@@ -38,7 +38,16 @@ class ValidationError(Exception):
         self.path = path
         self.line_number = line_number
         self.reason = reason
-        super().__init__(f"{path.relative_to(REPO_ROOT)}:{line_number}: {reason}")
+        super().__init__(f"{display_path(path)}:{line_number}: {reason}")
+
+
+def display_path(path: Path) -> str:
+    """Format a path relative to the repo when possible."""
+
+    try:
+        return str(path.relative_to(REPO_ROOT))
+    except ValueError:
+        return str(path)
 
 
 def load_json_file(path: Path) -> dict[str, Any]:
@@ -80,6 +89,35 @@ def load_and_validate_jsonl(path: Path, schema: dict[str, Any]) -> int:
             count += 1
 
     return count
+
+
+def validate_eval_case_record(record: dict[str, Any], source: str, line_number: int) -> None:
+    """Validate one eval case record using the repo eval-case schema."""
+
+    validate_record(record, load_json_file(EVAL_CASE_SCHEMA_PATH), Path(source), line_number)
+
+
+def validate_trace_record(record: dict[str, Any], source: str, line_number: int) -> None:
+    """Validate one scored trace record using the repo trace schema."""
+
+    validate_record(record, load_json_file(TRACE_SCHEMA_PATH), Path(source), line_number)
+
+
+def validate_all() -> tuple[int, int]:
+    """Validate all current eval cases and scored traces."""
+
+    eval_case_schema = load_json_file(EVAL_CASE_SCHEMA_PATH)
+    trace_schema = load_json_file(TRACE_SCHEMA_PATH)
+
+    eval_case_count = 0
+    for path in EVAL_CASE_PATHS:
+        eval_case_count += load_and_validate_jsonl(path, eval_case_schema)
+
+    trace_count = 0
+    for path in TRACE_PATHS:
+        trace_count += load_and_validate_jsonl(path, trace_schema)
+
+    return eval_case_count, trace_count
 
 
 def validate_record(record: Any, schema: dict[str, Any], path: Path, line_number: int) -> None:
@@ -200,17 +238,7 @@ def _type_name(value: Any) -> str:
 
 def main() -> int:
     try:
-        eval_case_schema = load_json_file(EVAL_CASE_SCHEMA_PATH)
-        trace_schema = load_json_file(TRACE_SCHEMA_PATH)
-
-        eval_case_count = 0
-        for path in EVAL_CASE_PATHS:
-            eval_case_count += load_and_validate_jsonl(path, eval_case_schema)
-
-        trace_count = 0
-        for path in TRACE_PATHS:
-            trace_count += load_and_validate_jsonl(path, trace_schema)
-
+        eval_case_count, trace_count = validate_all()
     except ValidationError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
