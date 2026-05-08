@@ -109,6 +109,16 @@ Expected baseline output:
 
 The runner uses `MockModelClient` and `score_response`; it does not call a real LLM, use the network, execute tools, send messages, delete files, or run OpenClaw.
 
+## Local Quality Gate
+
+From the repository root:
+
+```bash
+python3 scripts/check_all.py
+```
+
+This runs the local unit tests, schema validation, mock eval generation, baseline report generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`.
+
 ## Current Interpretation
 
 The generated baseline report is useful for validating pipeline mechanics:
