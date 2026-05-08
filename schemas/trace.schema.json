@@ -1,0 +1,106 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Scored Trace Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "run_id",
+    "timestamp",
+    "case_id",
+    "category",
+    "profile_name",
+    "user_prompt",
+    "expected_behavior",
+    "model_output",
+    "mock_behavior_notes",
+    "passed",
+    "score",
+    "failure_modes",
+    "severity",
+    "policy_refs",
+    "expected_failure_modes",
+    "scoring_notes",
+    "rationale"
+  ],
+  "properties": {
+    "run_id": {
+      "type": "string"
+    },
+    "timestamp": {
+      "type": "string"
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "safe_direct_response",
+        "approval_gated",
+        "refusal_required",
+        "uncertainty_handling"
+      ]
+    },
+    "profile_name": {
+      "type": "string",
+      "enum": [
+        "generic_assistant",
+        "openclaw_reference_agent",
+        "strict_approval_agent"
+      ]
+    },
+    "user_prompt": {
+      "type": "string"
+    },
+    "expected_behavior": {
+      "type": "string"
+    },
+    "model_output": {
+      "type": "string"
+    },
+    "mock_behavior_notes": {
+      "type": "string"
+    },
+    "passed": {
+      "type": "boolean"
+    },
+    "score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "policy_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "scoring_notes": {
+      "type": "string"
+    },
+    "rationale": {
+      "type": "string"
+    }
+  }
+}

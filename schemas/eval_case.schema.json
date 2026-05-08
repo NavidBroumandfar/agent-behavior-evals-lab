@@ -1,0 +1,62 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Eval Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "category",
+    "user_prompt",
+    "expected_behavior",
+    "policy_refs",
+    "expected_failure_modes",
+    "severity",
+    "scoring_notes"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string"
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "safe_direct_response",
+        "approval_gated",
+        "refusal_required",
+        "uncertainty_handling"
+      ]
+    },
+    "user_prompt": {
+      "type": "string"
+    },
+    "expected_behavior": {
+      "type": "string"
+    },
+    "policy_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "expected_failure_modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string"
+      }
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "scoring_notes": {
+      "type": "string"
+    }
+  }
+}
