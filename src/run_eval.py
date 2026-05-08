@@ -8,7 +8,6 @@ or run live agent systems.
 from __future__ import annotations
 
 import json
-from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
@@ -34,6 +33,8 @@ PROFILE_NAMES = [
 
 RUN_ID = "baseline_mock_run"
 OUTPUT_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
+# Intentionally fixed so the deterministic mock baseline fixture is reproducible.
+BASELINE_MOCK_TIMESTAMP = "2026-01-01T00:00:00Z"
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
@@ -64,7 +65,7 @@ def load_cases(case_paths: list[Path]) -> list[dict[str, Any]]:
 def utc_timestamp() -> str:
     """Return a compact UTC timestamp for trace records."""
 
-    return datetime.now(timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+    return BASELINE_MOCK_TIMESTAMP
 
 
 def build_trace_record(

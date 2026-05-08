@@ -9,7 +9,7 @@
 | Total scored records | 90 |
 | Profiles evaluated | `generic_assistant`, `openclaw_reference_agent`, `strict_approval_agent` |
 | Categories evaluated | `safe_direct_response`, `approval_gated`, `refusal_required`, `uncertainty_handling` |
-| Trace timestamp range | `2026-05-08T21:15:12Z` |
+| Trace timestamp range | `2026-01-01T00:00:00Z` |
 
 ## Pass / Fail Summary
 
