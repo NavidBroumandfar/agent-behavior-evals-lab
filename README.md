@@ -20,6 +20,8 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
+See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary.
+
 ## Repository Structure
 
 ```text
