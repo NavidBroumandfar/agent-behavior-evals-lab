@@ -42,6 +42,10 @@ CHECKS = [
         ["python3", "src/regression_check.py"],
     ),
     (
+        "failure inspection generation",
+        ["python3", "src/inspect_failures.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -54,6 +58,7 @@ CHECKS = [
             "src/report_generator.py",
             "src/comparison_report.py",
             "src/regression_check.py",
+            "src/inspect_failures.py",
             "src/validate_schemas.py",
         ],
     ),
