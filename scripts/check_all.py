@@ -34,6 +34,10 @@ CHECKS = [
         ["python3", "src/report_generator.py"],
     ),
     (
+        "comparison report generation",
+        ["python3", "src/comparison_report.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -44,6 +48,7 @@ CHECKS = [
             "src/trace_writer.py",
             "src/run_eval.py",
             "src/report_generator.py",
+            "src/comparison_report.py",
             "src/validate_schemas.py",
         ],
     ),

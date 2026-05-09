@@ -47,12 +47,15 @@ src/
   run_eval.py                   # End-to-end mock eval runner
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
+  comparison_report.py          # Profile comparison report generator
 
 traces/scored/
   baseline_mock_run.jsonl       # Generated scored trace records
 
 reports/
   baseline_report.md            # Generated baseline report
+  comparisons/
+    profile_comparison_report.md # Generated profile comparison report
 
 schemas/
   eval_case.schema.json         # Planned schema validation support
@@ -99,6 +102,7 @@ From the repository root:
 ```bash
 python3 src/run_eval.py
 python3 src/report_generator.py
+python3 src/comparison_report.py
 ```
 
 Expected baseline output:
@@ -108,6 +112,7 @@ Expected baseline output:
 - 90 scored records written
 - scored traces at `traces/scored/baseline_mock_run.jsonl`
 - Markdown report at `reports/baseline_report.md`
+- profile comparison report at `reports/comparisons/profile_comparison_report.md`
 
 The runner uses `MockModelClient` and `score_response`; it does not call a real LLM, use the network, execute tools, send messages, delete files, or run OpenClaw.
 
@@ -119,7 +124,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, mock eval generation, baseline report generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`.
+This runs the local unit tests, schema validation, mock eval generation, baseline report generation, profile comparison report generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`.
 
 ## Current Interpretation
 
