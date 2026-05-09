@@ -45,14 +45,19 @@ src/
   model_clients.py              # Deterministic MockModelClient
   scorers.py                    # Rule-based v0 scorer
   run_eval.py                   # End-to-end mock eval runner
+  evaluate_manual_outputs.py    # Manual saved-output eval runner
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
   comparison_report.py          # Profile comparison report generator
   regression_check.py           # Baseline regression snapshot checker
   inspect_failures.py           # Failure inspection report generator
 
-traces/scored/
-  baseline_mock_run.jsonl       # Generated scored trace records
+traces/
+  external/
+    manual_outputs.example.jsonl # Public-safe manual output fixture
+  scored/
+    baseline_mock_run.jsonl     # Generated scored trace records
+    manual_output_eval.jsonl    # Generated manual-output scored traces
 
 reports/
   baseline_report.md            # Generated baseline report
@@ -60,6 +65,7 @@ reports/
     profile_comparison_report.md # Generated profile comparison report
     baseline_regression_snapshot.json # Saved deterministic regression snapshot
     failure_inspection.md       # Generated failure inspection report
+    manual_output_report.md     # Generated manual-output report
 
 schemas/
   eval_case.schema.json         # Planned schema validation support
@@ -124,6 +130,18 @@ Expected baseline output:
 
 The runner uses `MockModelClient` and `score_response`; it does not call a real LLM, use the network, execute tools, send messages, delete files, or run OpenClaw.
 
+## Manual Output Mode
+
+Manual output mode evaluates assistant or model text saved in local JSONL. Each input record must include `case_id`, `target_profile`, and `model_output`; optional public-safe fields are `source_label` and `notes`.
+
+From the repository root:
+
+```bash
+python3 src/evaluate_manual_outputs.py
+```
+
+Default input is `traces/external/manual_outputs.example.jsonl`. The command writes scored traces to `traces/scored/manual_output_eval.jsonl` and a report to `reports/comparisons/manual_output_report.md`. It reuses the local cases and deterministic scorer; it does not call real APIs, run live adapters, execute OpenClaw, or use browser/email/external tools.
+
 ## Local Quality Gate
 
 From the repository root:
@@ -132,7 +150,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`.
+This runs the local unit tests, schema validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl` and `traces/scored/manual_output_eval.jsonl`.
 
 ## Current Interpretation
 

@@ -13,8 +13,10 @@ from pathlib import Path
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
-EXPECTED_TRACE_LINES = 90
+BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
+EXPECTED_BASELINE_TRACE_LINES = 90
+MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/manual_output_eval.jsonl"
+EXPECTED_MANUAL_TRACE_LINES = 4
 
 CHECKS = [
     (
@@ -46,6 +48,10 @@ CHECKS = [
         ["python3", "src/inspect_failures.py"],
     ),
     (
+        "manual output eval generation",
+        ["python3", "src/evaluate_manual_outputs.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -59,6 +65,7 @@ CHECKS = [
             "src/comparison_report.py",
             "src/regression_check.py",
             "src/inspect_failures.py",
+            "src/evaluate_manual_outputs.py",
             "src/validate_schemas.py",
         ],
     ),
@@ -72,22 +79,22 @@ def run_check(name: str, command: list[str]) -> None:
     subprocess.run(command, cwd=REPO_ROOT, check=True)
 
 
-def verify_trace_count() -> None:
-    """Verify the generated scored trace exists and has the expected length."""
+def verify_trace_count(path: Path, expected_lines: int) -> None:
+    """Verify a generated scored trace exists and has the expected length."""
 
     print("==> trace count verification", flush=True)
-    if not TRACE_PATH.exists():
-        raise RuntimeError(f"missing trace file: {TRACE_PATH.relative_to(REPO_ROOT)}")
+    if not path.exists():
+        raise RuntimeError(f"missing trace file: {path.relative_to(REPO_ROOT)}")
 
-    with TRACE_PATH.open("r", encoding="utf-8") as trace_file:
+    with path.open("r", encoding="utf-8") as trace_file:
         line_count = sum(1 for _ in trace_file)
 
-    if line_count != EXPECTED_TRACE_LINES:
+    if line_count != expected_lines:
         raise RuntimeError(
-            f"expected {EXPECTED_TRACE_LINES} trace lines, found {line_count} in {TRACE_PATH.relative_to(REPO_ROOT)}"
+            f"expected {expected_lines} trace lines, found {line_count} in {path.relative_to(REPO_ROOT)}"
         )
 
-    print(f"trace lines: {line_count}", flush=True)
+    print(f"{path.relative_to(REPO_ROOT)} trace lines: {line_count}", flush=True)
 
 
 def main() -> int:
@@ -95,7 +102,9 @@ def main() -> int:
         for name, command in CHECKS:
             run_check(name, command)
             if name == "mock eval generation":
-                verify_trace_count()
+                verify_trace_count(BASELINE_TRACE_PATH, EXPECTED_BASELINE_TRACE_LINES)
+            if name == "manual output eval generation":
+                verify_trace_count(MANUAL_TRACE_PATH, EXPECTED_MANUAL_TRACE_LINES)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
