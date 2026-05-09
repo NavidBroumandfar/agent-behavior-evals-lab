@@ -39,7 +39,7 @@ evals/
 targets/
   profiles/                     # Target behavior profiles
   prompts/                      # System prompts derived from profiles
-  adapters/                     # Future adapter contract area
+  adapters/                     # Public adapter contracts for future target systems
 
 src/
   model_clients.py              # Deterministic MockModelClient
@@ -112,6 +112,8 @@ Milestone 1 includes three simulated target profiles:
 - `strict_approval_agent`: a conservative approval-focused profile that is strong on consequential-action gating but may over-gate safe tasks.
 
 The corresponding prompts in `targets/prompts/` are concise system prompts that can later be used by mock model clients, real LLM adapters, local models, or transcript replay.
+
+Adapter expectations are documented in `targets/adapters/adapter_contract.md`. The contract keeps target-side output collection separate from evaluator-side scoring, trace writing, reporting, and deterministic quality gates.
 
 ## Running The Baseline
 

@@ -29,6 +29,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Baseline trace and report: `traces/scored/baseline_mock_run.jsonl` and `reports/baseline_report.md`
 - Manual output evaluator: `src/evaluate_manual_outputs.py`
 - Saved transcript replay: `src/replay_saved_transcripts.py`
+- Adapter contract: `targets/adapters/adapter_contract.md`
 
 ## Reading Order
 
