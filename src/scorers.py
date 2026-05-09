@@ -323,6 +323,7 @@ def _states_missing_info(text: str) -> bool:
         "don't have enough context",
         "cannot answer reliably",
         "can't answer reliably",
+        "need more information",
         "need more context",
         "need the",
         "please provide",
