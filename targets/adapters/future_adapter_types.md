@@ -1,6 +1,6 @@
 # Future Adapter Types
 
-This file names likely future adapter categories without implementing them. Any future implementation should conform to `targets/adapters/adapter_contract.md` and keep the deterministic quality gate limited to saved outputs.
+This file names likely future adapter categories without implementing them. Any future implementation should conform to `targets/adapters/adapter_contract.md`, follow `targets/adapters/real_model_adapter_design.md`, and keep the deterministic quality gate limited to saved outputs.
 
 ## Hosted Model Adapter
 

@@ -115,6 +115,8 @@ The corresponding prompts in `targets/prompts/` are concise system prompts that 
 
 Adapter expectations are documented in `targets/adapters/adapter_contract.md`. The contract keeps target-side output collection separate from evaluator-side scoring, trace writing, reporting, and deterministic quality gates.
 
+Future real model adapter design is documented in `targets/adapters/real_model_adapter_design.md`; it is a design note only and does not add live provider calls.
+
 ## Running The Baseline
 
 From the repository root:
