@@ -13,6 +13,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Refusal Boundaries](concepts/refusal_boundaries.md)
 - [Uncertainty Handling](concepts/uncertainty_handling.md)
 - [Mock Vs Real Evaluations](concepts/mock_vs_real_evaluations.md)
+- [OpenClaw As A System Under Test](concepts/openclaw_as_system_under_test.md)
 
 ## Current Source Artifacts
 
@@ -25,6 +26,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Trace writer and runner: `src/trace_writer.py` and `src/run_eval.py`
 - Report generator: `src/report_generator.py`
 - Baseline trace and report: `traces/scored/baseline_mock_run.jsonl` and `reports/baseline_report.md`
+- Manual output evaluator: `src/evaluate_manual_outputs.py`
 
 ## Reading Order
 

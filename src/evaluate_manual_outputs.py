@@ -31,7 +31,9 @@ DEFAULT_INPUT_PATH = REPO_ROOT / "traces/external/manual_outputs.example.jsonl"
 DEFAULT_OUTPUT_PATH = REPO_ROOT / "traces/scored/manual_output_eval.jsonl"
 DEFAULT_REPORT_PATH = REPO_ROOT / "reports/comparisons/manual_output_report.md"
 
-RUN_ID = "manual_output_eval_example"
+DEFAULT_RUN_ID = "manual_output_eval_example"
+DEFAULT_REPORT_TITLE = "Manual Output Evaluation Report"
+DEFAULT_REPORT_CONTEXT = ""
 MANUAL_OUTPUT_TIMESTAMP = "2026-01-01T00:00:00Z"
 
 REQUIRED_MANUAL_FIELDS = {
@@ -149,6 +151,9 @@ def evaluate_manual_outputs(
     input_path: Path = DEFAULT_INPUT_PATH,
     output_path: Path = DEFAULT_OUTPUT_PATH,
     report_path: Path = DEFAULT_REPORT_PATH,
+    run_id: str = DEFAULT_RUN_ID,
+    report_title: str = DEFAULT_REPORT_TITLE,
+    report_context: str = DEFAULT_REPORT_CONTEXT,
 ) -> dict[str, Any]:
     """Score manual outputs and write deterministic JSONL and Markdown artifacts."""
 
@@ -162,18 +167,18 @@ def evaluate_manual_outputs(
         case = cases_by_id[str(record["case_id"])]
         response = manual_response(record, input_path)
         score = score_response(case, response)
-        scored_traces.append(build_trace_record(RUN_ID, MANUAL_OUTPUT_TIMESTAMP, case, response, score))
+        scored_traces.append(build_trace_record(run_id, MANUAL_OUTPUT_TIMESTAMP, case, response, score))
 
     validate_scored_traces(scored_traces, output_path)
     write_jsonl(scored_traces, output_path)
 
-    report = generate_report(scored_traces, input_path, output_path, report_path)
+    report = generate_report(scored_traces, input_path, output_path, report_path, run_id, report_title, report_context)
     write_report(report, report_path)
 
     pass_count = sum(1 for trace in scored_traces if trace["passed"])
     fail_count = len(scored_traces) - pass_count
     return {
-        "run_id": RUN_ID,
+        "run_id": run_id,
         "input_path": _display_path(input_path),
         "output_path": _display_path(output_path),
         "report_path": _display_path(report_path),
@@ -219,6 +224,9 @@ def generate_report(
     input_path: Path,
     output_path: Path,
     report_path: Path,
+    run_id: str,
+    report_title: str,
+    report_context: str,
 ) -> str:
     """Build the deterministic manual output Markdown report."""
 
@@ -232,12 +240,13 @@ def generate_report(
     categories = _ordered_values(records, "category", CATEGORY_ORDER)
 
     lines = [
-        "# Manual Output Evaluation Report",
+        f"# {report_title}",
         "",
         "## Purpose",
         "",
         "Manual output mode scores assistant or model text that was saved or pasted into a local JSONL file. The lab remains the evaluator: manual records are target outputs under test, and this run uses the same local cases and deterministic rule-based scorer as the mock baseline.",
         "",
+        *_optional_paragraph(report_context),
         "This mode does not call real APIs, run live model adapters, execute OpenClaw, contact networks, use browser or email tools, or depend on private system-under-test files.",
         "",
         "## Paths",
@@ -247,7 +256,7 @@ def generate_report(
         f"| Input manual outputs | `{_display_path(input_path)}` |",
         f"| Output scored trace | `{_display_path(output_path)}` |",
         f"| Output report | `{_display_path(report_path)}` |",
-        f"| Run ID | `{RUN_ID}` |",
+        f"| Run ID | `{run_id}` |",
         f"| Fixed trace timestamp | `{MANUAL_OUTPUT_TIMESTAMP}` |",
         "",
         "## Manual Input Contract",
@@ -398,6 +407,13 @@ def _truncate(text: str, limit: int) -> str:
     return text[: limit - 3].rstrip() + "..."
 
 
+def _optional_paragraph(text: str) -> list[str]:
+    stripped = text.strip()
+    if not stripped:
+        return []
+    return [stripped, ""]
+
+
 def _display_path(path: Path) -> str:
     try:
         return str(path.relative_to(REPO_ROOT))
@@ -412,13 +428,27 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--input", type=Path, default=DEFAULT_INPUT_PATH, help="Manual output JSONL input path.")
     parser.add_argument("--output", type=Path, default=DEFAULT_OUTPUT_PATH, help="Scored trace JSONL output path.")
     parser.add_argument("--report", type=Path, default=DEFAULT_REPORT_PATH, help="Markdown report output path.")
+    parser.add_argument("--run-id", default=DEFAULT_RUN_ID, help="Stable run_id to write into scored traces.")
+    parser.add_argument("--report-title", default=DEFAULT_REPORT_TITLE, help="Markdown H1 for the generated report.")
+    parser.add_argument(
+        "--report-context",
+        default=DEFAULT_REPORT_CONTEXT,
+        help="Optional deterministic paragraph inserted into the report purpose section.",
+    )
     return parser.parse_args()
 
 
 def main() -> int:
     args = parse_args()
     try:
-        summary = evaluate_manual_outputs(args.input, args.output, args.report)
+        summary = evaluate_manual_outputs(
+            args.input,
+            args.output,
+            args.report,
+            args.run_id,
+            args.report_title,
+            args.report_context,
+        )
     except (OSError, ValueError) as exc:
         print(f"FAILED: {exc}")
         return 1

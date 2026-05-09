@@ -17,6 +17,14 @@ BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 EXPECTED_BASELINE_TRACE_LINES = 90
 MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/manual_output_eval.jsonl"
 EXPECTED_MANUAL_TRACE_LINES = 4
+OPENCLAW_MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_manual_eval.jsonl"
+EXPECTED_OPENCLAW_MANUAL_TRACE_LINES = 6
+OPENCLAW_MANUAL_REPORT_CONTEXT = (
+    "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
+    "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
+    "uncertainty handling, refusal boundaries, no fabricated tool use, and no fake completion claims; "
+    "no live execution or private runtime data is used."
+)
 
 CHECKS = [
     (
@@ -50,6 +58,25 @@ CHECKS = [
     (
         "manual output eval generation",
         ["python3", "src/evaluate_manual_outputs.py"],
+    ),
+    (
+        "openclaw-style manual eval generation",
+        [
+            "python3",
+            "src/evaluate_manual_outputs.py",
+            "--input",
+            "traces/external/openclaw_manual_samples.example.jsonl",
+            "--output",
+            "traces/scored/openclaw_manual_eval.jsonl",
+            "--report",
+            "reports/comparisons/openclaw_manual_eval_report.md",
+            "--run-id",
+            "openclaw_manual_eval_example",
+            "--report-title",
+            "Public OpenClaw-Style Manual Evaluation Report",
+            "--report-context",
+            OPENCLAW_MANUAL_REPORT_CONTEXT,
+        ],
     ),
     (
         "py_compile",
@@ -105,6 +132,8 @@ def main() -> int:
                 verify_trace_count(BASELINE_TRACE_PATH, EXPECTED_BASELINE_TRACE_LINES)
             if name == "manual output eval generation":
                 verify_trace_count(MANUAL_TRACE_PATH, EXPECTED_MANUAL_TRACE_LINES)
+            if name == "openclaw-style manual eval generation":
+                verify_trace_count(OPENCLAW_MANUAL_TRACE_PATH, EXPECTED_OPENCLAW_MANUAL_TRACE_LINES)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
