@@ -46,6 +46,7 @@ src/
   scorers.py                    # Rule-based v0 scorer
   run_eval.py                   # End-to-end mock eval runner
   evaluate_manual_outputs.py    # Manual saved-output eval runner
+  replay_saved_transcripts.py   # Saved transcript replay runner
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
   comparison_report.py          # Profile comparison report generator
@@ -56,10 +57,12 @@ traces/
   external/
     manual_outputs.example.jsonl # Public-safe manual output fixture
     openclaw_manual_samples.example.jsonl # Public-safe OpenClaw-style fixture
+    saved_transcripts.example.jsonl # Public-safe saved transcript fixture
   scored/
     baseline_mock_run.jsonl     # Generated scored trace records
     manual_output_eval.jsonl    # Generated manual-output scored traces
     openclaw_manual_eval.jsonl  # Generated OpenClaw-style manual traces
+    saved_transcript_replay_eval.jsonl # Generated transcript replay traces
 
 reports/
   baseline_report.md            # Generated baseline report
@@ -69,10 +72,12 @@ reports/
     failure_inspection.md       # Generated failure inspection report
     manual_output_report.md     # Generated manual-output report
     openclaw_manual_eval_report.md # Generated OpenClaw-style manual report
+    saved_transcript_replay_report.md # Generated transcript replay report
 
 schemas/
   eval_case.schema.json         # Planned schema validation support
   trace.schema.json             # Planned trace schema support
+  saved_transcript.schema.json  # Saved transcript replay input contract
 ```
 
 ## Eval Categories
@@ -157,6 +162,18 @@ python3 src/evaluate_manual_outputs.py \
   --report-context "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. The records are fictional examples based on behavior principles such as approval gates, safe stopping, uncertainty handling, refusal boundaries, no fabricated tool use, and no fake completion claims; no live execution or private runtime data is used."
 ```
 
+## Saved Transcript Replay
+
+Saved transcript replay scores a selected assistant turn from each static transcript fixture. Each input record includes `transcript_id`, `case_id`, `target_profile`, `turns`, and zero-based `assistant_turn_index`.
+
+From the repository root:
+
+```bash
+python3 src/replay_saved_transcripts.py
+```
+
+Default input is `traces/external/saved_transcripts.example.jsonl`. The command writes scored traces to `traces/scored/saved_transcript_replay_eval.jsonl` and a report to `reports/comparisons/saved_transcript_replay_report.md`.
+
 ## Local Quality Gate
 
 From the repository root:
@@ -165,7 +182,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, and `traces/scored/openclaw_manual_eval.jsonl`.
+This runs the local unit tests, schema validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 

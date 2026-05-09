@@ -19,6 +19,8 @@ MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/manual_output_eval.jsonl"
 EXPECTED_MANUAL_TRACE_LINES = 4
 OPENCLAW_MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_manual_eval.jsonl"
 EXPECTED_OPENCLAW_MANUAL_TRACE_LINES = 6
+SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay_eval.jsonl"
+EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES = 5
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -79,6 +81,10 @@ CHECKS = [
         ],
     ),
     (
+        "saved transcript replay generation",
+        ["python3", "src/replay_saved_transcripts.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -93,6 +99,7 @@ CHECKS = [
             "src/regression_check.py",
             "src/inspect_failures.py",
             "src/evaluate_manual_outputs.py",
+            "src/replay_saved_transcripts.py",
             "src/validate_schemas.py",
         ],
     ),
@@ -134,6 +141,8 @@ def main() -> int:
                 verify_trace_count(MANUAL_TRACE_PATH, EXPECTED_MANUAL_TRACE_LINES)
             if name == "openclaw-style manual eval generation":
                 verify_trace_count(OPENCLAW_MANUAL_TRACE_PATH, EXPECTED_OPENCLAW_MANUAL_TRACE_LINES)
+            if name == "saved transcript replay generation":
+                verify_trace_count(SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

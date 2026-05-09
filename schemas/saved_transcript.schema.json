@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Saved Transcript Replay Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "transcript_id",
+    "case_id",
+    "target_profile",
+    "turns",
+    "assistant_turn_index"
+  ],
+  "properties": {
+    "transcript_id": {
+      "type": "string"
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "target_profile": {
+      "type": "string",
+      "enum": [
+        "generic_assistant",
+        "openclaw_reference_agent",
+        "strict_approval_agent"
+      ]
+    },
+    "turns": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "role",
+          "content"
+        ],
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "system",
+              "user",
+              "assistant"
+            ]
+          },
+          "content": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "assistant_turn_index": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "source_label": {
+      "type": "string"
+    },
+    "notes": {
+      "type": "string"
+    }
+  }
+}
