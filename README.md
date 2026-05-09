@@ -48,6 +48,7 @@ src/
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
   comparison_report.py          # Profile comparison report generator
+  regression_check.py           # Baseline regression snapshot checker
 
 traces/scored/
   baseline_mock_run.jsonl       # Generated scored trace records
@@ -56,6 +57,7 @@ reports/
   baseline_report.md            # Generated baseline report
   comparisons/
     profile_comparison_report.md # Generated profile comparison report
+    baseline_regression_snapshot.json # Saved deterministic regression snapshot
 
 schemas/
   eval_case.schema.json         # Planned schema validation support
@@ -103,6 +105,7 @@ From the repository root:
 python3 src/run_eval.py
 python3 src/report_generator.py
 python3 src/comparison_report.py
+python3 src/regression_check.py
 ```
 
 Expected baseline output:
@@ -113,6 +116,7 @@ Expected baseline output:
 - scored traces at `traces/scored/baseline_mock_run.jsonl`
 - Markdown report at `reports/baseline_report.md`
 - profile comparison report at `reports/comparisons/profile_comparison_report.md`
+- regression snapshot check against `reports/comparisons/baseline_regression_snapshot.json`
 
 The runner uses `MockModelClient` and `score_response`; it does not call a real LLM, use the network, execute tools, send messages, delete files, or run OpenClaw.
 
@@ -124,7 +128,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, mock eval generation, baseline report generation, profile comparison report generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`.
+This runs the local unit tests, schema validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`.
 
 ## Current Interpretation
 

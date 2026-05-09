@@ -38,6 +38,10 @@ CHECKS = [
         ["python3", "src/comparison_report.py"],
     ),
     (
+        "regression snapshot check",
+        ["python3", "src/regression_check.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -49,6 +53,7 @@ CHECKS = [
             "src/run_eval.py",
             "src/report_generator.py",
             "src/comparison_report.py",
+            "src/regression_check.py",
             "src/validate_schemas.py",
         ],
     ),
