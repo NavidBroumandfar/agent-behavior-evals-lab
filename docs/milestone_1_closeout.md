@@ -1,8 +1,12 @@
-# Milestone 1 Closeout: v0 Mock Evaluation Harness
+# Milestone 1 Closeout
+
+## Milestone Name
+
+Milestone 1: v0 deterministic mock evaluation harness.
 
 ## Completion Status
 
-Milestone 1 is complete for the local deterministic mock evaluation harness. The repository now has enough policy, case, target, scoring, trace, reporting, schema, rubric, and test coverage to validate the evaluator pipeline end to end before real model adapters are introduced.
+Complete for the local deterministic mock harness. The repository has enough policy, case, target, scoring, trace, reporting, schema, rubric, and test coverage to validate the evaluator pipeline end to end before real model adapters are introduced.
 
 This milestone is not a real model benchmark. No live OpenClaw execution happened, and no real model adapters are active yet.
 
