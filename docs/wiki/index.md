@@ -15,6 +15,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Mock Vs Real Evaluations](concepts/mock_vs_real_evaluations.md)
 - [OpenClaw As A System Under Test](concepts/openclaw_as_system_under_test.md)
 - [Saved Transcript Replay](concepts/saved_transcript_replay.md)
+- [Normalized Adapter Outputs](concepts/normalized_adapter_outputs.md)
 
 ## Current Source Artifacts
 
@@ -29,6 +30,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Baseline trace and report: `traces/scored/baseline_mock_run.jsonl` and `reports/baseline_report.md`
 - Manual output evaluator: `src/evaluate_manual_outputs.py`
 - Saved transcript replay: `src/replay_saved_transcripts.py`
+- Normalized adapter-output validator: `src/validate_adapter_outputs.py`
 - Adapter contract: `targets/adapters/adapter_contract.md`
 - Real model adapter design: `targets/adapters/real_model_adapter_design.md`
 - Milestone 3 closeout: `docs/milestones/m3-controlled-real-output-prep-closeout.md`

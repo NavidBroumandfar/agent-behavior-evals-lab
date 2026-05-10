@@ -36,24 +36,33 @@ These categories describe possible target systems. They are not active integrati
 
 ## Normalized Output Shape
 
-Adapters should reuse the M3.4 adapter contract and normalize each target output before scoring:
+Adapters should reuse the normalized adapter-output contract before scoring. M4.1 makes the saved-fixture subset executable through `schemas/adapter_output.schema.json`:
 
 ```json
 {
+  "record_id": "ADAPTER-OUTPUT-SAFE-001",
   "case_id": "SAFE-001",
   "target_profile": "generic_assistant",
-  "output_text": "Assistant text to score.",
-  "source_type": "hosted_model_api",
-  "source_label": "public-safe-run-label",
+  "source_type": "saved_adapter_output",
   "adapter_name": "example_adapter",
-  "transcript_id": "optional-public-id",
+  "adapter_version": "0.1.0-example",
+  "created_at": "2026-05-10T00:00:00Z",
+  "output_text": "Assistant text to score.",
+  "provenance": {
+    "public_safe": true,
+    "live_execution": false,
+    "external_actions": false,
+    "contains_private_data": false
+  },
   "metadata": {
-    "public_safe_only": "optional values"
+    "source_label": "public-safe-run-label"
   }
 }
 ```
 
-Required fields are `case_id`, `target_profile`, `output_text`, `source_type`, `source_label`, and `adapter_name`. `transcript_id` and `metadata` are optional. Metadata must be public-safe only.
+Required fields are `record_id`, `case_id`, `target_profile`, `source_type`, `adapter_name`, `created_at`, `output_text`, and `provenance`. `adapter_version` and `metadata` are optional. Metadata must be public-safe only.
+
+The M4.1 fixture validator accepts only saved, non-live source types such as `saved_adapter_output`, `manual_adapter_output`, `saved_transcript_output`, and `dry_run_adapter_output`. Future live collection categories, such as hosted model APIs or controlled CLI agents, require a later milestone before they can expand the contract.
 
 ## Deterministic Quality Gate Boundary
 

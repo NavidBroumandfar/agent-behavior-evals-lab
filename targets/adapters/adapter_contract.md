@@ -24,33 +24,45 @@ An adapter must provide public-safe target outputs with enough metadata to audit
 - Provide a supported `target_profile`.
 - Map each output to an existing `case_id`.
 - Provide the final assistant/model output text to score.
-- Provide optional public-safe source metadata such as `source_label`, `adapter_name`, and `transcript_id`.
+- Provide stable `record_id`, `source_type`, `adapter_name`, and `created_at` values.
+- Provide optional public-safe source metadata such as `source_label` or `transcript_id` inside `metadata`.
 - Avoid claiming tool execution unless the captured output and trace evidence support that claim.
 - Avoid private data leakage in prompts, outputs, metadata, traces, and reports.
 - Preserve deterministic ordering and stable identifiers for replayable artifacts.
 
 Adapters may collect or generate outputs in future milestones, but the deterministic quality gate should only score saved outputs.
 
-## Normalized Output Record
+## Normalized Adapter Output Record
 
-Every future adapter should normalize target output to this minimum shape before scoring:
+M4.1 makes the saved adapter-output contract executable through `schemas/adapter_output.schema.json` and `src/validate_adapter_outputs.py`. Every saved adapter-output fixture should normalize target output to this shape before any importer or scorer consumes it:
 
 ```json
 {
+  "record_id": "ADAPTER-OUTPUT-SAFE-001",
   "case_id": "SAFE-001",
   "target_profile": "generic_assistant",
+  "source_type": "saved_adapter_output",
+  "adapter_name": "example_saved_output_fixture",
+  "adapter_version": "0.1.0-example",
+  "created_at": "2026-05-10T00:00:00Z",
   "output_text": "Assistant text to score.",
-  "source_type": "manual_output",
-  "source_label": "public-safe-label",
-  "adapter_name": "manual_jsonl",
-  "transcript_id": "optional-public-id",
+  "provenance": {
+    "public_safe": true,
+    "live_execution": false,
+    "external_actions": false,
+    "contains_private_data": false
+  },
   "metadata": {
-    "public_safe_only": "optional values"
+    "source_label": "optional-public-label"
   }
 }
 ```
 
-Required fields are `case_id`, `target_profile`, `output_text`, `source_type`, `source_label`, and `adapter_name`. `transcript_id` and `metadata` are optional. Metadata must be public-safe, deterministic, and free of secrets, private workspace paths, raw tool logs, browser/email data, or credentials.
+Required fields are `record_id`, `case_id`, `target_profile`, `source_type`, `adapter_name`, `created_at`, `output_text`, and `provenance`. `adapter_version` and `metadata` are optional. Metadata must be public-safe, deterministic, and free of secrets, private workspace paths, raw tool logs, browser/email data, or credentials.
+
+The M4.1 allowed `source_type` values are `saved_adapter_output`, `manual_adapter_output`, `saved_transcript_output`, and `dry_run_adapter_output`. These describe saved target-side fixtures, not provider families.
+
+For M4.1, provenance must state `public_safe: true`, `live_execution: false`, `external_actions: false`, and `contains_private_data: false`. Live collection, external actions, or richer provenance require a later milestone and must remain outside the deterministic quality gate.
 
 The current scored trace schema does not store every normalized adapter field directly. Until that schema is expanded, adapter metadata can be carried in `mock_behavior_notes` or in the input fixture that generated the trace.
 

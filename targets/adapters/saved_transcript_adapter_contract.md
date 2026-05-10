@@ -36,11 +36,9 @@ For the general adapter contract, this maps to:
 - `case_id`: copied from the transcript record.
 - `target_profile`: copied from the transcript record.
 - `output_text`: copied from `turns[assistant_turn_index].content`.
-- `source_type`: `saved_transcript`.
-- `source_label`: copied when present.
+- `source_type`: `saved_transcript_output`.
 - `adapter_name`: `saved_transcript_replay`.
-- `transcript_id`: copied from the transcript record.
-- `metadata`: optional public-safe replay details, such as `assistant_turn_index`.
+- `metadata`: optional public-safe replay details, such as `source_label`, `transcript_id`, and `assistant_turn_index`.
 
 ## Boundary
 

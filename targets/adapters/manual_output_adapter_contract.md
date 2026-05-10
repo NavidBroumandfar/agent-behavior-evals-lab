@@ -25,10 +25,9 @@ For the general adapter contract, this maps to:
 - `case_id`: copied from the fixture.
 - `target_profile`: copied from the fixture.
 - `output_text`: copied from `model_output`.
-- `source_type`: `manual_output`.
-- `source_label`: copied when present.
+- `source_type`: `manual_adapter_output`.
 - `adapter_name`: `manual_jsonl`.
-- `metadata`: optional public-safe notes.
+- `metadata`: optional public-safe notes and `source_label` when present.
 
 ## Boundary
 

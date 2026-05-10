@@ -38,6 +38,10 @@ CHECKS = [
         ["python3", "src/validate_schemas.py"],
     ),
     (
+        "adapter output fixture validation",
+        ["python3", "src/validate_adapter_outputs.py", "traces/external/adapter_outputs.example.jsonl"],
+    ),
+    (
         "mock eval generation",
         ["python3", "src/run_eval.py"],
     ),
@@ -101,6 +105,7 @@ CHECKS = [
             "src/evaluate_manual_outputs.py",
             "src/replay_saved_transcripts.py",
             "src/validate_schemas.py",
+            "src/validate_adapter_outputs.py",
         ],
     ),
 ]
