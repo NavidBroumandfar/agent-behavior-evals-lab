@@ -1,0 +1,180 @@
+{
+  "manifest_id": "external_fixture_manifest",
+  "version": "0.1.0",
+  "generated_at": "2026-05-10T00:00:00Z",
+  "purpose": "Index controlled public-safe external fixture sources, their generated scored traces, owning scripts, provenance classes, quality-gate coverage, and limitations.",
+  "scope": [
+    "Public-safe saved-output fixtures under traces/external/.",
+    "Generated scored traces under traces/scored/ that are produced from those fixtures.",
+    "Comparison reports under reports/comparisons/ that summarize controlled fixture outputs.",
+    "Deterministic local quality-gate artifacts only."
+  ],
+  "non_goals": [
+    "No live provider APIs or provider SDKs.",
+    "No local model execution.",
+    "No live OpenClaw CLI execution.",
+    "No browser, email, messaging, purchase, file mutation, or other external actions.",
+    "No credentials, secrets, network calls, or private runtime integration.",
+    "No real adapter implementations and no scoring changes."
+  ],
+  "fixtures": [
+    {
+      "fixture_id": "manual_outputs",
+      "source_path": "traces/external/manual_outputs.example.jsonl",
+      "source_kind": "manual_saved_output_fixture",
+      "source_type": "manual_output",
+      "provenance_class": "manual_saved_output",
+      "data_classification": "public_safe_fixture",
+      "generated_by": "src/evaluate_manual_outputs.py",
+      "validates_with": "src/evaluate_manual_outputs.py",
+      "imported_by": "src/evaluate_manual_outputs.py",
+      "scored_trace_path": "traces/scored/manual_output_eval.jsonl",
+      "expected_record_count": 4,
+      "expected_scored_count": 4,
+      "report_paths": [
+        "reports/comparisons/manual_output_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Small curated public-safe examples, not a benchmark sample.",
+        "Manual outputs are saved text and do not prove behavior from a live target system.",
+        "Scoring reflects the current deterministic v0 heuristic scorer."
+      ],
+      "notes": "Minimal saved-output path used before normalized adapter-output records were introduced."
+    },
+    {
+      "fixture_id": "sanitized_openclaw_style_manual_samples",
+      "source_path": "traces/external/openclaw_manual_samples.example.jsonl",
+      "source_kind": "sanitized_manual_output_fixture",
+      "source_type": "openclaw_style_manual_output",
+      "provenance_class": "sanitized_external_sample",
+      "data_classification": "public_sanitized",
+      "generated_by": "src/evaluate_manual_outputs.py",
+      "validates_with": "src/evaluate_manual_outputs.py",
+      "imported_by": "src/evaluate_manual_outputs.py",
+      "scored_trace_path": "traces/scored/openclaw_manual_eval.jsonl",
+      "expected_record_count": 6,
+      "expected_scored_count": 6,
+      "report_paths": [
+        "reports/comparisons/openclaw_manual_eval_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Fictional sanitized OpenClaw-style examples only.",
+        "Not evidence from a live OpenClaw runtime.",
+        "Small fixture size is useful for pipeline coverage, not ranking systems."
+      ],
+      "notes": "Keeps OpenClaw as one possible system-under-test label without coupling the evaluator to OpenClaw execution."
+    },
+    {
+      "fixture_id": "saved_transcript_replay",
+      "source_path": "traces/external/saved_transcripts.example.jsonl",
+      "source_kind": "saved_transcript_fixture",
+      "source_type": "saved_transcript_replay",
+      "provenance_class": "saved_transcript",
+      "data_classification": "public_safe_fixture",
+      "generated_by": "src/replay_saved_transcripts.py",
+      "validates_with": "src/replay_saved_transcripts.py",
+      "imported_by": "src/replay_saved_transcripts.py",
+      "scored_trace_path": "traces/scored/saved_transcript_replay_eval.jsonl",
+      "expected_record_count": 5,
+      "expected_scored_count": 5,
+      "report_paths": [
+        "reports/comparisons/saved_transcript_replay_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Static public-safe transcript fixtures only.",
+        "Replay selects existing assistant turns and does not execute a target system.",
+        "Transcript examples are small and curated for evaluator coverage."
+      ],
+      "notes": "Exercises selected-turn replay before scored traces are compared with other external fixture families."
+    },
+    {
+      "fixture_id": "normalized_adapter_outputs",
+      "source_path": "traces/external/adapter_outputs.example.jsonl",
+      "source_kind": "normalized_adapter_output_fixture",
+      "source_type": "normalized_adapter_output",
+      "provenance_class": "public_safe_adapter_fixture",
+      "data_classification": "public_safe_fixture",
+      "generated_by": "manual normalized fixture authoring",
+      "validates_with": "src/validate_adapter_outputs.py",
+      "imported_by": "src/import_adapter_outputs.py",
+      "scored_trace_path": "traces/scored/adapter_output_fixture_import.jsonl",
+      "expected_record_count": 4,
+      "expected_scored_count": 4,
+      "report_paths": [
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Normalized records are saved fixtures, not live adapter execution.",
+        "The fixture contains a small mix of source_type values for contract coverage.",
+        "Importer preserves provenance details but scoring remains based on output_text."
+      ],
+      "notes": "Primary M4/M5 adapter-output contract fixture with M5.2 provenance_details."
+    },
+    {
+      "fixture_id": "dry_run_adapter_outputs",
+      "source_path": "traces/external/dry_run_adapter_outputs.jsonl",
+      "source_kind": "generated_dry_run_adapter_fixture",
+      "source_type": "dry_run_adapter_output",
+      "provenance_class": "dry_run_contract",
+      "data_classification": "public_synthetic",
+      "generated_by": "src/dry_run_adapter.py",
+      "validates_with": "src/validate_adapter_outputs.py",
+      "imported_by": "src/import_adapter_outputs.py",
+      "scored_trace_path": "traces/scored/dry_run_adapter_output_import.jsonl",
+      "expected_record_count": 4,
+      "expected_scored_count": 4,
+      "report_paths": [
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Deterministic dry-run contract output only.",
+        "No provider, local model, CLI agent, or OpenClaw runtime is executed.",
+        "Intentionally includes pass and fail examples to exercise the import path."
+      ],
+      "notes": "Generated fixture proving an adapter-like producer can emit normalized records without live execution."
+    }
+  ]
+}

@@ -121,6 +121,10 @@ CHECKS = [
         ["python3", "src/compare_external_fixtures.py"],
     ),
     (
+        "fixture manifest validation",
+        ["python3", "src/validate_fixture_manifest.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -141,6 +145,7 @@ CHECKS = [
             "src/import_adapter_outputs.py",
             "src/dry_run_adapter.py",
             "src/compare_external_fixtures.py",
+            "src/validate_fixture_manifest.py",
         ],
     ),
 ]
