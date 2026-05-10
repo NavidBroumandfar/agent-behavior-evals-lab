@@ -6,6 +6,8 @@ M4.1 makes this contract executable for saved fixtures only. It adds `schemas/ad
 
 M4.2 adds `src/import_adapter_outputs.py`. The importer validates the same saved fixture first, loads existing eval cases, connects each `case_id` to evaluator expectations, scores `output_text` with the existing scorer, and writes deterministic scored traces to `traces/scored/adapter_output_fixture_import.jsonl`.
 
+M4.4 adds `src/dry_run_adapter.py`, a deterministic no-network producer of normalized adapter-output records. It writes `traces/external/dry_run_adapter_outputs.jsonl`, which is then validated and imported through the same M4.1/M4.2 path.
+
 ## Not Scored Traces
 
 Adapter outputs are not scored traces. A normalized adapter-output record has target-side fields such as `record_id`, `case_id`, `target_profile`, `source_type`, `adapter_name`, `created_at`, `output_text`, `provenance`, and optional `metadata`.
@@ -68,8 +70,16 @@ python3 src/import_adapter_outputs.py traces/external/adapter_outputs.example.js
 
 The import command writes `traces/scored/adapter_output_fixture_import.jsonl` with fixed `run_id` `m4_adapter_output_fixture_import` and fixed timestamp `2026-05-10T00:00:00Z`.
 
+For the dry-run adapter contract test, run:
+
+```bash
+python3 src/dry_run_adapter.py
+python3 src/validate_adapter_outputs.py traces/external/dry_run_adapter_outputs.jsonl
+python3 src/import_adapter_outputs.py traces/external/dry_run_adapter_outputs.jsonl traces/scored/dry_run_adapter_output_import.jsonl
+```
+
 This still does not mean live model, provider, local model, or OpenClaw integration. The importer consumes saved public-safe records only. It does not create a real adapter, call APIs, run local models, execute OpenClaw, use browser/email/external tools, or read private runtime state.
 
-## Preparing M4.3
+## Preparing Later Adapter Work
 
-M4.2 produces the first deterministic scored trace from normalized adapter-output fixtures. M4.3 can compare that scored fixture with other external fixture runs, reports, or summaries without changing the scorer and without making the evaluator provider-aware.
+The normalized adapter-output path gives future provider-agnostic adapter interface work a deterministic acceptance target: emit public-safe records, validate them, import them into scored traces, and compare them without changing the scorer or making the evaluator provider-aware.

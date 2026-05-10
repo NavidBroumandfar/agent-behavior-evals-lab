@@ -12,6 +12,7 @@ The report currently compares:
 - Sanitized OpenClaw-style manual fixture: `traces/scored/openclaw_manual_eval.jsonl`
 - Saved transcript replay fixture: `traces/scored/saved_transcript_replay_eval.jsonl`
 - Normalized adapter-output import fixture: `traces/scored/adapter_output_fixture_import.jsonl`
+- Dry-run adapter contract fixture: `traces/scored/dry_run_adapter_output_import.jsonl`
 
 These inputs are scored traces, not raw adapter records. The comparison script does not import adapter outputs, replay transcripts, or evaluate manual outputs itself; the quality gate regenerates those deterministic dependencies before it generates the comparison report.
 
@@ -35,12 +36,13 @@ Fixture comparison makes it easier to analyze behavior across source types:
 - Sanitized OpenClaw-style samples show public-safe system-under-test examples without live execution.
 - Saved transcript replay shows selected assistant turns from static conversations.
 - Normalized adapter-output import shows the M4 adapter-output contract feeding the existing evaluator trace shape.
+- Dry-run adapter contract output shows a deterministic no-network adapter-like producer feeding the same validation and import path.
 
 Because the report uses fixed inputs, fixed timestamps, stable sorting, and deterministic formatting, repeated quality-gate runs should not dirty generated artifacts.
 
-## Preparing M4.4
+## Preparing Later Adapter Work
 
-M4.4 can add an adapter dry-run contract test. The comparison report gives that work a stable downstream consumer: future dry-run records can be validated, imported, scored through existing logic, and compared as another saved fixture family without creating a real adapter or adding live execution.
+The comparison report gives future adapter work a stable downstream consumer: records can be validated, imported, scored through existing logic, and compared as another saved fixture family without creating a real adapter or adding live execution.
 
 Run the report from the repository root:
 

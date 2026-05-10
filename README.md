@@ -123,7 +123,7 @@ Milestone 1 includes three simulated target profiles:
 
 The corresponding prompts in `targets/prompts/` are concise system prompts that can later be used by mock model clients, real LLM adapters, local models, or transcript replay.
 
-Adapter expectations are documented in `targets/adapters/adapter_contract.md`. The contract keeps target-side output collection separate from evaluator-side scoring, trace writing, reporting, and deterministic quality gates.
+Adapter expectations are documented in `targets/adapters/adapter_contract.md` and `targets/adapters/provider_agnostic_adapter_interface.md`. The contract keeps target-side output collection separate from evaluator-side scoring, trace writing, reporting, and deterministic quality gates.
 
 Future real model adapter design is documented in `targets/adapters/real_model_adapter_design.md`; it is a design note only and does not add live provider calls.
 

@@ -4,6 +4,8 @@ Agent Behavior Evals Lab is the evaluator. Adapters are target-side producers of
 
 M3.4 is contract-only. It does not add real model adapters, credentials, SDKs, network code, browser/email actions, OpenClaw execution, autonomous agents, or private runtime integration.
 
+The provider-agnostic future adapter interface is defined in `targets/adapters/provider_agnostic_adapter_interface.md`. That document names the stable target-side boundary for later adapters without implementing live providers or runtimes.
+
 ## Evaluator Responsibilities
 
 The evaluator owns the stable scoring pipeline:
