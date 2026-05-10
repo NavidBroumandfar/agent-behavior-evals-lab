@@ -49,6 +49,7 @@ src/
   replay_saved_transcripts.py   # Saved transcript replay runner
   validate_adapter_outputs.py   # Normalized adapter-output fixture validator
   import_adapter_outputs.py     # Normalized adapter-output fixture importer
+  dry_run_adapter.py            # Deterministic no-network adapter contract fixture producer
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
   comparison_report.py          # Profile comparison report generator
@@ -62,12 +63,14 @@ traces/
     openclaw_manual_samples.example.jsonl # Public-safe OpenClaw-style fixture
     saved_transcripts.example.jsonl # Public-safe saved transcript fixture
     adapter_outputs.example.jsonl # Public-safe normalized adapter-output fixture
+    dry_run_adapter_outputs.jsonl # Generated dry-run adapter-output fixture
   scored/
     baseline_mock_run.jsonl     # Generated scored trace records
     manual_output_eval.jsonl    # Generated manual-output scored traces
     openclaw_manual_eval.jsonl  # Generated OpenClaw-style manual traces
     saved_transcript_replay_eval.jsonl # Generated transcript replay traces
     adapter_output_fixture_import.jsonl # Generated adapter-output scored traces
+    dry_run_adapter_output_import.jsonl # Generated dry-run adapter scored traces
 
 reports/
   baseline_report.md            # Generated baseline report
@@ -198,9 +201,23 @@ python3 src/import_adapter_outputs.py traces/external/adapter_outputs.example.js
 
 Validation writes nothing. Import writes deterministic scored traces to `traces/scored/adapter_output_fixture_import.jsonl` using the existing cases and scorer. Neither command calls real APIs, runs local models, executes OpenClaw, uses browser/email/external tools, creates a real adapter, or reads private runtime state.
 
+## Adapter Dry-Run Contract Test
+
+The dry-run adapter is a deterministic no-network contract test for future adapter-like producers. It emits normalized adapter-output records, then the existing validator and importer process them.
+
+From the repository root:
+
+```bash
+python3 src/dry_run_adapter.py
+python3 src/validate_adapter_outputs.py traces/external/dry_run_adapter_outputs.jsonl
+python3 src/import_adapter_outputs.py traces/external/dry_run_adapter_outputs.jsonl traces/scored/dry_run_adapter_output_import.jsonl
+```
+
+This is not a real model adapter and does not call providers, run local models, execute OpenClaw, use browser/email/external tools, call the network, or use credentials.
+
 ## External Fixture Comparison
 
-External fixture comparison summarizes already-scored controlled fixture traces across manual output, sanitized OpenClaw-style samples, saved transcript replay, and normalized adapter-output import.
+External fixture comparison summarizes already-scored controlled fixture traces across manual output, sanitized OpenClaw-style samples, saved transcript replay, normalized adapter-output import, and the dry-run adapter contract fixture.
 
 From the repository root:
 
@@ -218,7 +235,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, adapter-output fixture validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 

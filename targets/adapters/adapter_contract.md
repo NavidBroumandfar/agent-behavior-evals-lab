@@ -74,6 +74,7 @@ The repository already has adapter-like producers without live execution:
 - Manual output JSONL: `traces/external/manual_outputs.example.jsonl` is scored by `src/evaluate_manual_outputs.py`.
 - Sanitized OpenClaw-style manual samples: `traces/external/openclaw_manual_samples.example.jsonl` uses the same manual evaluator.
 - Saved transcript replay: `traces/external/saved_transcripts.example.jsonl` is scored by `src/replay_saved_transcripts.py`.
+- Dry-run adapter contract test: `src/dry_run_adapter.py` emits `traces/external/dry_run_adapter_outputs.jsonl` without live execution, then the normal validator/importer path scores it.
 
 These modes prove the evaluator boundary: target outputs can vary, but scoring and reporting stay stable.
 

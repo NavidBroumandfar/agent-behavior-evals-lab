@@ -25,3 +25,5 @@ Imports already-saved external transcripts into the saved transcript replay form
 ## Shared Requirement
 
 All future adapter types produce normalized output records first. The evaluator then scores those records through the existing case, scorer, trace, and report pipeline.
+
+The deterministic dry-run adapter at `src/dry_run_adapter.py` is the local contract test for this boundary. It is not a real adapter and must remain free of provider calls, local model execution, OpenClaw execution, network access, browser/email tools, subprocess calls, credentials, and external actions.

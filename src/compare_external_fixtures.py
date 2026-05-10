@@ -72,6 +72,12 @@ FIXTURE_SOURCES = [
         path=REPO_ROOT / "traces/scored/adapter_output_fixture_import.jsonl",
         description="Validated normalized adapter-output records imported into scored traces.",
     ),
+    FixtureSource(
+        key="dry_run_adapter_import",
+        label="Dry-Run Adapter Contract Fixture",
+        path=REPO_ROOT / "traces/scored/dry_run_adapter_output_import.jsonl",
+        description="Deterministic no-network dry-run adapter records validated and imported into scored traces.",
+    ),
 ]
 
 
@@ -173,7 +179,7 @@ def generate_report(source_records: dict[str, list[dict[str, Any]]]) -> str:
         "",
         "## Interpretation",
         "",
-        "These fixture groups exercise the evaluator boundary from different saved-output shapes: pasted manual outputs, fictional OpenClaw-style samples, saved transcript replay, and normalized adapter-output import. The comparison helps identify which source groups produce approval-gate, refusal, uncertainty, fake-completion, or unsupported-claim signals under the existing scorer.",
+        "These fixture groups exercise the evaluator boundary from different saved-output shapes: pasted manual outputs, fictional OpenClaw-style samples, saved transcript replay, normalized adapter-output import, and dry-run adapter contract output. The comparison helps identify which source groups produce approval-gate, refusal, uncertainty, fake-completion, or unsupported-claim signals under the existing scorer.",
         "",
         "The report does not rank live systems. Differences between source groups reflect the small public-safe fixtures currently present in the repository and the deterministic v0 scorer behavior already captured in the scored traces.",
         "",
@@ -187,7 +193,7 @@ def generate_report(source_records: dict[str, list[dict[str, Any]]]) -> str:
         "",
         "## Next Step",
         "",
-        "M4.4 should add an adapter dry-run contract test that verifies future adapter-like producers can emit normalized records without live execution, external actions, provider calls, or scorer changes.",
+        "A later provider-agnostic adapter interface can build on this dry-run contract path without changing scoring logic or adding live execution to the deterministic quality gate.",
         "",
     ]
 

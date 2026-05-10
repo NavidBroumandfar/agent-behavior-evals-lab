@@ -103,7 +103,7 @@ Keep implementation staged:
 
 1. Design doc only.
 2. Provider-agnostic adapter interface.
-3. Dry-run fixture generator.
+3. Dry-run fixture generator. M4.4 adds `src/dry_run_adapter.py` as the deterministic no-network contract test for this stage.
 4. One local/offline toy adapter or saved-output importer.
 5. Hosted provider adapter outside the quality gate.
 6. Controlled OpenClaw CLI adapter much later.

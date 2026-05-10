@@ -23,6 +23,10 @@ SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay
 EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES = 5
 ADAPTER_OUTPUT_TRACE_PATH = REPO_ROOT / "traces/scored/adapter_output_fixture_import.jsonl"
 EXPECTED_ADAPTER_OUTPUT_TRACE_LINES = 4
+DRY_RUN_ADAPTER_OUTPUT_PATH = REPO_ROOT / "traces/external/dry_run_adapter_outputs.jsonl"
+EXPECTED_DRY_RUN_ADAPTER_OUTPUT_LINES = 4
+DRY_RUN_ADAPTER_TRACE_PATH = REPO_ROOT / "traces/scored/dry_run_adapter_output_import.jsonl"
+EXPECTED_DRY_RUN_ADAPTER_TRACE_LINES = 4
 EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/external_fixture_comparison_report.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
@@ -47,6 +51,23 @@ CHECKS = [
     (
         "adapter output fixture import",
         ["python3", "src/import_adapter_outputs.py", "traces/external/adapter_outputs.example.jsonl"],
+    ),
+    (
+        "dry-run adapter generation",
+        ["python3", "src/dry_run_adapter.py"],
+    ),
+    (
+        "dry-run adapter output validation",
+        ["python3", "src/validate_adapter_outputs.py", "traces/external/dry_run_adapter_outputs.jsonl"],
+    ),
+    (
+        "dry-run adapter output import",
+        [
+            "python3",
+            "src/import_adapter_outputs.py",
+            "traces/external/dry_run_adapter_outputs.jsonl",
+            "traces/scored/dry_run_adapter_output_import.jsonl",
+        ],
     ),
     (
         "mock eval generation",
@@ -118,6 +139,7 @@ CHECKS = [
             "src/validate_schemas.py",
             "src/validate_adapter_outputs.py",
             "src/import_adapter_outputs.py",
+            "src/dry_run_adapter.py",
             "src/compare_external_fixtures.py",
         ],
     ),
@@ -149,6 +171,24 @@ def verify_trace_count(path: Path, expected_lines: int) -> None:
     print(f"{path.relative_to(REPO_ROOT)} trace lines: {line_count}", flush=True)
 
 
+def verify_jsonl_count(path: Path, expected_lines: int) -> None:
+    """Verify a generated JSONL file exists and has the expected length."""
+
+    print("==> JSONL count verification", flush=True)
+    if not path.exists():
+        raise RuntimeError(f"missing JSONL file: {path.relative_to(REPO_ROOT)}")
+
+    with path.open("r", encoding="utf-8") as jsonl_file:
+        line_count = sum(1 for _ in jsonl_file)
+
+    if line_count != expected_lines:
+        raise RuntimeError(
+            f"expected {expected_lines} JSONL lines, found {line_count} in {path.relative_to(REPO_ROOT)}"
+        )
+
+    print(f"{path.relative_to(REPO_ROOT)} JSONL lines: {line_count}", flush=True)
+
+
 def verify_report_exists(path: Path) -> None:
     """Verify a generated report exists and is non-empty."""
 
@@ -166,6 +206,10 @@ def main() -> int:
             run_check(name, command)
             if name == "adapter output fixture import":
                 verify_trace_count(ADAPTER_OUTPUT_TRACE_PATH, EXPECTED_ADAPTER_OUTPUT_TRACE_LINES)
+            if name == "dry-run adapter generation":
+                verify_jsonl_count(DRY_RUN_ADAPTER_OUTPUT_PATH, EXPECTED_DRY_RUN_ADAPTER_OUTPUT_LINES)
+            if name == "dry-run adapter output import":
+                verify_trace_count(DRY_RUN_ADAPTER_TRACE_PATH, EXPECTED_DRY_RUN_ADAPTER_TRACE_LINES)
             if name == "mock eval generation":
                 verify_trace_count(BASELINE_TRACE_PATH, EXPECTED_BASELINE_TRACE_LINES)
             if name == "manual output eval generation":

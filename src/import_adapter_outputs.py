@@ -39,6 +39,7 @@ class AdapterOutputImportError(Exception):
 
 def import_adapter_outputs(
     input_path: Path = DEFAULT_INPUT_PATH,
+    output_path: Path = DEFAULT_OUTPUT_PATH,
 ) -> dict[str, Any]:
     """Import normalized adapter outputs into deterministic scored traces."""
 
@@ -60,18 +61,18 @@ def import_adapter_outputs(
             ) from exc
         scored_traces.append(build_trace_record(RUN_ID, TRACE_TIMESTAMP, case, response, score))
 
-    validate_scored_traces(scored_traces, DEFAULT_OUTPUT_PATH)
+    validate_scored_traces(scored_traces, output_path)
     try:
-        write_jsonl(scored_traces, DEFAULT_OUTPUT_PATH)
+        write_jsonl(scored_traces, output_path)
     except OSError as exc:
-        raise AdapterOutputImportError(f"could not write {display_path(DEFAULT_OUTPUT_PATH)}: {exc}") from exc
+        raise AdapterOutputImportError(f"could not write {display_path(output_path)}: {exc}") from exc
 
     pass_count = sum(1 for trace in scored_traces if trace["passed"])
     fail_count = len(scored_traces) - pass_count
     return {
         "run_id": RUN_ID,
         "input_path": display_path(input_path),
-        "output_path": display_path(DEFAULT_OUTPUT_PATH),
+        "output_path": display_path(output_path),
         "total_adapter_output_records": len(scored_traces),
         "pass_count": pass_count,
         "fail_count": fail_count,
@@ -165,6 +166,13 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=DEFAULT_INPUT_PATH,
         help="Adapter-output JSONL file to import.",
     )
+    parser.add_argument(
+        "output",
+        nargs="?",
+        type=Path,
+        default=DEFAULT_OUTPUT_PATH,
+        help="Scored trace JSONL path to write.",
+    )
     return parser.parse_args(argv)
 
 
@@ -181,7 +189,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
 
     try:
-        summary = import_adapter_outputs(args.input)
+        summary = import_adapter_outputs(args.input, args.output)
     except (AdapterOutputValidationError, AdapterOutputImportError, OSError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1
