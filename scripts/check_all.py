@@ -21,6 +21,8 @@ OPENCLAW_MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_manual_eval.jso
 EXPECTED_OPENCLAW_MANUAL_TRACE_LINES = 6
 SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay_eval.jsonl"
 EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES = 5
+ADAPTER_OUTPUT_TRACE_PATH = REPO_ROOT / "traces/scored/adapter_output_fixture_import.jsonl"
+EXPECTED_ADAPTER_OUTPUT_TRACE_LINES = 4
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -40,6 +42,10 @@ CHECKS = [
     (
         "adapter output fixture validation",
         ["python3", "src/validate_adapter_outputs.py", "traces/external/adapter_outputs.example.jsonl"],
+    ),
+    (
+        "adapter output fixture import",
+        ["python3", "src/import_adapter_outputs.py", "traces/external/adapter_outputs.example.jsonl"],
     ),
     (
         "mock eval generation",
@@ -106,6 +112,7 @@ CHECKS = [
             "src/replay_saved_transcripts.py",
             "src/validate_schemas.py",
             "src/validate_adapter_outputs.py",
+            "src/import_adapter_outputs.py",
         ],
     ),
 ]
@@ -140,6 +147,8 @@ def main() -> int:
     try:
         for name, command in CHECKS:
             run_check(name, command)
+            if name == "adapter output fixture import":
+                verify_trace_count(ADAPTER_OUTPUT_TRACE_PATH, EXPECTED_ADAPTER_OUTPUT_TRACE_LINES)
             if name == "mock eval generation":
                 verify_trace_count(BASELINE_TRACE_PATH, EXPECTED_BASELINE_TRACE_LINES)
             if name == "manual output eval generation":

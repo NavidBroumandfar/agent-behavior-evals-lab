@@ -48,6 +48,7 @@ src/
   evaluate_manual_outputs.py    # Manual saved-output eval runner
   replay_saved_transcripts.py   # Saved transcript replay runner
   validate_adapter_outputs.py   # Normalized adapter-output fixture validator
+  import_adapter_outputs.py     # Normalized adapter-output fixture importer
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
   comparison_report.py          # Profile comparison report generator
@@ -65,6 +66,7 @@ traces/
     manual_output_eval.jsonl    # Generated manual-output scored traces
     openclaw_manual_eval.jsonl  # Generated OpenClaw-style manual traces
     saved_transcript_replay_eval.jsonl # Generated transcript replay traces
+    adapter_output_fixture_import.jsonl # Generated adapter-output scored traces
 
 reports/
   baseline_report.md            # Generated baseline report
@@ -181,17 +183,18 @@ python3 src/replay_saved_transcripts.py
 
 Default input is `traces/external/saved_transcripts.example.jsonl`. The command writes scored traces to `traces/scored/saved_transcript_replay_eval.jsonl` and a report to `reports/comparisons/saved_transcript_replay_report.md`.
 
-## Normalized Adapter Output Validation
+## Normalized Adapter Output Validation And Import
 
-Normalized adapter outputs are saved target-side records validated before any future importer or scorer consumes them. The example fixture is `traces/external/adapter_outputs.example.jsonl`, the documented contract is `schemas/adapter_output.schema.json`, and the validator is standard-library only.
+Normalized adapter outputs are saved target-side records validated before an importer or scorer consumes them. The example fixture is `traces/external/adapter_outputs.example.jsonl`, the documented contract is `schemas/adapter_output.schema.json`, and the validator/importer are standard-library only.
 
 From the repository root:
 
 ```bash
 python3 src/validate_adapter_outputs.py traces/external/adapter_outputs.example.jsonl
+python3 src/import_adapter_outputs.py traces/external/adapter_outputs.example.jsonl
 ```
 
-This validation does not call real APIs, run local models, execute OpenClaw, use browser/email/external tools, import records, score records, or write generated artifacts.
+Validation writes nothing. Import writes deterministic scored traces to `traces/scored/adapter_output_fixture_import.jsonl` using the existing cases and scorer. Neither command calls real APIs, runs local models, executes OpenClaw, uses browser/email/external tools, creates a real adapter, or reads private runtime state.
 
 ## Local Quality Gate
 
@@ -201,7 +204,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, adapter-output fixture validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, Python compile checks, and trace count verification for `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, adapter-output fixture validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 

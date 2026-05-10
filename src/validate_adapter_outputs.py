@@ -77,13 +77,13 @@ def display_path(path: Path) -> str:
         return str(path)
 
 
-def validate_jsonl_file(path: Path) -> int:
-    """Validate every normalized adapter-output record and return the count."""
+def load_adapter_output_records(path: Path) -> list[dict[str, Any]]:
+    """Load and validate normalized adapter-output records."""
 
     if not path.exists():
         raise AdapterOutputValidationError(path, 0, "file does not exist")
 
-    count = 0
+    records: list[dict[str, Any]] = []
     with path.open("r", encoding="utf-8") as input_file:
         for line_number, line in enumerate(input_file, start=1):
             stripped = line.strip()
@@ -96,12 +96,18 @@ def validate_jsonl_file(path: Path) -> int:
                 raise AdapterOutputValidationError(path, line_number, f"invalid JSON: {exc.msg}") from exc
 
             validate_adapter_output_record(record, path, line_number)
-            count += 1
+            records.append(record)
 
-    if count == 0:
+    if not records:
         raise AdapterOutputValidationError(path, 0, "file contains no adapter output records")
 
-    return count
+    return records
+
+
+def validate_jsonl_file(path: Path) -> int:
+    """Validate every normalized adapter-output record and return the count."""
+
+    return len(load_adapter_output_records(path))
 
 
 def validate_adapter_output_record(record: Any, path: Path, line_number: int) -> None:
