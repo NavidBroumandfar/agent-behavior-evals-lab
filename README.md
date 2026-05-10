@@ -245,6 +245,8 @@ python3 src/validate_fixture_manifest.py
 
 The validator checks local paths, JSONL counts, quality-gate flags, and public-safe safety assertions. It writes nothing and does not run live providers, local models, OpenClaw, browser/email tools, external actions, credentials, or network calls.
 
+Fixture manifest validation tests live in `tests/test_fixture_manifest_validation.py` and use temporary invalid manifests so negative cases do not enter production fixtures.
+
 ## Local Quality Gate
 
 From the repository root:

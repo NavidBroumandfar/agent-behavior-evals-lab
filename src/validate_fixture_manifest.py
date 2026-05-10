@@ -73,11 +73,11 @@ class FixtureManifestValidationError(Exception):
     """Manifest validation error with public-safe context."""
 
 
-def display_path(path: Path) -> str:
+def display_path(path: Path, repo_root: Path = REPO_ROOT) -> str:
     """Format a path relative to the repo when possible."""
 
     try:
-        return str(path.relative_to(REPO_ROOT))
+        return str(path.relative_to(repo_root))
     except ValueError:
         return str(path)
 
@@ -102,29 +102,29 @@ def load_manifest(path: Path) -> dict[str, Any]:
     return manifest
 
 
-def validate_manifest(path: Path = DEFAULT_MANIFEST_PATH) -> dict[str, Any]:
+def validate_manifest(path: Path = DEFAULT_MANIFEST_PATH, repo_root: Path = REPO_ROOT) -> dict[str, Any]:
     """Validate the fixture manifest and return a small summary."""
 
     manifest = load_manifest(path)
-    validate_top_level_fields(manifest, path)
+    validate_top_level_fields(manifest, path, repo_root)
 
     fixtures = manifest["fixtures"]
     seen_fixture_ids: set[str] = set()
     for index, fixture in enumerate(fixtures):
-        context = f"{display_path(path)}:fixtures[{index}]"
-        validate_fixture_entry(fixture, context, seen_fixture_ids)
+        context = f"{display_path(path, repo_root)}:fixtures[{index}]"
+        validate_fixture_entry(fixture, context, seen_fixture_ids, repo_root)
 
     return {
-        "manifest_path": display_path(path),
+        "manifest_path": display_path(path, repo_root),
         "fixture_count": len(fixtures),
         "quality_gate_fixture_count": sum(1 for fixture in fixtures if fixture["quality_gate_included"] is True),
     }
 
 
-def validate_top_level_fields(manifest: dict[str, Any], path: Path) -> None:
+def validate_top_level_fields(manifest: dict[str, Any], path: Path, repo_root: Path = REPO_ROOT) -> None:
     """Validate manifest-level shape."""
 
-    context = display_path(path)
+    context = display_path(path, repo_root)
     missing_fields = sorted(REQUIRED_TOP_LEVEL_FIELDS - set(manifest))
     if missing_fields:
         raise FixtureManifestValidationError(f"{context}: missing required fields: {', '.join(missing_fields)}")
@@ -144,7 +144,12 @@ def validate_top_level_fields(manifest: dict[str, Any], path: Path) -> None:
         raise FixtureManifestValidationError(f"{context}.fixtures must not be empty")
 
 
-def validate_fixture_entry(fixture: Any, context: str, seen_fixture_ids: set[str]) -> None:
+def validate_fixture_entry(
+    fixture: Any,
+    context: str,
+    seen_fixture_ids: set[str],
+    repo_root: Path = REPO_ROOT,
+) -> None:
     """Validate one fixture entry."""
 
     if not isinstance(fixture, dict):
@@ -180,7 +185,7 @@ def validate_fixture_entry(fixture: Any, context: str, seen_fixture_ids: set[str
     validate_safety_assertions(fixture["safety_assertions"], f"{context}.safety_assertions")
     require_string_list(fixture["limitations"], f"{context}.limitations")
 
-    source_path = require_repo_path(fixture["source_path"], f"{context}.source_path")
+    source_path = require_repo_path(fixture["source_path"], f"{context}.source_path", repo_root)
     if not source_path.exists():
         raise FixtureManifestValidationError(f"{context}.source_path does not exist: {display_path(source_path)}")
 
@@ -192,25 +197,24 @@ def validate_fixture_entry(fixture: Any, context: str, seen_fixture_ids: set[str
         validate_line_count(source_path, expected_record_count, f"{context}.source_path")
 
     scored_trace_path_value = fixture["scored_trace_path"]
-    if scored_trace_path_value:
-        scored_trace_path = require_repo_path(scored_trace_path_value, f"{context}.scored_trace_path")
-        if not scored_trace_path.exists():
-            raise FixtureManifestValidationError(
-                f"{context}.scored_trace_path does not exist: {display_path(scored_trace_path)}"
-            )
-        if "expected_scored_count" in fixture:
-            expected_scored_count = require_non_negative_int(
-                fixture["expected_scored_count"],
-                f"{context}.expected_scored_count",
-            )
-            if scored_trace_path.suffix == ".jsonl":
-                validate_line_count(scored_trace_path, expected_scored_count, f"{context}.scored_trace_path")
+    scored_trace_path = require_repo_path(scored_trace_path_value, f"{context}.scored_trace_path", repo_root)
+    if not scored_trace_path.exists():
+        raise FixtureManifestValidationError(
+            f"{context}.scored_trace_path does not exist: {display_path(scored_trace_path)}"
+        )
+    if "expected_scored_count" in fixture:
+        expected_scored_count = require_non_negative_int(
+            fixture["expected_scored_count"],
+            f"{context}.expected_scored_count",
+        )
+        if scored_trace_path.suffix == ".jsonl":
+            validate_line_count(scored_trace_path, expected_scored_count, f"{context}.scored_trace_path")
 
     report_paths = fixture["report_paths"]
     if not isinstance(report_paths, list):
         raise FixtureManifestValidationError(f"{context}.report_paths must be an array")
     for report_index, report_path_value in enumerate(report_paths):
-        report_path = require_repo_path(report_path_value, f"{context}.report_paths[{report_index}]")
+        report_path = require_repo_path(report_path_value, f"{context}.report_paths[{report_index}]", repo_root)
         if not report_path.exists():
             raise FixtureManifestValidationError(
                 f"{context}.report_paths[{report_index}] does not exist: {display_path(report_path)}"
@@ -285,15 +289,15 @@ def require_non_negative_int(value: Any, context: str) -> int:
     return value
 
 
-def require_repo_path(value: Any, context: str) -> Path:
+def require_repo_path(value: Any, context: str, repo_root: Path = REPO_ROOT) -> Path:
     raw_path = require_non_empty_string(value, context)
     path = Path(raw_path)
     if path.is_absolute():
         raise FixtureManifestValidationError(f"{context} must be a repository-relative path")
 
-    resolved = (REPO_ROOT / path).resolve()
+    resolved = (repo_root / path).resolve()
     try:
-        resolved.relative_to(REPO_ROOT)
+        resolved.relative_to(repo_root)
     except ValueError as exc:
         raise FixtureManifestValidationError(f"{context} must stay within the repository") from exc
     return resolved
