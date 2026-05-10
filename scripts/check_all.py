@@ -23,6 +23,7 @@ SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay
 EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES = 5
 ADAPTER_OUTPUT_TRACE_PATH = REPO_ROOT / "traces/scored/adapter_output_fixture_import.jsonl"
 EXPECTED_ADAPTER_OUTPUT_TRACE_LINES = 4
+EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/external_fixture_comparison_report.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -95,6 +96,10 @@ CHECKS = [
         ["python3", "src/replay_saved_transcripts.py"],
     ),
     (
+        "external fixture comparison report generation",
+        ["python3", "src/compare_external_fixtures.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -113,6 +118,7 @@ CHECKS = [
             "src/validate_schemas.py",
             "src/validate_adapter_outputs.py",
             "src/import_adapter_outputs.py",
+            "src/compare_external_fixtures.py",
         ],
     ),
 ]
@@ -143,6 +149,17 @@ def verify_trace_count(path: Path, expected_lines: int) -> None:
     print(f"{path.relative_to(REPO_ROOT)} trace lines: {line_count}", flush=True)
 
 
+def verify_report_exists(path: Path) -> None:
+    """Verify a generated report exists and is non-empty."""
+
+    print("==> report verification", flush=True)
+    if not path.exists():
+        raise RuntimeError(f"missing report file: {path.relative_to(REPO_ROOT)}")
+    if path.stat().st_size == 0:
+        raise RuntimeError(f"empty report file: {path.relative_to(REPO_ROOT)}")
+    print(f"{path.relative_to(REPO_ROOT)} exists", flush=True)
+
+
 def main() -> int:
     try:
         for name, command in CHECKS:
@@ -157,6 +174,8 @@ def main() -> int:
                 verify_trace_count(OPENCLAW_MANUAL_TRACE_PATH, EXPECTED_OPENCLAW_MANUAL_TRACE_LINES)
             if name == "saved transcript replay generation":
                 verify_trace_count(SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES)
+            if name == "external fixture comparison report generation":
+                verify_report_exists(EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

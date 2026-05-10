@@ -52,6 +52,7 @@ src/
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
   comparison_report.py          # Profile comparison report generator
+  compare_external_fixtures.py  # Controlled external fixture comparison report generator
   regression_check.py           # Baseline regression snapshot checker
   inspect_failures.py           # Failure inspection report generator
 
@@ -77,6 +78,7 @@ reports/
     manual_output_report.md     # Generated manual-output report
     openclaw_manual_eval_report.md # Generated OpenClaw-style manual report
     saved_transcript_replay_report.md # Generated transcript replay report
+    external_fixture_comparison_report.md # Generated controlled external fixture comparison
 
 schemas/
   eval_case.schema.json         # Planned schema validation support
@@ -196,6 +198,18 @@ python3 src/import_adapter_outputs.py traces/external/adapter_outputs.example.js
 
 Validation writes nothing. Import writes deterministic scored traces to `traces/scored/adapter_output_fixture_import.jsonl` using the existing cases and scorer. Neither command calls real APIs, runs local models, executes OpenClaw, uses browser/email/external tools, creates a real adapter, or reads private runtime state.
 
+## External Fixture Comparison
+
+External fixture comparison summarizes already-scored controlled fixture traces across manual output, sanitized OpenClaw-style samples, saved transcript replay, and normalized adapter-output import.
+
+From the repository root:
+
+```bash
+python3 src/compare_external_fixtures.py
+```
+
+The command writes `reports/comparisons/external_fixture_comparison_report.md`. It does not rescore, call live providers, run local models, execute OpenClaw, or create a real adapter.
+
 ## Local Quality Gate
 
 From the repository root:
@@ -204,7 +218,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, adapter-output fixture validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, adapter-output fixture validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 
