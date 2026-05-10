@@ -19,6 +19,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [External Fixture Comparison](concepts/external_fixture_comparison.md)
 - [Adapter Dry-Run Contract Test](concepts/adapter_dry_run_contract_test.md)
 - [Provider-Agnostic Adapter Interface](concepts/provider_agnostic_adapter_interface.md)
+- [Adapter Interface Conformance Tests](concepts/adapter_interface_conformance_tests.md)
 
 ## Current Source Artifacts
 
@@ -36,6 +37,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Normalized adapter-output validator: `src/validate_adapter_outputs.py`
 - Adapter-output fixture importer: `src/import_adapter_outputs.py`
 - Adapter dry-run contract test: `src/dry_run_adapter.py`
+- Adapter interface conformance tests: `tests/test_adapter_output_conformance.py`
 - External fixture comparison: `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`
 - Adapter contract: `targets/adapters/adapter_contract.md`
 - Provider-agnostic adapter interface: `targets/adapters/provider_agnostic_adapter_interface.md`

@@ -205,6 +205,8 @@ Validation writes nothing. Import writes deterministic scored traces to `traces/
 
 The dry-run adapter is a deterministic no-network contract test for future adapter-like producers. It emits normalized adapter-output records, then the existing validator and importer process them.
 
+Adapter interface conformance tests live in `tests/test_adapter_output_conformance.py`. They validate public-safe adapter fixtures, dry-run output emission, temporary-path import, and rejection of invalid adapter records before import or scoring.
+
 From the repository root:
 
 ```bash

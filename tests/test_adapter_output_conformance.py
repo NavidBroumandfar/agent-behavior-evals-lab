@@ -1,0 +1,167 @@
+import copy
+import json
+import sys
+import tempfile
+import unittest
+from pathlib import Path
+
+
+REPO_ROOT = Path(__file__).resolve().parents[1]
+SRC_ROOT = REPO_ROOT / "src"
+if str(SRC_ROOT) not in sys.path:
+    sys.path.insert(0, str(SRC_ROOT))
+
+from dry_run_adapter import dry_run_records, write_records
+from import_adapter_outputs import AdapterOutputImportError, import_adapter_outputs
+from validate_adapter_outputs import AdapterOutputValidationError, validate_jsonl_file
+
+
+ADAPTER_OUTPUT_FIXTURE_PATH = REPO_ROOT / "traces/external/adapter_outputs.example.jsonl"
+DRY_RUN_ADAPTER_OUTPUT_PATH = REPO_ROOT / "traces/external/dry_run_adapter_outputs.jsonl"
+
+
+def valid_adapter_output_record():
+    return {
+        "record_id": "TEST-ADAPTER-OUTPUT-001",
+        "case_id": "SAFE-001",
+        "target_profile": "generic_assistant",
+        "source_type": "saved_adapter_output",
+        "adapter_name": "unit_test_adapter_fixture",
+        "adapter_version": "0.1.0-test",
+        "created_at": "2026-05-10T00:00:00Z",
+        "output_text": "Precision is selected correctness; recall is coverage of all correct items.",
+        "provenance": {
+            "public_safe": True,
+            "live_execution": False,
+            "external_actions": False,
+            "contains_private_data": False,
+        },
+        "metadata": {
+            "fixture_only": True,
+            "test_case": "adapter_output_conformance",
+        },
+    }
+
+
+def write_jsonl(path, records):
+    with path.open("w", encoding="utf-8") as output_file:
+        for record in records:
+            output_file.write(json.dumps(record, sort_keys=True, separators=(",", ":")))
+            output_file.write("\n")
+
+
+class AdapterOutputConformanceTests(unittest.TestCase):
+    def test_committed_adapter_output_fixture_validates(self):
+        self.assertEqual(validate_jsonl_file(ADAPTER_OUTPUT_FIXTURE_PATH), 4)
+
+    def test_committed_dry_run_adapter_output_validates(self):
+        self.assertEqual(validate_jsonl_file(DRY_RUN_ADAPTER_OUTPUT_PATH), 4)
+
+    def test_dry_run_adapter_emits_records_that_validate(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_path = Path(temp_dir) / "dry_run_adapter_outputs.jsonl"
+
+            write_records(dry_run_records(), output_path)
+
+            self.assertEqual(validate_jsonl_file(output_path), 4)
+
+    def test_importer_accepts_valid_adapter_outputs_to_temporary_scored_trace(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            output_path = Path(temp_dir) / "adapter_output_import.jsonl"
+
+            summary = import_adapter_outputs(ADAPTER_OUTPUT_FIXTURE_PATH, output_path)
+
+            self.assertEqual(summary["run_id"], "m4_adapter_output_fixture_import")
+            self.assertEqual(summary["total_adapter_output_records"], 4)
+            self.assertEqual(summary["pass_count"], 1)
+            self.assertEqual(summary["fail_count"], 3)
+            self.assertTrue(output_path.exists())
+
+            records = [json.loads(line) for line in output_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(len(records), 4)
+            self.assertEqual(
+                [(record["case_id"], record["passed"]) for record in records],
+                [
+                    ("SAFE-001", True),
+                    ("APPROVAL-004", False),
+                    ("REFUSAL-003", False),
+                    ("UNCERTAINTY-002", False),
+                ],
+            )
+            self.assertEqual({record["timestamp"] for record in records}, {"2026-05-10T00:00:00Z"})
+            self.assertEqual({record["run_id"] for record in records}, {"m4_adapter_output_fixture_import"})
+
+    def test_missing_required_fields_are_rejected_before_import(self):
+        for field_name in [
+            "record_id",
+            "case_id",
+            "target_profile",
+            "source_type",
+            "adapter_name",
+            "created_at",
+            "provenance",
+        ]:
+            with self.subTest(field_name=field_name):
+                record = valid_adapter_output_record()
+                del record[field_name]
+
+                self.assert_validation_fails(record)
+
+    def test_unknown_source_type_is_rejected_before_import(self):
+        record = valid_adapter_output_record()
+        record["source_type"] = "hosted_provider_output"
+
+        self.assert_validation_fails(record)
+
+    def test_created_at_without_z_suffix_is_rejected_before_import(self):
+        record = valid_adapter_output_record()
+        record["created_at"] = "2026-05-10T00:00:00"
+
+        self.assert_validation_fails(record)
+
+    def test_empty_output_text_after_stripping_is_rejected_before_import(self):
+        record = valid_adapter_output_record()
+        record["output_text"] = " \t\n "
+
+        self.assert_validation_fails(record)
+
+    def test_invalid_provenance_values_are_rejected_before_import(self):
+        invalid_values = [
+            ("public_safe", False),
+            ("live_execution", True),
+            ("external_actions", True),
+            ("contains_private_data", True),
+        ]
+
+        for field_name, field_value in invalid_values:
+            with self.subTest(field_name=field_name):
+                record = copy.deepcopy(valid_adapter_output_record())
+                record["provenance"][field_name] = field_value
+
+                self.assert_validation_fails(record)
+
+    def test_unknown_case_id_fails_during_import_not_validation(self):
+        record = valid_adapter_output_record()
+        record["case_id"] = "UNKNOWN-ADAPTER-CASE"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            input_path = Path(temp_dir) / "unknown_case_adapter_output.jsonl"
+            output_path = Path(temp_dir) / "should_not_be_written.jsonl"
+            write_jsonl(input_path, [record])
+
+            self.assertEqual(validate_jsonl_file(input_path), 1)
+            with self.assertRaises(AdapterOutputImportError):
+                import_adapter_outputs(input_path, output_path)
+            self.assertFalse(output_path.exists())
+
+    def assert_validation_fails(self, record):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            input_path = Path(temp_dir) / "invalid_adapter_output.jsonl"
+            write_jsonl(input_path, [record])
+
+            with self.assertRaises(AdapterOutputValidationError):
+                validate_jsonl_file(input_path)
+
+
+if __name__ == "__main__":
+    unittest.main()
