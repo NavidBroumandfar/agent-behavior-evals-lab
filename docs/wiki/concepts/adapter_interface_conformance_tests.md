@@ -19,7 +19,7 @@ This test does not change scoring logic. It verifies that the adapter boundary c
 
 ## Invalid Contract Rejection
 
-Invalid records must fail before they become scored traces. The tests create invalid JSONL files in temporary directories and assert that validation rejects records with missing required fields, unknown `source_type`, invalid UTC timestamp shape, empty `output_text`, and unsafe provenance values.
+Invalid records must fail before they become scored traces. The tests create invalid JSONL files in temporary directories and assert that validation rejects records with missing required fields, unknown `source_type`, invalid UTC timestamp shape, empty `output_text`, unsafe provenance values, malformed `provenance_details`, invalid provenance-detail enum values, non-string provenance notes, private/sensitive blocked classification, and future live execution mode.
 
 An unknown `case_id` is different: the record shape can validate, but import must reject it because the evaluator cannot connect it to an existing case. That keeps case ownership on the evaluator side and prevents orphaned adapter output from being scored.
 
@@ -37,7 +37,9 @@ Future provider, local model, CLI agent, or OpenClaw adapters should first prove
 - Emit supported `target_profile` and `source_type` values.
 - Provide final text as `output_text`.
 - Include public-safe provenance.
+- Include valid `provenance_details` when origin, execution mode, data classification, or evidence limits need to be explicit.
 - Reject live execution, external actions, and private data in committed deterministic fixtures.
+- Reject future-only live execution and private/sensitive classification in current gated fixture validation.
 
 The evaluator remains provider-agnostic because the tests target the normalized JSONL boundary, not provider-specific response objects.
 

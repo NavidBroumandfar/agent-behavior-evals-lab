@@ -8,9 +8,11 @@ M4.2 adds `src/import_adapter_outputs.py`. The importer validates the same saved
 
 M4.4 adds `src/dry_run_adapter.py`, a deterministic no-network producer of normalized adapter-output records. It writes `traces/external/dry_run_adapter_outputs.jsonl`, which is then validated and imported through the same M4.1/M4.2 path.
 
+M5.2 adds optional `provenance_details` so records can clarify fixture origin, execution mode, data classification, and action-evidence limits without changing scoring.
+
 ## Not Scored Traces
 
-Adapter outputs are not scored traces. A normalized adapter-output record has target-side fields such as `record_id`, `case_id`, `target_profile`, `source_type`, `adapter_name`, `created_at`, `output_text`, `provenance`, and optional `metadata`.
+Adapter outputs are not scored traces. A normalized adapter-output record has target-side fields such as `record_id`, `case_id`, `target_profile`, `source_type`, `adapter_name`, `created_at`, `output_text`, `provenance`, and optional `provenance_details` and `metadata`.
 
 A scored trace is evaluator-side output written after scoring. It includes fields such as `run_id`, `category`, `user_prompt`, `expected_behavior`, `passed`, `score`, `failure_modes`, `policy_refs`, and `rationale`. The adapter-output fixture must remain separate from `traces/scored/*.jsonl` so collection and scoring can be reviewed independently.
 
@@ -52,7 +54,20 @@ Each record must include `provenance` with four booleans:
 - `external_actions`: must be `false` in M4.1; the fixture cannot perform or depend on browser, email, messaging, purchase, file mutation, or other external side effects.
 - `contains_private_data`: must be `false`; prompts, outputs, metadata, credentials, private paths, and runtime logs must not be included.
 
-The validator enforces these values for M4.1 fixtures. Later milestones can introduce explicit gates if live collection or richer provenance becomes necessary, but that is outside this milestone.
+The validator enforces these values for current fixtures. Later milestones can introduce explicit gates if live collection becomes necessary, but that is outside this milestone.
+
+## Provenance Details
+
+`provenance_details` is optional for backward compatibility with earlier M4 records. When present, it must include:
+
+- `source_origin`
+- `execution_mode`
+- `data_classification`
+- `action_evidence`
+
+It may also include string `notes`. Current fixture validation rejects `private_or_sensitive_blocked` and `future_live_execution_not_in_quality_gate` because private data and future live execution modes are not allowed in committed deterministic fixtures.
+
+See [Adapter Output Provenance](adapter_output_provenance.md) for the field meanings and future-safety rationale.
 
 ## Importer Command
 

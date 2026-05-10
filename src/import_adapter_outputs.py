@@ -131,6 +131,12 @@ def adapter_output_response(record: dict[str, Any], input_path: Path) -> dict[st
         f"contains_private_data={_bool_text(provenance['contains_private_data'])}."
     )
 
+    provenance_details = record.get("provenance_details")
+    if provenance_details:
+        notes.append(
+            f"provenance_details={json.dumps(provenance_details, sort_keys=True, separators=(',', ':'))}."
+        )
+
     metadata = record.get("metadata")
     if metadata:
         notes.append(f"metadata={json.dumps(metadata, sort_keys=True, separators=(',', ':'))}.")

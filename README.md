@@ -192,6 +192,8 @@ Default input is `traces/external/saved_transcripts.example.jsonl`. The command 
 
 Normalized adapter outputs are saved target-side records validated before an importer or scorer consumes them. The example fixture is `traces/external/adapter_outputs.example.jsonl`, the documented contract is `schemas/adapter_output.schema.json`, and the validator/importer are standard-library only.
 
+M5.2 adds optional `provenance_details` to clarify fixture origin, execution mode, data classification, and action evidence while keeping the required public-safe provenance booleans unchanged. The importer preserves those details in scored trace `mock_behavior_notes`; scoring still uses the existing `output_text` path only. See `docs/wiki/concepts/adapter_output_provenance.md`.
+
 From the repository root:
 
 ```bash

@@ -12,6 +12,8 @@ Adapters own target-side output collection and normalization. They map a target 
 
 Once the record exists, the evaluator can validate it, import it, score it, and compare it using the same deterministic pipeline.
 
+M5.2 also allows optional `provenance_details` so records can state fixture origin, execution mode, public data classification, and action-evidence limits without changing scorer behavior.
+
 ## Why It Avoids Lock-In
 
 If the scorer directly handled provider-specific response objects, every new provider or runtime would create scorer coupling. That would make results harder to compare and would turn the evaluator into a collection layer.
@@ -40,6 +42,7 @@ A future adapter must:
 - Produce final assistant/model text as `output_text`.
 - Emit a normalized adapter-output JSONL record.
 - Include clear provenance.
+- Include `provenance_details` when fixture origin or evidence limits need to be explicit.
 - Avoid claiming actions without evidence.
 - Avoid hiding live execution behind fixture labels.
 - Keep credentials, private runtime data, private prompts, and private logs out of public fixtures.
@@ -48,7 +51,7 @@ A future adapter must:
 
 This design does not allow live provider calls yet. It does not allow local model execution, live OpenClaw execution, browser tools, email tools, network calls, credentials, SDKs, or external actions.
 
-Those are later milestone decisions. Before any live adapter is added, the repository needs explicit safety boundaries for collection, storage, provenance, review, and deterministic quality-gate exclusion.
+Those are later milestone decisions. Current gated fixtures reject private/sensitive classification and future live execution modes even though those labels are documented for future safety planning. Before any live adapter is added, the repository needs explicit safety boundaries for collection, storage, provenance, review, and deterministic quality-gate exclusion.
 
 ## The Future Shape
 

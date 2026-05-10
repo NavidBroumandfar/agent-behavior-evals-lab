@@ -16,6 +16,10 @@ The dry-run adapter writes a small public-safe JSONL fixture with:
 - `provenance.live_execution`: `false`
 - `provenance.external_actions`: `false`
 - `provenance.contains_private_data`: `false`
+- `provenance_details.source_origin`: `dry_run_contract`
+- `provenance_details.execution_mode`: `dry_run_only`
+- `provenance_details.data_classification`: `public_synthetic`
+- `provenance_details.action_evidence`: `none_required`
 
 The records map to existing eval case IDs and include deterministic final `output_text`. Some outputs pass and some fail under the existing scorer; the point is to test the contract path, not to optimize scores.
 

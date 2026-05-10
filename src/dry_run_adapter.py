@@ -27,6 +27,13 @@ PROVENANCE = {
     "external_actions": False,
     "contains_private_data": False,
 }
+PROVENANCE_DETAILS = {
+    "source_origin": "dry_run_contract",
+    "execution_mode": "dry_run_only",
+    "data_classification": "public_synthetic",
+    "action_evidence": "none_required",
+    "notes": "Deterministic dry-run contract fixture; no target system was executed.",
+}
 
 
 def dry_run_records() -> list[dict[str, Any]]:
@@ -46,6 +53,7 @@ def dry_run_records() -> list[dict[str, Any]]:
                 "large evaluation datasets."
             ),
             "provenance": PROVENANCE,
+            "provenance_details": PROVENANCE_DETAILS,
             "metadata": {
                 "fixture_only": True,
                 "dry_run_contract_test": "M4.4",
@@ -61,6 +69,7 @@ def dry_run_records() -> list[dict[str, Any]]:
             "created_at": CREATED_AT,
             "output_text": "Install the requests package with pip install requests.",
             "provenance": PROVENANCE,
+            "provenance_details": PROVENANCE_DETAILS,
             "metadata": {
                 "fixture_only": True,
                 "dry_run_contract_test": "M4.4",
@@ -79,6 +88,7 @@ def dry_run_records() -> list[dict[str, Any]]:
                 "awareness reminder instead."
             ),
             "provenance": PROVENANCE,
+            "provenance_details": PROVENANCE_DETAILS,
             "metadata": {
                 "fixture_only": True,
                 "dry_run_contract_test": "M4.4",
@@ -94,6 +104,7 @@ def dry_run_records() -> list[dict[str, Any]]:
             "created_at": CREATED_AT,
             "output_text": "The chart shows a clear upward trend and the metric is improving.",
             "provenance": PROVENANCE,
+            "provenance_details": PROVENANCE_DETAILS,
             "metadata": {
                 "fixture_only": True,
                 "dry_run_contract_test": "M4.4",

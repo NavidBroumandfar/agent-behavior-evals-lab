@@ -31,6 +31,7 @@ REQUIRED_FIELDS = {
 }
 OPTIONAL_FIELDS = {
     "adapter_version",
+    "provenance_details",
     "metadata",
 }
 ALLOWED_FIELDS = REQUIRED_FIELDS | OPTIONAL_FIELDS
@@ -53,6 +54,52 @@ EXPECTED_PROVENANCE_VALUES = {
     "live_execution": False,
     "external_actions": False,
     "contains_private_data": False,
+}
+
+REQUIRED_PROVENANCE_DETAIL_FIELDS = {
+    "source_origin",
+    "execution_mode",
+    "data_classification",
+    "action_evidence",
+}
+OPTIONAL_PROVENANCE_DETAIL_FIELDS = {
+    "notes",
+}
+ALLOWED_PROVENANCE_DETAIL_FIELDS = REQUIRED_PROVENANCE_DETAIL_FIELDS | OPTIONAL_PROVENANCE_DETAIL_FIELDS
+
+ALLOWED_SOURCE_ORIGINS = {
+    "synthetic_fixture",
+    "manual_saved_output",
+    "saved_transcript",
+    "dry_run_contract",
+    "sanitized_external_sample",
+    "future_controlled_adapter_output",
+}
+ALLOWED_EXECUTION_MODES = {
+    "no_live_execution",
+    "saved_output_only",
+    "dry_run_only",
+    "future_live_execution_not_in_quality_gate",
+}
+ALLOWED_DATA_CLASSIFICATIONS = {
+    "public_synthetic",
+    "public_sanitized",
+    "public_safe_fixture",
+    "private_or_sensitive_blocked",
+}
+ALLOWED_ACTION_EVIDENCE_VALUES = {
+    "none_required",
+    "not_applicable",
+    "output_text_only",
+    "trace_or_transcript_reference",
+    "external_action_evidence_required_later",
+}
+
+BLOCKED_CURRENT_EXECUTION_MODES = {
+    "future_live_execution_not_in_quality_gate",
+}
+BLOCKED_CURRENT_DATA_CLASSIFICATIONS = {
+    "private_or_sensitive_blocked",
 }
 
 UTC_TIMESTAMP_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
@@ -128,6 +175,8 @@ def validate_adapter_output_record(record: Any, path: Path, line_number: int) ->
     validate_source_type(record["source_type"], path, line_number)
     validate_created_at(record["created_at"], path, line_number)
     validate_provenance(record["provenance"], path, line_number)
+    if "provenance_details" in record:
+        validate_provenance_details(record["provenance_details"], path, line_number)
 
     if "metadata" in record and not isinstance(record["metadata"], dict):
         raise AdapterOutputValidationError(path, line_number, "metadata must be an object")
@@ -180,7 +229,7 @@ def validate_created_at(value: str, path: Path, line_number: int) -> None:
 
 
 def validate_provenance(value: Any, path: Path, line_number: int) -> None:
-    """Validate public-safe, non-live provenance for M4.1 fixtures."""
+    """Validate public-safe, non-live provenance for gated fixtures."""
 
     if not isinstance(value, dict):
         raise AdapterOutputValidationError(path, line_number, "provenance must be an object")
@@ -212,8 +261,99 @@ def validate_provenance(value: Any, path: Path, line_number: int) -> None:
             raise AdapterOutputValidationError(
                 path,
                 line_number,
-                f"provenance.{field_name} must be {expected_text} for M4.1 fixtures",
+                f"provenance.{field_name} must be {expected_text} for current gated fixtures",
             )
+
+
+def validate_provenance_details(value: Any, path: Path, line_number: int) -> None:
+    """Validate optional M5.2 provenance detail fields for gated fixtures."""
+
+    if not isinstance(value, dict):
+        raise AdapterOutputValidationError(path, line_number, "provenance_details must be an object")
+
+    missing_fields = sorted(REQUIRED_PROVENANCE_DETAIL_FIELDS - set(value))
+    if missing_fields:
+        raise AdapterOutputValidationError(
+            path,
+            line_number,
+            f"provenance_details missing required fields: {', '.join(missing_fields)}",
+        )
+
+    unexpected_fields = sorted(set(value) - ALLOWED_PROVENANCE_DETAIL_FIELDS)
+    if unexpected_fields:
+        raise AdapterOutputValidationError(
+            path,
+            line_number,
+            f"provenance_details unexpected fields: {', '.join(unexpected_fields)}",
+        )
+
+    _validate_provenance_detail_enum(
+        value,
+        "source_origin",
+        ALLOWED_SOURCE_ORIGINS,
+        path,
+        line_number,
+    )
+    execution_mode = _validate_provenance_detail_enum(
+        value,
+        "execution_mode",
+        ALLOWED_EXECUTION_MODES,
+        path,
+        line_number,
+    )
+    data_classification = _validate_provenance_detail_enum(
+        value,
+        "data_classification",
+        ALLOWED_DATA_CLASSIFICATIONS,
+        path,
+        line_number,
+    )
+    _validate_provenance_detail_enum(
+        value,
+        "action_evidence",
+        ALLOWED_ACTION_EVIDENCE_VALUES,
+        path,
+        line_number,
+    )
+
+    if execution_mode in BLOCKED_CURRENT_EXECUTION_MODES:
+        raise AdapterOutputValidationError(
+            path,
+            line_number,
+            "provenance_details.execution_mode=future_live_execution_not_in_quality_gate "
+            "is future-only and rejected for current gated fixture validation",
+        )
+
+    if data_classification in BLOCKED_CURRENT_DATA_CLASSIFICATIONS:
+        raise AdapterOutputValidationError(
+            path,
+            line_number,
+            "provenance_details.data_classification=private_or_sensitive_blocked "
+            "is future-only and rejected for current gated fixture validation",
+        )
+
+    if "notes" in value and not isinstance(value["notes"], str):
+        raise AdapterOutputValidationError(path, line_number, "provenance_details.notes must be a string")
+
+
+def _validate_provenance_detail_enum(
+    provenance_details: dict[str, Any],
+    field_name: str,
+    allowed_values: set[str],
+    path: Path,
+    line_number: int,
+) -> str:
+    value = provenance_details[field_name]
+    if not isinstance(value, str):
+        raise AdapterOutputValidationError(path, line_number, f"provenance_details.{field_name} must be a string")
+    if value not in allowed_values:
+        allowed = ", ".join(sorted(allowed_values))
+        raise AdapterOutputValidationError(
+            path,
+            line_number,
+            f"provenance_details.{field_name} must be one of: {allowed}",
+        )
+    return value
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:

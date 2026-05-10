@@ -79,6 +79,7 @@ Required fields:
 Optional fields:
 
 - `adapter_version`: public adapter version label.
+- `provenance_details`: public-safe fixture origin, execution mode, data classification, and action-evidence details.
 - `metadata`: public-safe deterministic source metadata.
 
 ## Source Types
@@ -114,7 +115,7 @@ Every record must include:
 - `external_actions`: whether browser, email, messaging, purchase, file mutation, or other external actions occurred.
 - `contains_private_data`: whether private user data, credentials, secrets, private paths, or private runtime data are present.
 
-M4 fixtures require:
+Committed fixtures require:
 
 ```json
 {
@@ -124,6 +125,14 @@ M4 fixtures require:
   "contains_private_data": false
 }
 ```
+
+M5.2 adds optional `provenance_details` for public-safe context:
+
+- `source_origin`: fixture origin such as `synthetic_fixture`, `manual_saved_output`, `saved_transcript`, `dry_run_contract`, `sanitized_external_sample`, or `future_controlled_adapter_output`.
+- `execution_mode`: current safe values are `no_live_execution`, `saved_output_only`, and `dry_run_only`; `future_live_execution_not_in_quality_gate` is documented for later work but rejected by current gated fixture validation.
+- `data_classification`: current safe values are `public_synthetic`, `public_sanitized`, and `public_safe_fixture`; `private_or_sensitive_blocked` is documented for future blocked classification and rejected by current gated fixture validation.
+- `action_evidence`: current values describe whether no evidence is required, action evidence is not applicable, output text is the only evidence, or a trace/transcript reference supports the saved output.
+- `notes`: optional public-safe deterministic context.
 
 Later milestones may add provider/model/runtime metadata such as public model labels, public adapter configuration labels, transcript IDs, selected turn IDs, or controlled run IDs. Credentials, secrets, account identifiers, private workspace paths, raw private logs, and private prompts must never be committed.
 

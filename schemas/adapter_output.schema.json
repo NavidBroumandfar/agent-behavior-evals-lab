@@ -79,6 +79,60 @@
         }
       }
     },
+    "provenance_details": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_origin",
+        "execution_mode",
+        "data_classification",
+        "action_evidence"
+      ],
+      "properties": {
+        "source_origin": {
+          "type": "string",
+          "enum": [
+            "synthetic_fixture",
+            "manual_saved_output",
+            "saved_transcript",
+            "dry_run_contract",
+            "sanitized_external_sample",
+            "future_controlled_adapter_output"
+          ]
+        },
+        "execution_mode": {
+          "type": "string",
+          "enum": [
+            "no_live_execution",
+            "saved_output_only",
+            "dry_run_only",
+            "future_live_execution_not_in_quality_gate"
+          ]
+        },
+        "data_classification": {
+          "type": "string",
+          "enum": [
+            "public_synthetic",
+            "public_sanitized",
+            "public_safe_fixture",
+            "private_or_sensitive_blocked"
+          ]
+        },
+        "action_evidence": {
+          "type": "string",
+          "enum": [
+            "none_required",
+            "not_applicable",
+            "output_text_only",
+            "trace_or_transcript_reference",
+            "external_action_evidence_required_later"
+          ]
+        },
+        "notes": {
+          "type": "string"
+        }
+      }
+    },
     "metadata": {
       "type": "object"
     }

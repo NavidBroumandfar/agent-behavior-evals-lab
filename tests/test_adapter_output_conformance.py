@@ -36,6 +36,13 @@ def valid_adapter_output_record():
             "external_actions": False,
             "contains_private_data": False,
         },
+        "provenance_details": {
+            "source_origin": "synthetic_fixture",
+            "execution_mode": "saved_output_only",
+            "data_classification": "public_safe_fixture",
+            "action_evidence": "output_text_only",
+            "notes": "Unit-test fixture with no live target execution.",
+        },
         "metadata": {
             "fixture_only": True,
             "test_case": "adapter_output_conformance",
@@ -61,7 +68,12 @@ class AdapterOutputConformanceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as temp_dir:
             output_path = Path(temp_dir) / "dry_run_adapter_outputs.jsonl"
 
-            write_records(dry_run_records(), output_path)
+            records = dry_run_records()
+            self.assertTrue(all("provenance_details" in record for record in records))
+            self.assertEqual({record["provenance_details"]["source_origin"] for record in records}, {"dry_run_contract"})
+            self.assertEqual({record["provenance_details"]["execution_mode"] for record in records}, {"dry_run_only"})
+
+            write_records(records, output_path)
 
             self.assertEqual(validate_jsonl_file(output_path), 4)
 
@@ -90,6 +102,17 @@ class AdapterOutputConformanceTests(unittest.TestCase):
             )
             self.assertEqual({record["timestamp"] for record in records}, {"2026-05-10T00:00:00Z"})
             self.assertEqual({record["run_id"] for record in records}, {"m4_adapter_output_fixture_import"})
+            self.assertTrue(all("provenance_details=" in record["mock_behavior_notes"] for record in records))
+
+    def test_m4_style_record_without_provenance_details_still_validates(self):
+        record = valid_adapter_output_record()
+        del record["provenance_details"]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            input_path = Path(temp_dir) / "m4_style_adapter_output.jsonl"
+            write_jsonl(input_path, [record])
+
+            self.assertEqual(validate_jsonl_file(input_path), 1)
 
     def test_missing_required_fields_are_rejected_before_import(self):
         for field_name in [
@@ -139,6 +162,45 @@ class AdapterOutputConformanceTests(unittest.TestCase):
                 record["provenance"][field_name] = field_value
 
                 self.assert_validation_fails(record)
+
+    def test_provenance_details_must_be_an_object(self):
+        record = valid_adapter_output_record()
+        record["provenance_details"] = "not an object"
+
+        self.assert_validation_fails(record)
+
+    def test_invalid_provenance_detail_enum_values_are_rejected_before_import(self):
+        invalid_values = [
+            ("source_origin", "provider_api_response"),
+            ("execution_mode", "live_provider_execution"),
+            ("data_classification", "private_fixture"),
+            ("action_evidence", "browser_log"),
+        ]
+
+        for field_name, field_value in invalid_values:
+            with self.subTest(field_name=field_name):
+                record = copy.deepcopy(valid_adapter_output_record())
+                record["provenance_details"][field_name] = field_value
+
+                self.assert_validation_fails(record)
+
+    def test_provenance_details_notes_must_be_a_string(self):
+        record = valid_adapter_output_record()
+        record["provenance_details"]["notes"] = ["not", "a", "string"]
+
+        self.assert_validation_fails(record)
+
+    def test_private_or_sensitive_classification_is_rejected_before_import(self):
+        record = valid_adapter_output_record()
+        record["provenance_details"]["data_classification"] = "private_or_sensitive_blocked"
+
+        self.assert_validation_fails(record)
+
+    def test_future_live_execution_mode_is_rejected_before_import(self):
+        record = valid_adapter_output_record()
+        record["provenance_details"]["execution_mode"] = "future_live_execution_not_in_quality_gate"
+
+        self.assert_validation_fails(record)
 
     def test_unknown_case_id_fails_during_import_not_validation(self):
         record = valid_adapter_output_record()
