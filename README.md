@@ -20,7 +20,7 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
-See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
+See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
 
 ## Repository Structure
 

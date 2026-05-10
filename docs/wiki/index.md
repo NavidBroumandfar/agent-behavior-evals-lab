@@ -41,6 +41,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Provider-agnostic adapter interface: `targets/adapters/provider_agnostic_adapter_interface.md`
 - Real model adapter design: `targets/adapters/real_model_adapter_design.md`
 - Milestone 3 closeout: `docs/milestones/m3-controlled-real-output-prep-closeout.md`
+- Milestone 4 closeout: `docs/milestones/m4-adapter-readiness-closeout.md`
 
 ## Reading Order
 
