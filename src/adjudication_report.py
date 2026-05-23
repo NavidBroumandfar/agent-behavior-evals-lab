@@ -182,6 +182,10 @@ def generate_summary_report(
         "",
         _decision_table(decisions),
         "",
+        "## Needs Discussion Queue",
+        "",
+        _needs_discussion_table(context),
+        "",
         "## Original Vs Adjudicated Reviewed Results",
         "",
         _original_vs_adjudicated_table(context.adjudications),
@@ -323,6 +327,37 @@ def _decision_table(decisions: Counter[str]) -> str:
     ordered_decisions.extend(sorted(observed.difference(DECISION_ORDER)))
     for decision in ordered_decisions:
         lines.append(f"| `{decision}` | {decisions[decision]} |")
+    return "\n".join(lines)
+
+
+def _needs_discussion_table(context: AdjudicationContext) -> str:
+    records = [
+        adjudication
+        for adjudication in context.adjudications
+        if adjudication["reviewer_decision"] == "needs_discussion"
+    ]
+    if not records:
+        return "No reviewed records are currently marked `needs_discussion`."
+
+    records.sort(
+        key=lambda adjudication: (
+            str(adjudication["source_trace_path"]),
+            str(adjudication["case_id"]),
+            str(adjudication["profile_name"]),
+        )
+    )
+    lines = [
+        "| Case ID | Profile | Category | Original Result | Discussion Topic |",
+        "| --- | --- | --- | --- | --- |",
+    ]
+    for adjudication in records:
+        source_record = context.source_record_by_adjudication_id[adjudication["adjudication_id"]]
+        original_result = "pass" if adjudication["original_passed"] is True else "fail"
+        lines.append(
+            f"| `{adjudication['case_id']}` | `{adjudication['profile_name']}` | "
+            f"`{source_record.get('category', 'unknown')}` | {original_result} | "
+            f"{_truncate(str(adjudication['rationale']), 180)} |"
+        )
     return "\n".join(lines)
 
 
@@ -537,6 +572,12 @@ def _timestamp_range(timestamps: list[str]) -> str:
     if len(timestamps) == 1:
         return f"`{timestamps[0]}`"
     return f"`{min(timestamps)}` to `{max(timestamps)}`"
+
+
+def _truncate(text: str, limit: int) -> str:
+    if len(text) <= limit:
+        return text
+    return text[: limit - 3].rstrip() + "..."
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:

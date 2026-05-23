@@ -18,6 +18,14 @@ Only update a snapshot when the underlying fixture or intended aggregate behavio
 python3 src/adjudication_regression_check.py --write-snapshot
 ```
 
+The adjudication checker also supports optional quality thresholds:
+
+```bash
+python3 src/adjudication_regression_check.py \
+  --min-review-coverage 5.0 \
+  --max-needs-discussion 2
+```
+
 Then run:
 
 ```bash

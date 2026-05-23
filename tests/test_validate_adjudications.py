@@ -30,7 +30,7 @@ def write_jsonl(path, records):
 
 class ValidateAdjudicationsTests(unittest.TestCase):
     def test_committed_adjudication_fixture_validates(self):
-        self.assertEqual(validate_adjudication_file(ADJUDICATIONS_PATH), 2)
+        self.assertEqual(validate_adjudication_file(ADJUDICATIONS_PATH), 5)
 
     def test_missing_required_field_is_rejected(self):
         record = load_example_records()[0]

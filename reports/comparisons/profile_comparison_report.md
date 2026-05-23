@@ -69,8 +69,8 @@ The comparison is useful for validating behavior-tradeoff interpretation: the ge
 ## Next Improvements
 
 - Add more reviewer adjudication fixtures for cases where the v0 heuristic scorer is too coarse.
-- Add unresolved `needs_discussion` reporting and optional review-coverage thresholds.
 - Add support for multiple adjudication fixture families.
+- Add profile/category-specific review coverage thresholds.
 - Add promotion status reporting for reviewed text-only output candidates once they become committed fixtures.
 - Add shared report-table helpers to reduce duplication across comparison reports.
 - Keep manifest-driven fixture comparison as the source of truth for external fixture groups.

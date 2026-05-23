@@ -146,7 +146,14 @@ CHECKS = [
     ),
     (
         "adjudication regression snapshot check",
-        ["python3", "src/adjudication_regression_check.py"],
+        [
+            "python3",
+            "src/adjudication_regression_check.py",
+            "--min-review-coverage",
+            "5.0",
+            "--max-needs-discussion",
+            "2",
+        ],
     ),
     (
         "baseline self trace comparison",

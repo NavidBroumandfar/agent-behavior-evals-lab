@@ -1,71 +1,79 @@
 {
   "adjudication_fixture": "traces/external/adjudications.example.jsonl",
-  "adjudication_records": 2,
+  "adjudication_records": 5,
   "failure_mode_distribution": {
     "adjudicated": {
+      "incomplete_risk_disclosure": 1,
       "missing_approval_gate": 1,
       "over_refusal": 1
     },
     "original": {
       "missing_approval_gate": 1,
-      "over_refusal": 1
+      "over_refusal": 2
     }
   },
   "result_summary": {
-    "adjudicated_failed": 2,
-    "adjudicated_pass_rate": "0.0%",
-    "adjudicated_passed": 0,
-    "changed_failure_modes_count": 0,
-    "changed_result_count": 0,
-    "original_failed": 2,
-    "original_pass_rate": "0.0%",
-    "original_passed": 0
+    "adjudicated_failed": 3,
+    "adjudicated_pass_rate": "40.0%",
+    "adjudicated_passed": 2,
+    "changed_failure_modes_count": 2,
+    "changed_result_count": 2,
+    "original_failed": 3,
+    "original_pass_rate": "40.0%",
+    "original_passed": 2
   },
   "review_coverage_by_source_trace": {
     "traces/scored/baseline_mock_run.jsonl": {
-      "review_coverage": "2.2%",
-      "reviewed_records": 2,
+      "review_coverage": "5.6%",
+      "reviewed_records": 5,
       "source_records": 90,
-      "unreviewed_records": 88
+      "unreviewed_records": 85
     }
   },
   "reviewed_by_category": {
     "approval_gated": {
-      "adjudicated_failed": 1,
+      "adjudicated_failed": 2,
       "needs_discussion": 1,
       "original_failed": 1,
-      "overrides": 0,
-      "reviewed": 1
+      "overrides": 1,
+      "reviewed": 2
     },
     "safe_direct_response": {
       "adjudicated_failed": 1,
       "needs_discussion": 0,
-      "original_failed": 1,
+      "original_failed": 2,
+      "overrides": 1,
+      "reviewed": 2
+    },
+    "uncertainty_handling": {
+      "adjudicated_failed": 0,
+      "needs_discussion": 1,
+      "original_failed": 0,
       "overrides": 0,
       "reviewed": 1
     }
   },
   "reviewed_by_profile": {
     "generic_assistant": {
-      "adjudicated_failed": 1,
-      "needs_discussion": 1,
+      "adjudicated_failed": 2,
+      "needs_discussion": 2,
       "original_failed": 1,
-      "overrides": 0,
-      "reviewed": 1
+      "overrides": 1,
+      "reviewed": 3
     },
     "strict_approval_agent": {
       "adjudicated_failed": 1,
       "needs_discussion": 0,
-      "original_failed": 1,
-      "overrides": 0,
-      "reviewed": 1
+      "original_failed": 2,
+      "overrides": 1,
+      "reviewed": 2
     }
   },
   "reviewer_count": 1,
   "reviewer_decisions": {
-    "needs_discussion": 1,
-    "override_fail": 0,
-    "override_pass": 0,
+    "needs_discussion": 2,
+    "override_fail": 1,
+    "override_pass": 1,
     "uphold_score": 1
   },
   "source_trace_count": 1,

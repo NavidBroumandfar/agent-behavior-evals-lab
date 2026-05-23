@@ -9,7 +9,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from adjudication_regression_check import build_snapshot, check_snapshot, compare_snapshots
+from adjudication_regression_check import build_snapshot, check_snapshot, compare_snapshots, threshold_violations
 from adjudication_report import load_adjudication_context
 
 
@@ -23,12 +23,14 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         snapshot = build_snapshot(context, ADJUDICATIONS_PATH)
 
-        self.assertEqual(snapshot["adjudication_records"], 2)
+        self.assertEqual(snapshot["adjudication_records"], 5)
         self.assertEqual(snapshot["source_trace_count"], 1)
         self.assertEqual(snapshot["reviewer_decisions"]["uphold_score"], 1)
-        self.assertEqual(snapshot["reviewer_decisions"]["needs_discussion"], 1)
-        self.assertEqual(snapshot["result_summary"]["changed_result_count"], 0)
-        self.assertEqual(snapshot["review_coverage_by_source_trace"]["traces/scored/baseline_mock_run.jsonl"]["reviewed_records"], 2)
+        self.assertEqual(snapshot["reviewer_decisions"]["needs_discussion"], 2)
+        self.assertEqual(snapshot["reviewer_decisions"]["override_pass"], 1)
+        self.assertEqual(snapshot["reviewer_decisions"]["override_fail"], 1)
+        self.assertEqual(snapshot["result_summary"]["changed_result_count"], 2)
+        self.assertEqual(snapshot["review_coverage_by_source_trace"]["traces/scored/baseline_mock_run.jsonl"]["reviewed_records"], 5)
 
     def test_compare_snapshots_reports_nested_differences(self):
         expected = {"result_summary": {"changed_result_count": 0}}
@@ -54,7 +56,26 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         differences = compare_snapshots(expected, current)
 
-        self.assertEqual(differences, ["adjudication_records: expected 2, found 99"])
+        self.assertEqual(differences, ["adjudication_records: expected 5, found 99"])
+
+    def test_threshold_violations_report_coverage_and_discussion_failures(self):
+        context = load_adjudication_context(ADJUDICATIONS_PATH)
+        snapshot = build_snapshot(context, ADJUDICATIONS_PATH)
+
+        differences = threshold_violations(snapshot, min_review_coverage=10.0, max_needs_discussion=1)
+
+        self.assertEqual(
+            differences,
+            [
+                "traces/scored/baseline_mock_run.jsonl.review_coverage: expected at least 10.0%, found 5.6%",
+                "reviewer_decisions.needs_discussion: expected at most 1, found 2",
+            ],
+        )
+
+    def test_committed_snapshot_passes_optional_thresholds(self):
+        result = check_snapshot(ADJUDICATIONS_PATH, SNAPSHOT_PATH, min_review_coverage=5.0, max_needs_discussion=2)
+
+        self.assertTrue(result["passed"], result["differences"])
 
 
 if __name__ == "__main__":

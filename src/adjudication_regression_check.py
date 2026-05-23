@@ -76,6 +76,8 @@ def compare_snapshots(expected: dict[str, Any], current: dict[str, Any]) -> list
 def check_snapshot(
     adjudications_path: Path = DEFAULT_ADJUDICATIONS_PATH,
     snapshot_path: Path = DEFAULT_SNAPSHOT_PATH,
+    min_review_coverage: float | None = None,
+    max_needs_discussion: int | None = None,
 ) -> dict[str, Any]:
     """Load current adjudication aggregates and compare them to the saved snapshot."""
 
@@ -83,6 +85,7 @@ def check_snapshot(
     expected = load_json_object(snapshot_path)
     current = build_snapshot(context, adjudications_path)
     differences = compare_snapshots(expected, current)
+    differences.extend(threshold_violations(current, min_review_coverage, max_needs_discussion))
     return {
         "current": current,
         "differences": differences,
@@ -113,6 +116,48 @@ def print_summary(snapshot: dict[str, Any], passed: bool, snapshot_path: Path) -
     print(f"override pass: {snapshot['reviewer_decisions'].get('override_pass', 0)}")
     print(f"override fail: {snapshot['reviewer_decisions'].get('override_fail', 0)}")
     print(f"snapshot comparison: {'passed' if passed else 'failed'}")
+
+
+def threshold_violations(
+    snapshot: dict[str, Any],
+    min_review_coverage: float | None = None,
+    max_needs_discussion: int | None = None,
+) -> list[str]:
+    """Return review threshold violations for optional quality gates."""
+
+    violations: list[str] = []
+    if min_review_coverage is not None:
+        coverage_by_source = snapshot.get("review_coverage_by_source_trace", {})
+        if not isinstance(coverage_by_source, dict):
+            raise AdjudicationRegressionError("review_coverage_by_source_trace must be an object")
+        for source_trace, coverage in sorted(coverage_by_source.items()):
+            if not isinstance(coverage, dict):
+                raise AdjudicationRegressionError(f"{source_trace}.review_coverage must be an object")
+            actual = _parse_percent(str(coverage.get("review_coverage", "0.0%")))
+            if actual < min_review_coverage:
+                violations.append(
+                    f"{source_trace}.review_coverage: expected at least {min_review_coverage:.1f}%, found {actual:.1f}%"
+                )
+
+    if max_needs_discussion is not None:
+        needs_discussion = snapshot.get("reviewer_decisions", {}).get("needs_discussion")
+        if not isinstance(needs_discussion, int):
+            raise AdjudicationRegressionError("reviewer_decisions.needs_discussion must be an integer")
+        if needs_discussion > max_needs_discussion:
+            violations.append(
+                f"reviewer_decisions.needs_discussion: expected at most {max_needs_discussion}, found {needs_discussion}"
+            )
+
+    return violations
+
+
+def _parse_percent(value: str) -> float:
+    if not value.endswith("%"):
+        raise AdjudicationRegressionError(f"invalid percent value: {value!r}")
+    try:
+        return float(value[:-1])
+    except ValueError as exc:
+        raise AdjudicationRegressionError(f"invalid percent value: {value!r}") from exc
 
 
 def _result_summary(adjudications: list[dict[str, Any]]) -> dict[str, Any]:
@@ -208,6 +253,18 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--input", type=Path, default=DEFAULT_ADJUDICATIONS_PATH, help="Adjudication JSONL input.")
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT_PATH, help="Expected snapshot JSON path.")
     parser.add_argument("--write-snapshot", action="store_true", help="Overwrite the snapshot with current aggregates.")
+    parser.add_argument(
+        "--min-review-coverage",
+        type=float,
+        default=None,
+        help="Optional minimum reviewed-record coverage percentage required for each source trace.",
+    )
+    parser.add_argument(
+        "--max-needs-discussion",
+        type=int,
+        default=None,
+        help="Optional maximum number of records allowed to remain in needs_discussion.",
+    )
     return parser.parse_args(argv)
 
 
@@ -221,7 +278,7 @@ def main(argv: list[str] | None = None) -> int:
             print("snapshot written")
             return 0
 
-        result = check_snapshot(args.input, args.snapshot)
+        result = check_snapshot(args.input, args.snapshot, args.min_review_coverage, args.max_needs_discussion)
     except (AdjudicationValidationError, AdjudicationReportError, AdjudicationRegressionError, OSError, ValueError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

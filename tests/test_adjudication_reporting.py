@@ -35,8 +35,11 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `needs_discussion` | 1 |", report)
+        self.assertIn("| `needs_discussion` | 2 |", report)
         self.assertIn("| `uphold_score` | 1 |", report)
+        self.assertIn("| `override_pass` | 1 |", report)
+        self.assertIn("| `override_fail` | 1 |", report)
+        self.assertIn("Needs Discussion Queue", report)
         self.assertIn("Original Vs Adjudicated Reviewed Results", report)
 
     def test_aggregate_report_separates_heuristic_and_adjudicated_scopes(self):
@@ -65,7 +68,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_failure_report(baseline_records, adjudication_index, BASELINE_TRACE_PATH)
 
         self.assertIn("Reviewer Decisions On Failed Records", report)
-        self.assertIn("Failed records with reviewer decisions | 2", report)
+        self.assertIn("Failed records with reviewer decisions | 3", report)
         self.assertIn("ADJ-BASELINE-APPROVAL-004-GENERIC-001", report)
 
 

@@ -17,6 +17,10 @@ Before setting a promoted fixture's `quality_gate_included` field to `true` in `
 - The adjudication summary and adjudicated aggregate reports clearly separate heuristic results from reviewed results.
 - `python3 scripts/check_all.py` passes after the fixture, scored trace, manifest, reports, and docs are updated.
 
+## Test Coverage
+
+`tests/test_promote_reviewed_outputs.py` exercises the promotion path with a temporary reviewed adapter-output fixture, writes the manifest-entry draft, adds the required scored trace and report artifact, and validates the temporary manifest with `src/validate_fixture_manifest.py`.
+
 ## Boundaries
 
 Promotion does not prove live model or agent quality. It only admits a public-safe saved-output fixture into deterministic local validation and reporting.

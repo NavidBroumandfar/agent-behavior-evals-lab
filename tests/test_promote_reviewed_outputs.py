@@ -12,6 +12,7 @@ if str(SRC_ROOT) not in sys.path:
 
 from promote_reviewed_outputs import ReviewedOutputPromotionError, promote_reviewed_outputs
 from validate_adapter_outputs import validate_jsonl_file
+from validate_fixture_manifest import validate_manifest
 
 
 def valid_reviewed_adapter_output():
@@ -55,6 +56,23 @@ def read_json(path):
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def write_json(path, value):
+    path.parent.mkdir(parents=True, exist_ok=True)
+    path.write_text(json.dumps(value, sort_keys=True, indent=2), encoding="utf-8")
+
+
+def manifest_with_entry(entry):
+    return {
+        "manifest_id": "external_fixture_manifest",
+        "version": "0.1.0-test",
+        "generated_at": "2026-05-23T00:00:00Z",
+        "purpose": "Temporary reviewed fixture promotion checklist test.",
+        "scope": ["Temporary promoted fixture manifest validation."],
+        "non_goals": ["No live execution."],
+        "fixtures": [entry],
+    }
+
+
 class PromoteReviewedOutputsTests(unittest.TestCase):
     def test_promotes_reviewed_outputs_and_writes_manifest_entry_draft(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -84,6 +102,36 @@ class PromoteReviewedOutputsTests(unittest.TestCase):
             self.assertEqual(manifest_entry["source_path"], "traces/external/promoted_fixture.jsonl")
             self.assertFalse(manifest_entry["quality_gate_included"])
             self.assertEqual(manifest_entry["expected_record_count"], 1)
+
+    def test_promoted_manifest_entry_validates_after_required_artifacts_exist(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir).resolve()
+            input_path = root / "incoming.reviewed.jsonl"
+            output_path = root / "traces/external/promoted_fixture.jsonl"
+            scored_trace_path = root / "traces/scored/promoted_fixture.jsonl"
+            report_path = root / "reports/comparisons/promoted_fixture_report.md"
+            manifest_entry_path = root / "promoted_fixture.manifest_entry.local.json"
+            manifest_path = root / "traces/external/fixture_manifest.json"
+            write_jsonl(input_path, [valid_reviewed_adapter_output()])
+
+            summary = promote_reviewed_outputs(
+                input_path,
+                output_path,
+                "promoted_text_only_fixture",
+                scored_trace_path,
+                [report_path],
+                manifest_entry_path,
+                repo_root=root,
+            )
+            write_jsonl(scored_trace_path, [{"record_id": "PROMOTED-SCORED-001"}])
+            report_path.parent.mkdir(parents=True, exist_ok=True)
+            report_path.write_text("# Promoted Fixture Report\n", encoding="utf-8")
+            write_json(manifest_path, manifest_with_entry(summary["manifest_entry"]))
+
+            validation_summary = validate_manifest(manifest_path, repo_root=root)
+
+            self.assertEqual(validation_summary["fixture_count"], 1)
+            self.assertEqual(validation_summary["quality_gate_fixture_count"], 0)
 
     def test_rejects_input_without_reviewed_suffix(self):
         with tempfile.TemporaryDirectory() as temp_dir:

@@ -9,6 +9,8 @@ Adjudication-aware reporting summarizes reviewer decisions over existing scored 
 - `reports/comparisons/adjudication_summary_report.md` summarizes reviewer decision counts, reviewed records by source trace, reviewed records by profile, and record-level decisions.
 - `reports/comparisons/adjudicated_aggregate_report.md` separates full heuristic trace results, the reviewed heuristic subset, and the reviewed adjudicated subset.
 
+The summary report includes a `Needs Discussion Queue` for adjudications whose reviewer decision is `needs_discussion`.
+
 Run both reports from the repository root:
 
 ```bash
@@ -47,6 +49,14 @@ Run the check from the repository root:
 
 ```bash
 python3 src/adjudication_regression_check.py
+```
+
+Optional thresholds can turn review coverage or unresolved discussion counts into local gate checks:
+
+```bash
+python3 src/adjudication_regression_check.py \
+  --min-review-coverage 5.0 \
+  --max-needs-discussion 2
 ```
 
 When an intentional fixture change should update the expected counts:
