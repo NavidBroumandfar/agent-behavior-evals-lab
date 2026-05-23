@@ -2,11 +2,11 @@
 
 An external fixture comparison summarizes already-scored traces that came from controlled saved-output inputs. It compares fixture families, not live systems.
 
-M4.3 adds `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`. The script reads scored trace JSONL files that already exist in `traces/scored/`, validates them against the current trace schema, groups them by fixture source, and writes a deterministic Markdown report.
+M4.3 added `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`. M10 makes the source list manifest-driven. The script reads `traces/external/fixture_manifest.json`, loads the scored trace JSONL files listed there, validates them against the current trace schema, groups them by fixture source, and writes a deterministic Markdown report.
 
 ## Compared Sources
 
-The report currently compares:
+The committed manifest currently lists:
 
 - Manual output fixture: `traces/scored/manual_output_eval.jsonl`
 - Sanitized OpenClaw-style manual fixture: `traces/scored/openclaw_manual_eval.jsonl`
@@ -14,7 +14,7 @@ The report currently compares:
 - Normalized adapter-output import fixture: `traces/scored/adapter_output_fixture_import.jsonl`
 - Dry-run adapter contract fixture: `traces/scored/dry_run_adapter_output_import.jsonl`
 
-These inputs are scored traces, not raw adapter records. The comparison script does not import adapter outputs, replay transcripts, or evaluate manual outputs itself; the quality gate regenerates those deterministic dependencies before it generates the comparison report.
+These inputs are scored traces, not raw adapter records. The comparison script does not import adapter outputs, replay transcripts, or evaluate manual outputs itself; the quality gate regenerates those deterministic dependencies before it generates the comparison report. Adding or removing a fixture source should happen through `traces/external/fixture_manifest.json`, not by editing a hard-coded source list in the reporter.
 
 ## Saved Outputs, Not Live Systems
 
@@ -38,7 +38,7 @@ Fixture comparison makes it easier to analyze behavior across source types:
 - Normalized adapter-output import shows the M4 adapter-output contract feeding the existing evaluator trace shape.
 - Dry-run adapter contract output shows a deterministic no-network adapter-like producer feeding the same validation and import path.
 
-Because the report uses fixed inputs, fixed timestamps, stable sorting, and deterministic formatting, repeated quality-gate runs should not dirty generated artifacts.
+Because the report uses manifest order, fixed inputs, stable sorting, and deterministic formatting, repeated quality-gate runs should not dirty generated artifacts.
 
 ## Preparing Later Adapter Work
 

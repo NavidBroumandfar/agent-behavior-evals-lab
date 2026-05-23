@@ -29,6 +29,9 @@ DRY_RUN_ADAPTER_TRACE_PATH = REPO_ROOT / "traces/scored/dry_run_adapter_output_i
 EXPECTED_DRY_RUN_ADAPTER_TRACE_LINES = 4
 EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/external_fixture_comparison_report.md"
 BASELINE_SELF_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/baseline_self_comparison_report.md"
+ADJUDICATION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudication_summary_report.md"
+ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated_aggregate_report.md"
+ADJUDICATION_REGRESSION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -138,6 +141,14 @@ CHECKS = [
         ["python3", "src/validate_adjudications.py"],
     ),
     (
+        "adjudication report generation",
+        ["python3", "src/adjudication_report.py"],
+    ),
+    (
+        "adjudication regression snapshot check",
+        ["python3", "src/adjudication_regression_check.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -162,6 +173,7 @@ CHECKS = [
             "src/target_registry.py",
             "src/scorers.py",
             "src/trace_writer.py",
+            "src/reporting_utils.py",
             "src/run_eval.py",
             "src/report_generator.py",
             "src/comparison_report.py",
@@ -180,6 +192,8 @@ CHECKS = [
             "src/review_text_only_outputs.py",
             "src/promote_reviewed_outputs.py",
             "src/validate_adjudications.py",
+            "src/adjudication_report.py",
+            "src/adjudication_regression_check.py",
             "src/compare_scored_traces.py",
         ],
     ),
@@ -260,6 +274,11 @@ def main() -> int:
                 verify_trace_count(SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES)
             if name == "external fixture comparison report generation":
                 verify_report_exists(EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH)
+            if name == "adjudication report generation":
+                verify_report_exists(ADJUDICATION_SUMMARY_REPORT_PATH)
+                verify_report_exists(ADJUDICATED_AGGREGATE_REPORT_PATH)
+            if name == "adjudication regression snapshot check":
+                verify_report_exists(ADJUDICATION_REGRESSION_SNAPSHOT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:

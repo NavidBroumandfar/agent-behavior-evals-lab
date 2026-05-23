@@ -68,9 +68,10 @@ The comparison is useful for validating behavior-tradeoff interpretation: the ge
 
 ## Next Improvements
 
-- Make external fixture comparison manifest-driven instead of maintaining source lists in code.
-- Add adjudication-aware comparison summaries that separate heuristic and reviewed outcomes.
-- Add reviewer adjudication rollups for cases where the v0 heuristic scorer is too coarse.
+- Add more reviewer adjudication fixtures for cases where the v0 heuristic scorer is too coarse.
+- Add unresolved `needs_discussion` reporting and optional review-coverage thresholds.
+- Add support for multiple adjudication fixture families.
 - Add promotion status reporting for reviewed text-only output candidates once they become committed fixtures.
-- Add a promotion checklist for admitting reviewed fixtures to the deterministic quality gate.
+- Add shared report-table helpers to reduce duplication across comparison reports.
+- Keep manifest-driven fixture comparison as the source of truth for external fixture groups.
 - Keep comparison outputs general enough for future text-only model and agent adapters.

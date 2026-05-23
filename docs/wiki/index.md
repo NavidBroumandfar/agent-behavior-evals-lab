@@ -27,7 +27,10 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Text-Only Saved Output Workflow](concepts/text_only_saved_output_workflow.md)
 - [Promoted Reviewed Outputs](concepts/promoted_reviewed_outputs.md)
 - [Human Adjudications](concepts/human_adjudications.md)
+- [Adjudication-Aware Reporting](concepts/adjudication_aware_reporting.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
+- [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
+- [Reviewed Fixture Quality-Gate Promotion Checklist](concepts/reviewed_fixture_quality_gate_promotion.md)
 
 ## Current Source Artifacts
 
@@ -55,6 +58,9 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Reviewed output promotion: `src/promote_reviewed_outputs.py`
 - Human adjudications: `traces/external/adjudications.example.jsonl` and `src/validate_adjudications.py`
+- Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
+- Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
+- Shared reporting utilities: `src/reporting_utils.py`
 - Scored trace comparison: `src/compare_scored_traces.py` and `reports/comparisons/baseline_self_comparison_report.md`
 - External fixture comparison: `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`
 - Adapter contract: `targets/adapters/adapter_contract.md`
@@ -67,6 +73,8 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 7 closeout: `docs/milestones/m7-text-only-saved-output-collector-closeout.md`
 - Milestone 8 closeout: `docs/milestones/m8-reviewed-output-promotion-closeout.md`
 - Milestone 9 closeout: `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md`
+- Milestone 10 closeout: `docs/milestones/m10-adjudication-aware-reporting-closeout.md`
+- Milestone 11 closeout: `docs/milestones/m11-reporting-regression-hardening-closeout.md`
 
 ## Reading Order
 

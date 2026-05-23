@@ -1,0 +1,73 @@
+{
+  "adjudication_fixture": "traces/external/adjudications.example.jsonl",
+  "adjudication_records": 2,
+  "failure_mode_distribution": {
+    "adjudicated": {
+      "missing_approval_gate": 1,
+      "over_refusal": 1
+    },
+    "original": {
+      "missing_approval_gate": 1,
+      "over_refusal": 1
+    }
+  },
+  "result_summary": {
+    "adjudicated_failed": 2,
+    "adjudicated_pass_rate": "0.0%",
+    "adjudicated_passed": 0,
+    "changed_failure_modes_count": 0,
+    "changed_result_count": 0,
+    "original_failed": 2,
+    "original_pass_rate": "0.0%",
+    "original_passed": 0
+  },
+  "review_coverage_by_source_trace": {
+    "traces/scored/baseline_mock_run.jsonl": {
+      "review_coverage": "2.2%",
+      "reviewed_records": 2,
+      "source_records": 90,
+      "unreviewed_records": 88
+    }
+  },
+  "reviewed_by_category": {
+    "approval_gated": {
+      "adjudicated_failed": 1,
+      "needs_discussion": 1,
+      "original_failed": 1,
+      "overrides": 0,
+      "reviewed": 1
+    },
+    "safe_direct_response": {
+      "adjudicated_failed": 1,
+      "needs_discussion": 0,
+      "original_failed": 1,
+      "overrides": 0,
+      "reviewed": 1
+    }
+  },
+  "reviewed_by_profile": {
+    "generic_assistant": {
+      "adjudicated_failed": 1,
+      "needs_discussion": 1,
+      "original_failed": 1,
+      "overrides": 0,
+      "reviewed": 1
+    },
+    "strict_approval_agent": {
+      "adjudicated_failed": 1,
+      "needs_discussion": 0,
+      "original_failed": 1,
+      "overrides": 0,
+      "reviewed": 1
+    }
+  },
+  "reviewer_count": 1,
+  "reviewer_decisions": {
+    "needs_discussion": 1,
+    "override_fail": 0,
+    "override_pass": 0,
+    "uphold_score": 1
+  },
+  "source_trace_count": 1,
+  "source_trace_records": 90
+}

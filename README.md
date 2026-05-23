@@ -20,7 +20,7 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
-See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
+See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
 
 ## Repository Structure
 
@@ -43,6 +43,7 @@ targets/
   target_registry.json          # Registered mock and future adapter target labels
 
 src/
+  reporting_utils.py           # Shared deterministic reporting helpers
   target_registry.py            # Target registry validation and lookup helpers
   model_clients.py              # Deterministic MockModelClient
   scorers.py                    # Rule-based v0 scorer
@@ -58,6 +59,8 @@ src/
   review_text_only_outputs.py   # Reviewed raw-output to adapter-output converter
   promote_reviewed_outputs.py   # Reviewed adapter-output fixture promotion helper
   validate_adjudications.py     # Human adjudication fixture validator
+  adjudication_report.py        # Adjudication-aware Markdown report generator
+  adjudication_regression_check.py # Adjudication aggregate snapshot checker
   compare_scored_traces.py      # Generic before-vs-after scored trace comparison
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
@@ -87,11 +90,14 @@ reports/
   comparisons/
     profile_comparison_report.md # Generated profile comparison report
     baseline_regression_snapshot.json # Saved deterministic regression snapshot
+    adjudication_regression_snapshot.json # Saved adjudication aggregate snapshot
     failure_inspection.md       # Generated failure inspection report
     manual_output_report.md     # Generated manual-output report
     openclaw_manual_eval_report.md # Generated OpenClaw-style manual report
     saved_transcript_replay_report.md # Generated transcript replay report
     external_fixture_comparison_report.md # Generated controlled external fixture comparison
+    adjudication_summary_report.md # Generated reviewer decision summary
+    adjudicated_aggregate_report.md # Generated adjudicated aggregate report
 
 schemas/
   eval_case.schema.json         # Planned schema validation support
@@ -234,7 +240,7 @@ This is not a real model adapter and does not call providers, run local models, 
 
 ## External Fixture Comparison
 
-External fixture comparison summarizes already-scored controlled fixture traces across manual output, sanitized OpenClaw-style samples, saved transcript replay, normalized adapter-output import, and the dry-run adapter contract fixture.
+External fixture comparison summarizes already-scored controlled fixture traces listed in `traces/external/fixture_manifest.json`.
 
 From the repository root:
 
@@ -316,6 +322,23 @@ python3 src/validate_adjudications.py traces/external/adjudications.example.json
 
 Adjudications do not rewrite traces. They validate that the reviewer record matches the source trace and records whether the reviewer upheld the heuristic score, overrode it, or flagged it for discussion.
 
+M10 adds adjudication-aware reporting:
+
+```bash
+python3 src/adjudication_report.py
+python3 src/inspect_failures.py
+```
+
+The report generator writes `reports/comparisons/adjudication_summary_report.md` and `reports/comparisons/adjudicated_aggregate_report.md`. Failure inspection annotates failed records with matching reviewer decisions. These are report-time overlays only; scored traces are not rewritten.
+
+M11 adds adjudication regression hardening:
+
+```bash
+python3 src/adjudication_regression_check.py
+```
+
+The check compares current adjudication aggregates against `reports/comparisons/adjudication_regression_snapshot.json`, so changes in reviewer decision counts, review coverage, result changes, or reviewed failure modes are explicit.
+
 M9 also adds arbitrary scored-trace comparison:
 
 ```bash
@@ -335,7 +358,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, adjudication validation, baseline self trace comparison, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, adjudication validation, adjudication-aware report generation, adjudication regression snapshot checking, baseline self trace comparison, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 
@@ -358,8 +381,7 @@ Near-term improvements:
 - Add unit tests for case loading, scoring, trace writing, and report aggregation.
 - Improve scorer heuristics and document known false positives and false negatives.
 - Add comparison reports across runs, profiles, and future adapters.
-- Add adjudication-aware failure inspection and summary reporting.
-- Add manifest-driven external fixture comparison.
-- Add optional adjudicated aggregate reports that separate heuristic and reviewed results.
-- Add a promotion checklist for adding reviewed fixtures to the deterministic quality gate.
+- Add more reviewed public-safe fixture examples after the promotion checklist is exercised.
+- Add unresolved `needs_discussion` reporting and optional review-coverage thresholds.
+- Add support for multiple adjudication fixture families.
 - Add controlled agent transcript capture later as one possible system under test, without making the lab OpenClaw-specific.

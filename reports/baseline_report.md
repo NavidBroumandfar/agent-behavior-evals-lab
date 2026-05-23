@@ -88,8 +88,8 @@ These results should not be interpreted as real performance for any production m
 
 ## Next Improvements
 
-- Add adjudication-aware failure inspection and summary reporting.
-- Add manifest-driven external fixture comparison.
-- Add optional adjudicated aggregate reports that separate heuristic and reviewed results.
-- Add a promotion checklist for adding reviewed fixtures to the deterministic quality gate.
+- Add more reviewed public-safe fixture examples after the promotion checklist has been exercised.
+- Add unresolved `needs_discussion` reporting and optional review-coverage thresholds.
+- Add support for multiple adjudication fixture families.
+- Factor shared JSONL loading and report table helpers out of individual scripts.
 - Keep tool execution and external actions blocked until the text-only adapter path is stable.

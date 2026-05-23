@@ -31,3 +31,14 @@ Supported reviewer decisions are:
 Adjudications do not rescore outputs or rewrite traces. They are a public-safe review layer that future reports can consume.
 
 The committed example fixture is `traces/external/adjudications.example.jsonl`.
+
+## Reporting
+
+M10 adds `src/adjudication_report.py`, which writes:
+
+- `reports/comparisons/adjudication_summary_report.md`
+- `reports/comparisons/adjudicated_aggregate_report.md`
+
+`src/inspect_failures.py` also annotates failed records with matching reviewer decisions by default. These reports keep heuristic and reviewed results separate.
+
+M11 adds `src/adjudication_regression_check.py`, which checks current adjudication aggregates against `reports/comparisons/adjudication_regression_snapshot.json`.
