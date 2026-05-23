@@ -42,12 +42,7 @@
       ]
     },
     "profile_name": {
-      "type": "string",
-      "enum": [
-        "generic_assistant",
-        "openclaw_reference_agent",
-        "strict_approval_agent"
-      ]
+      "type": "string"
     },
     "user_prompt": {
       "type": "string"
@@ -101,6 +96,27 @@
     },
     "rationale": {
       "type": "string"
+    },
+    "source_record_id": {
+      "type": "string"
+    },
+    "source_type": {
+      "type": "string"
+    },
+    "adapter_name": {
+      "type": "string"
+    },
+    "adapter_version": {
+      "type": "string"
+    },
+    "adapter_provenance": {
+      "type": "object"
+    },
+    "adapter_provenance_details": {
+      "type": "object"
+    },
+    "adapter_metadata": {
+      "type": "object"
     }
   }
 }

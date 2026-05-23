@@ -20,8 +20,9 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from run_eval import CASE_PATHS, PROFILE_NAMES, build_trace_record, load_cases
+from run_eval import CASE_PATHS, build_trace_record, load_cases
 from scorers import score_response
+from target_registry import allowed_manual_output_profiles
 from trace_writer import write_jsonl
 from validate_schemas import ValidationError, validate_trace_record
 
@@ -119,7 +120,7 @@ def validate_manual_records(
     """Validate case references, target profiles, and duplicate manual keys."""
 
     seen_keys: set[tuple[str, str]] = set()
-    supported_profiles = ", ".join(PROFILE_NAMES)
+    supported_profiles = ", ".join(allowed_manual_output_profiles())
 
     for line_number, record in enumerate(records, start=1):
         case_id = str(record["case_id"])
@@ -132,7 +133,7 @@ def validate_manual_records(
                 f"expected one of: {known_cases}"
             )
 
-        if target_profile not in PROFILE_NAMES:
+        if target_profile not in allowed_manual_output_profiles():
             raise ValueError(
                 f"{_display_path(input_path)}:{line_number}: unsupported target_profile {target_profile!r}; "
                 f"expected one of: {supported_profiles}"
@@ -236,7 +237,7 @@ def generate_report(
     total = len(records)
     pass_count = sum(1 for record in records if record.get("passed") is True)
     fail_count = total - pass_count
-    profiles = _ordered_values(records, "profile_name", PROFILE_NAMES)
+    profiles = _ordered_values(records, "profile_name", allowed_manual_output_profiles())
     categories = _ordered_values(records, "category", CATEGORY_ORDER)
 
     lines = [
@@ -290,7 +291,7 @@ def generate_report(
         "## Limitations",
         "",
         "- Manual records are local pasted or saved outputs; there is no provenance guarantee beyond the public-safe fields in the input file.",
-        "- `target_profile` is currently limited to the repository's existing target profile names so scored traces remain compatible with the current schema.",
+        "- `target_profile` must be present in the target registry so manual outputs remain auditable.",
         "- The scorer is deterministic and heuristic-based; it is useful for pipeline checks and failure surfacing, not final behavioral truth.",
         "- This mode evaluates final text only. It does not replay tool calls, intermediate reasoning, approvals, UI state, or transcript timing.",
         "",

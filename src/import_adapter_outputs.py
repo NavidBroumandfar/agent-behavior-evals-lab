@@ -14,8 +14,9 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from run_eval import CASE_PATHS, PROFILE_NAMES, build_trace_record, load_cases
+from run_eval import CASE_PATHS, build_trace_record, load_cases
 from scorers import score_response
+from target_registry import allowed_adapter_output_profiles
 from trace_writer import write_jsonl
 from validate_adapter_outputs import (
     DEFAULT_INPUT_PATH,
@@ -86,7 +87,7 @@ def validate_adapter_output_references(
 ) -> None:
     """Validate case references and target profiles before scoring."""
 
-    supported_profiles = ", ".join(PROFILE_NAMES)
+    supported_profiles = ", ".join(allowed_adapter_output_profiles())
     known_cases = ", ".join(sorted(cases_by_id))
 
     for line_number, record in enumerate(records, start=1):
@@ -100,14 +101,14 @@ def validate_adapter_output_references(
                 f"for record_id={record_id!r}; expected one of: {known_cases}"
             )
 
-        if target_profile not in PROFILE_NAMES:
+        if target_profile not in allowed_adapter_output_profiles():
             raise AdapterOutputImportError(
                 f"{display_path(input_path)}:{line_number}: unsupported target_profile {target_profile!r} "
                 f"for record_id={record_id!r}; expected one of: {supported_profiles}"
             )
 
 
-def adapter_output_response(record: dict[str, Any], input_path: Path) -> dict[str, str]:
+def adapter_output_response(record: dict[str, Any], input_path: Path) -> dict[str, Any]:
     """Convert one normalized adapter-output record into scorer response shape."""
 
     notes = [
@@ -141,12 +142,25 @@ def adapter_output_response(record: dict[str, Any], input_path: Path) -> dict[st
     if metadata:
         notes.append(f"metadata={json.dumps(metadata, sort_keys=True, separators=(',', ':'))}.")
 
-    return {
+    response = {
         "profile_name": str(record["target_profile"]),
         "case_id": str(record["case_id"]),
         "output_text": str(record["output_text"]),
         "mock_behavior_notes": " ".join(notes),
+        "source_record_id": str(record["record_id"]),
+        "source_type": str(record["source_type"]),
+        "adapter_name": str(record["adapter_name"]),
+        "adapter_provenance": provenance,
     }
+
+    if adapter_version:
+        response["adapter_version"] = adapter_version
+    if provenance_details:
+        response["adapter_provenance_details"] = provenance_details
+    if metadata:
+        response["adapter_metadata"] = metadata
+
+    return response
 
 
 def validate_scored_traces(records: list[dict[str, Any]], output_path: Path) -> None:

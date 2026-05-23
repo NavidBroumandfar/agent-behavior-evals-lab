@@ -1,0 +1,71 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Adapter Run Metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata_id",
+    "version",
+    "created_at",
+    "run_id",
+    "status",
+    "adapter",
+    "target",
+    "case_selection",
+    "sandbox",
+    "outputs",
+    "review",
+    "quality_gate",
+    "provenance"
+  ],
+  "properties": {
+    "metadata_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "run_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned_only",
+        "dry_run_only",
+        "saved_output_review_only"
+      ]
+    },
+    "adapter": {
+      "type": "object"
+    },
+    "target": {
+      "type": "object"
+    },
+    "case_selection": {
+      "type": "object"
+    },
+    "sandbox": {
+      "type": "object"
+    },
+    "outputs": {
+      "type": "object"
+    },
+    "review": {
+      "type": "object"
+    },
+    "quality_gate": {
+      "type": "object"
+    },
+    "provenance": {
+      "type": "object"
+    }
+  }
+}

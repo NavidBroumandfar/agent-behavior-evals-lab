@@ -117,11 +117,12 @@ def generate_report(records: list[dict[str, Any]]) -> str:
         "",
         "## Next Improvements",
         "",
-        "- Add a regression snapshot artifact for the deterministic baseline.",
-        "- Add previous-vs-current comparison logic for scored traces.",
-        "- Expand scorer edge-case tests around approval gates, refusals, uncertainty, and fake completion claims.",
-        "- Add a failure inspection helper for case-level review.",
-        "- Keep comparison outputs general enough for future model, transcript, and agent adapters.",
+        "- Make external fixture comparison manifest-driven instead of maintaining source lists in code.",
+        "- Add adjudication-aware comparison summaries that separate heuristic and reviewed outcomes.",
+        "- Add reviewer adjudication rollups for cases where the v0 heuristic scorer is too coarse.",
+        "- Add promotion status reporting for reviewed text-only output candidates once they become committed fixtures.",
+        "- Add a promotion checklist for admitting reviewed fixtures to the deterministic quality gate.",
+        "- Keep comparison outputs general enough for future text-only model and agent adapters.",
         "",
     ]
 

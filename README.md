@@ -20,7 +20,7 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
-See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
+See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
 
 ## Repository Structure
 
@@ -40,8 +40,10 @@ targets/
   profiles/                     # Target behavior profiles
   prompts/                      # System prompts derived from profiles
   adapters/                     # Public adapter contracts for future target systems
+  target_registry.json          # Registered mock and future adapter target labels
 
 src/
+  target_registry.py            # Target registry validation and lookup helpers
   model_clients.py              # Deterministic MockModelClient
   scorers.py                    # Rule-based v0 scorer
   run_eval.py                   # End-to-end mock eval runner
@@ -51,6 +53,12 @@ src/
   import_adapter_outputs.py     # Normalized adapter-output fixture importer
   dry_run_adapter.py            # Deterministic no-network adapter contract fixture producer
   validate_fixture_manifest.py  # Controlled external fixture manifest validator
+  validate_adapter_run_metadata.py # Public-safe adapter run metadata validator
+  collect_text_only_outputs.py  # Non-gated local raw text-output collector
+  review_text_only_outputs.py   # Reviewed raw-output to adapter-output converter
+  promote_reviewed_outputs.py   # Reviewed adapter-output fixture promotion helper
+  validate_adjudications.py     # Human adjudication fixture validator
+  compare_scored_traces.py      # Generic before-vs-after scored trace comparison
   trace_writer.py               # JSONL trace writer
   report_generator.py           # Markdown report generator
   comparison_report.py          # Profile comparison report generator
@@ -90,6 +98,9 @@ schemas/
   trace.schema.json             # Planned trace schema support
   saved_transcript.schema.json  # Saved transcript replay input contract
   adapter_output.schema.json    # Normalized adapter-output input contract
+  adapter_run_metadata.schema.json # Non-gated adapter experiment metadata contract
+  target_registry.schema.json   # Target registry contract
+  adjudication.schema.json      # Human adjudication record contract
 ```
 
 ## Eval Categories
@@ -247,6 +258,75 @@ The validator checks local paths, JSONL counts, quality-gate flags, and public-s
 
 Fixture manifest validation tests live in `tests/test_fixture_manifest_validation.py` and use temporary invalid manifests so negative cases do not enter production fixtures.
 
+## Adapter Run Metadata Sandbox
+
+M6 adds a controlled adapter sandbox policy for future non-gated live-output experiments. The policy and approval checklist live in `targets/adapters/controlled_adapter_sandbox.md`.
+
+The committed metadata example is `traces/external/adapter_run_metadata.example.json`, the contract is `schemas/adapter_run_metadata.schema.json`, and validation is handled by:
+
+```bash
+python3 src/validate_adapter_run_metadata.py
+```
+
+This validates public-safe planning metadata only. It does not run the described adapter, call providers, run local models, execute agents, use credentials, or collect live outputs. Raw experimental outputs must stay in local-only ignored paths such as `traces/raw/*.local.jsonl`.
+
+## Target Registry And Text-Only Workflow
+
+M7 adds `targets/target_registry.json` so deterministic mock profiles and future adapter candidate labels are registered in one place. Validate it with:
+
+```bash
+python3 src/target_registry.py
+```
+
+The first non-gated saved-output workflow is text-only:
+
+```bash
+python3 src/collect_text_only_outputs.py \
+  --metadata traces/external/adapter_run_metadata.example.json \
+  --input traces/raw/example_text_inputs.local.jsonl \
+  --output traces/raw/example_text_outputs.local.jsonl
+
+python3 src/review_text_only_outputs.py \
+  --input traces/raw/example_text_outputs.local.jsonl \
+  --output traces/external/example_text_outputs.reviewed.jsonl
+```
+
+The collector only normalizes already-provided text into local raw JSONL and marks it `pending_review`. The review converter only writes normalized adapter-output records for raw records manually marked `approved_public_safe`. These local and reviewed candidate files are ignored until deliberately promoted into committed fixtures.
+
+Promote a reviewed candidate with:
+
+```bash
+python3 src/promote_reviewed_outputs.py \
+  --input traces/external/example_text_outputs.reviewed.jsonl \
+  --output traces/external/example_text_outputs.promoted.jsonl \
+  --fixture-id example_text_outputs \
+  --scored-trace-path traces/scored/example_text_outputs.promoted.jsonl \
+  --manifest-entry example_text_outputs.manifest_entry.local.json
+```
+
+Promotion copies reviewed adapter-output records into a stable fixture path and can write a local manifest-entry draft. It does not update `traces/external/fixture_manifest.json` automatically, import/score the fixture, or run live collection.
+
+## Human Adjudication And Trace Comparison
+
+M9 adds public-safe reviewer adjudications over existing scored traces:
+
+```bash
+python3 src/validate_adjudications.py traces/external/adjudications.example.jsonl
+```
+
+Adjudications do not rewrite traces. They validate that the reviewer record matches the source trace and records whether the reviewer upheld the heuristic score, overrode it, or flagged it for discussion.
+
+M9 also adds arbitrary scored-trace comparison:
+
+```bash
+python3 src/compare_scored_traces.py \
+  --before traces/scored/baseline_mock_run.jsonl \
+  --after traces/scored/baseline_mock_run.jsonl \
+  --output reports/comparisons/baseline_self_comparison_report.md
+```
+
+The comparison reads already-scored traces and reports aggregate deltas, changed records, new failures, resolved failures, added records, and removed records. It does not collect outputs, run models, execute agents, or rescore records.
+
 ## Local Quality Gate
 
 From the repository root:
@@ -255,7 +335,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, adjudication validation, baseline self trace comparison, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 
@@ -278,6 +358,8 @@ Near-term improvements:
 - Add unit tests for case loading, scoring, trace writing, and report aggregation.
 - Improve scorer heuristics and document known false positives and false negatives.
 - Add comparison reports across runs, profiles, and future adapters.
-- Add real model adapters after the mock harness remains stable.
-- Add saved transcript replay for evaluating recorded assistant outputs.
-- Add a controlled OpenClaw adapter later as one system under test, without making the lab OpenClaw-specific.
+- Add adjudication-aware failure inspection and summary reporting.
+- Add manifest-driven external fixture comparison.
+- Add optional adjudicated aggregate reports that separate heuristic and reviewed results.
+- Add a promotion checklist for adding reviewed fixtures to the deterministic quality gate.
+- Add controlled agent transcript capture later as one possible system under test, without making the lab OpenClaw-specific.

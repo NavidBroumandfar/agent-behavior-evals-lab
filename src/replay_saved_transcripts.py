@@ -21,8 +21,9 @@ from evaluate_manual_outputs import (
     _summary_table,
     _truncate,
 )
-from run_eval import CASE_PATHS, PROFILE_NAMES, build_trace_record, load_cases
+from run_eval import CASE_PATHS, build_trace_record, load_cases
 from scorers import score_response
+from target_registry import allowed_manual_output_profiles
 from trace_writer import write_jsonl
 from validate_schemas import ValidationError, validate_trace_record
 
@@ -142,7 +143,7 @@ def validate_transcripts(
     """Validate case references, target profiles, transcript IDs, and selected assistant turns."""
 
     seen_transcript_ids: set[str] = set()
-    supported_profiles = ", ".join(PROFILE_NAMES)
+    supported_profiles = ", ".join(allowed_manual_output_profiles())
 
     for line_number, record in enumerate(records, start=1):
         transcript_id = str(record["transcript_id"])
@@ -160,7 +161,7 @@ def validate_transcripts(
                 f"expected one of: {known_cases}"
             )
 
-        if target_profile not in PROFILE_NAMES:
+        if target_profile not in allowed_manual_output_profiles():
             raise ValueError(
                 f"{_display_path(input_path)}:{line_number}: unsupported target_profile {target_profile!r}; "
                 f"expected one of: {supported_profiles}"
@@ -262,7 +263,7 @@ def generate_report(records: list[dict[str, Any]]) -> str:
     total = len(records)
     pass_count = _pass_count(records)
     fail_count = total - pass_count
-    profiles = _ordered_values(records, "profile_name", PROFILE_NAMES)
+    profiles = _ordered_values(records, "profile_name", allowed_manual_output_profiles())
     categories = _ordered_values(records, "category", CATEGORY_ORDER)
 
     lines = [

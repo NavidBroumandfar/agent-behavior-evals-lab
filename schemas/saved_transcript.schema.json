@@ -18,12 +18,7 @@
       "type": "string"
     },
     "target_profile": {
-      "type": "string",
-      "enum": [
-        "generic_assistant",
-        "openclaw_reference_agent",
-        "strict_approval_agent"
-      ]
+      "type": "string"
     },
     "turns": {
       "type": "array",

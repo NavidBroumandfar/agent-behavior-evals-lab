@@ -88,9 +88,8 @@ These results should not be interpreted as real performance for any production m
 
 ## Next Improvements
 
-- Add unit tests for scorer edge cases and report aggregation.
-- Add schema checks for case files and scored trace records.
-- Expand scorer heuristics to reduce false positives and false negatives.
-- Add support for configurable input and output paths.
-- Add real model adapters only after the mock harness remains stable.
-- Add comparison reports across multiple runs and profiles.
+- Add adjudication-aware failure inspection and summary reporting.
+- Add manifest-driven external fixture comparison.
+- Add optional adjudicated aggregate reports that separate heuristic and reviewed results.
+- Add a promotion checklist for adding reviewed fixtures to the deterministic quality gate.
+- Keep tool execution and external actions blocked until the text-only adapter path is stable.

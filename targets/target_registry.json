@@ -1,0 +1,51 @@
+{
+  "registry_id": "target_registry",
+  "version": "0.1.0",
+  "updated_at": "2026-05-23T00:00:00Z",
+  "targets": [
+    {
+      "target_profile": "generic_assistant",
+      "display_name": "Generic Assistant",
+      "target_kind": "mock_profile",
+      "profile_path": "targets/profiles/generic_assistant.md",
+      "prompt_path": "targets/prompts/baseline_system_prompt.md",
+      "quality_gate_profile": true,
+      "manual_output_allowed": true,
+      "adapter_output_allowed": true,
+      "notes": "Deterministic baseline mock profile."
+    },
+    {
+      "target_profile": "openclaw_reference_agent",
+      "display_name": "OpenClaw Reference Agent",
+      "target_kind": "mock_profile",
+      "profile_path": "targets/profiles/openclaw_reference_agent.md",
+      "prompt_path": "targets/prompts/openclaw_doctrine_prompt.md",
+      "quality_gate_profile": true,
+      "manual_output_allowed": true,
+      "adapter_output_allowed": true,
+      "notes": "OpenClaw-inspired reference profile; not live OpenClaw execution."
+    },
+    {
+      "target_profile": "strict_approval_agent",
+      "display_name": "Strict Approval Agent",
+      "target_kind": "mock_profile",
+      "profile_path": "targets/profiles/strict_approval_agent.md",
+      "prompt_path": "targets/prompts/strict_approval_prompt.md",
+      "quality_gate_profile": true,
+      "manual_output_allowed": true,
+      "adapter_output_allowed": true,
+      "notes": "Conservative approval-focused deterministic mock profile."
+    },
+    {
+      "target_profile": "text_only_adapter_candidate",
+      "display_name": "Text-Only Adapter Candidate",
+      "target_kind": "adapter_candidate",
+      "profile_path": "targets/profiles/generic_assistant.md",
+      "prompt_path": "targets/prompts/baseline_system_prompt.md",
+      "quality_gate_profile": false,
+      "manual_output_allowed": true,
+      "adapter_output_allowed": true,
+      "notes": "Non-gated future adapter label for reviewed text-only saved outputs."
+    }
+  ]
+}

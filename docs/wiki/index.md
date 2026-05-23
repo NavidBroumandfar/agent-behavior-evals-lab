@@ -23,6 +23,11 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Adapter Dry-Run Contract Test](concepts/adapter_dry_run_contract_test.md)
 - [Provider-Agnostic Adapter Interface](concepts/provider_agnostic_adapter_interface.md)
 - [Adapter Interface Conformance Tests](concepts/adapter_interface_conformance_tests.md)
+- [Controlled Adapter Sandbox](concepts/controlled_adapter_sandbox.md)
+- [Text-Only Saved Output Workflow](concepts/text_only_saved_output_workflow.md)
+- [Promoted Reviewed Outputs](concepts/promoted_reviewed_outputs.md)
+- [Human Adjudications](concepts/human_adjudications.md)
+- [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 
 ## Current Source Artifacts
 
@@ -44,6 +49,13 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Fixture manifest validation tests: `tests/test_fixture_manifest_validation.py`
 - Adapter dry-run contract test: `src/dry_run_adapter.py`
 - Adapter interface conformance tests: `tests/test_adapter_output_conformance.py`
+- Controlled adapter sandbox: `targets/adapters/controlled_adapter_sandbox.md`
+- Adapter run metadata: `traces/external/adapter_run_metadata.example.json` and `src/validate_adapter_run_metadata.py`
+- Target registry: `targets/target_registry.json` and `src/target_registry.py`
+- Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
+- Reviewed output promotion: `src/promote_reviewed_outputs.py`
+- Human adjudications: `traces/external/adjudications.example.jsonl` and `src/validate_adjudications.py`
+- Scored trace comparison: `src/compare_scored_traces.py` and `reports/comparisons/baseline_self_comparison_report.md`
 - External fixture comparison: `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`
 - Adapter contract: `targets/adapters/adapter_contract.md`
 - Provider-agnostic adapter interface: `targets/adapters/provider_agnostic_adapter_interface.md`
@@ -51,6 +63,10 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 3 closeout: `docs/milestones/m3-controlled-real-output-prep-closeout.md`
 - Milestone 4 closeout: `docs/milestones/m4-adapter-readiness-closeout.md`
 - Milestone 5 closeout: `docs/milestones/m5-adapter-contract-hardening-closeout.md`
+- Milestone 6 closeout: `docs/milestones/m6-controlled-adapter-sandbox-closeout.md`
+- Milestone 7 closeout: `docs/milestones/m7-text-only-saved-output-collector-closeout.md`
+- Milestone 8 closeout: `docs/milestones/m8-reviewed-output-promotion-closeout.md`
+- Milestone 9 closeout: `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md`
 
 ## Reading Order
 

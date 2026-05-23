@@ -13,6 +13,7 @@ from typing import Any
 
 from model_clients import MockModelClient
 from scorers import score_response
+from target_registry import quality_gate_profile_names
 from trace_writer import write_jsonl
 
 
@@ -25,11 +26,7 @@ CASE_PATHS = [
     REPO_ROOT / "evals/cases/uncertainty_cases.jsonl",
 ]
 
-PROFILE_NAMES = [
-    "generic_assistant",
-    "openclaw_reference_agent",
-    "strict_approval_agent",
-]
+PROFILE_NAMES = quality_gate_profile_names()
 
 RUN_ID = "baseline_mock_run"
 OUTPUT_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
@@ -77,7 +74,7 @@ def build_trace_record(
 ) -> dict[str, Any]:
     """Combine case, response, and score data into one scored trace record."""
 
-    return {
+    trace_record = {
         "run_id": run_id,
         "timestamp": timestamp,
         "case_id": score["case_id"],
@@ -96,6 +93,20 @@ def build_trace_record(
         "scoring_notes": case.get("scoring_notes", ""),
         "rationale": score["rationale"],
     }
+
+    for field_name in [
+        "source_record_id",
+        "source_type",
+        "adapter_name",
+        "adapter_version",
+        "adapter_provenance",
+        "adapter_provenance_details",
+        "adapter_metadata",
+    ]:
+        if field_name in response:
+            trace_record[field_name] = response[field_name]
+
+    return trace_record
 
 
 def run_eval() -> dict[str, Any]:

@@ -28,6 +28,7 @@ EXPECTED_DRY_RUN_ADAPTER_OUTPUT_LINES = 4
 DRY_RUN_ADAPTER_TRACE_PATH = REPO_ROOT / "traces/scored/dry_run_adapter_output_import.jsonl"
 EXPECTED_DRY_RUN_ADAPTER_TRACE_LINES = 4
 EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/external_fixture_comparison_report.md"
+BASELINE_SELF_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/baseline_self_comparison_report.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -43,6 +44,10 @@ CHECKS = [
     (
         "schema validation",
         ["python3", "src/validate_schemas.py"],
+    ),
+    (
+        "target registry validation",
+        ["python3", "src/target_registry.py"],
     ),
     (
         "adapter output fixture validation",
@@ -125,12 +130,36 @@ CHECKS = [
         ["python3", "src/validate_fixture_manifest.py"],
     ),
     (
+        "adapter run metadata validation",
+        ["python3", "src/validate_adapter_run_metadata.py"],
+    ),
+    (
+        "adjudication validation",
+        ["python3", "src/validate_adjudications.py"],
+    ),
+    (
+        "baseline self trace comparison",
+        [
+            "python3",
+            "src/compare_scored_traces.py",
+            "--before",
+            "traces/scored/baseline_mock_run.jsonl",
+            "--after",
+            "traces/scored/baseline_mock_run.jsonl",
+            "--output",
+            "reports/comparisons/baseline_self_comparison_report.md",
+            "--title",
+            "Baseline Self Comparison Report",
+        ],
+    ),
+    (
         "py_compile",
         [
             "python3",
             "-m",
             "py_compile",
             "src/model_clients.py",
+            "src/target_registry.py",
             "src/scorers.py",
             "src/trace_writer.py",
             "src/run_eval.py",
@@ -146,6 +175,12 @@ CHECKS = [
             "src/dry_run_adapter.py",
             "src/compare_external_fixtures.py",
             "src/validate_fixture_manifest.py",
+            "src/validate_adapter_run_metadata.py",
+            "src/collect_text_only_outputs.py",
+            "src/review_text_only_outputs.py",
+            "src/promote_reviewed_outputs.py",
+            "src/validate_adjudications.py",
+            "src/compare_scored_traces.py",
         ],
     ),
 ]
@@ -225,6 +260,8 @@ def main() -> int:
                 verify_trace_count(SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES)
             if name == "external fixture comparison report generation":
                 verify_report_exists(EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH)
+            if name == "baseline self trace comparison":
+                verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

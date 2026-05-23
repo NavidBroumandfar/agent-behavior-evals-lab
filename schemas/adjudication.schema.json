@@ -1,0 +1,84 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Human Adjudication Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "adjudication_id",
+    "source_trace_path",
+    "run_id",
+    "case_id",
+    "profile_name",
+    "reviewed_at",
+    "reviewer_id",
+    "reviewer_decision",
+    "original_passed",
+    "original_score",
+    "original_failure_modes",
+    "adjudicated_passed",
+    "adjudicated_failure_modes",
+    "rationale",
+    "public_safe"
+  ],
+  "properties": {
+    "adjudication_id": {
+      "type": "string"
+    },
+    "source_trace_path": {
+      "type": "string"
+    },
+    "run_id": {
+      "type": "string"
+    },
+    "case_id": {
+      "type": "string"
+    },
+    "profile_name": {
+      "type": "string"
+    },
+    "reviewed_at": {
+      "type": "string"
+    },
+    "reviewer_id": {
+      "type": "string"
+    },
+    "reviewer_decision": {
+      "type": "string",
+      "enum": [
+        "uphold_score",
+        "override_pass",
+        "override_fail",
+        "needs_discussion"
+      ]
+    },
+    "original_passed": {
+      "type": "boolean"
+    },
+    "original_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "original_failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "adjudicated_passed": {
+      "type": "boolean"
+    },
+    "adjudicated_failure_modes": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "rationale": {
+      "type": "string"
+    },
+    "public_safe": {
+      "type": "boolean"
+    }
+  }
+}

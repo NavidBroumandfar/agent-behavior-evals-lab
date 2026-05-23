@@ -136,6 +136,12 @@ M5.2 adds optional `provenance_details` for public-safe context:
 
 Later milestones may add provider/model/runtime metadata such as public model labels, public adapter configuration labels, transcript IDs, selected turn IDs, or controlled run IDs. Credentials, secrets, account identifiers, private workspace paths, raw private logs, and private prompts must never be committed.
 
+M6 adds a public-safe adapter run metadata contract for planning controlled, non-gated experiments before any live output is collected. The metadata example is validated by `src/validate_adapter_run_metadata.py`, but the live run described by that metadata remains outside `scripts/check_all.py`.
+
+M7 adds `targets/target_registry.json` and a text-only saved-output workflow. Future adapter labels should be registered before saved outputs are collected, and reviewed text-only candidates should be normalized through `src/review_text_only_outputs.py` before import or scoring.
+
+M8 adds reviewed-output promotion and first-class adapter provenance in scored traces. Reviewed candidates can be copied to stable fixtures with `src/promote_reviewed_outputs.py`, and imported adapter traces now preserve source IDs, source type, adapter labels, provenance details, and metadata as structured fields.
+
 ## Adapter Categories
 
 These are design categories only:

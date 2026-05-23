@@ -103,6 +103,28 @@ class AdapterOutputConformanceTests(unittest.TestCase):
             self.assertEqual({record["timestamp"] for record in records}, {"2026-05-10T00:00:00Z"})
             self.assertEqual({record["run_id"] for record in records}, {"m4_adapter_output_fixture_import"})
             self.assertTrue(all("provenance_details=" in record["mock_behavior_notes"] for record in records))
+            self.assertTrue(all("source_record_id" in record for record in records))
+            self.assertTrue(all("adapter_name" in record for record in records))
+            self.assertTrue(all("adapter_provenance" in record for record in records))
+            self.assertTrue(all("adapter_provenance_details" in record for record in records))
+
+    def test_importer_accepts_registered_text_only_adapter_candidate_profile(self):
+        record = valid_adapter_output_record()
+        record["target_profile"] = "text_only_adapter_candidate"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            input_path = Path(temp_dir) / "text_only_adapter_output.jsonl"
+            output_path = Path(temp_dir) / "text_only_adapter_import.jsonl"
+            write_jsonl(input_path, [record])
+
+            summary = import_adapter_outputs(input_path, output_path)
+
+            self.assertEqual(summary["total_adapter_output_records"], 1)
+            records = [json.loads(line) for line in output_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(records[0]["profile_name"], "text_only_adapter_candidate")
+            self.assertEqual(records[0]["source_record_id"], "TEST-ADAPTER-OUTPUT-001")
+            self.assertEqual(records[0]["adapter_name"], "unit_test_adapter_fixture")
+            self.assertTrue(records[0]["passed"])
 
     def test_m4_style_record_without_provenance_details_still_validates(self):
         record = valid_adapter_output_record()

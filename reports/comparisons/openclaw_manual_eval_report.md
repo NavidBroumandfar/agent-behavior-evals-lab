@@ -69,7 +69,7 @@ Each JSONL record must include `case_id`, `target_profile`, and `model_output`. 
 ## Limitations
 
 - Manual records are local pasted or saved outputs; there is no provenance guarantee beyond the public-safe fields in the input file.
-- `target_profile` is currently limited to the repository's existing target profile names so scored traces remain compatible with the current schema.
+- `target_profile` must be present in the target registry so manual outputs remain auditable.
 - The scorer is deterministic and heuristic-based; it is useful for pipeline checks and failure surfacing, not final behavioral truth.
 - This mode evaluates final text only. It does not replay tool calls, intermediate reasoning, approvals, UI state, or transcript timing.
 

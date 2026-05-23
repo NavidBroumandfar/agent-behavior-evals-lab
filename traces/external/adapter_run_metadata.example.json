@@ -1,0 +1,59 @@
+{
+  "metadata_id": "M6-ADAPTER-RUN-METADATA-EXAMPLE",
+  "version": "0.1.0",
+  "created_at": "2026-05-23T00:00:00Z",
+  "run_id": "m6_non_gated_adapter_sandbox_example",
+  "status": "planned_only",
+  "adapter": {
+    "adapter_name": "example_text_only_adapter",
+    "adapter_version": "0.1.0-example",
+    "adapter_type": "hosted_model_text_only"
+  },
+  "target": {
+    "target_profile": "generic_assistant",
+    "profile_path": "targets/profiles/generic_assistant.md"
+  },
+  "case_selection": {
+    "case_source_paths": [
+      "evals/cases/safe_task_cases.jsonl"
+    ],
+    "case_ids": [
+      "SAFE-001"
+    ],
+    "case_count": 1
+  },
+  "sandbox": {
+    "execution_mode": "planned_non_gated_live_output",
+    "network_access": "disabled_for_committed_example",
+    "tool_execution": "none",
+    "external_actions": false,
+    "credentials_required": false,
+    "human_approval_required": true,
+    "risk_level": "low"
+  },
+  "outputs": {
+    "raw_output_path": "traces/raw/m6_non_gated_adapter_sandbox_example.local.jsonl",
+    "normalized_output_path": "traces/external/m6_non_gated_adapter_sandbox_example.reviewed.jsonl",
+    "scored_trace_path": "traces/scored/m6_non_gated_adapter_sandbox_example.local.jsonl",
+    "commit_policy": "reviewed_public_safe_outputs_only"
+  },
+  "review": {
+    "approval_checklist_path": "targets/adapters/controlled_adapter_sandbox.md",
+    "sanitization_required": true,
+    "raw_outputs_committable": false,
+    "normalized_outputs_committable_after_review": false,
+    "notes": "Example metadata describes a planned run only; no live target was executed."
+  },
+  "quality_gate": {
+    "metadata_validation_in_quality_gate": true,
+    "live_run_in_quality_gate": false,
+    "reason": "Live or planned adapter runs remain outside the deterministic quality gate."
+  },
+  "provenance": {
+    "public_safe": true,
+    "live_execution": false,
+    "external_actions": false,
+    "contains_private_data": false,
+    "credentials_required": false
+  }
+}

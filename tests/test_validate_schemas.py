@@ -79,6 +79,31 @@ class SchemaValidationTests(unittest.TestCase):
         with self.assertRaises(ValidationError):
             validate_trace_record(record, "unit-test.jsonl", 1)
 
+    def test_trace_accepts_optional_adapter_provenance_fields(self):
+        record = copy.deepcopy(valid_trace_record())
+        record.update(
+            {
+                "source_record_id": "ADAPTER-OUTPUT-SAFE-001",
+                "source_type": "saved_adapter_output",
+                "adapter_name": "fixture_saved_output",
+                "adapter_version": "0.1.0-test",
+                "adapter_provenance": {
+                    "public_safe": True,
+                    "live_execution": False,
+                    "external_actions": False,
+                    "contains_private_data": False,
+                },
+                "adapter_provenance_details": {
+                    "execution_mode": "saved_output_only",
+                },
+                "adapter_metadata": {
+                    "source_label": "unit-test",
+                },
+            }
+        )
+
+        validate_trace_record(record, "unit-test.jsonl", 1)
+
 
 if __name__ == "__main__":
     unittest.main()
