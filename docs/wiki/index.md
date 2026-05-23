@@ -57,7 +57,8 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Target registry: `targets/target_registry.json` and `src/target_registry.py`
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Reviewed output promotion: `src/promote_reviewed_outputs.py`
-- Human adjudications: `traces/external/adjudications.example.jsonl` and `src/validate_adjudications.py`
+- Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, and `src/validate_adjudications.py`
+- Adjudication fixture manifest: `traces/external/adjudication_manifest.json`
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
 - Shared reporting utilities: `src/reporting_utils.py`
@@ -76,6 +77,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 10 closeout: `docs/milestones/m10-adjudication-aware-reporting-closeout.md`
 - Milestone 11 closeout: `docs/milestones/m11-reporting-regression-hardening-closeout.md`
 - Milestone 12 closeout: `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md`
+- Milestone 13 closeout: `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md`
 
 ## Reading Order
 

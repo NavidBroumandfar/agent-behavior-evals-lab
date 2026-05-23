@@ -17,6 +17,15 @@ Run both reports from the repository root:
 python3 src/adjudication_report.py
 ```
 
+M13 adds manifest-backed reporting for multiple committed adjudication fixture families. With `traces/external/adjudication_manifest.json` present, the no-argument command uses the manifest-backed path; the explicit form is:
+
+```bash
+python3 src/adjudication_report.py \
+  --manifest traces/external/adjudication_manifest.json
+```
+
+When `--manifest` is provided, `--input` is ignored. The summary report includes fixture family counts, fixture paths, quality-gate inclusion status, and reviewer decision counts by fixture.
+
 To write only the summary report:
 
 ```bash
@@ -25,10 +34,17 @@ python3 src/adjudication_report.py --skip-aggregate
 
 ## Failure Inspection
 
-`src/inspect_failures.py` now loads adjudications by default and annotates failed baseline records with reviewer decisions when a matching adjudication exists.
+`src/inspect_failures.py` loads adjudications by default and annotates failed baseline records with reviewer decisions when a matching adjudication exists.
 
 ```bash
 python3 src/inspect_failures.py
+```
+
+Use the manifest path when failure inspection should include every committed adjudication fixture family:
+
+```bash
+python3 src/inspect_failures.py \
+  --adjudication-manifest traces/external/adjudication_manifest.json
 ```
 
 The annotation key is source trace path, run ID, case ID, and profile name. Unreviewed failures remain visible as unreviewed records.
@@ -51,18 +67,28 @@ Run the check from the repository root:
 python3 src/adjudication_regression_check.py
 ```
 
+For the manifest-backed multi-fixture snapshot path:
+
+```bash
+python3 src/adjudication_regression_check.py \
+  --manifest traces/external/adjudication_manifest.json
+```
+
 Optional thresholds can turn review coverage or unresolved discussion counts into local gate checks:
 
 ```bash
 python3 src/adjudication_regression_check.py \
+  --manifest traces/external/adjudication_manifest.json \
   --min-review-coverage 5.0 \
-  --max-needs-discussion 2
+  --max-needs-discussion 3
 ```
 
 When an intentional fixture change should update the expected counts:
 
 ```bash
-python3 src/adjudication_regression_check.py --write-snapshot
+python3 src/adjudication_regression_check.py \
+  --manifest traces/external/adjudication_manifest.json \
+  --write-snapshot
 ```
 
 ## Boundaries

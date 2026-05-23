@@ -15,15 +15,18 @@ Snapshots make aggregate changes explicit before they enter the local quality ga
 Only update a snapshot when the underlying fixture or intended aggregate behavior changed. For adjudications:
 
 ```bash
-python3 src/adjudication_regression_check.py --write-snapshot
+python3 src/adjudication_regression_check.py \
+  --manifest traces/external/adjudication_manifest.json \
+  --write-snapshot
 ```
 
-The adjudication checker also supports optional quality thresholds:
+The adjudication checker also supports optional quality thresholds. The current manifest-backed quality gate uses:
 
 ```bash
 python3 src/adjudication_regression_check.py \
+  --manifest traces/external/adjudication_manifest.json \
   --min-review-coverage 5.0 \
-  --max-needs-discussion 2
+  --max-needs-discussion 3
 ```
 
 Then run:

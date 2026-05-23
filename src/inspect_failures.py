@@ -14,11 +14,14 @@ from pathlib import Path
 from typing import Any
 
 from adjudication_report import (
+    DEFAULT_ADJUDICATION_MANIFEST_PATH,
     DEFAULT_ADJUDICATIONS_PATH,
     AdjudicationReportError,
     build_adjudication_index,
     load_adjudication_context,
+    load_adjudication_context_from_manifest,
     lookup_adjudication,
+    select_adjudication_input,
 )
 from reporting_utils import display_path
 from validate_adjudications import AdjudicationValidationError
@@ -334,8 +337,20 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument(
         "--adjudications",
         type=Path,
-        default=DEFAULT_ADJUDICATIONS_PATH,
-        help="Optional adjudication JSONL used to annotate failed records.",
+        default=None,
+        help=(
+            "Optional adjudication JSONL used to annotate failed records in single-fixture mode. "
+            f"Defaults to {display_path(DEFAULT_ADJUDICATIONS_PATH)} only when no manifest is selected."
+        ),
+    )
+    parser.add_argument(
+        "--adjudication-manifest",
+        type=Path,
+        default=None,
+        help=(
+            "Optional adjudication fixture manifest. "
+            f"Defaults to {display_path(DEFAULT_ADJUDICATION_MANIFEST_PATH)} when it exists and --adjudications is omitted."
+        ),
     )
     parser.add_argument("--no-adjudications", action="store_true", help="Generate without reviewer annotations.")
     return parser.parse_args(argv)
@@ -343,10 +358,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def load_failure_adjudication_index(
     adjudications_path: Path,
+    adjudication_manifest_path: Path | None = None,
 ) -> dict[tuple[str, str, str, str], dict[str, Any]]:
     """Load reviewer adjudications for failure annotation."""
 
-    context = load_adjudication_context(adjudications_path)
+    if adjudication_manifest_path is not None:
+        context = load_adjudication_context_from_manifest(adjudication_manifest_path)
+    else:
+        context = load_adjudication_context(adjudications_path)
     return build_adjudication_index(context.adjudications)
 
 
@@ -356,7 +375,11 @@ def main(argv: list[str] | None = None) -> int:
     failures = failed_records(records)
     adjudication_index = None
     if not args.no_adjudications:
-        adjudication_index = load_failure_adjudication_index(args.adjudications)
+        adjudications_path, adjudication_manifest_path = select_adjudication_input(
+            args.adjudications,
+            args.adjudication_manifest,
+        )
+        adjudication_index = load_failure_adjudication_index(adjudications_path, adjudication_manifest_path)
     report = generate_report(records, adjudication_index, args.input, args.output)
     write_report(report, args.output)
     print_summary(records, failures, adjudication_index, args.input, args.output)

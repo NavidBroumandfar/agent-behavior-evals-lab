@@ -95,7 +95,12 @@ CHECKS = [
     ),
     (
         "failure inspection generation",
-        ["python3", "src/inspect_failures.py"],
+        [
+            "python3",
+            "src/inspect_failures.py",
+            "--adjudication-manifest",
+            "traces/external/adjudication_manifest.json",
+        ],
     ),
     (
         "manual output eval generation",
@@ -141,18 +146,24 @@ CHECKS = [
         ["python3", "src/validate_adjudications.py"],
     ),
     (
+        "followup adjudication validation",
+        ["python3", "src/validate_adjudications.py", "traces/external/adjudications.followup.example.jsonl"],
+    ),
+    (
         "adjudication report generation",
-        ["python3", "src/adjudication_report.py"],
+        ["python3", "src/adjudication_report.py", "--manifest", "traces/external/adjudication_manifest.json"],
     ),
     (
         "adjudication regression snapshot check",
         [
             "python3",
             "src/adjudication_regression_check.py",
+            "--manifest",
+            "traces/external/adjudication_manifest.json",
             "--min-review-coverage",
             "5.0",
             "--max-needs-discussion",
-            "2",
+            "3",
         ],
     ),
     (

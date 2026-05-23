@@ -30,7 +30,12 @@ Supported reviewer decisions are:
 
 Adjudications do not rescore outputs or rewrite traces. They are a public-safe review layer that future reports can consume.
 
-The committed example fixture is `traces/external/adjudications.example.jsonl`.
+The committed example fixtures are:
+
+- `traces/external/adjudications.example.jsonl`
+- `traces/external/adjudications.followup.example.jsonl`
+
+M13 indexes committed adjudication fixture families in `traces/external/adjudication_manifest.json`. The manifest records each fixture path, expected record count, source trace paths, quality-gate inclusion status, and public-safe safety assertions.
 
 ## Reporting
 
@@ -41,4 +46,4 @@ M10 adds `src/adjudication_report.py`, which writes:
 
 `src/inspect_failures.py` also annotates failed records with matching reviewer decisions by default. These reports keep heuristic and reviewed results separate.
 
-M11 adds `src/adjudication_regression_check.py`, which checks current adjudication aggregates against `reports/comparisons/adjudication_regression_snapshot.json`.
+M11 adds `src/adjudication_regression_check.py`, which checks current adjudication aggregates against `reports/comparisons/adjudication_regression_snapshot.json`. M13 lets that snapshot be built from `traces/external/adjudication_manifest.json` so multiple adjudication fixture families are checked together.

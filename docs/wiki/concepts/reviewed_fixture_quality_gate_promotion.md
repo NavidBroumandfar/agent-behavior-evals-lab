@@ -13,7 +13,8 @@ Before setting a promoted fixture's `quality_gate_included` field to `true` in `
 - `expected_record_count` and `expected_scored_count` match the committed JSONL line counts.
 - `report_paths` includes every deterministic report that should summarize the fixture.
 - `src/compare_external_fixtures.py` includes the fixture through the manifest-driven comparison, not through a hard-coded source list.
-- Any reviewer adjudications that affect interpretation are captured in `traces/external/adjudications.example.jsonl` or a future committed adjudication fixture.
+- Any reviewer adjudications that affect interpretation are captured in a committed adjudication fixture under `traces/external/`.
+- The adjudication fixture is listed in `traces/external/adjudication_manifest.json` with the correct expected record count, source trace paths, quality-gate status, and public-safe safety assertions.
 - The adjudication summary and adjudicated aggregate reports clearly separate heuristic results from reviewed results.
 - `python3 scripts/check_all.py` passes after the fixture, scored trace, manifest, reports, and docs are updated.
 

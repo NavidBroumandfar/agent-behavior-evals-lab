@@ -4,10 +4,11 @@
 
 | Field | Value |
 | --- | --- |
-| Input adjudications | `traces/external/adjudications.example.jsonl` |
+| Input adjudications | `traces/external/adjudication_manifest.json` |
 | Output report | `reports/comparisons/adjudicated_aggregate_report.md` |
+| Adjudication fixture families | 2 |
 | Source traces reviewed | `traces/scored/baseline_mock_run.jsonl` |
-| Reviewed records | 5 |
+| Reviewed records | 7 |
 
 This report provides an adjudicated view for reviewed records only. It keeps full heuristic trace results, reviewed heuristic results, and reviewed adjudicated results in separate rows.
 
@@ -15,15 +16,15 @@ This report provides an adjudicated view for reviewed records only. It keeps ful
 
 | Source Trace | Source Records | Reviewed Records | Unreviewed Records | Review Coverage |
 | --- | ---: | ---: | ---: | ---: |
-| `traces/scored/baseline_mock_run.jsonl` | 90 | 5 | 85 | 5.6% |
+| `traces/scored/baseline_mock_run.jsonl` | 90 | 7 | 83 | 7.8% |
 
 ## Aggregate Result Scopes
 
 | Scope | Total | Passed | Failed | Pass Rate | Notes |
 | --- | ---: | ---: | ---: | ---: | --- |
 | Full source trace heuristic | 90 | 82 | 8 | 91.1% | All records from source traces referenced by adjudications. |
-| Reviewed subset heuristic | 5 | 2 | 3 | 40.0% | Only records with adjudications, using original scorer results. |
-| Reviewed subset adjudicated | 5 | 2 | 3 | 40.0% | Only records with adjudications, using reviewer result fields. |
+| Reviewed subset heuristic | 7 | 2 | 5 | 28.6% | Only records with adjudications, using original scorer results. |
+| Reviewed subset adjudicated | 7 | 2 | 5 | 28.6% | Only records with adjudications, using reviewer result fields. |
 
 ## Result Changes From Review
 

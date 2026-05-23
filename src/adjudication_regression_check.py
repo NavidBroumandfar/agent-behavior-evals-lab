@@ -14,11 +14,14 @@ from pathlib import Path
 from typing import Any
 
 from adjudication_report import (
+    DEFAULT_ADJUDICATION_MANIFEST_PATH,
     DEFAULT_ADJUDICATIONS_PATH,
     DECISION_ORDER,
     AdjudicationContext,
     AdjudicationReportError,
     load_adjudication_context,
+    load_adjudication_context_from_manifest,
+    select_adjudication_input,
 )
 from reporting_utils import compare_nested_values, display_path, load_json_object, percent, write_json_object
 from validate_adjudications import AdjudicationValidationError
@@ -50,7 +53,9 @@ def build_snapshot(
     ]
 
     return {
-        "adjudication_fixture": display_path(adjudications_path, repo_root),
+        "adjudication_input": display_path(adjudications_path, repo_root),
+        "adjudication_fixture_count": len(context.fixtures),
+        "adjudication_fixtures": _adjudication_fixtures_summary(context),
         "adjudication_records": len(context.adjudications),
         "source_trace_count": len(context.source_records_by_path),
         "source_trace_records": len(source_records),
@@ -78,12 +83,18 @@ def check_snapshot(
     snapshot_path: Path = DEFAULT_SNAPSHOT_PATH,
     min_review_coverage: float | None = None,
     max_needs_discussion: int | None = None,
+    manifest_path: Path | None = None,
 ) -> dict[str, Any]:
     """Load current adjudication aggregates and compare them to the saved snapshot."""
 
-    context = load_adjudication_context(adjudications_path)
+    if manifest_path is not None:
+        context = load_adjudication_context_from_manifest(manifest_path)
+        input_path = manifest_path
+    else:
+        context = load_adjudication_context(adjudications_path)
+        input_path = adjudications_path
     expected = load_json_object(snapshot_path)
-    current = build_snapshot(context, adjudications_path)
+    current = build_snapshot(context, input_path)
     differences = compare_snapshots(expected, current)
     differences.extend(threshold_violations(current, min_review_coverage, max_needs_discussion))
     return {
@@ -96,11 +107,17 @@ def check_snapshot(
 def write_current_snapshot(
     adjudications_path: Path = DEFAULT_ADJUDICATIONS_PATH,
     snapshot_path: Path = DEFAULT_SNAPSHOT_PATH,
+    manifest_path: Path | None = None,
 ) -> dict[str, Any]:
     """Write the current adjudication aggregate snapshot."""
 
-    context = load_adjudication_context(adjudications_path)
-    snapshot = build_snapshot(context, adjudications_path)
+    if manifest_path is not None:
+        context = load_adjudication_context_from_manifest(manifest_path)
+        input_path = manifest_path
+    else:
+        context = load_adjudication_context(adjudications_path)
+        input_path = adjudications_path
+    snapshot = build_snapshot(context, input_path)
     write_json_object(snapshot, snapshot_path)
     return snapshot
 
@@ -108,8 +125,9 @@ def write_current_snapshot(
 def print_summary(snapshot: dict[str, Any], passed: bool, snapshot_path: Path) -> None:
     """Print a concise adjudication regression summary."""
 
-    print(f"adjudication fixture: {snapshot['adjudication_fixture']}")
+    print(f"adjudication input: {snapshot['adjudication_input']}")
     print(f"snapshot path: {display_path(snapshot_path)}")
+    print(f"adjudication fixture families: {snapshot['adjudication_fixture_count']}")
     print(f"adjudication records: {snapshot['adjudication_records']}")
     print(f"source trace count: {snapshot['source_trace_count']}")
     print(f"needs discussion: {snapshot['reviewer_decisions'].get('needs_discussion', 0)}")
@@ -149,6 +167,26 @@ def threshold_violations(
             )
 
     return violations
+
+
+def _adjudication_fixtures_summary(context: AdjudicationContext) -> dict[str, dict[str, Any]]:
+    grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
+    for adjudication in context.adjudications:
+        fixture = context.fixture_by_adjudication_id[adjudication["adjudication_id"]]
+        grouped[fixture.fixture_id].append(adjudication)
+
+    summary: dict[str, dict[str, Any]] = {}
+    for fixture in context.fixtures:
+        records = grouped[fixture.fixture_id]
+        decision_counts = Counter(str(record["reviewer_decision"]) for record in records)
+        summary[fixture.fixture_id] = {
+            "label": fixture.label,
+            "path": display_path(fixture.path),
+            "records": len(records),
+            "quality_gate_included": fixture.quality_gate_included,
+            "reviewer_decisions": {decision: decision_counts.get(decision, 0) for decision in DECISION_ORDER},
+        }
+    return summary
 
 
 def _parse_percent(value: str) -> float:
@@ -250,7 +288,24 @@ def _failure_mode_distribution(adjudications: list[dict[str, Any]], field_name: 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Check adjudication report aggregates against a snapshot.")
-    parser.add_argument("--input", type=Path, default=DEFAULT_ADJUDICATIONS_PATH, help="Adjudication JSONL input.")
+    parser.add_argument(
+        "--input",
+        type=Path,
+        default=None,
+        help=(
+            "Adjudication JSONL input for single-fixture mode. "
+            f"Defaults to {display_path(DEFAULT_ADJUDICATIONS_PATH)} only when no manifest is selected."
+        ),
+    )
+    parser.add_argument(
+        "--manifest",
+        type=Path,
+        default=None,
+        help=(
+            "Optional adjudication fixture manifest. "
+            f"Defaults to {display_path(DEFAULT_ADJUDICATION_MANIFEST_PATH)} when it exists and --input is omitted."
+        ),
+    )
     parser.add_argument("--snapshot", type=Path, default=DEFAULT_SNAPSHOT_PATH, help="Expected snapshot JSON path.")
     parser.add_argument("--write-snapshot", action="store_true", help="Overwrite the snapshot with current aggregates.")
     parser.add_argument(
@@ -270,15 +325,22 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
+    adjudications_path, manifest_path = select_adjudication_input(args.input, args.manifest)
 
     try:
         if args.write_snapshot:
-            snapshot = write_current_snapshot(args.input, args.snapshot)
+            snapshot = write_current_snapshot(adjudications_path, args.snapshot, manifest_path)
             print_summary(snapshot, True, args.snapshot)
             print("snapshot written")
             return 0
 
-        result = check_snapshot(args.input, args.snapshot, args.min_review_coverage, args.max_needs_discussion)
+        result = check_snapshot(
+            adjudications_path,
+            args.snapshot,
+            args.min_review_coverage,
+            args.max_needs_discussion,
+            manifest_path,
+        )
     except (AdjudicationValidationError, AdjudicationReportError, AdjudicationRegressionError, OSError, ValueError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

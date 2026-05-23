@@ -1,0 +1,58 @@
+{
+  "manifest_id": "adjudication_manifest",
+  "version": "0.1.0",
+  "generated_at": "2026-05-23T00:00:00Z",
+  "purpose": "Index committed public-safe human adjudication fixture families for deterministic reporting and regression checks.",
+  "scope": [
+    "Public-safe adjudication JSONL fixtures under traces/external/.",
+    "Existing scored traces referenced by those adjudications.",
+    "Deterministic local reporting and regression checks only."
+  ],
+  "non_goals": [
+    "No automatic scorer overrides.",
+    "No automatic trace rewriting.",
+    "No live provider APIs or provider SDKs.",
+    "No local model execution.",
+    "No live OpenClaw CLI execution.",
+    "No browser, email, messaging, purchase, file mutation, or other external actions.",
+    "No credentials, secrets, network calls, or private runtime integration."
+  ],
+  "adjudication_fixtures": [
+    {
+      "fixture_id": "baseline_reviewed_decisions",
+      "label": "Baseline Reviewed Decisions",
+      "path": "traces/external/adjudications.example.jsonl",
+      "description": "Primary public-safe reviewer decisions over the deterministic baseline mock trace.",
+      "expected_record_count": 5,
+      "quality_gate_included": true,
+      "source_trace_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "baseline_followup_review_queue",
+      "label": "Baseline Followup Review Queue",
+      "path": "traces/external/adjudications.followup.example.jsonl",
+      "description": "Additional public-safe follow-up reviewer decisions used to exercise multi-fixture reporting.",
+      "expected_record_count": 2,
+      "quality_gate_included": true,
+      "source_trace_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    }
+  ]
+}
