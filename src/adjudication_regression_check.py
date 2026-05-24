@@ -8,6 +8,7 @@ traces, call models, execute agents, or collect live outputs.
 from __future__ import annotations
 
 import argparse
+import math
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -18,9 +19,11 @@ from adjudication_report import (
     DEFAULT_ADJUDICATIONS_PATH,
     DECISION_ORDER,
     AdjudicationContext,
+    AdjudicationQualityGateThresholds,
     AdjudicationReportError,
     load_adjudication_context,
-    load_adjudication_context_from_manifest,
+    load_adjudication_context_from_fixtures,
+    load_adjudication_manifest_data,
     select_adjudication_input,
 )
 from reporting_utils import compare_nested_values, display_path, load_json_object, percent, write_json_object
@@ -93,23 +96,26 @@ def check_snapshot(
 ) -> dict[str, Any]:
     """Load current adjudication aggregates and compare them to the saved snapshot."""
 
-    if manifest_path is not None:
-        context = load_adjudication_context_from_manifest(manifest_path)
-        input_path = manifest_path
-    else:
-        context = load_adjudication_context(adjudications_path)
-        input_path = adjudications_path
+    context, input_path, manifest_thresholds = load_regression_context(adjudications_path, manifest_path)
+    effective_thresholds = quality_gate_thresholds_with_overrides(
+        manifest_thresholds,
+        min_review_coverage=min_review_coverage,
+        max_needs_discussion=max_needs_discussion,
+        min_profile_review_coverage=min_profile_review_coverage,
+        min_category_review_coverage=min_category_review_coverage,
+        max_fixture_needs_discussion=max_fixture_needs_discussion,
+    )
     expected = load_json_object(snapshot_path)
     current = build_snapshot(context, input_path)
     differences = compare_snapshots(expected, current)
     differences.extend(
         threshold_violations(
             current,
-            min_review_coverage,
-            max_needs_discussion,
-            min_profile_review_coverage,
-            min_category_review_coverage,
-            max_fixture_needs_discussion,
+            effective_thresholds.min_review_coverage,
+            effective_thresholds.max_needs_discussion,
+            effective_thresholds.min_profile_review_coverage,
+            effective_thresholds.min_category_review_coverage,
+            effective_thresholds.max_fixture_needs_discussion,
         )
     )
     return {
@@ -126,15 +132,60 @@ def write_current_snapshot(
 ) -> dict[str, Any]:
     """Write the current adjudication aggregate snapshot."""
 
-    if manifest_path is not None:
-        context = load_adjudication_context_from_manifest(manifest_path)
-        input_path = manifest_path
-    else:
-        context = load_adjudication_context(adjudications_path)
-        input_path = adjudications_path
+    context, input_path, _manifest_thresholds = load_regression_context(adjudications_path, manifest_path)
     snapshot = build_snapshot(context, input_path)
     write_json_object(snapshot, snapshot_path)
     return snapshot
+
+
+def load_regression_context(
+    adjudications_path: Path = DEFAULT_ADJUDICATIONS_PATH,
+    manifest_path: Path | None = None,
+) -> tuple[AdjudicationContext, Path, AdjudicationQualityGateThresholds]:
+    """Load adjudication inputs and manifest-declared quality gate policy."""
+
+    if manifest_path is None:
+        return load_adjudication_context(adjudications_path), adjudications_path, AdjudicationQualityGateThresholds()
+
+    manifest = load_adjudication_manifest_data(manifest_path)
+    context = load_adjudication_context_from_fixtures(manifest.fixtures)
+    return context, manifest_path, manifest.quality_gate_thresholds
+
+
+def quality_gate_thresholds_with_overrides(
+    manifest_thresholds: AdjudicationQualityGateThresholds,
+    min_review_coverage: float | None = None,
+    max_needs_discussion: int | None = None,
+    min_profile_review_coverage: dict[str, float] | None = None,
+    min_category_review_coverage: dict[str, float] | None = None,
+    max_fixture_needs_discussion: dict[str, int] | None = None,
+) -> AdjudicationQualityGateThresholds:
+    """Merge manifest quality-gate defaults with explicit CLI-style overrides."""
+
+    return AdjudicationQualityGateThresholds(
+        min_review_coverage=(
+            manifest_thresholds.min_review_coverage
+            if min_review_coverage is None
+            else min_review_coverage
+        ),
+        max_needs_discussion=(
+            manifest_thresholds.max_needs_discussion
+            if max_needs_discussion is None
+            else max_needs_discussion
+        ),
+        min_profile_review_coverage={
+            **manifest_thresholds.min_profile_review_coverage,
+            **(min_profile_review_coverage or {}),
+        },
+        min_category_review_coverage={
+            **manifest_thresholds.min_category_review_coverage,
+            **(min_category_review_coverage or {}),
+        },
+        max_fixture_needs_discussion={
+            **manifest_thresholds.max_fixture_needs_discussion,
+            **(max_fixture_needs_discussion or {}),
+        },
+    )
 
 
 def print_summary(snapshot: dict[str, Any], passed: bool, snapshot_path: Path) -> None:
@@ -460,8 +511,7 @@ def parse_percent_thresholds(values: list[str], option_name: str) -> dict[str, f
             threshold = float(raw_threshold)
         except ValueError as exc:
             raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be a number") from exc
-        if threshold < 0 or threshold > 100:
-            raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be between 0 and 100")
+        threshold = validate_percent_threshold(threshold, f"{option_name} threshold for {key}")
         if key in thresholds:
             raise AdjudicationRegressionError(f"{option_name} duplicate threshold for {key}")
         thresholds[key] = threshold
@@ -476,8 +526,7 @@ def parse_int_thresholds(values: list[str], option_name: str) -> dict[str, int]:
             threshold = int(raw_threshold)
         except ValueError as exc:
             raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be an integer") from exc
-        if threshold < 0:
-            raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be >= 0")
+        threshold = validate_non_negative_int_threshold(threshold, f"{option_name} threshold for {key}")
         if key in thresholds:
             raise AdjudicationRegressionError(f"{option_name} duplicate threshold for {key}")
         thresholds[key] = threshold
@@ -491,6 +540,20 @@ def parse_key_value(value: str, option_name: str) -> tuple[str, str]:
     if not key.strip() or not raw_threshold.strip():
         raise AdjudicationRegressionError(f"{option_name} values must use non-empty name=value format")
     return key.strip(), raw_threshold.strip()
+
+
+def validate_percent_threshold(value: float, context: str) -> float:
+    if not math.isfinite(value):
+        raise AdjudicationRegressionError(f"{context} must be a finite number")
+    if value < 0 or value > 100:
+        raise AdjudicationRegressionError(f"{context} must be between 0 and 100")
+    return value
+
+
+def validate_non_negative_int_threshold(value: int, context: str) -> int:
+    if value < 0:
+        raise AdjudicationRegressionError(f"{context} must be >= 0")
+    return value
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
@@ -519,34 +582,34 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "--min-review-coverage",
         type=float,
         default=None,
-        help="Optional minimum reviewed-record coverage percentage required for each source trace.",
+        help="Override the manifest/default minimum reviewed-record coverage percentage required for each source trace.",
     )
     parser.add_argument(
         "--max-needs-discussion",
         type=int,
         default=None,
-        help="Optional maximum number of records allowed to remain in needs_discussion.",
+        help="Override the manifest/default maximum number of records allowed to remain in needs_discussion.",
     )
     parser.add_argument(
         "--min-profile-review-coverage",
         action="append",
         default=[],
         metavar="PROFILE=PERCENT",
-        help="Optional minimum reviewed-record coverage percentage for a specific profile. Repeatable.",
+        help="Override or add a minimum reviewed-record coverage percentage for a specific profile. Repeatable.",
     )
     parser.add_argument(
         "--min-category-review-coverage",
         action="append",
         default=[],
         metavar="CATEGORY=PERCENT",
-        help="Optional minimum reviewed-record coverage percentage for a specific category. Repeatable.",
+        help="Override or add a minimum reviewed-record coverage percentage for a specific category. Repeatable.",
     )
     parser.add_argument(
         "--max-fixture-needs-discussion",
         action="append",
         default=[],
         metavar="FIXTURE=COUNT",
-        help="Optional maximum needs_discussion count for a specific adjudication fixture. Repeatable.",
+        help="Override or add a maximum needs_discussion count for a specific adjudication fixture. Repeatable.",
     )
     return parser.parse_args(argv)
 
@@ -556,6 +619,16 @@ def main(argv: list[str] | None = None) -> int:
     adjudications_path, manifest_path = select_adjudication_input(args.input, args.manifest)
 
     try:
+        min_review_coverage = (
+            None
+            if args.min_review_coverage is None
+            else validate_percent_threshold(args.min_review_coverage, "--min-review-coverage")
+        )
+        max_needs_discussion = (
+            None
+            if args.max_needs_discussion is None
+            else validate_non_negative_int_threshold(args.max_needs_discussion, "--max-needs-discussion")
+        )
         min_profile_review_coverage = parse_percent_thresholds(
             args.min_profile_review_coverage,
             "--min-profile-review-coverage",
@@ -577,8 +650,8 @@ def main(argv: list[str] | None = None) -> int:
         result = check_snapshot(
             adjudications_path,
             args.snapshot,
-            args.min_review_coverage,
-            args.max_needs_discussion,
+            min_review_coverage,
+            max_needs_discussion,
             manifest_path,
             min_profile_review_coverage=min_profile_review_coverage,
             min_category_review_coverage=min_category_review_coverage,

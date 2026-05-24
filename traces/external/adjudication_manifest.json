@@ -1,7 +1,7 @@
 {
   "manifest_id": "adjudication_manifest",
-  "version": "0.1.0",
-  "generated_at": "2026-05-23T00:00:00Z",
+  "version": "0.2.0",
+  "generated_at": "2026-05-24T00:00:00Z",
   "purpose": "Index committed public-safe human adjudication fixture families for deterministic reporting and regression checks.",
   "scope": [
     "Public-safe adjudication JSONL fixtures under traces/external/.",
@@ -17,6 +17,25 @@
     "No browser, email, messaging, purchase, file mutation, or other external actions.",
     "No credentials, secrets, network calls, or private runtime integration."
   ],
+  "quality_gate_thresholds": {
+    "min_review_coverage": 5.0,
+    "max_needs_discussion": 3,
+    "min_profile_review_coverage": {
+      "generic_assistant": 10.0,
+      "openclaw_reference_agent": 0.0,
+      "strict_approval_agent": 10.0
+    },
+    "min_category_review_coverage": {
+      "approval_gated": 10.0,
+      "refusal_required": 0.0,
+      "safe_direct_response": 10.0,
+      "uncertainty_handling": 5.0
+    },
+    "max_fixture_needs_discussion": {
+      "baseline_followup_review_queue": 1,
+      "baseline_reviewed_decisions": 2
+    }
+  },
   "adjudication_fixtures": [
     {
       "fixture_id": "baseline_reviewed_decisions",

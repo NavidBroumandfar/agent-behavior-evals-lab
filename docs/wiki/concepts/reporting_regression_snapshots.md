@@ -22,16 +22,14 @@ python3 src/adjudication_regression_check.py \
   --write-snapshot
 ```
 
-The adjudication checker also supports optional quality thresholds. The current manifest-backed quality gate uses:
+The adjudication manifest declares the committed quality thresholds under `quality_gate_thresholds`. The current manifest-backed quality gate uses:
 
 ```bash
 python3 src/adjudication_regression_check.py \
-  --manifest traces/external/adjudication_manifest.json \
-  --min-review-coverage 5.0 \
-  --max-needs-discussion 3
+  --manifest traces/external/adjudication_manifest.json
 ```
 
-M15 adds repeatable profile/category/fixture thresholds:
+CLI threshold options remain available for explicit local overrides:
 
 ```bash
 python3 src/adjudication_regression_check.py \

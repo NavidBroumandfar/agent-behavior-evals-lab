@@ -9,10 +9,11 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import re
 import sys
 from collections import Counter, defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -89,6 +90,13 @@ QUALITY_GATE_COMPATIBLE_REVIEW_STATUSES = {
     "reviewed",
     "needs_discussion",
 }
+QUALITY_GATE_THRESHOLD_FIELDS = {
+    "min_review_coverage",
+    "max_needs_discussion",
+    "min_profile_review_coverage",
+    "min_category_review_coverage",
+    "max_fixture_needs_discussion",
+}
 UTC_TIMESTAMP_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 
@@ -105,6 +113,23 @@ class AdjudicationFixture:
     status_notes: str
     last_reviewed_at: str
     source_trace_paths: list[str]
+
+
+@dataclass(frozen=True)
+class AdjudicationQualityGateThresholds:
+    min_review_coverage: float | None = None
+    max_needs_discussion: int | None = None
+    min_profile_review_coverage: dict[str, float] = field(default_factory=dict)
+    min_category_review_coverage: dict[str, float] = field(default_factory=dict)
+    max_fixture_needs_discussion: dict[str, int] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class AdjudicationManifest:
+    fixtures: list[AdjudicationFixture]
+    quality_gate_thresholds: AdjudicationQualityGateThresholds = field(
+        default_factory=AdjudicationQualityGateThresholds
+    )
 
 
 @dataclass(frozen=True)
@@ -149,8 +174,8 @@ def load_adjudication_context_from_manifest(
 ) -> AdjudicationContext:
     """Load adjudication records from a manifest of fixture families."""
 
-    fixtures = load_adjudication_manifest(manifest_path, repo_root)
-    return load_adjudication_context_from_fixtures(fixtures, repo_root)
+    manifest = load_adjudication_manifest_data(manifest_path, repo_root)
+    return load_adjudication_context_from_fixtures(manifest.fixtures, repo_root)
 
 
 def load_adjudication_context_from_selection(
@@ -248,6 +273,15 @@ def load_adjudication_manifest(
     manifest_path: Path = DEFAULT_ADJUDICATION_MANIFEST_PATH,
     repo_root: Path = REPO_ROOT,
 ) -> list[AdjudicationFixture]:
+    """Load and validate adjudication fixture entries from the manifest."""
+
+    return load_adjudication_manifest_data(manifest_path, repo_root).fixtures
+
+
+def load_adjudication_manifest_data(
+    manifest_path: Path = DEFAULT_ADJUDICATION_MANIFEST_PATH,
+    repo_root: Path = REPO_ROOT,
+) -> AdjudicationManifest:
     """Load and validate the adjudication fixture manifest."""
 
     resolved_manifest_path = resolve_repo_path(manifest_path, repo_root)
@@ -293,7 +327,12 @@ def load_adjudication_manifest(
     for index, fixture_value in enumerate(fixtures_value):
         context = f"{display_path(resolved_manifest_path, repo_root)}.adjudication_fixtures[{index}]"
         fixtures.append(load_manifest_fixture(fixture_value, context, seen_fixture_ids, repo_root))
-    return fixtures
+
+    thresholds = load_manifest_quality_gate_thresholds(
+        manifest.get("quality_gate_thresholds"),
+        f"{display_path(resolved_manifest_path, repo_root)}.quality_gate_thresholds",
+    )
+    return AdjudicationManifest(fixtures=fixtures, quality_gate_thresholds=thresholds)
 
 
 def load_manifest_fixture(
@@ -363,6 +402,66 @@ def load_manifest_fixture(
     )
 
 
+def load_manifest_quality_gate_thresholds(value: Any, context: str) -> AdjudicationQualityGateThresholds:
+    """Validate optional manifest-declared adjudication quality-gate thresholds."""
+
+    if value is None:
+        return AdjudicationQualityGateThresholds()
+    if not isinstance(value, dict):
+        raise AdjudicationReportError(f"{context} must be an object")
+
+    unexpected_fields = sorted(set(value) - QUALITY_GATE_THRESHOLD_FIELDS)
+    if unexpected_fields:
+        raise AdjudicationReportError(f"{context} unexpected fields: {', '.join(unexpected_fields)}")
+
+    min_review_coverage = None
+    if "min_review_coverage" in value:
+        min_review_coverage = require_percent_number(value["min_review_coverage"], f"{context}.min_review_coverage")
+
+    max_needs_discussion = None
+    if "max_needs_discussion" in value:
+        max_needs_discussion = require_non_negative_int(value["max_needs_discussion"], f"{context}.max_needs_discussion")
+
+    return AdjudicationQualityGateThresholds(
+        min_review_coverage=min_review_coverage,
+        max_needs_discussion=max_needs_discussion,
+        min_profile_review_coverage=require_percent_threshold_map(
+            value.get("min_profile_review_coverage", {}),
+            f"{context}.min_profile_review_coverage",
+        ),
+        min_category_review_coverage=require_percent_threshold_map(
+            value.get("min_category_review_coverage", {}),
+            f"{context}.min_category_review_coverage",
+        ),
+        max_fixture_needs_discussion=require_non_negative_int_threshold_map(
+            value.get("max_fixture_needs_discussion", {}),
+            f"{context}.max_fixture_needs_discussion",
+        ),
+    )
+
+
+def require_percent_threshold_map(value: Any, context: str) -> dict[str, float]:
+    if not isinstance(value, dict):
+        raise AdjudicationReportError(f"{context} must be an object")
+
+    thresholds: dict[str, float] = {}
+    for key, threshold_value in sorted(value.items()):
+        threshold_key = require_non_empty_string(key, f"{context} key")
+        thresholds[threshold_key] = require_percent_number(threshold_value, f"{context}.{threshold_key}")
+    return thresholds
+
+
+def require_non_negative_int_threshold_map(value: Any, context: str) -> dict[str, int]:
+    if not isinstance(value, dict):
+        raise AdjudicationReportError(f"{context} must be an object")
+
+    thresholds: dict[str, int] = {}
+    for key, threshold_value in sorted(value.items()):
+        threshold_key = require_non_empty_string(key, f"{context} key")
+        thresholds[threshold_key] = require_non_negative_int(threshold_value, f"{context}.{threshold_key}")
+    return thresholds
+
+
 def validate_safety_assertions(value: Any, context: str) -> None:
     if not isinstance(value, dict):
         raise AdjudicationReportError(f"{context} must be an object")
@@ -417,6 +516,17 @@ def require_non_negative_int(value: Any, context: str) -> int:
     if value < 0:
         raise AdjudicationReportError(f"{context} must be >= 0")
     return value
+
+
+def require_percent_number(value: Any, context: str) -> float:
+    if not isinstance(value, (int, float)) or isinstance(value, bool):
+        raise AdjudicationReportError(f"{context} must be a number")
+    threshold = float(value)
+    if not math.isfinite(threshold):
+        raise AdjudicationReportError(f"{context} must be a finite number")
+    if threshold < 0 or threshold > 100:
+        raise AdjudicationReportError(f"{context} must be between 0 and 100")
+    return threshold
 
 
 def require_bool(value: Any, context: str) -> bool:

@@ -84,16 +84,22 @@ python3 src/adjudication_regression_check.py \
   --manifest traces/external/adjudication_manifest.json
 ```
 
-Optional thresholds can turn review coverage or unresolved discussion counts into local gate checks:
+The committed adjudication manifest can declare quality-gate thresholds under `quality_gate_thresholds`. Manifest-backed checks load those thresholds by default:
 
 ```bash
 python3 src/adjudication_regression_check.py \
-  --manifest traces/external/adjudication_manifest.json \
-  --min-review-coverage 5.0 \
-  --max-needs-discussion 3
+  --manifest traces/external/adjudication_manifest.json
 ```
 
-M15 adds status-aware threshold maps for specific profiles, categories, and fixture families:
+The manifest threshold block supports:
+
+- `min_review_coverage` for each source trace
+- `max_needs_discussion` globally
+- `min_profile_review_coverage` by profile
+- `min_category_review_coverage` by behavior category
+- `max_fixture_needs_discussion` by adjudication fixture family
+
+CLI threshold options remain available for explicit local overrides:
 
 ```bash
 python3 src/adjudication_regression_check.py \

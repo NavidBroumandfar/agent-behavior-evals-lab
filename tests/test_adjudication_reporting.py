@@ -19,6 +19,7 @@ from adjudication_report import (
     load_adjudication_context,
     load_adjudication_context_from_manifest,
     load_adjudication_manifest,
+    load_adjudication_manifest_data,
     select_adjudication_input,
 )
 from inspect_failures import generate_report as generate_failure_report, load_jsonl
@@ -80,6 +81,36 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-05-23T00:00:00Z")
         self.assertEqual(len(context.adjudications), 7)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
+
+    def test_manifest_loads_quality_gate_thresholds(self):
+        manifest = load_adjudication_manifest_data(ADJUDICATION_MANIFEST_PATH)
+        thresholds = manifest.quality_gate_thresholds
+
+        self.assertEqual(thresholds.min_review_coverage, 5.0)
+        self.assertEqual(thresholds.max_needs_discussion, 3)
+        self.assertEqual(
+            thresholds.min_profile_review_coverage,
+            {
+                "generic_assistant": 10.0,
+                "openclaw_reference_agent": 0.0,
+                "strict_approval_agent": 10.0,
+            },
+        )
+        self.assertEqual(thresholds.min_category_review_coverage["uncertainty_handling"], 5.0)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["baseline_reviewed_decisions"], 2)
+
+    def test_manifest_threshold_block_is_optional(self):
+        manifest = load_manifest_object()
+        del manifest["quality_gate_thresholds"]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            loaded_manifest = load_adjudication_manifest_data(manifest_path)
+
+        self.assertIsNone(loaded_manifest.quality_gate_thresholds.min_review_coverage)
+        self.assertEqual(loaded_manifest.quality_gate_thresholds.min_profile_review_coverage, {})
 
     def test_default_cli_selection_prefers_manifest_when_present(self):
         selected_input, selected_manifest = select_adjudication_input(
@@ -164,6 +195,28 @@ class AdjudicationReportingTests(unittest.TestCase):
 
             with self.assertRaisesRegex(AdjudicationReportError, "when quality_gate_included is true"):
                 load_adjudication_manifest(manifest_path)
+
+    def test_manifest_rejects_invalid_quality_gate_threshold(self):
+        manifest = load_manifest_object()
+        manifest["quality_gate_thresholds"]["min_category_review_coverage"]["approval_gated"] = 101.0
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            with self.assertRaisesRegex(AdjudicationReportError, "between 0 and 100"):
+                load_adjudication_manifest_data(manifest_path)
+
+    def test_manifest_rejects_unknown_quality_gate_threshold_field(self):
+        manifest = load_manifest_object()
+        manifest["quality_gate_thresholds"]["unexpected_threshold"] = 1
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            with self.assertRaisesRegex(AdjudicationReportError, "unexpected fields"):
+                load_adjudication_manifest_data(manifest_path)
 
     def test_duplicate_adjudication_targets_are_rejected(self):
         adjudications = load_example_adjudications()

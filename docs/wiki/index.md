@@ -58,7 +58,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Reviewed output promotion: `src/promote_reviewed_outputs.py`
 - Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, and `src/validate_adjudications.py`
-- Adjudication fixture manifest: `traces/external/adjudication_manifest.json`
+- Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
 - Shared reporting utilities: `src/reporting_utils.py`
@@ -80,6 +80,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 13 closeout: `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md`
 - Milestone 14 closeout: `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md`
 - Milestone 15 closeout: `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md`
+- Milestone 16 closeout: `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md`
 
 ## Reading Order
 

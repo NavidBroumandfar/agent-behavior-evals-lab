@@ -39,6 +39,8 @@ M13 indexes committed adjudication fixture families in `traces/external/adjudica
 
 M14 adds fixture status governance to that manifest. Each fixture records `review_status`, `owner`, `status_notes`, and `last_reviewed_at`; quality-gate fixtures may be `reviewed` or `needs_discussion`, but not `draft` or `blocked`.
 
+M16 adds optional manifest-declared `quality_gate_thresholds` for committed adjudication checks. Manifest-backed regression checks load those thresholds by default, while CLI threshold options remain available for local override experiments.
+
 ## Reporting
 
 M10 adds `src/adjudication_report.py`, which writes:

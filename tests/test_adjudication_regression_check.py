@@ -67,6 +67,20 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         self.assertTrue(result["passed"], result["differences"])
 
+    def test_cli_thresholds_override_manifest_thresholds(self):
+        result = check_snapshot(
+            ADJUDICATIONS_PATH,
+            SNAPSHOT_PATH,
+            min_review_coverage=10.0,
+            manifest_path=ADJUDICATION_MANIFEST_PATH,
+        )
+
+        self.assertFalse(result["passed"])
+        self.assertEqual(
+            result["differences"],
+            ["traces/scored/baseline_mock_run.jsonl.review_coverage: expected at least 10.0%, found 7.8%"],
+        )
+
     def test_snapshot_mismatch_fails_comparison(self):
         context = load_adjudication_context_from_manifest(ADJUDICATION_MANIFEST_PATH)
         expected = build_snapshot(context, ADJUDICATION_MANIFEST_PATH)
