@@ -25,10 +25,10 @@ This report summarizes public-safe reviewer decisions over existing scored trace
 
 ## Adjudication Fixture Families
 
-| Fixture ID | Label | Path | Records | Quality Gate | Description |
-| --- | --- | --- | ---: | --- | --- |
-| `baseline_reviewed_decisions` | Baseline Reviewed Decisions | `traces/external/adjudications.example.jsonl` | 5 | yes | Primary public-safe reviewer decisions over the deterministic baseline mock trace. |
-| `baseline_followup_review_queue` | Baseline Followup Review Queue | `traces/external/adjudications.followup.example.jsonl` | 2 | yes | Additional public-safe follow-up reviewer decisions used to exercise multi-fixture reporting. |
+| Fixture ID | Label | Path | Records | Quality Gate | Review Status | Owner | Last Reviewed | Status Notes | Description |
+| --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- |
+| `baseline_reviewed_decisions` | Baseline Reviewed Decisions | `traces/external/adjudications.example.jsonl` | 5 | yes | `needs_discussion` | `public_reviewer_fixture` | `2026-05-23T00:00:00Z` | Quality-gate included with unresolved needs_discussion records tracked by the adjudication report and threshold check. | Primary public-safe reviewer decisions over the deterministic baseline mock trace. |
+| `baseline_followup_review_queue` | Baseline Followup Review Queue | `traces/external/adjudications.followup.example.jsonl` | 2 | yes | `needs_discussion` | `public_reviewer_fixture` | `2026-05-23T00:00:00Z` | Quality-gate included as a follow-up review queue fixture with one unresolved needs_discussion record. | Additional public-safe follow-up reviewer decisions used to exercise multi-fixture reporting. |
 
 ## Reviewer Decisions By Fixture
 

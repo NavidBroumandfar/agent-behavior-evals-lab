@@ -55,6 +55,7 @@ def build_snapshot(
     return {
         "adjudication_input": display_path(adjudications_path, repo_root),
         "adjudication_fixture_count": len(context.fixtures),
+        "adjudication_fixture_statuses": _adjudication_fixture_statuses(context),
         "adjudication_fixtures": _adjudication_fixtures_summary(context),
         "adjudication_records": len(context.adjudications),
         "source_trace_count": len(context.source_records_by_path),
@@ -128,6 +129,7 @@ def print_summary(snapshot: dict[str, Any], passed: bool, snapshot_path: Path) -
     print(f"adjudication input: {snapshot['adjudication_input']}")
     print(f"snapshot path: {display_path(snapshot_path)}")
     print(f"adjudication fixture families: {snapshot['adjudication_fixture_count']}")
+    print(f"adjudication fixture statuses: {_format_counts(snapshot['adjudication_fixture_statuses'])}")
     print(f"adjudication records: {snapshot['adjudication_records']}")
     print(f"source trace count: {snapshot['source_trace_count']}")
     print(f"needs discussion: {snapshot['reviewer_decisions'].get('needs_discussion', 0)}")
@@ -184,9 +186,24 @@ def _adjudication_fixtures_summary(context: AdjudicationContext) -> dict[str, di
             "path": display_path(fixture.path),
             "records": len(records),
             "quality_gate_included": fixture.quality_gate_included,
+            "review_status": fixture.review_status,
+            "owner": fixture.owner,
+            "status_notes": fixture.status_notes,
+            "last_reviewed_at": fixture.last_reviewed_at,
             "reviewer_decisions": {decision: decision_counts.get(decision, 0) for decision in DECISION_ORDER},
         }
     return summary
+
+
+def _adjudication_fixture_statuses(context: AdjudicationContext) -> dict[str, int]:
+    counts = Counter(fixture.review_status for fixture in context.fixtures)
+    return {status: counts[status] for status in sorted(counts)}
+
+
+def _format_counts(counts: Any) -> str:
+    if not isinstance(counts, dict) or not counts:
+        return "none"
+    return ", ".join(f"{key}={value}" for key, value in sorted(counts.items()))
 
 
 def _parse_percent(value: str) -> float:

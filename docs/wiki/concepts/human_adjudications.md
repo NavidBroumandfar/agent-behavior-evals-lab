@@ -37,6 +37,8 @@ The committed example fixtures are:
 
 M13 indexes committed adjudication fixture families in `traces/external/adjudication_manifest.json`. The manifest records each fixture path, expected record count, source trace paths, quality-gate inclusion status, and public-safe safety assertions.
 
+M14 adds fixture status governance to that manifest. Each fixture records `review_status`, `owner`, `status_notes`, and `last_reviewed_at`; quality-gate fixtures may be `reviewed` or `needs_discussion`, but not `draft` or `blocked`.
+
 ## Reporting
 
 M10 adds `src/adjudication_report.py`, which writes:

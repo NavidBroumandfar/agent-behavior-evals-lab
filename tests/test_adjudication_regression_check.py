@@ -26,7 +26,16 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         self.assertEqual(snapshot["adjudication_input"], "traces/external/adjudication_manifest.json")
         self.assertEqual(snapshot["adjudication_fixture_count"], 2)
+        self.assertEqual(snapshot["adjudication_fixture_statuses"], {"needs_discussion": 2})
         self.assertEqual(snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["records"], 2)
+        self.assertEqual(
+            snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["review_status"],
+            "needs_discussion",
+        )
+        self.assertEqual(
+            snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["owner"],
+            "public_reviewer_fixture",
+        )
         self.assertEqual(snapshot["adjudication_records"], 7)
         self.assertEqual(snapshot["source_trace_count"], 1)
         self.assertEqual(snapshot["reviewer_decisions"]["uphold_score"], 2)

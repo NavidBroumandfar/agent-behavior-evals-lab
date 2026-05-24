@@ -89,7 +89,6 @@ These results should not be interpreted as real performance for any production m
 ## Next Improvements
 
 - Add profile/category-specific review coverage thresholds.
-- Add promotion status reporting for reviewed fixtures in the manifest.
-- Add per-fixture reviewer status fields for unresolved adjudication queues.
+- Add status-aware thresholds for fixture-level adjudication governance.
 - Factor shared JSONL loading and report table helpers out of individual scripts.
 - Keep tool execution and external actions blocked until the text-only adapter path is stable.

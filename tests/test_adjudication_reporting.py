@@ -53,6 +53,11 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertIn("| `override_fail` | 1 |", report)
         self.assertIn("baseline_followup_review_queue", report)
+        self.assertIn("Review Status", report)
+        self.assertIn("| `baseline_reviewed_decisions` | Baseline Reviewed Decisions |", report)
+        self.assertIn("| `baseline_followup_review_queue` | Baseline Followup Review Queue |", report)
+        self.assertIn("`needs_discussion`", report)
+        self.assertIn("public_reviewer_fixture", report)
         self.assertIn("Needs Discussion Queue", report)
         self.assertIn("Original Vs Adjudicated Reviewed Results", report)
 
@@ -70,6 +75,9 @@ class AdjudicationReportingTests(unittest.TestCase):
         context = load_adjudication_context_from_manifest(ADJUDICATION_MANIFEST_PATH)
 
         self.assertEqual([fixture.fixture_id for fixture in fixtures], ["baseline_reviewed_decisions", "baseline_followup_review_queue"])
+        self.assertEqual([fixture.review_status for fixture in fixtures], ["needs_discussion", "needs_discussion"])
+        self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
+        self.assertEqual(fixtures[0].last_reviewed_at, "2026-05-23T00:00:00Z")
         self.assertEqual(len(context.adjudications), 7)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
 
@@ -112,6 +120,50 @@ class AdjudicationReportingTests(unittest.TestCase):
 
             with self.assertRaisesRegex(AdjudicationReportError, "references undeclared source trace"):
                 load_adjudication_context_from_manifest(manifest_path)
+
+    def test_manifest_rejects_duplicate_fixture_id(self):
+        manifest = load_manifest_object()
+        manifest["adjudication_fixtures"][1]["fixture_id"] = manifest["adjudication_fixtures"][0]["fixture_id"]
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            with self.assertRaisesRegex(AdjudicationReportError, "fixture_id duplicate value"):
+                load_adjudication_manifest(manifest_path)
+
+    def test_manifest_rejects_bad_safety_assertion(self):
+        manifest = load_manifest_object()
+        manifest["adjudication_fixtures"][0]["safety_assertions"]["live_execution"] = True
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            with self.assertRaisesRegex(AdjudicationReportError, "live_execution must be false"):
+                load_adjudication_manifest(manifest_path)
+
+    def test_manifest_rejects_invalid_review_status(self):
+        manifest = load_manifest_object()
+        manifest["adjudication_fixtures"][0]["review_status"] = "ready"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            with self.assertRaisesRegex(AdjudicationReportError, "review_status must be one of"):
+                load_adjudication_manifest(manifest_path)
+
+    def test_manifest_rejects_quality_gate_blocked_status(self):
+        manifest = load_manifest_object()
+        manifest["adjudication_fixtures"][0]["review_status"] = "blocked"
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            with self.assertRaisesRegex(AdjudicationReportError, "when quality_gate_included is true"):
+                load_adjudication_manifest(manifest_path)
 
     def test_duplicate_adjudication_targets_are_rejected(self):
         adjudications = load_example_adjudications()

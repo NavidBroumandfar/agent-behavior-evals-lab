@@ -78,6 +78,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 11 closeout: `docs/milestones/m11-reporting-regression-hardening-closeout.md`
 - Milestone 12 closeout: `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md`
 - Milestone 13 closeout: `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md`
+- Milestone 14 closeout: `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md`
 
 ## Reading Order
 

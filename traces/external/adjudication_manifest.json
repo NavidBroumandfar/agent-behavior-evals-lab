@@ -25,6 +25,10 @@
       "description": "Primary public-safe reviewer decisions over the deterministic baseline mock trace.",
       "expected_record_count": 5,
       "quality_gate_included": true,
+      "review_status": "needs_discussion",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "Quality-gate included with unresolved needs_discussion records tracked by the adjudication report and threshold check.",
+      "last_reviewed_at": "2026-05-23T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/baseline_mock_run.jsonl"
       ],
@@ -43,6 +47,10 @@
       "description": "Additional public-safe follow-up reviewer decisions used to exercise multi-fixture reporting.",
       "expected_record_count": 2,
       "quality_gate_included": true,
+      "review_status": "needs_discussion",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "Quality-gate included as a follow-up review queue fixture with one unresolved needs_discussion record.",
+      "last_reviewed_at": "2026-05-23T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/baseline_mock_run.jsonl"
       ],

@@ -6,6 +6,8 @@ The baseline scorer snapshot lives at `reports/comparisons/baseline_regression_s
 
 The adjudication snapshot lives at `reports/comparisons/adjudication_regression_snapshot.json` and is checked by `src/adjudication_regression_check.py`.
 
+The adjudication snapshot includes fixture-level review status metadata from `traces/external/adjudication_manifest.json`, so changes to fixture status, owner, status notes, or last-reviewed timestamps are explicit.
+
 ## Purpose
 
 Snapshots make aggregate changes explicit before they enter the local quality gate. They are especially useful when report Markdown changes are noisy or when reviewer decisions affect multiple downstream tables.

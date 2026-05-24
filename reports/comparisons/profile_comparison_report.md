@@ -69,8 +69,7 @@ The comparison is useful for validating behavior-tradeoff interpretation: the ge
 ## Next Improvements
 
 - Add profile/category-specific review coverage thresholds.
-- Add per-fixture reviewer status fields for unresolved adjudication queues.
-- Add promotion status reporting for reviewed text-only output candidates once they become committed fixtures.
+- Add status-aware thresholds for fixture-level adjudication governance.
 - Add shared report-table helpers to reduce duplication across comparison reports.
 - Keep manifest-driven fixture comparison as the source of truth for external fixture groups.
 - Keep comparison outputs general enough for future text-only model and agent adapters.

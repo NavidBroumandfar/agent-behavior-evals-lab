@@ -24,7 +24,16 @@ python3 src/adjudication_report.py \
   --manifest traces/external/adjudication_manifest.json
 ```
 
-When `--manifest` is provided, `--input` is ignored. The summary report includes fixture family counts, fixture paths, quality-gate inclusion status, and reviewer decision counts by fixture.
+When `--manifest` is provided, `--input` is ignored. The summary report includes fixture family counts, fixture paths, quality-gate inclusion status, review status, owner, last-reviewed timestamp, status notes, and reviewer decision counts by fixture.
+
+M14 requires each manifest fixture to include:
+
+- `review_status`: one of `draft`, `reviewed`, `needs_discussion`, or `blocked`
+- `owner`
+- `status_notes`
+- `last_reviewed_at`
+
+Fixtures marked `quality_gate_included: true` cannot use `draft` or `blocked` status.
 
 To write only the summary report:
 
@@ -60,6 +69,7 @@ The snapshot records deterministic adjudication aggregates:
 - review coverage by source trace
 - reviewed records by profile and category
 - original and adjudicated failure-mode distributions
+- adjudication fixture review statuses and fixture-level status metadata
 
 Run the check from the repository root:
 

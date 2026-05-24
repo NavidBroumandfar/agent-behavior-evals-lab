@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass
@@ -57,6 +58,10 @@ REQUIRED_FIXTURE_FIELDS = {
     "description",
     "expected_record_count",
     "quality_gate_included",
+    "review_status",
+    "owner",
+    "status_notes",
+    "last_reviewed_at",
     "source_trace_paths",
     "safety_assertions",
 }
@@ -74,6 +79,17 @@ EXPECTED_SAFE_ASSERTIONS = {
     "contains_private_data": False,
     "credentials_required": False,
 }
+ALLOWED_FIXTURE_REVIEW_STATUSES = {
+    "draft",
+    "reviewed",
+    "needs_discussion",
+    "blocked",
+}
+QUALITY_GATE_COMPATIBLE_REVIEW_STATUSES = {
+    "reviewed",
+    "needs_discussion",
+}
+UTC_TIMESTAMP_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
 
 
 @dataclass(frozen=True)
@@ -84,6 +100,10 @@ class AdjudicationFixture:
     description: str
     expected_record_count: int | None
     quality_gate_included: bool
+    review_status: str
+    owner: str
+    status_notes: str
+    last_reviewed_at: str
     source_trace_paths: list[str]
 
 
@@ -114,6 +134,10 @@ def load_adjudication_context(
         description="Direct adjudication JSONL input.",
         expected_record_count=None,
         quality_gate_included=True,
+        review_status="reviewed",
+        owner="direct_input",
+        status_notes="Direct adjudication input outside the fixture manifest.",
+        last_reviewed_at="1970-01-01T00:00:00Z",
         source_trace_paths=[],
     )
     return load_adjudication_context_from_fixtures([fixture], repo_root)
@@ -295,8 +319,17 @@ def load_manifest_fixture(
     description = require_non_empty_string(value["description"], f"{context}.description")
     expected_record_count = require_non_negative_int(value["expected_record_count"], f"{context}.expected_record_count")
     quality_gate_included = require_bool(value["quality_gate_included"], f"{context}.quality_gate_included")
+    review_status = require_enum(
+        value["review_status"],
+        ALLOWED_FIXTURE_REVIEW_STATUSES,
+        f"{context}.review_status",
+    )
+    owner = require_non_empty_string(value["owner"], f"{context}.owner")
+    status_notes = require_non_empty_string(value["status_notes"], f"{context}.status_notes")
+    last_reviewed_at = require_utc_timestamp(value["last_reviewed_at"], f"{context}.last_reviewed_at")
     source_trace_paths = require_non_empty_string_list(value["source_trace_paths"], f"{context}.source_trace_paths")
     validate_safety_assertions(value["safety_assertions"], f"{context}.safety_assertions")
+    validate_quality_gate_review_status(quality_gate_included, review_status, f"{context}.review_status")
 
     raw_path = require_non_empty_string(value["path"], f"{context}.path")
     fixture_path = resolve_repo_path(Path(raw_path), repo_root)
@@ -322,6 +355,10 @@ def load_manifest_fixture(
         description=description,
         expected_record_count=expected_record_count,
         quality_gate_included=quality_gate_included,
+        review_status=review_status,
+        owner=owner,
+        status_notes=status_notes,
+        last_reviewed_at=last_reviewed_at,
         source_trace_paths=source_trace_paths,
     )
 
@@ -353,6 +390,21 @@ def require_non_empty_string(value: Any, context: str) -> str:
     return value
 
 
+def require_enum(value: Any, allowed_values: set[str], context: str) -> str:
+    text = require_non_empty_string(value, context)
+    if text not in allowed_values:
+        allowed = ", ".join(sorted(allowed_values))
+        raise AdjudicationReportError(f"{context} must be one of: {allowed}")
+    return text
+
+
+def require_utc_timestamp(value: Any, context: str) -> str:
+    text = require_non_empty_string(value, context)
+    if not UTC_TIMESTAMP_PATTERN.fullmatch(text):
+        raise AdjudicationReportError(f"{context} must use YYYY-MM-DDTHH:MM:SSZ UTC format")
+    return text
+
+
 def require_non_empty_string_list(value: Any, context: str) -> list[str]:
     if not isinstance(value, list) or not value:
         raise AdjudicationReportError(f"{context} must be a non-empty array")
@@ -371,6 +423,14 @@ def require_bool(value: Any, context: str) -> bool:
     if not isinstance(value, bool):
         raise AdjudicationReportError(f"{context} must be a boolean")
     return value
+
+
+def validate_quality_gate_review_status(quality_gate_included: bool, review_status: str, context: str) -> None:
+    if quality_gate_included and review_status not in QUALITY_GATE_COMPATIBLE_REVIEW_STATUSES:
+        allowed = ", ".join(sorted(QUALITY_GATE_COMPATIBLE_REVIEW_STATUSES))
+        raise AdjudicationReportError(
+            f"{context} must be one of: {allowed} when quality_gate_included is true"
+        )
 
 
 def build_adjudication_index(
@@ -640,13 +700,15 @@ def _fixture_table(context: AdjudicationContext) -> str:
         for record in context.adjudications
     )
     lines = [
-        "| Fixture ID | Label | Path | Records | Quality Gate | Description |",
-        "| --- | --- | --- | ---: | --- | --- |",
+        "| Fixture ID | Label | Path | Records | Quality Gate | Review Status | Owner | Last Reviewed | Status Notes | Description |",
+        "| --- | --- | --- | ---: | --- | --- | --- | --- | --- | --- |",
     ]
     for fixture in context.fixtures:
         lines.append(
             f"| `{fixture.fixture_id}` | {fixture.label} | `{display_path(fixture.path)}` | "
-            f"{record_counts.get(fixture.fixture_id, 0)} | {_yes_no(fixture.quality_gate_included)} | {fixture.description} |"
+            f"{record_counts.get(fixture.fixture_id, 0)} | {_yes_no(fixture.quality_gate_included)} | "
+            f"`{fixture.review_status}` | `{fixture.owner}` | `{fixture.last_reviewed_at}` | "
+            f"{fixture.status_notes} | {fixture.description} |"
         )
     return "\n".join(lines)
 

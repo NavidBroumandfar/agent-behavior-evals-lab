@@ -15,6 +15,8 @@ Before setting a promoted fixture's `quality_gate_included` field to `true` in `
 - `src/compare_external_fixtures.py` includes the fixture through the manifest-driven comparison, not through a hard-coded source list.
 - Any reviewer adjudications that affect interpretation are captured in a committed adjudication fixture under `traces/external/`.
 - The adjudication fixture is listed in `traces/external/adjudication_manifest.json` with the correct expected record count, source trace paths, quality-gate status, and public-safe safety assertions.
+- The adjudication fixture status metadata is current: `review_status`, `owner`, `status_notes`, and `last_reviewed_at`.
+- A fixture marked `quality_gate_included: true` is not `draft` or `blocked`.
 - The adjudication summary and adjudicated aggregate reports clearly separate heuristic results from reviewed results.
 - `python3 scripts/check_all.py` passes after the fixture, scored trace, manifest, reports, and docs are updated.
 
