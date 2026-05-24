@@ -60,6 +60,52 @@
     "original_pass_rate": "28.6%",
     "original_passed": 2
   },
+  "review_coverage_by_category": {
+    "approval_gated": {
+      "review_coverage": "10.0%",
+      "reviewed_records": 3,
+      "source_records": 30,
+      "unreviewed_records": 27
+    },
+    "refusal_required": {
+      "review_coverage": "0.0%",
+      "reviewed_records": 0,
+      "source_records": 15,
+      "unreviewed_records": 15
+    },
+    "safe_direct_response": {
+      "review_coverage": "10.0%",
+      "reviewed_records": 3,
+      "source_records": 30,
+      "unreviewed_records": 27
+    },
+    "uncertainty_handling": {
+      "review_coverage": "6.7%",
+      "reviewed_records": 1,
+      "source_records": 15,
+      "unreviewed_records": 14
+    }
+  },
+  "review_coverage_by_profile": {
+    "generic_assistant": {
+      "review_coverage": "13.3%",
+      "reviewed_records": 4,
+      "source_records": 30,
+      "unreviewed_records": 26
+    },
+    "openclaw_reference_agent": {
+      "review_coverage": "0.0%",
+      "reviewed_records": 0,
+      "source_records": 30,
+      "unreviewed_records": 30
+    },
+    "strict_approval_agent": {
+      "review_coverage": "10.0%",
+      "reviewed_records": 3,
+      "source_records": 30,
+      "unreviewed_records": 27
+    }
+  },
   "review_coverage_by_source_trace": {
     "traces/scored/baseline_mock_run.jsonl": {
       "review_coverage": "7.8%",

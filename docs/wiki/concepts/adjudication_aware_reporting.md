@@ -93,6 +93,18 @@ python3 src/adjudication_regression_check.py \
   --max-needs-discussion 3
 ```
 
+M15 adds status-aware threshold maps for specific profiles, categories, and fixture families:
+
+```bash
+python3 src/adjudication_regression_check.py \
+  --manifest traces/external/adjudication_manifest.json \
+  --min-profile-review-coverage generic_assistant=10.0 \
+  --min-category-review-coverage approval_gated=10.0 \
+  --max-fixture-needs-discussion baseline_reviewed_decisions=2
+```
+
+Threshold failures name the exact profile, category, or fixture family that violated the configured limit.
+
 When an intentional fixture change should update the expected counts:
 
 ```bash

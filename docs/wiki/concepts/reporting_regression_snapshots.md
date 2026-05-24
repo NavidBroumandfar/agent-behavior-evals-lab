@@ -31,6 +31,18 @@ python3 src/adjudication_regression_check.py \
   --max-needs-discussion 3
 ```
 
+M15 adds repeatable profile/category/fixture thresholds:
+
+```bash
+python3 src/adjudication_regression_check.py \
+  --manifest traces/external/adjudication_manifest.json \
+  --min-profile-review-coverage generic_assistant=10.0 \
+  --min-category-review-coverage approval_gated=10.0 \
+  --max-fixture-needs-discussion baseline_reviewed_decisions=2
+```
+
+These thresholds are local quality-gate policy. Snapshot diffs still track deterministic aggregate changes separately.
+
 Then run:
 
 ```bash

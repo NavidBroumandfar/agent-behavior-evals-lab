@@ -64,6 +64,8 @@ def build_snapshot(
         "reviewer_decisions": {decision: decision_counts.get(decision, 0) for decision in DECISION_ORDER},
         "result_summary": _result_summary(context.adjudications),
         "review_coverage_by_source_trace": _review_coverage_by_source_trace(context),
+        "review_coverage_by_profile": _review_coverage_by_profile(context),
+        "review_coverage_by_category": _review_coverage_by_category(context),
         "reviewed_by_profile": _reviewed_by_profile(context),
         "reviewed_by_category": _reviewed_by_category(context),
         "failure_mode_distribution": {
@@ -85,6 +87,9 @@ def check_snapshot(
     min_review_coverage: float | None = None,
     max_needs_discussion: int | None = None,
     manifest_path: Path | None = None,
+    min_profile_review_coverage: dict[str, float] | None = None,
+    min_category_review_coverage: dict[str, float] | None = None,
+    max_fixture_needs_discussion: dict[str, int] | None = None,
 ) -> dict[str, Any]:
     """Load current adjudication aggregates and compare them to the saved snapshot."""
 
@@ -97,7 +102,16 @@ def check_snapshot(
     expected = load_json_object(snapshot_path)
     current = build_snapshot(context, input_path)
     differences = compare_snapshots(expected, current)
-    differences.extend(threshold_violations(current, min_review_coverage, max_needs_discussion))
+    differences.extend(
+        threshold_violations(
+            current,
+            min_review_coverage,
+            max_needs_discussion,
+            min_profile_review_coverage,
+            min_category_review_coverage,
+            max_fixture_needs_discussion,
+        )
+    )
     return {
         "current": current,
         "differences": differences,
@@ -142,6 +156,9 @@ def threshold_violations(
     snapshot: dict[str, Any],
     min_review_coverage: float | None = None,
     max_needs_discussion: int | None = None,
+    min_profile_review_coverage: dict[str, float] | None = None,
+    min_category_review_coverage: dict[str, float] | None = None,
+    max_fixture_needs_discussion: dict[str, int] | None = None,
 ) -> list[str]:
     """Return review threshold violations for optional quality gates."""
 
@@ -168,6 +185,83 @@ def threshold_violations(
                 f"reviewer_decisions.needs_discussion: expected at most {max_needs_discussion}, found {needs_discussion}"
             )
 
+    violations.extend(
+        coverage_threshold_violations(
+            snapshot,
+            "review_coverage_by_profile",
+            "profile",
+            min_profile_review_coverage,
+        )
+    )
+    violations.extend(
+        coverage_threshold_violations(
+            snapshot,
+            "review_coverage_by_category",
+            "category",
+            min_category_review_coverage,
+        )
+    )
+    violations.extend(fixture_needs_discussion_violations(snapshot, max_fixture_needs_discussion))
+
+    return violations
+
+
+def coverage_threshold_violations(
+    snapshot: dict[str, Any],
+    snapshot_key: str,
+    label: str,
+    thresholds: dict[str, float] | None,
+) -> list[str]:
+    if not thresholds:
+        return []
+
+    coverage_by_group = snapshot.get(snapshot_key)
+    if not isinstance(coverage_by_group, dict):
+        raise AdjudicationRegressionError(f"{snapshot_key} must be an object")
+
+    violations: list[str] = []
+    for group_name, minimum in sorted(thresholds.items()):
+        coverage = coverage_by_group.get(group_name)
+        if not isinstance(coverage, dict):
+            violations.append(f"{label}.{group_name}.review_coverage: missing coverage group")
+            continue
+        actual = _parse_percent(str(coverage.get("review_coverage", "0.0%")))
+        if actual < minimum:
+            violations.append(
+                f"{label}.{group_name}.review_coverage: expected at least {minimum:.1f}%, found {actual:.1f}%"
+            )
+    return violations
+
+
+def fixture_needs_discussion_violations(
+    snapshot: dict[str, Any],
+    thresholds: dict[str, int] | None,
+) -> list[str]:
+    if not thresholds:
+        return []
+
+    fixtures = snapshot.get("adjudication_fixtures")
+    if not isinstance(fixtures, dict):
+        raise AdjudicationRegressionError("adjudication_fixtures must be an object")
+
+    violations: list[str] = []
+    for fixture_id, maximum in sorted(thresholds.items()):
+        fixture = fixtures.get(fixture_id)
+        if not isinstance(fixture, dict):
+            violations.append(f"fixture.{fixture_id}.needs_discussion: missing fixture")
+            continue
+        reviewer_decisions = fixture.get("reviewer_decisions")
+        if not isinstance(reviewer_decisions, dict):
+            raise AdjudicationRegressionError(f"adjudication_fixtures.{fixture_id}.reviewer_decisions must be an object")
+        needs_discussion = reviewer_decisions.get("needs_discussion")
+        if not isinstance(needs_discussion, int):
+            raise AdjudicationRegressionError(
+                f"adjudication_fixtures.{fixture_id}.reviewer_decisions.needs_discussion must be an integer"
+            )
+        if needs_discussion > maximum:
+            violations.append(
+                f"fixture.{fixture_id}.needs_discussion: expected at most {maximum}, found {needs_discussion}"
+            )
     return violations
 
 
@@ -262,6 +356,61 @@ def _review_coverage_by_source_trace(context: AdjudicationContext) -> dict[str, 
     return coverage
 
 
+def _review_coverage_by_profile(context: AdjudicationContext) -> dict[str, dict[str, Any]]:
+    source_counts: Counter[str] = Counter()
+    for records in context.source_records_by_path.values():
+        for record in records:
+            source_counts[str(record.get("profile_name", "unknown"))] += 1
+
+    reviewed_by_profile: dict[str, set[tuple[str, str, str, str]]] = defaultdict(set)
+    for adjudication in context.adjudications:
+        profile = str(adjudication["profile_name"])
+        reviewed_by_profile[profile].add(_reviewed_record_key(adjudication))
+
+    return _coverage_by_group(source_counts, reviewed_by_profile)
+
+
+def _review_coverage_by_category(context: AdjudicationContext) -> dict[str, dict[str, Any]]:
+    source_counts: Counter[str] = Counter()
+    for records in context.source_records_by_path.values():
+        for record in records:
+            source_counts[str(record.get("category", "unknown"))] += 1
+
+    reviewed_by_category: dict[str, set[tuple[str, str, str, str]]] = defaultdict(set)
+    for adjudication in context.adjudications:
+        source_record = context.source_record_by_adjudication_id[adjudication["adjudication_id"]]
+        category = str(source_record.get("category", "unknown"))
+        reviewed_by_category[category].add(_reviewed_record_key(adjudication))
+
+    return _coverage_by_group(source_counts, reviewed_by_category)
+
+
+def _coverage_by_group(
+    source_counts: Counter[str],
+    reviewed_by_group: dict[str, set[tuple[str, str, str, str]]],
+) -> dict[str, dict[str, Any]]:
+    coverage: dict[str, dict[str, Any]] = {}
+    for group_name in sorted(source_counts):
+        total = source_counts[group_name]
+        reviewed = len(reviewed_by_group[group_name])
+        coverage[group_name] = {
+            "source_records": total,
+            "reviewed_records": reviewed,
+            "unreviewed_records": total - reviewed,
+            "review_coverage": percent(reviewed, total),
+        }
+    return coverage
+
+
+def _reviewed_record_key(adjudication: dict[str, Any]) -> tuple[str, str, str, str]:
+    return (
+        display_path(adjudication["source_trace_path"]),
+        str(adjudication["run_id"]),
+        str(adjudication["case_id"]),
+        str(adjudication["profile_name"]),
+    )
+
+
 def _reviewed_by_profile(context: AdjudicationContext) -> dict[str, dict[str, int]]:
     grouped: dict[str, list[dict[str, Any]]] = defaultdict(list)
     for adjudication in context.adjudications:
@@ -303,6 +452,47 @@ def _failure_mode_distribution(adjudications: list[dict[str, Any]], field_name: 
     return {failure_mode: counts[failure_mode] for failure_mode in sorted(counts)}
 
 
+def parse_percent_thresholds(values: list[str], option_name: str) -> dict[str, float]:
+    thresholds: dict[str, float] = {}
+    for value in values:
+        key, raw_threshold = parse_key_value(value, option_name)
+        try:
+            threshold = float(raw_threshold)
+        except ValueError as exc:
+            raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be a number") from exc
+        if threshold < 0 or threshold > 100:
+            raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be between 0 and 100")
+        if key in thresholds:
+            raise AdjudicationRegressionError(f"{option_name} duplicate threshold for {key}")
+        thresholds[key] = threshold
+    return thresholds
+
+
+def parse_int_thresholds(values: list[str], option_name: str) -> dict[str, int]:
+    thresholds: dict[str, int] = {}
+    for value in values:
+        key, raw_threshold = parse_key_value(value, option_name)
+        try:
+            threshold = int(raw_threshold)
+        except ValueError as exc:
+            raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be an integer") from exc
+        if threshold < 0:
+            raise AdjudicationRegressionError(f"{option_name} threshold for {key} must be >= 0")
+        if key in thresholds:
+            raise AdjudicationRegressionError(f"{option_name} duplicate threshold for {key}")
+        thresholds[key] = threshold
+    return thresholds
+
+
+def parse_key_value(value: str, option_name: str) -> tuple[str, str]:
+    if "=" not in value:
+        raise AdjudicationRegressionError(f"{option_name} values must use name=value format")
+    key, raw_threshold = value.split("=", 1)
+    if not key.strip() or not raw_threshold.strip():
+        raise AdjudicationRegressionError(f"{option_name} values must use non-empty name=value format")
+    return key.strip(), raw_threshold.strip()
+
+
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Check adjudication report aggregates against a snapshot.")
     parser.add_argument(
@@ -337,6 +527,27 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=None,
         help="Optional maximum number of records allowed to remain in needs_discussion.",
     )
+    parser.add_argument(
+        "--min-profile-review-coverage",
+        action="append",
+        default=[],
+        metavar="PROFILE=PERCENT",
+        help="Optional minimum reviewed-record coverage percentage for a specific profile. Repeatable.",
+    )
+    parser.add_argument(
+        "--min-category-review-coverage",
+        action="append",
+        default=[],
+        metavar="CATEGORY=PERCENT",
+        help="Optional minimum reviewed-record coverage percentage for a specific category. Repeatable.",
+    )
+    parser.add_argument(
+        "--max-fixture-needs-discussion",
+        action="append",
+        default=[],
+        metavar="FIXTURE=COUNT",
+        help="Optional maximum needs_discussion count for a specific adjudication fixture. Repeatable.",
+    )
     return parser.parse_args(argv)
 
 
@@ -345,6 +556,18 @@ def main(argv: list[str] | None = None) -> int:
     adjudications_path, manifest_path = select_adjudication_input(args.input, args.manifest)
 
     try:
+        min_profile_review_coverage = parse_percent_thresholds(
+            args.min_profile_review_coverage,
+            "--min-profile-review-coverage",
+        )
+        min_category_review_coverage = parse_percent_thresholds(
+            args.min_category_review_coverage,
+            "--min-category-review-coverage",
+        )
+        max_fixture_needs_discussion = parse_int_thresholds(
+            args.max_fixture_needs_discussion,
+            "--max-fixture-needs-discussion",
+        )
         if args.write_snapshot:
             snapshot = write_current_snapshot(adjudications_path, args.snapshot, manifest_path)
             print_summary(snapshot, True, args.snapshot)
@@ -357,6 +580,9 @@ def main(argv: list[str] | None = None) -> int:
             args.min_review_coverage,
             args.max_needs_discussion,
             manifest_path,
+            min_profile_review_coverage=min_profile_review_coverage,
+            min_category_review_coverage=min_category_review_coverage,
+            max_fixture_needs_discussion=max_fixture_needs_discussion,
         )
     except (AdjudicationValidationError, AdjudicationReportError, AdjudicationRegressionError, OSError, ValueError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
