@@ -156,7 +156,13 @@ class AdapterOutputConformanceTests(unittest.TestCase):
         record = valid_adapter_output_record()
         record["source_type"] = "hosted_provider_output"
 
-        self.assert_validation_fails(record)
+        self.assert_validation_fails(record, "source_type must be one of")
+
+    def test_unexpected_record_field_is_rejected_before_import(self):
+        record = valid_adapter_output_record()
+        record["unexpected"] = True
+
+        self.assert_validation_fails(record, "unexpected fields: unexpected")
 
     def test_created_at_without_z_suffix_is_rejected_before_import(self):
         record = valid_adapter_output_record()
@@ -216,13 +222,13 @@ class AdapterOutputConformanceTests(unittest.TestCase):
         record = valid_adapter_output_record()
         record["provenance_details"]["data_classification"] = "private_or_sensitive_blocked"
 
-        self.assert_validation_fails(record)
+        self.assert_validation_fails(record, "private_or_sensitive_blocked")
 
     def test_future_live_execution_mode_is_rejected_before_import(self):
         record = valid_adapter_output_record()
         record["provenance_details"]["execution_mode"] = "future_live_execution_not_in_quality_gate"
 
-        self.assert_validation_fails(record)
+        self.assert_validation_fails(record, "future_live_execution_not_in_quality_gate")
 
     def test_unknown_case_id_fails_during_import_not_validation(self):
         record = valid_adapter_output_record()
@@ -238,12 +244,17 @@ class AdapterOutputConformanceTests(unittest.TestCase):
                 import_adapter_outputs(input_path, output_path)
             self.assertFalse(output_path.exists())
 
-    def assert_validation_fails(self, record):
+    def assert_validation_fails(self, record, message=None):
         with tempfile.TemporaryDirectory() as temp_dir:
             input_path = Path(temp_dir) / "invalid_adapter_output.jsonl"
             write_jsonl(input_path, [record])
 
-            with self.assertRaises(AdapterOutputValidationError):
+            context = (
+                self.assertRaisesRegex(AdapterOutputValidationError, message)
+                if message
+                else self.assertRaises(AdapterOutputValidationError)
+            )
+            with context:
                 validate_jsonl_file(input_path)
 
 

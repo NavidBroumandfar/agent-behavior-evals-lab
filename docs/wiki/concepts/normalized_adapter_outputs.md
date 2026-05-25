@@ -10,6 +10,8 @@ M4.4 adds `src/dry_run_adapter.py`, a deterministic no-network producer of norma
 
 M5.2 adds optional `provenance_details` so records can clarify fixture origin, execution mode, data classification, and action-evidence limits without changing scoring.
 
+M25 routes adapter-output record shape validation through `schemas/adapter_output.schema.json` and `src/schema_validation_utils.py`. Adapter-output-specific UTC date validity, public-safe provenance values, and future-only provenance detail blocks remain in `src/validate_adapter_outputs.py`.
+
 ## Not Scored Traces
 
 Adapter outputs are not scored traces. A normalized adapter-output record has target-side fields such as `record_id`, `case_id`, `target_profile`, `source_type`, `adapter_name`, `created_at`, `output_text`, `provenance`, and optional `provenance_details` and `metadata`.
