@@ -61,26 +61,43 @@ class TargetRegistryTests(unittest.TestCase):
         duplicate = copy.deepcopy(registry["targets"][0])
         registry["targets"].append(duplicate)
 
-        self.assert_registry_fails(registry)
+        self.assert_registry_fails(registry, "duplicate value")
+
+    def test_schema_rejects_unknown_target_kind(self):
+        registry = load_registry()
+        registry["targets"][0]["target_kind"] = "unknown_target_kind"
+
+        self.assert_registry_fails(registry, "target_kind must be one of")
+
+    def test_schema_rejects_unexpected_target_field(self):
+        registry = load_registry()
+        registry["targets"][0]["unexpected"] = True
+
+        self.assert_registry_fails(registry, "unexpected fields: unexpected")
 
     def test_missing_profile_path_is_rejected(self):
         registry = load_registry()
         registry["targets"][0]["profile_path"] = "targets/profiles/missing.md"
 
-        self.assert_registry_fails(registry)
+        self.assert_registry_fails(registry, "profile_path does not exist")
 
     def test_quality_gate_profile_must_be_mock_profile(self):
         registry = load_registry()
         registry["targets"][3]["quality_gate_profile"] = True
 
-        self.assert_registry_fails(registry)
+        self.assert_registry_fails(registry, "quality_gate_profile requires target_kind=mock_profile")
 
-    def assert_registry_fails(self, registry):
+    def assert_registry_fails(self, registry, message=None):
         with tempfile.TemporaryDirectory() as temp_dir:
             path = Path(temp_dir) / "target_registry.json"
             write_json(path, registry)
 
-            with self.assertRaises(TargetRegistryError):
+            context = (
+                self.assertRaisesRegex(TargetRegistryError, message)
+                if message
+                else self.assertRaises(TargetRegistryError)
+            )
+            with context:
                 validate_target_registry(path=path)
 
 

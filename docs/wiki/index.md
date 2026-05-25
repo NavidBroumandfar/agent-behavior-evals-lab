@@ -96,6 +96,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 20 closeout: `docs/milestones/m20-shared-schema-validation-helpers-closeout.md`
 - Milestone 21 closeout: `docs/milestones/m21-schema-validator-helper-reuse-closeout.md`
 - Milestone 22 closeout: `docs/milestones/m22-schema-validation-coverage-matrix-closeout.md`
+- Milestone 23 closeout: `docs/milestones/m23-target-registry-schema-helper-reuse-closeout.md`
 
 ## Reading Order
 
