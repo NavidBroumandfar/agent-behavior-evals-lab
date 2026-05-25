@@ -89,6 +89,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 18 closeout: `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md`
 - Milestone 19 closeout: `docs/milestones/m19-report-artifact-manifest-closeout.md`
 - Milestone 20 closeout: `docs/milestones/m20-shared-schema-validation-helpers-closeout.md`
+- Milestone 21 closeout: `docs/milestones/m21-schema-validator-helper-reuse-closeout.md`
 
 ## Reading Order
 

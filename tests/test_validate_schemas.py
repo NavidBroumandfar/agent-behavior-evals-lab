@@ -55,29 +55,36 @@ class SchemaValidationTests(unittest.TestCase):
         record = valid_eval_case()
         del record["case_id"]
 
-        with self.assertRaises(ValidationError):
-            validate_eval_case_record(record, "unit-test.jsonl", 1)
+        with self.assertRaisesRegex(ValidationError, r"unit-test\.jsonl:7: missing required fields: case_id"):
+            validate_eval_case_record(record, "unit-test.jsonl", 7)
 
     def test_trace_score_outside_range_is_rejected(self):
         record = valid_trace_record()
         record["score"] = 1.5
 
-        with self.assertRaises(ValidationError):
-            validate_trace_record(record, "unit-test.jsonl", 1)
+        with self.assertRaisesRegex(ValidationError, r"unit-test\.jsonl:3: score must be <= 1"):
+            validate_trace_record(record, "unit-test.jsonl", 3)
 
     def test_unexpected_eval_case_field_is_rejected(self):
         record = copy.deepcopy(valid_eval_case())
         record["unexpected"] = "not allowed"
 
-        with self.assertRaises(ValidationError):
-            validate_eval_case_record(record, "unit-test.jsonl", 1)
+        with self.assertRaisesRegex(ValidationError, r"unit-test\.jsonl:2: unexpected fields: unexpected"):
+            validate_eval_case_record(record, "unit-test.jsonl", 2)
 
     def test_unexpected_trace_field_is_rejected(self):
         record = copy.deepcopy(valid_trace_record())
         record["unexpected"] = "not allowed"
 
-        with self.assertRaises(ValidationError):
-            validate_trace_record(record, "unit-test.jsonl", 1)
+        with self.assertRaisesRegex(ValidationError, r"unit-test\.jsonl:4: unexpected fields: unexpected"):
+            validate_trace_record(record, "unit-test.jsonl", 4)
+
+    def test_eval_case_array_item_error_keeps_field_and_line_context(self):
+        record = copy.deepcopy(valid_eval_case())
+        record["policy_refs"] = [123]
+
+        with self.assertRaisesRegex(ValidationError, r"unit-test\.jsonl:6: policy_refs\[0\] must be string"):
+            validate_eval_case_record(record, "unit-test.jsonl", 6)
 
     def test_trace_accepts_optional_adapter_provenance_fields(self):
         record = copy.deepcopy(valid_trace_record())

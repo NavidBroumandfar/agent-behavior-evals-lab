@@ -11,7 +11,12 @@ from __future__ import annotations
 import json
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
+
+try:
+    from .schema_validation_utils import validate_schema_value
+except ImportError:  # pragma: no cover - exercised when run as a script.
+    from schema_validation_utils import validate_schema_value
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -126,114 +131,20 @@ def validate_record(record: Any, schema: dict[str, Any], path: Path, line_number
     if not isinstance(record, dict):
         raise ValidationError(path, line_number, "record must be a JSON object")
 
-    required = set(schema.get("required", []))
     properties = schema.get("properties", {})
     if not isinstance(properties, dict):
         raise ValidationError(path, line_number, "schema properties must be an object")
 
-    missing_fields = sorted(required - set(record))
-    if missing_fields:
-        raise ValidationError(path, line_number, f"missing required fields: {', '.join(missing_fields)}")
-
-    if schema.get("additionalProperties") is False:
-        unexpected_fields = sorted(set(record) - set(properties))
-        if unexpected_fields:
-            raise ValidationError(path, line_number, f"unexpected fields: {', '.join(unexpected_fields)}")
-
-    for field_name, field_schema in properties.items():
-        if field_name in record:
-            validate_field(record[field_name], field_schema, field_name, path, line_number)
+    validate_schema_value(record, schema, "", path, REPO_ROOT, validation_error_for_line(path, line_number))
 
 
-def validate_field(
-    value: Any,
-    field_schema: dict[str, Any],
-    field_name: str,
-    path: Path,
-    line_number: int,
-) -> None:
-    """Validate one field against the supported field constraints."""
+def validation_error_for_line(path: Path, line_number: int) -> Callable[[str], ValidationError]:
+    """Build line-aware validation errors for shared schema checks."""
 
-    expected_type = field_schema.get("type")
-    if expected_type and not _matches_type(value, expected_type):
-        raise ValidationError(
-            path,
-            line_number,
-            f"{field_name} must be {expected_type}, got {_type_name(value)}",
-        )
+    def build_error(reason: str) -> ValidationError:
+        return ValidationError(path, line_number, reason)
 
-    if "enum" in field_schema and value not in field_schema["enum"]:
-        allowed = ", ".join(str(item) for item in field_schema["enum"])
-        raise ValidationError(path, line_number, f"{field_name} must be one of: {allowed}")
-
-    if expected_type == "array":
-        validate_array_field(value, field_schema, field_name, path, line_number)
-
-    if expected_type == "number":
-        minimum = field_schema.get("minimum")
-        maximum = field_schema.get("maximum")
-        if minimum is not None and value < minimum:
-            raise ValidationError(path, line_number, f"{field_name} must be >= {minimum}")
-        if maximum is not None and value > maximum:
-            raise ValidationError(path, line_number, f"{field_name} must be <= {maximum}")
-
-
-def validate_array_field(
-    value: Any,
-    field_schema: dict[str, Any],
-    field_name: str,
-    path: Path,
-    line_number: int,
-) -> None:
-    """Validate array constraints and item types."""
-
-    if not isinstance(value, list):
-        return
-
-    min_items = field_schema.get("minItems")
-    if min_items is not None and len(value) < min_items:
-        raise ValidationError(path, line_number, f"{field_name} must contain at least {min_items} item(s)")
-
-    item_schema = field_schema.get("items", {})
-    item_type = item_schema.get("type") if isinstance(item_schema, dict) else None
-    if item_type:
-        for index, item in enumerate(value):
-            if not _matches_type(item, item_type):
-                raise ValidationError(
-                    path,
-                    line_number,
-                    f"{field_name}[{index}] must be {item_type}, got {_type_name(item)}",
-                )
-
-
-def _matches_type(value: Any, expected_type: str) -> bool:
-    if expected_type == "object":
-        return isinstance(value, dict)
-    if expected_type == "array":
-        return isinstance(value, list)
-    if expected_type == "string":
-        return isinstance(value, str)
-    if expected_type == "boolean":
-        return isinstance(value, bool)
-    if expected_type == "number":
-        return isinstance(value, (int, float)) and not isinstance(value, bool)
-    return False
-
-
-def _type_name(value: Any) -> str:
-    if isinstance(value, bool):
-        return "boolean"
-    if isinstance(value, str):
-        return "string"
-    if isinstance(value, list):
-        return "array"
-    if isinstance(value, dict):
-        return "object"
-    if isinstance(value, (int, float)):
-        return "number"
-    if value is None:
-        return "null"
-    return type(value).__name__
+    return build_error
 
 
 def main() -> int:

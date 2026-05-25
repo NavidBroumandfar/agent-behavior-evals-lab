@@ -15,6 +15,8 @@ An eval case is one JSON object in `evals/cases/*.jsonl`. It describes a prompt,
 
 The required contract is captured in `schemas/eval_case.schema.json` and checked by `src/validate_schemas.py`.
 
+M21 routes eval-case and scored-trace record checks through the shared schema-subset helper in `src/schema_validation_utils.py`. JSONL parsing and line-numbered validation errors remain owned by `src/validate_schemas.py`.
+
 ## How Cases Flow Through The Harness
 
 `src/run_eval.py` loads all configured case files, passes each case to each mock profile in `src/model_clients.py`, scores each response with `src/scorers.py`, and writes scored records to `traces/scored/baseline_mock_run.jsonl`.

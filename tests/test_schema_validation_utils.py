@@ -48,6 +48,17 @@ class SchemaValidationUtilsTests(unittest.TestCase):
         with self.assertRaisesRegex(UtilityValidationError, "unexpected fields: extra"):
             validate_schema_value({"extra": True}, schema, "manifest", Path("manifest.json"), REPO_ROOT, UtilityValidationError)
 
+    def test_empty_root_context_does_not_prefix_object_errors(self):
+        schema = {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["case_id"],
+            "properties": {"case_id": {"type": "string"}},
+        }
+
+        with self.assertRaisesRegex(UtilityValidationError, "^missing required fields: case_id$"):
+            validate_schema_value({}, schema, "", Path("cases.jsonl"), REPO_ROOT, UtilityValidationError)
+
     def test_load_json_object_uses_custom_error_type(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             json_path = Path(temp_dir) / "value.json"

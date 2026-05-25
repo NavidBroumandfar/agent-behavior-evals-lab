@@ -12,10 +12,11 @@ import json
 import math
 import re
 from pathlib import Path
-from typing import Any, TypeVar
+from typing import Any, Callable, TypeVar
 
 
 ErrorT = TypeVar("ErrorT", bound=Exception)
+ErrorFactory = Callable[[str], ErrorT]
 DEFAULT_REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -28,8 +29,8 @@ def display_path(path: Path, repo_root: Path = DEFAULT_REPO_ROOT) -> str:
         return str(path)
 
 
-def load_json_object(path: Path, label: str, repo_root: Path, error_type: type[ErrorT]) -> dict[str, Any]:
-    """Load a JSON object from disk, raising the caller's validation error type."""
+def load_json_object(path: Path, label: str, repo_root: Path, error_type: ErrorFactory[ErrorT]) -> dict[str, Any]:
+    """Load a JSON object from disk, raising the caller's validation error."""
 
     if not path.exists():
         raise error_type(f"{display_path(path, repo_root)}: {label} does not exist")
@@ -51,20 +52,20 @@ def validate_schema_value(
     context: str,
     path: Path,
     repo_root: Path,
-    error_type: type[ErrorT],
+    error_type: ErrorFactory[ErrorT],
 ) -> None:
     """Validate a value against the repository's supported JSON Schema subset."""
 
     expected_type = schema.get("type")
     if expected_type is not None and not matches_type(value, expected_type):
-        raise error_type(f"{context} must be {expected_type}, got {type_name(value)}")
+        raise error_type(f"{value_context(context)} must be {expected_type}, got {type_name(value)}")
 
     if "const" in schema and value != schema["const"]:
-        raise error_type(f"{context} must equal {schema['const']!r}")
+        raise error_type(f"{value_context(context)} must equal {schema['const']!r}")
 
     if "enum" in schema and value not in schema["enum"]:
         allowed = ", ".join(str(item) for item in schema["enum"])
-        raise error_type(f"{context} must be one of: {allowed}")
+        raise error_type(f"{value_context(context)} must be one of: {allowed}")
 
     if isinstance(value, dict):
         validate_object(value, schema, context, path, repo_root, error_type)
@@ -82,7 +83,7 @@ def validate_object(
     context: str,
     path: Path,
     repo_root: Path,
-    error_type: type[ErrorT],
+    error_type: ErrorFactory[ErrorT],
 ) -> None:
     properties = schema.get("properties", {})
     if properties is not None and not isinstance(properties, dict):
@@ -91,20 +92,20 @@ def validate_object(
     required = set(schema.get("required", []))
     missing_fields = sorted(required - set(value))
     if missing_fields:
-        raise error_type(f"{context}: missing required fields: {', '.join(missing_fields)}")
+        raise error_type(context_message(context, f"missing required fields: {', '.join(missing_fields)}"))
 
     additional_properties = schema.get("additionalProperties", True)
     if additional_properties is False:
         unexpected_fields = sorted(set(value) - set(properties))
         if unexpected_fields:
-            raise error_type(f"{context}: unexpected fields: {', '.join(unexpected_fields)}")
+            raise error_type(context_message(context, f"unexpected fields: {', '.join(unexpected_fields)}"))
 
     for field_name, field_schema in properties.items():
         if field_name in value:
             validate_schema_value(
                 value[field_name],
                 field_schema,
-                f"{context}.{field_name}",
+                child_context(context, field_name),
                 path,
                 repo_root,
                 error_type,
@@ -115,7 +116,7 @@ def validate_object(
             validate_schema_value(
                 value[field_name],
                 additional_properties,
-                f"{context}.{field_name}",
+                child_context(context, field_name),
                 path,
                 repo_root,
                 error_type,
@@ -128,39 +129,63 @@ def validate_array(
     context: str,
     path: Path,
     repo_root: Path,
-    error_type: type[ErrorT],
+    error_type: ErrorFactory[ErrorT],
 ) -> None:
     min_items = schema.get("minItems")
     if min_items is not None and len(value) < min_items:
-        raise error_type(f"{context} must contain at least {min_items} item(s)")
+        raise error_type(f"{value_context(context)} must contain at least {min_items} item(s)")
 
     item_schema = schema.get("items")
     if isinstance(item_schema, dict):
         for index, item in enumerate(value):
-            validate_schema_value(item, item_schema, f"{context}[{index}]", path, repo_root, error_type)
+            validate_schema_value(item, item_schema, array_item_context(context, index), path, repo_root, error_type)
 
 
-def validate_string(value: str, schema: dict[str, Any], context: str, error_type: type[ErrorT]) -> None:
+def validate_string(value: str, schema: dict[str, Any], context: str, error_type: ErrorFactory[ErrorT]) -> None:
     min_length = schema.get("minLength")
     if min_length is not None and len(value) < min_length:
-        raise error_type(f"{context} must contain at least {min_length} character(s)")
+        raise error_type(f"{value_context(context)} must contain at least {min_length} character(s)")
 
     pattern = schema.get("pattern")
     if pattern is not None and re.fullmatch(str(pattern), value) is None:
-        raise error_type(f"{context} must match pattern {pattern!r}")
+        raise error_type(f"{value_context(context)} must match pattern {pattern!r}")
 
 
-def validate_number(value: int | float, schema: dict[str, Any], context: str, error_type: type[ErrorT]) -> None:
+def validate_number(value: int | float, schema: dict[str, Any], context: str, error_type: ErrorFactory[ErrorT]) -> None:
     if not math.isfinite(float(value)):
-        raise error_type(f"{context} must be finite")
+        raise error_type(f"{value_context(context)} must be finite")
 
     minimum = schema.get("minimum")
     if minimum is not None and value < minimum:
-        raise error_type(f"{context} must be >= {minimum}")
+        raise error_type(f"{value_context(context)} must be >= {minimum}")
 
     maximum = schema.get("maximum")
     if maximum is not None and value > maximum:
-        raise error_type(f"{context} must be <= {maximum}")
+        raise error_type(f"{value_context(context)} must be <= {maximum}")
+
+
+def child_context(context: str, field_name: str) -> str:
+    if context:
+        return f"{context}.{field_name}"
+    return field_name
+
+
+def array_item_context(context: str, index: int) -> str:
+    if context:
+        return f"{context}[{index}]"
+    return f"[{index}]"
+
+
+def context_message(context: str, message: str) -> str:
+    if context:
+        return f"{context}: {message}"
+    return message
+
+
+def value_context(context: str) -> str:
+    if context:
+        return context
+    return "value"
 
 
 def matches_type(value: Any, expected_type: str) -> bool:
