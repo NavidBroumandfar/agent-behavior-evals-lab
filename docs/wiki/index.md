@@ -34,6 +34,10 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
 - [Reviewed Fixture Quality-Gate Promotion Checklist](concepts/reviewed_fixture_quality_gate_promotion.md)
 
+## Reference Pages
+
+- [Schema Validation Coverage](reference/schema_validation_coverage.md)
+
 ## Current Source Artifacts
 
 - Policy: `policy/agent_behavior_policy.md`
@@ -66,6 +70,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Shared reporting utilities: `src/reporting_utils.py`
 - Shared schema validation helpers: `src/schema_validation_utils.py`
+- Schema validation coverage matrix: `docs/wiki/reference/schema_validation_coverage.md`
 - Scored trace comparison: `src/compare_scored_traces.py` and `reports/comparisons/baseline_self_comparison_report.md`
 - External fixture comparison: `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`
 - Adapter contract: `targets/adapters/adapter_contract.md`
@@ -90,6 +95,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 19 closeout: `docs/milestones/m19-report-artifact-manifest-closeout.md`
 - Milestone 20 closeout: `docs/milestones/m20-shared-schema-validation-helpers-closeout.md`
 - Milestone 21 closeout: `docs/milestones/m21-schema-validator-helper-reuse-closeout.md`
+- Milestone 22 closeout: `docs/milestones/m22-schema-validation-coverage-matrix-closeout.md`
 
 ## Reading Order
 
