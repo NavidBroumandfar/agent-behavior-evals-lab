@@ -8,12 +8,11 @@ agents, collect live outputs, or perform external actions.
 from __future__ import annotations
 
 import argparse
-import json
-import math
-import re
 import sys
 from pathlib import Path
 from typing import Any
+
+from schema_validation_utils import display_path, load_json_object, validate_schema_value
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -33,34 +32,6 @@ class ReportManifestValidationError(Exception):
     """Report manifest validation error with public-safe context."""
 
 
-def display_path(path: Path, repo_root: Path = REPO_ROOT) -> str:
-    """Format a path relative to the repo when possible."""
-
-    try:
-        return str(path.resolve().relative_to(repo_root.resolve()))
-    except ValueError:
-        return str(path)
-
-
-def load_json_object(path: Path, label: str) -> dict[str, Any]:
-    """Load a JSON object from disk."""
-
-    if not path.exists():
-        raise ReportManifestValidationError(f"{display_path(path)}: {label} does not exist")
-
-    try:
-        with path.open("r", encoding="utf-8") as input_file:
-            value = json.load(input_file)
-    except json.JSONDecodeError as exc:
-        raise ReportManifestValidationError(
-            f"{display_path(path)}:{exc.lineno}: invalid JSON: {exc.msg}"
-        ) from exc
-
-    if not isinstance(value, dict):
-        raise ReportManifestValidationError(f"{display_path(path)}: {label} must be a JSON object")
-    return value
-
-
 def validate_manifest(
     manifest_path: Path = DEFAULT_MANIFEST_PATH,
     schema_path: Path = DEFAULT_SCHEMA_PATH,
@@ -68,9 +39,16 @@ def validate_manifest(
 ) -> dict[str, Any]:
     """Validate the report manifest and return a deterministic summary."""
 
-    schema = load_json_object(schema_path, "schema")
-    manifest = load_json_object(manifest_path, "manifest")
-    validate_schema_value(manifest, schema, display_path(manifest_path, repo_root), manifest_path)
+    schema = load_json_object(schema_path, "schema", repo_root, ReportManifestValidationError)
+    manifest = load_json_object(manifest_path, "manifest", repo_root, ReportManifestValidationError)
+    validate_schema_value(
+        manifest,
+        schema,
+        display_path(manifest_path, repo_root),
+        manifest_path,
+        repo_root,
+        ReportManifestValidationError,
+    )
     artifacts = manifest["report_artifacts"]
     validate_artifacts(artifacts, manifest_path, repo_root)
 
@@ -82,119 +60,6 @@ def validate_manifest(
         "json_snapshot_count": sum(1 for artifact in artifacts if artifact["artifact_type"] == "json_snapshot"),
         "quality_gate_artifact_count": sum(1 for artifact in artifacts if artifact["quality_gate_included"] is True),
     }
-
-
-def validate_schema_value(value: Any, schema: dict[str, Any], context: str, path: Path) -> None:
-    """Validate a value against the schema subset used by the report manifest schema."""
-
-    expected_type = schema.get("type")
-    if expected_type is not None and not matches_type(value, expected_type):
-        raise ReportManifestValidationError(f"{context} must be {expected_type}, got {type_name(value)}")
-
-    if "const" in schema and value != schema["const"]:
-        raise ReportManifestValidationError(f"{context} must equal {schema['const']!r}")
-
-    if "enum" in schema and value not in schema["enum"]:
-        allowed = ", ".join(str(item) for item in schema["enum"])
-        raise ReportManifestValidationError(f"{context} must be one of: {allowed}")
-
-    if isinstance(value, dict):
-        validate_object(value, schema, context, path)
-    if isinstance(value, list):
-        validate_array(value, schema, context, path)
-    if isinstance(value, str):
-        validate_string(value, schema, context)
-    if isinstance(value, (int, float)) and not isinstance(value, bool):
-        validate_number(value, schema, context)
-
-
-def validate_object(value: dict[str, Any], schema: dict[str, Any], context: str, path: Path) -> None:
-    properties = schema.get("properties", {})
-    if properties is not None and not isinstance(properties, dict):
-        raise ReportManifestValidationError(f"{display_path(path)} schema properties must be an object")
-
-    required = set(schema.get("required", []))
-    missing_fields = sorted(required - set(value))
-    if missing_fields:
-        raise ReportManifestValidationError(f"{context}: missing required fields: {', '.join(missing_fields)}")
-
-    additional_properties = schema.get("additionalProperties", True)
-    if additional_properties is False:
-        unexpected_fields = sorted(set(value) - set(properties))
-        if unexpected_fields:
-            raise ReportManifestValidationError(f"{context}: unexpected fields: {', '.join(unexpected_fields)}")
-
-    for field_name, field_schema in properties.items():
-        if field_name in value:
-            validate_schema_value(value[field_name], field_schema, f"{context}.{field_name}", path)
-
-
-def validate_array(value: list[Any], schema: dict[str, Any], context: str, path: Path) -> None:
-    min_items = schema.get("minItems")
-    if min_items is not None and len(value) < min_items:
-        raise ReportManifestValidationError(f"{context} must contain at least {min_items} item(s)")
-
-    item_schema = schema.get("items")
-    if isinstance(item_schema, dict):
-        for index, item in enumerate(value):
-            validate_schema_value(item, item_schema, f"{context}[{index}]", path)
-
-
-def validate_string(value: str, schema: dict[str, Any], context: str) -> None:
-    min_length = schema.get("minLength")
-    if min_length is not None and len(value) < min_length:
-        raise ReportManifestValidationError(f"{context} must contain at least {min_length} character(s)")
-
-    pattern = schema.get("pattern")
-    if pattern is not None and re.fullmatch(str(pattern), value) is None:
-        raise ReportManifestValidationError(f"{context} must match pattern {pattern!r}")
-
-
-def validate_number(value: int | float, schema: dict[str, Any], context: str) -> None:
-    if not math.isfinite(float(value)):
-        raise ReportManifestValidationError(f"{context} must be finite")
-
-    minimum = schema.get("minimum")
-    if minimum is not None and value < minimum:
-        raise ReportManifestValidationError(f"{context} must be >= {minimum}")
-
-    maximum = schema.get("maximum")
-    if maximum is not None and value > maximum:
-        raise ReportManifestValidationError(f"{context} must be <= {maximum}")
-
-
-def matches_type(value: Any, expected_type: str) -> bool:
-    if expected_type == "object":
-        return isinstance(value, dict)
-    if expected_type == "array":
-        return isinstance(value, list)
-    if expected_type == "string":
-        return isinstance(value, str)
-    if expected_type == "boolean":
-        return isinstance(value, bool)
-    if expected_type == "number":
-        return isinstance(value, (int, float)) and not isinstance(value, bool)
-    if expected_type == "integer":
-        return isinstance(value, int) and not isinstance(value, bool)
-    return False
-
-
-def type_name(value: Any) -> str:
-    if isinstance(value, bool):
-        return "boolean"
-    if isinstance(value, str):
-        return "string"
-    if isinstance(value, list):
-        return "array"
-    if isinstance(value, dict):
-        return "object"
-    if isinstance(value, int):
-        return "integer"
-    if isinstance(value, float):
-        return "number"
-    if value is None:
-        return "null"
-    return type(value).__name__
 
 
 def validate_artifacts(artifacts: list[dict[str, Any]], manifest_path: Path, repo_root: Path) -> None:
@@ -217,7 +82,7 @@ def validate_artifacts(artifacts: list[dict[str, Any]], manifest_path: Path, rep
         seen_artifact_paths.add(artifact_path_value)
 
         artifact_path = require_existing_repo_path(artifact_path_value, f"{context}.path", repo_root)
-        validate_artifact_path_shape(artifact_path, str(artifact["artifact_type"]), f"{context}.path")
+        validate_artifact_path_shape(artifact_path, str(artifact["artifact_type"]), f"{context}.path", repo_root)
 
         generated_by_path = require_existing_repo_path(artifact["generated_by"], f"{context}.generated_by", repo_root)
         if generated_by_path.suffix != ".py":
@@ -244,7 +109,7 @@ def validate_artifacts(artifacts: list[dict[str, Any]], manifest_path: Path, rep
         validate_safety_assertions(artifact["safety_assertions"], f"{context}.safety_assertions")
 
 
-def validate_artifact_path_shape(path: Path, artifact_type: str, context: str) -> None:
+def validate_artifact_path_shape(path: Path, artifact_type: str, context: str, repo_root: Path) -> None:
     if artifact_type == "markdown_report":
         if path.suffix != ".md":
             raise ReportManifestValidationError(f"{context} must use .md for markdown_report artifacts")
@@ -255,7 +120,7 @@ def validate_artifact_path_shape(path: Path, artifact_type: str, context: str) -
     if artifact_type == "json_snapshot":
         if path.suffix != ".json":
             raise ReportManifestValidationError(f"{context} must use .json for json_snapshot artifacts")
-        load_json_object(path, "snapshot")
+        load_json_object(path, "snapshot", repo_root, ReportManifestValidationError)
 
 
 def validate_safety_assertions(value: dict[str, Any], context: str) -> None:

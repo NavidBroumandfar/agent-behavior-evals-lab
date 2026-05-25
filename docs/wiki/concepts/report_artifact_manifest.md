@@ -36,6 +36,8 @@ Each artifact entry declares:
 
 The validator checks path existence, duplicate artifact IDs, duplicate artifact paths, expected file suffixes, non-empty Markdown reports, parseable JSON snapshots, generator script paths, input paths, snapshot dependency membership, and safety assertions.
 
+M20 moves the shared JSON Schema subset mechanics used by this validator into `src/schema_validation_utils.py`. Report-specific artifact provenance checks remain in `src/validate_report_manifest.py`.
+
 ## Boundaries
 
 Report manifest validation does not regenerate reports, rescore traces, rewrite JSONL files, collect outputs, execute target systems, call provider APIs, use network access, or apply adjudications back to source traces.

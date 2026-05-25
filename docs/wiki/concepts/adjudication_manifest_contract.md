@@ -12,6 +12,8 @@ The validator runs before adjudication report generation in `scripts/check_all.p
 
 Manifest-backed adjudication report loading also calls the validator as a preflight before constructing report dataclasses. This keeps schema, path, fixture-count, safety, status, and threshold-key failures owned by the standalone manifest contract check.
 
+M20 moves the shared JSON Schema subset mechanics used by this validator into `src/schema_validation_utils.py`. Adjudication-specific fixture, source trace, and threshold-key checks remain in `src/validate_adjudication_manifest.py`.
+
 ## Top-Level Fields
 
 - `manifest_id`: must be `adjudication_manifest`.

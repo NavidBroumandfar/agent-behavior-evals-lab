@@ -65,6 +65,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Shared reporting utilities: `src/reporting_utils.py`
+- Shared schema validation helpers: `src/schema_validation_utils.py`
 - Scored trace comparison: `src/compare_scored_traces.py` and `reports/comparisons/baseline_self_comparison_report.md`
 - External fixture comparison: `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`
 - Adapter contract: `targets/adapters/adapter_contract.md`
@@ -87,6 +88,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 17 closeout: `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md`
 - Milestone 18 closeout: `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md`
 - Milestone 19 closeout: `docs/milestones/m19-report-artifact-manifest-closeout.md`
+- Milestone 20 closeout: `docs/milestones/m20-shared-schema-validation-helpers-closeout.md`
 
 ## Reading Order
 

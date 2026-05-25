@@ -192,6 +192,7 @@ CHECKS = [
             "-m",
             "py_compile",
             "src/model_clients.py",
+            "src/schema_validation_utils.py",
             "src/target_registry.py",
             "src/scorers.py",
             "src/trace_writer.py",
