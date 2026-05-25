@@ -12,13 +12,19 @@
   ],
   "properties": {
     "transcript_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "case_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "target_profile": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "turns": {
       "type": "array",
@@ -40,7 +46,9 @@
             ]
           },
           "content": {
-            "type": "string"
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
           }
         }
       }

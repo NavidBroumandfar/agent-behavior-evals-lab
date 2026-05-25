@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 from evaluate_manual_outputs import (
     CATEGORY_ORDER,
@@ -23,6 +23,7 @@ from evaluate_manual_outputs import (
 )
 from run_eval import CASE_PATHS, build_trace_record, load_cases
 from scorers import score_response
+from schema_validation_utils import load_json_object, validate_schema_value
 from target_registry import allowed_manual_output_profiles
 from trace_writer import write_jsonl
 from validate_schemas import ValidationError, validate_trace_record
@@ -32,24 +33,11 @@ REPO_ROOT = Path(__file__).resolve().parents[1]
 INPUT_PATH = REPO_ROOT / "traces/external/saved_transcripts.example.jsonl"
 OUTPUT_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay_eval.jsonl"
 REPORT_PATH = REPO_ROOT / "reports/comparisons/saved_transcript_replay_report.md"
+SCHEMA_PATH = REPO_ROOT / "schemas/saved_transcript.schema.json"
 
 RUN_ID = "saved_transcript_replay_example"
 TRACE_TIMESTAMP = "2026-01-01T00:00:00Z"
 
-REQUIRED_TRANSCRIPT_FIELDS = {
-    "transcript_id",
-    "case_id",
-    "target_profile",
-    "turns",
-    "assistant_turn_index",
-}
-OPTIONAL_TRANSCRIPT_FIELDS = {
-    "source_label",
-    "notes",
-}
-ALLOWED_TRANSCRIPT_FIELDS = REQUIRED_TRANSCRIPT_FIELDS | OPTIONAL_TRANSCRIPT_FIELDS
-ALLOWED_TURN_FIELDS = {"role", "content"}
-ALLOWED_ROLES = {"system", "user", "assistant"}
 
 def load_transcripts(path: Path) -> list[dict[str, Any]]:
     """Load and validate saved transcript JSONL records."""
@@ -57,6 +45,7 @@ def load_transcripts(path: Path) -> list[dict[str, Any]]:
     if not path.exists():
         raise ValueError(f"Saved transcript input does not exist: {_display_path(path)}")
 
+    schema = load_json_object(SCHEMA_PATH, "schema", REPO_ROOT, ValueError)
     records = []
     with path.open("r", encoding="utf-8") as input_file:
         for line_number, line in enumerate(input_file, start=1):
@@ -68,7 +57,7 @@ def load_transcripts(path: Path) -> list[dict[str, Any]]:
             except json.JSONDecodeError as exc:
                 raise ValueError(f"Invalid JSON in {_display_path(path)} on line {line_number}: {exc}") from exc
 
-            validate_transcript_shape(record, path, line_number)
+            validate_transcript_shape(record, path, line_number, schema)
             records.append(record)
 
     if not records:
@@ -76,63 +65,25 @@ def load_transcripts(path: Path) -> list[dict[str, Any]]:
     return records
 
 
-def validate_transcript_shape(record: Any, path: Path, line_number: int) -> None:
+def validate_transcript_shape(
+    record: Any,
+    path: Path,
+    line_number: int,
+    schema: dict[str, Any] | None = None,
+) -> None:
     """Validate one transcript record before case/profile checks."""
 
-    if not isinstance(record, dict):
-        raise ValueError(f"{_display_path(path)}:{line_number}: transcript record must be a JSON object")
-
-    missing_fields = sorted(REQUIRED_TRANSCRIPT_FIELDS - set(record))
-    if missing_fields:
-        raise ValueError(f"{_display_path(path)}:{line_number}: missing required fields: {', '.join(missing_fields)}")
-
-    unexpected_fields = sorted(set(record) - ALLOWED_TRANSCRIPT_FIELDS)
-    if unexpected_fields:
-        raise ValueError(f"{_display_path(path)}:{line_number}: unexpected fields: {', '.join(unexpected_fields)}")
-
-    for field_name in ["transcript_id", "case_id", "target_profile"]:
-        if not isinstance(record[field_name], str) or not record[field_name].strip():
-            raise ValueError(f"{_display_path(path)}:{line_number}: {field_name} must be a non-empty string")
-
-    for field_name in sorted(OPTIONAL_TRANSCRIPT_FIELDS):
-        if field_name in record and not isinstance(record[field_name], str):
-            raise ValueError(f"{_display_path(path)}:{line_number}: {field_name} must be a string")
-
-    if not isinstance(record["assistant_turn_index"], int) or isinstance(record["assistant_turn_index"], bool):
-        raise ValueError(f"{_display_path(path)}:{line_number}: assistant_turn_index must be an integer")
-
-    validate_turns(record["turns"], path, line_number)
+    schema = schema if schema is not None else load_json_object(SCHEMA_PATH, "schema", REPO_ROOT, ValueError)
+    validate_schema_value(record, schema, "", path, REPO_ROOT, validation_error_for_line(path, line_number))
 
 
-def validate_turns(turns: Any, path: Path, line_number: int) -> None:
-    """Validate the transcript turns array."""
+def validation_error_for_line(path: Path, line_number: int) -> Callable[[str], ValueError]:
+    """Build line-aware validation errors for shared schema checks."""
 
-    if not isinstance(turns, list) or not turns:
-        raise ValueError(f"{_display_path(path)}:{line_number}: turns must be a non-empty array")
+    def build_error(reason: str) -> ValueError:
+        return ValueError(f"{_display_path(path)}:{line_number}: {reason}")
 
-    for turn_index, turn in enumerate(turns):
-        if not isinstance(turn, dict):
-            raise ValueError(f"{_display_path(path)}:{line_number}: turns[{turn_index}] must be an object")
-
-        missing_fields = sorted(ALLOWED_TURN_FIELDS - set(turn))
-        if missing_fields:
-            raise ValueError(
-                f"{_display_path(path)}:{line_number}: turns[{turn_index}] missing fields: {', '.join(missing_fields)}"
-            )
-
-        unexpected_fields = sorted(set(turn) - ALLOWED_TURN_FIELDS)
-        if unexpected_fields:
-            raise ValueError(
-                f"{_display_path(path)}:{line_number}: turns[{turn_index}] unexpected fields: {', '.join(unexpected_fields)}"
-            )
-
-        role = turn["role"]
-        content = turn["content"]
-        if role not in ALLOWED_ROLES:
-            allowed_roles = ", ".join(sorted(ALLOWED_ROLES))
-            raise ValueError(f"{_display_path(path)}:{line_number}: turns[{turn_index}].role must be one of: {allowed_roles}")
-        if not isinstance(content, str) or not content.strip():
-            raise ValueError(f"{_display_path(path)}:{line_number}: turns[{turn_index}].content must be a non-empty string")
+    return build_error
 
 
 def validate_transcripts(

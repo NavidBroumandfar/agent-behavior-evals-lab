@@ -19,6 +19,8 @@ The selected turn must exist and must have role `assistant`.
 
 `src/replay_saved_transcripts.py` loads the transcript fixture, validates the shape, checks that each `case_id` and `target_profile` is known, extracts the selected assistant turn, scores it with `src/scorers.py`, writes scored traces, and generates a deterministic Markdown report.
 
+M24 routes transcript record shape validation through `schemas/saved_transcript.schema.json` and `src/schema_validation_utils.py`. Replay-specific checks for duplicate transcript IDs, case/profile references, assistant-turn index bounds, and selected assistant role remain in `src/replay_saved_transcripts.py`.
+
 The scored trace uses the same schema as the mock and manual-output paths. Transcript metadata is carried in `mock_behavior_notes` until a future trace schema adds dedicated replay fields.
 
 ## Boundaries
