@@ -100,6 +100,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 24 closeout: `docs/milestones/m24-saved-transcript-schema-helper-reuse-closeout.md`
 - Milestone 25 closeout: `docs/milestones/m25-adapter-output-schema-helper-reuse-closeout.md`
 - Milestone 26 closeout: `docs/milestones/m26-adjudication-schema-helper-reuse-closeout.md`
+- Milestone 27 closeout: `docs/milestones/m27-adapter-run-metadata-schema-helper-reuse-closeout.md`
 
 ## Reading Order
 

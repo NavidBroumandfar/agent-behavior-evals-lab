@@ -21,6 +21,8 @@ The evaluator remains deterministic:
 - Metadata validator: `src/validate_adapter_run_metadata.py`
 - Metadata tests: `tests/test_adapter_run_metadata_validation.py`
 
+M27 loads the metadata schema through `src/schema_validation_utils.py` for object shape, required fields, enum values, and primitive types while keeping timestamp validity, target registry lookup, case ID checks, path boundaries, and public-safe provenance expectations local.
+
 ## Why This Matters
 
 Without this boundary, the project could accidentally turn a deterministic evaluator into an unreliable live runner. M6 keeps the evaluator stable while making the first real adapter experiment reviewable.

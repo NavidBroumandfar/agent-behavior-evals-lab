@@ -21,19 +21,23 @@
   "properties": {
     "metadata_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "version": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "created_at": {
       "type": "string",
+      "minLength": 1,
       "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
     },
     "run_id": {
       "type": "string",
-      "minLength": 1
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "status": {
       "type": "string",
@@ -44,28 +48,261 @@
       ]
     },
     "adapter": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_name",
+        "adapter_version",
+        "adapter_type"
+      ],
+      "properties": {
+        "adapter_name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "adapter_version": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "adapter_type": {
+          "type": "string",
+          "enum": [
+            "hosted_model_text_only",
+            "local_model_text_only",
+            "cli_agent_text_only",
+            "saved_transcript_import",
+            "dry_run_contract"
+          ]
+        }
+      }
     },
     "target": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "target_profile",
+        "profile_path"
+      ],
+      "properties": {
+        "target_profile": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "profile_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
     },
     "case_selection": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_source_paths",
+        "case_ids",
+        "case_count"
+      ],
+      "properties": {
+        "case_source_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          }
+        },
+        "case_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          }
+        },
+        "case_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
     },
     "sandbox": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "execution_mode",
+        "network_access",
+        "tool_execution",
+        "external_actions",
+        "credentials_required",
+        "human_approval_required",
+        "risk_level"
+      ],
+      "properties": {
+        "execution_mode": {
+          "type": "string",
+          "enum": [
+            "planned_non_gated_live_output",
+            "dry_run_only",
+            "saved_output_review_only"
+          ]
+        },
+        "network_access": {
+          "type": "string",
+          "enum": [
+            "disabled_for_committed_example",
+            "allowed_for_manual_collection_only",
+            "not_applicable"
+          ]
+        },
+        "tool_execution": {
+          "type": "string",
+          "enum": [
+            "none",
+            "text_generation_only",
+            "local_read_only",
+            "external_actions_blocked"
+          ]
+        },
+        "external_actions": {
+          "type": "boolean"
+        },
+        "credentials_required": {
+          "type": "boolean"
+        },
+        "human_approval_required": {
+          "type": "boolean"
+        },
+        "risk_level": {
+          "type": "string",
+          "enum": [
+            "low",
+            "medium",
+            "high",
+            "critical"
+          ]
+        }
+      }
     },
     "outputs": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_output_path",
+        "normalized_output_path",
+        "scored_trace_path",
+        "commit_policy"
+      ],
+      "properties": {
+        "raw_output_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "normalized_output_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "scored_trace_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "commit_policy": {
+          "type": "string",
+          "enum": [
+            "reviewed_public_safe_outputs_only"
+          ]
+        }
+      }
     },
     "review": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "approval_checklist_path",
+        "sanitization_required",
+        "raw_outputs_committable",
+        "normalized_outputs_committable_after_review",
+        "notes"
+      ],
+      "properties": {
+        "approval_checklist_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "sanitization_required": {
+          "type": "boolean"
+        },
+        "raw_outputs_committable": {
+          "type": "boolean"
+        },
+        "normalized_outputs_committable_after_review": {
+          "type": "boolean"
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
     },
     "quality_gate": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "metadata_validation_in_quality_gate",
+        "live_run_in_quality_gate",
+        "reason"
+      ],
+      "properties": {
+        "metadata_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "live_run_in_quality_gate": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
     },
     "provenance": {
-      "type": "object"
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean"
+        },
+        "live_execution": {
+          "type": "boolean"
+        },
+        "external_actions": {
+          "type": "boolean"
+        },
+        "contains_private_data": {
+          "type": "boolean"
+        },
+        "credentials_required": {
+          "type": "boolean"
+        }
+      }
     }
   }
 }
