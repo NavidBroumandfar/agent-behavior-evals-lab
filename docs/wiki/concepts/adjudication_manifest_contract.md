@@ -10,6 +10,8 @@ python3 src/validate_adjudication_manifest.py
 
 The validator runs before adjudication report generation in `scripts/check_all.py`.
 
+Manifest-backed adjudication report loading also calls the validator as a preflight before constructing report dataclasses. This keeps schema, path, fixture-count, safety, status, and threshold-key failures owned by the standalone manifest contract check.
+
 ## Top-Level Fields
 
 - `manifest_id`: must be `adjudication_manifest`.

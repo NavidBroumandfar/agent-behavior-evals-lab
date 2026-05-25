@@ -49,6 +49,8 @@ python3 src/validate_adjudication_manifest.py
 
 This catches manifest schema errors, bad fixture references, unsafe assertions, and typoed threshold keys before the regression snapshot check runs.
 
+Manifest-backed regression checks load adjudication context through `src/adjudication_report.py`, so the same standalone manifest validator also preflights regression inputs before snapshot comparison.
+
 Then run:
 
 ```bash

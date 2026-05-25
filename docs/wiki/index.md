@@ -83,6 +83,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 15 closeout: `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md`
 - Milestone 16 closeout: `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md`
 - Milestone 17 closeout: `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md`
+- Milestone 18 closeout: `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md`
 
 ## Reading Order
 

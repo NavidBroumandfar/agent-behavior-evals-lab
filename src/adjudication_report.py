@@ -8,9 +8,6 @@ new outputs.
 from __future__ import annotations
 
 import argparse
-import json
-import math
-import re
 import sys
 from collections import Counter, defaultdict
 from dataclasses import dataclass, field
@@ -19,6 +16,7 @@ from typing import Any
 
 from reporting_utils import display_path, format_list, normalize_repo_path, percent, resolve_repo_path, write_text
 from validate_adjudications import AdjudicationValidationError, load_adjudications, load_trace_records
+from validate_adjudication_manifest import AdjudicationManifestValidationError, load_validated_manifest
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -42,63 +40,6 @@ SEVERITY_ORDER = [
     "unknown",
 ]
 SEVERITY_RANK = {severity: index for index, severity in enumerate(SEVERITY_ORDER)}
-
-REQUIRED_MANIFEST_FIELDS = {
-    "manifest_id",
-    "version",
-    "generated_at",
-    "purpose",
-    "scope",
-    "non_goals",
-    "adjudication_fixtures",
-}
-REQUIRED_FIXTURE_FIELDS = {
-    "fixture_id",
-    "label",
-    "path",
-    "description",
-    "expected_record_count",
-    "quality_gate_included",
-    "review_status",
-    "owner",
-    "status_notes",
-    "last_reviewed_at",
-    "source_trace_paths",
-    "safety_assertions",
-}
-REQUIRED_SAFETY_ASSERTIONS = {
-    "public_safe",
-    "live_execution",
-    "external_actions",
-    "contains_private_data",
-    "credentials_required",
-}
-EXPECTED_SAFE_ASSERTIONS = {
-    "public_safe": True,
-    "live_execution": False,
-    "external_actions": False,
-    "contains_private_data": False,
-    "credentials_required": False,
-}
-ALLOWED_FIXTURE_REVIEW_STATUSES = {
-    "draft",
-    "reviewed",
-    "needs_discussion",
-    "blocked",
-}
-QUALITY_GATE_COMPATIBLE_REVIEW_STATUSES = {
-    "reviewed",
-    "needs_discussion",
-}
-QUALITY_GATE_THRESHOLD_FIELDS = {
-    "min_review_coverage",
-    "max_needs_discussion",
-    "min_profile_review_coverage",
-    "min_category_review_coverage",
-    "max_fixture_needs_discussion",
-}
-UTC_TIMESTAMP_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
-
 
 @dataclass(frozen=True)
 class AdjudicationFixture:
@@ -285,53 +226,18 @@ def load_adjudication_manifest_data(
     """Load and validate the adjudication fixture manifest."""
 
     resolved_manifest_path = resolve_repo_path(manifest_path, repo_root)
-    if not resolved_manifest_path.exists():
-        raise AdjudicationReportError(f"{display_path(resolved_manifest_path, repo_root)}: file does not exist")
-
     try:
-        with resolved_manifest_path.open("r", encoding="utf-8") as manifest_file:
-            manifest = json.load(manifest_file)
-    except json.JSONDecodeError as exc:
-        raise AdjudicationReportError(
-            f"{display_path(resolved_manifest_path, repo_root)}:{exc.lineno}: invalid JSON: {exc.msg}"
-        ) from exc
-
-    if not isinstance(manifest, dict):
-        raise AdjudicationReportError(f"{display_path(resolved_manifest_path, repo_root)}: manifest must be an object")
-
-    missing_fields = sorted(REQUIRED_MANIFEST_FIELDS - set(manifest))
-    if missing_fields:
-        raise AdjudicationReportError(
-            f"{display_path(resolved_manifest_path, repo_root)}: missing required fields: {', '.join(missing_fields)}"
-        )
-    if manifest["manifest_id"] != "adjudication_manifest":
-        raise AdjudicationReportError(
-            f"{display_path(resolved_manifest_path, repo_root)}.manifest_id must be adjudication_manifest"
-        )
-    for field_name in ["version", "generated_at", "purpose"]:
-        require_non_empty_string(manifest[field_name], f"{display_path(resolved_manifest_path, repo_root)}.{field_name}")
-    for field_name in ["scope", "non_goals"]:
-        require_non_empty_string_list(
-            manifest[field_name],
-            f"{display_path(resolved_manifest_path, repo_root)}.{field_name}",
-        )
-
-    fixtures_value = manifest["adjudication_fixtures"]
-    if not isinstance(fixtures_value, list) or not fixtures_value:
-        raise AdjudicationReportError(
-            f"{display_path(resolved_manifest_path, repo_root)}.adjudication_fixtures must be a non-empty array"
-        )
+        manifest = load_validated_manifest(resolved_manifest_path, repo_root=repo_root)
+    except AdjudicationManifestValidationError as exc:
+        raise AdjudicationReportError(str(exc)) from exc
 
     fixtures: list[AdjudicationFixture] = []
     seen_fixture_ids: set[str] = set()
-    for index, fixture_value in enumerate(fixtures_value):
+    for index, fixture_value in enumerate(manifest["adjudication_fixtures"]):
         context = f"{display_path(resolved_manifest_path, repo_root)}.adjudication_fixtures[{index}]"
         fixtures.append(load_manifest_fixture(fixture_value, context, seen_fixture_ids, repo_root))
 
-    thresholds = load_manifest_quality_gate_thresholds(
-        manifest.get("quality_gate_thresholds"),
-        f"{display_path(resolved_manifest_path, repo_root)}.quality_gate_thresholds",
-    )
+    thresholds = load_manifest_quality_gate_thresholds(manifest.get("quality_gate_thresholds", {}))
     return AdjudicationManifest(fixtures=fixtures, quality_gate_thresholds=thresholds)
 
 
@@ -341,206 +247,68 @@ def load_manifest_fixture(
     seen_fixture_ids: set[str],
     repo_root: Path,
 ) -> AdjudicationFixture:
-    """Validate one adjudication fixture entry."""
+    """Build one adjudication fixture entry from a prevalidated manifest object."""
 
-    if not isinstance(value, dict):
-        raise AdjudicationReportError(f"{context}: fixture entry must be an object")
-    missing_fields = sorted(REQUIRED_FIXTURE_FIELDS - set(value))
-    if missing_fields:
-        raise AdjudicationReportError(f"{context}: missing required fields: {', '.join(missing_fields)}")
-
-    fixture_id = require_non_empty_string(value["fixture_id"], f"{context}.fixture_id")
+    fixture_id = str(value["fixture_id"])
     if fixture_id in seen_fixture_ids:
         raise AdjudicationReportError(f"{context}.fixture_id duplicate value: {fixture_id}")
     seen_fixture_ids.add(fixture_id)
 
-    label = require_non_empty_string(value["label"], f"{context}.label")
-    description = require_non_empty_string(value["description"], f"{context}.description")
-    expected_record_count = require_non_negative_int(value["expected_record_count"], f"{context}.expected_record_count")
-    quality_gate_included = require_bool(value["quality_gate_included"], f"{context}.quality_gate_included")
-    review_status = require_enum(
-        value["review_status"],
-        ALLOWED_FIXTURE_REVIEW_STATUSES,
-        f"{context}.review_status",
-    )
-    owner = require_non_empty_string(value["owner"], f"{context}.owner")
-    status_notes = require_non_empty_string(value["status_notes"], f"{context}.status_notes")
-    last_reviewed_at = require_utc_timestamp(value["last_reviewed_at"], f"{context}.last_reviewed_at")
-    source_trace_paths = require_non_empty_string_list(value["source_trace_paths"], f"{context}.source_trace_paths")
-    validate_safety_assertions(value["safety_assertions"], f"{context}.safety_assertions")
-    validate_quality_gate_review_status(quality_gate_included, review_status, f"{context}.review_status")
-
-    raw_path = require_non_empty_string(value["path"], f"{context}.path")
-    fixture_path = resolve_repo_path(Path(raw_path), repo_root)
-    try:
-        fixture_path.relative_to(repo_root.resolve())
-    except ValueError as exc:
-        raise AdjudicationReportError(f"{context}.path must stay within the repository") from exc
-    if not fixture_path.exists():
-        raise AdjudicationReportError(f"{context}.path does not exist: {display_path(fixture_path, repo_root)}")
-
-    for source_index, source_trace_path in enumerate(source_trace_paths):
-        resolved_source_path = resolve_repo_path(Path(source_trace_path), repo_root)
-        if not resolved_source_path.exists():
-            raise AdjudicationReportError(
-                f"{context}.source_trace_paths[{source_index}] does not exist: "
-                f"{display_path(resolved_source_path, repo_root)}"
-            )
-
     return AdjudicationFixture(
         fixture_id=fixture_id,
-        label=label,
-        path=fixture_path,
-        description=description,
-        expected_record_count=expected_record_count,
-        quality_gate_included=quality_gate_included,
-        review_status=review_status,
-        owner=owner,
-        status_notes=status_notes,
-        last_reviewed_at=last_reviewed_at,
-        source_trace_paths=source_trace_paths,
+        label=str(value["label"]),
+        path=resolve_repo_path(Path(str(value["path"])), repo_root),
+        description=str(value["description"]),
+        expected_record_count=int(value["expected_record_count"]),
+        quality_gate_included=bool(value["quality_gate_included"]),
+        review_status=str(value["review_status"]),
+        owner=str(value["owner"]),
+        status_notes=str(value["status_notes"]),
+        last_reviewed_at=str(value["last_reviewed_at"]),
+        source_trace_paths=[str(source_path) for source_path in value["source_trace_paths"]],
     )
 
 
-def load_manifest_quality_gate_thresholds(value: Any, context: str) -> AdjudicationQualityGateThresholds:
-    """Validate optional manifest-declared adjudication quality-gate thresholds."""
+def load_manifest_quality_gate_thresholds(value: Any) -> AdjudicationQualityGateThresholds:
+    """Build quality-gate thresholds from a prevalidated manifest object."""
 
-    if value is None:
-        return AdjudicationQualityGateThresholds()
-    if not isinstance(value, dict):
-        raise AdjudicationReportError(f"{context} must be an object")
-
-    unexpected_fields = sorted(set(value) - QUALITY_GATE_THRESHOLD_FIELDS)
-    if unexpected_fields:
-        raise AdjudicationReportError(f"{context} unexpected fields: {', '.join(unexpected_fields)}")
-
-    min_review_coverage = None
-    if "min_review_coverage" in value:
-        min_review_coverage = require_percent_number(value["min_review_coverage"], f"{context}.min_review_coverage")
-
-    max_needs_discussion = None
-    if "max_needs_discussion" in value:
-        max_needs_discussion = require_non_negative_int(value["max_needs_discussion"], f"{context}.max_needs_discussion")
+    threshold_values = value or {}
+    min_review_coverage = optional_float(threshold_values.get("min_review_coverage"))
+    max_needs_discussion = optional_int(threshold_values.get("max_needs_discussion"))
 
     return AdjudicationQualityGateThresholds(
         min_review_coverage=min_review_coverage,
         max_needs_discussion=max_needs_discussion,
-        min_profile_review_coverage=require_percent_threshold_map(
-            value.get("min_profile_review_coverage", {}),
-            f"{context}.min_profile_review_coverage",
+        min_profile_review_coverage=float_threshold_map(
+            threshold_values.get("min_profile_review_coverage", {}),
         ),
-        min_category_review_coverage=require_percent_threshold_map(
-            value.get("min_category_review_coverage", {}),
-            f"{context}.min_category_review_coverage",
+        min_category_review_coverage=float_threshold_map(
+            threshold_values.get("min_category_review_coverage", {}),
         ),
-        max_fixture_needs_discussion=require_non_negative_int_threshold_map(
-            value.get("max_fixture_needs_discussion", {}),
-            f"{context}.max_fixture_needs_discussion",
+        max_fixture_needs_discussion=int_threshold_map(
+            threshold_values.get("max_fixture_needs_discussion", {}),
         ),
     )
 
 
-def require_percent_threshold_map(value: Any, context: str) -> dict[str, float]:
-    if not isinstance(value, dict):
-        raise AdjudicationReportError(f"{context} must be an object")
-
-    thresholds: dict[str, float] = {}
-    for key, threshold_value in sorted(value.items()):
-        threshold_key = require_non_empty_string(key, f"{context} key")
-        thresholds[threshold_key] = require_percent_number(threshold_value, f"{context}.{threshold_key}")
-    return thresholds
+def optional_float(value: Any) -> float | None:
+    if value is None:
+        return None
+    return float(value)
 
 
-def require_non_negative_int_threshold_map(value: Any, context: str) -> dict[str, int]:
-    if not isinstance(value, dict):
-        raise AdjudicationReportError(f"{context} must be an object")
-
-    thresholds: dict[str, int] = {}
-    for key, threshold_value in sorted(value.items()):
-        threshold_key = require_non_empty_string(key, f"{context} key")
-        thresholds[threshold_key] = require_non_negative_int(threshold_value, f"{context}.{threshold_key}")
-    return thresholds
+def optional_int(value: Any) -> int | None:
+    if value is None:
+        return None
+    return int(value)
 
 
-def validate_safety_assertions(value: Any, context: str) -> None:
-    if not isinstance(value, dict):
-        raise AdjudicationReportError(f"{context} must be an object")
-
-    missing_fields = sorted(REQUIRED_SAFETY_ASSERTIONS - set(value))
-    if missing_fields:
-        raise AdjudicationReportError(f"{context} missing required fields: {', '.join(missing_fields)}")
-
-    unexpected_fields = sorted(set(value) - REQUIRED_SAFETY_ASSERTIONS)
-    if unexpected_fields:
-        raise AdjudicationReportError(f"{context} unexpected fields: {', '.join(unexpected_fields)}")
-
-    for field_name, expected_value in EXPECTED_SAFE_ASSERTIONS.items():
-        actual_value = value[field_name]
-        if not isinstance(actual_value, bool):
-            raise AdjudicationReportError(f"{context}.{field_name} must be a boolean")
-        if actual_value is not expected_value:
-            expected_text = str(expected_value).lower()
-            raise AdjudicationReportError(f"{context}.{field_name} must be {expected_text} for committed fixtures")
+def float_threshold_map(value: dict[str, Any]) -> dict[str, float]:
+    return {str(key): float(threshold) for key, threshold in sorted(value.items())}
 
 
-def require_non_empty_string(value: Any, context: str) -> str:
-    if not isinstance(value, str) or not value.strip():
-        raise AdjudicationReportError(f"{context} must be a non-empty string")
-    return value
-
-
-def require_enum(value: Any, allowed_values: set[str], context: str) -> str:
-    text = require_non_empty_string(value, context)
-    if text not in allowed_values:
-        allowed = ", ".join(sorted(allowed_values))
-        raise AdjudicationReportError(f"{context} must be one of: {allowed}")
-    return text
-
-
-def require_utc_timestamp(value: Any, context: str) -> str:
-    text = require_non_empty_string(value, context)
-    if not UTC_TIMESTAMP_PATTERN.fullmatch(text):
-        raise AdjudicationReportError(f"{context} must use YYYY-MM-DDTHH:MM:SSZ UTC format")
-    return text
-
-
-def require_non_empty_string_list(value: Any, context: str) -> list[str]:
-    if not isinstance(value, list) or not value:
-        raise AdjudicationReportError(f"{context} must be a non-empty array")
-    return [require_non_empty_string(item, f"{context}[{index}]") for index, item in enumerate(value)]
-
-
-def require_non_negative_int(value: Any, context: str) -> int:
-    if not isinstance(value, int) or isinstance(value, bool):
-        raise AdjudicationReportError(f"{context} must be an integer")
-    if value < 0:
-        raise AdjudicationReportError(f"{context} must be >= 0")
-    return value
-
-
-def require_percent_number(value: Any, context: str) -> float:
-    if not isinstance(value, (int, float)) or isinstance(value, bool):
-        raise AdjudicationReportError(f"{context} must be a number")
-    threshold = float(value)
-    if not math.isfinite(threshold):
-        raise AdjudicationReportError(f"{context} must be a finite number")
-    if threshold < 0 or threshold > 100:
-        raise AdjudicationReportError(f"{context} must be between 0 and 100")
-    return threshold
-
-
-def require_bool(value: Any, context: str) -> bool:
-    if not isinstance(value, bool):
-        raise AdjudicationReportError(f"{context} must be a boolean")
-    return value
-
-
-def validate_quality_gate_review_status(quality_gate_included: bool, review_status: str, context: str) -> None:
-    if quality_gate_included and review_status not in QUALITY_GATE_COMPATIBLE_REVIEW_STATUSES:
-        allowed = ", ".join(sorted(QUALITY_GATE_COMPATIBLE_REVIEW_STATUSES))
-        raise AdjudicationReportError(
-            f"{context} must be one of: {allowed} when quality_gate_included is true"
-        )
+def int_threshold_map(value: dict[str, Any]) -> dict[str, int]:
+    return {str(key): int(threshold) for key, threshold in sorted(value.items())}
 
 
 def build_adjudication_index(

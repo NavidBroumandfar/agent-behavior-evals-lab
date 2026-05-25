@@ -43,6 +43,8 @@ M16 adds optional manifest-declared `quality_gate_thresholds` for committed adju
 
 M17 adds `schemas/adjudication_manifest.schema.json` and `src/validate_adjudication_manifest.py` so manifest structure, fixture references, public-safe assertions, and threshold keys are checked before report generation consumes the manifest.
 
+M18 makes the standalone validator the manifest-backed report loader preflight, so report generation and regression checks share the same manifest contract boundary.
+
 ## Reporting
 
 M10 adds `src/adjudication_report.py`, which writes:

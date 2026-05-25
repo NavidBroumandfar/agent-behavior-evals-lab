@@ -68,8 +68,32 @@ def validate_manifest(
 
     schema = load_json_object(schema_path, "schema")
     manifest = load_json_object(manifest_path, "manifest")
-    validate_schema_value(manifest, schema, display_path(manifest_path, repo_root), manifest_path)
+    return validate_loaded_manifest(manifest, schema, manifest_path, schema_path, repo_root)
 
+
+def load_validated_manifest(
+    manifest_path: Path = DEFAULT_MANIFEST_PATH,
+    schema_path: Path = DEFAULT_SCHEMA_PATH,
+    repo_root: Path = REPO_ROOT,
+) -> dict[str, Any]:
+    """Load and validate the adjudication manifest, returning the manifest object."""
+
+    schema = load_json_object(schema_path, "schema")
+    manifest = load_json_object(manifest_path, "manifest")
+    validate_loaded_manifest(manifest, schema, manifest_path, schema_path, repo_root)
+    return manifest
+
+
+def validate_loaded_manifest(
+    manifest: dict[str, Any],
+    schema: dict[str, Any],
+    manifest_path: Path,
+    schema_path: Path,
+    repo_root: Path = REPO_ROOT,
+) -> dict[str, Any]:
+    """Validate loaded manifest shape and semantics and return a summary."""
+
+    validate_schema_value(manifest, schema, display_path(manifest_path, repo_root), manifest_path)
     fixtures = manifest["adjudication_fixtures"]
     fixture_ids, profile_names, category_names = validate_fixture_semantics(
         fixtures,

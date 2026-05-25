@@ -119,6 +119,8 @@ python3 src/validate_adjudication_manifest.py
 
 The validator checks `schemas/adjudication_manifest.schema.json`, fixture paths, fixture record counts, source trace references, safety assertions, quality-gate-compatible review statuses, and threshold keys before adjudication reports or regression checks load the manifest.
 
+M18 wires that validator directly into manifest-backed report loading. Report generation still keeps adjudication data loading and report dataclass construction local to `src/adjudication_report.py`, but manifest contract failures now come from the standalone validator first.
+
 When an intentional fixture change should update the expected counts:
 
 ```bash

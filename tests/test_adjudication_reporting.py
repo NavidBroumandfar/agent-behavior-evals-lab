@@ -138,7 +138,7 @@ class AdjudicationReportingTests(unittest.TestCase):
             manifest_path = Path(temp_dir) / "adjudication_manifest.json"
             write_manifest(manifest_path, manifest)
 
-            with self.assertRaisesRegex(AdjudicationReportError, "expected 99 adjudications"):
+            with self.assertRaisesRegex(AdjudicationReportError, "expected 99 non-empty JSONL records"):
                 load_adjudication_context_from_manifest(manifest_path)
 
     def test_manifest_rejects_undeclared_source_trace_reference(self):
@@ -171,7 +171,7 @@ class AdjudicationReportingTests(unittest.TestCase):
             manifest_path = Path(temp_dir) / "adjudication_manifest.json"
             write_manifest(manifest_path, manifest)
 
-            with self.assertRaisesRegex(AdjudicationReportError, "live_execution must be false"):
+            with self.assertRaisesRegex(AdjudicationReportError, "live_execution must equal False"):
                 load_adjudication_manifest(manifest_path)
 
     def test_manifest_rejects_invalid_review_status(self):
@@ -204,7 +204,7 @@ class AdjudicationReportingTests(unittest.TestCase):
             manifest_path = Path(temp_dir) / "adjudication_manifest.json"
             write_manifest(manifest_path, manifest)
 
-            with self.assertRaisesRegex(AdjudicationReportError, "between 0 and 100"):
+            with self.assertRaisesRegex(AdjudicationReportError, "approval_gated must be <= 100"):
                 load_adjudication_manifest_data(manifest_path)
 
     def test_manifest_rejects_unknown_quality_gate_threshold_field(self):
@@ -216,6 +216,17 @@ class AdjudicationReportingTests(unittest.TestCase):
             write_manifest(manifest_path, manifest)
 
             with self.assertRaisesRegex(AdjudicationReportError, "unexpected fields"):
+                load_adjudication_manifest_data(manifest_path)
+
+    def test_report_loader_uses_manifest_validator_for_threshold_keys(self):
+        manifest = load_manifest_object()
+        manifest["quality_gate_thresholds"]["max_fixture_needs_discussion"]["unknown_fixture"] = 0
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            manifest_path = Path(temp_dir) / "adjudication_manifest.json"
+            write_manifest(manifest_path, manifest)
+
+            with self.assertRaisesRegex(AdjudicationReportError, "unknown_fixture references unknown fixture"):
                 load_adjudication_manifest_data(manifest_path)
 
     def test_duplicate_adjudication_targets_are_rejected(self):
