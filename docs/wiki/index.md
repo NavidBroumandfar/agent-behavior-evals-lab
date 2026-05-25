@@ -31,6 +31,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Adjudication Manifest Contract](concepts/adjudication_manifest_contract.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
+- [Report Artifact Manifest](concepts/report_artifact_manifest.md)
 - [Reviewed Fixture Quality-Gate Promotion Checklist](concepts/reviewed_fixture_quality_gate_promotion.md)
 
 ## Current Source Artifacts
@@ -62,6 +63,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`, `schemas/adjudication_manifest.schema.json`, and `src/validate_adjudication_manifest.py`
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
+- Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Shared reporting utilities: `src/reporting_utils.py`
 - Scored trace comparison: `src/compare_scored_traces.py` and `reports/comparisons/baseline_self_comparison_report.md`
 - External fixture comparison: `src/compare_external_fixtures.py` and `reports/comparisons/external_fixture_comparison_report.md`
@@ -84,6 +86,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 16 closeout: `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md`
 - Milestone 17 closeout: `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md`
 - Milestone 18 closeout: `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md`
+- Milestone 19 closeout: `docs/milestones/m19-report-artifact-manifest-closeout.md`
 
 ## Reading Order
 

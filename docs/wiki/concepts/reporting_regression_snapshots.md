@@ -51,6 +51,14 @@ This catches manifest schema errors, bad fixture references, unsafe assertions, 
 
 Manifest-backed regression checks load adjudication context through `src/adjudication_report.py`, so the same standalone manifest validator also preflights regression inputs before snapshot comparison.
 
+M19 adds `reports/comparisons/report_manifest.json`, which indexes generated Markdown reports and JSON snapshots. Validate it with:
+
+```bash
+python3 src/validate_report_manifest.py
+```
+
+The report manifest validator checks artifact paths, generator scripts, declared input paths, snapshot dependencies, and public-safe assertions after report generation finishes.
+
 Then run:
 
 ```bash

@@ -182,6 +182,10 @@ CHECKS = [
         ],
     ),
     (
+        "report manifest validation",
+        ["python3", "src/validate_report_manifest.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -211,6 +215,7 @@ CHECKS = [
             "src/promote_reviewed_outputs.py",
             "src/validate_adjudications.py",
             "src/validate_adjudication_manifest.py",
+            "src/validate_report_manifest.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/compare_scored_traces.py",

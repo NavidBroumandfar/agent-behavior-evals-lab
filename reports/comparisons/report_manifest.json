@@ -1,0 +1,280 @@
+{
+  "manifest_id": "report_manifest",
+  "version": "0.1.0",
+  "generated_at": "2026-05-25T00:00:00Z",
+  "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
+  "scope": [
+    "Committed generated Markdown reports under reports/.",
+    "Committed generated JSON regression snapshots under reports/comparisons/.",
+    "Local generation scripts and input artifacts used by the deterministic quality gate."
+  ],
+  "non_goals": [
+    "No report regeneration.",
+    "No scorer changes.",
+    "No trace rewriting.",
+    "No live provider APIs or provider SDKs.",
+    "No local model execution.",
+    "No live OpenClaw CLI execution.",
+    "No browser, email, messaging, purchase, file mutation, or other external actions.",
+    "No credentials, secrets, network calls, or private runtime integration."
+  ],
+  "report_artifacts": [
+    {
+      "artifact_id": "baseline_report",
+      "label": "Baseline Report",
+      "path": "reports/baseline_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/report_generator.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/baseline_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Human-readable baseline aggregate report for the deterministic mock run.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "profile_comparison_report",
+      "label": "Profile Comparison Report",
+      "path": "reports/comparisons/profile_comparison_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/comparison_report.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/baseline_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Human-readable comparison of deterministic mock-run profile aggregates.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "baseline_regression_snapshot",
+      "label": "Baseline Regression Snapshot",
+      "path": "reports/comparisons/baseline_regression_snapshot.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/regression_check.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Saved deterministic aggregate snapshot for baseline regression checks.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "failure_inspection",
+      "label": "Failure Inspection",
+      "path": "reports/comparisons/failure_inspection.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/inspect_failures.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl",
+        "traces/external/adjudication_manifest.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/baseline_regression_snapshot.json",
+        "reports/comparisons/adjudication_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Failure inspection report with reviewer annotations loaded from the adjudication manifest.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "manual_output_report",
+      "label": "Manual Output Report",
+      "path": "reports/comparisons/manual_output_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/evaluate_manual_outputs.py",
+      "input_paths": [
+        "traces/external/manual_outputs.example.jsonl",
+        "traces/scored/manual_output_eval.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Human-readable report for public-safe manual output fixtures.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "openclaw_manual_eval_report",
+      "label": "OpenClaw-Style Manual Eval Report",
+      "path": "reports/comparisons/openclaw_manual_eval_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/evaluate_manual_outputs.py",
+      "input_paths": [
+        "traces/external/openclaw_manual_samples.example.jsonl",
+        "traces/scored/openclaw_manual_eval.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Human-readable report for public-safe OpenClaw-style manual samples.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "saved_transcript_replay_report",
+      "label": "Saved Transcript Replay Report",
+      "path": "reports/comparisons/saved_transcript_replay_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/replay_saved_transcripts.py",
+      "input_paths": [
+        "traces/external/saved_transcripts.example.jsonl",
+        "traces/scored/saved_transcript_replay_eval.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Human-readable report for public-safe saved transcript replay fixtures.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "external_fixture_comparison_report",
+      "label": "External Fixture Comparison Report",
+      "path": "reports/comparisons/external_fixture_comparison_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/compare_external_fixtures.py",
+      "input_paths": [
+        "traces/external/fixture_manifest.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Human-readable comparison report for controlled external fixture groups.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "adjudication_summary_report",
+      "label": "Adjudication Summary Report",
+      "path": "reports/comparisons/adjudication_summary_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/adjudication_report.py",
+      "input_paths": [
+        "traces/external/adjudication_manifest.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/adjudication_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Human-readable reviewer decision summary for manifest-backed adjudication fixtures.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "adjudicated_aggregate_report",
+      "label": "Adjudicated Aggregate Report",
+      "path": "reports/comparisons/adjudicated_aggregate_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/adjudication_report.py",
+      "input_paths": [
+        "traces/external/adjudication_manifest.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/adjudication_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Human-readable adjudicated aggregate report for reviewed records.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "adjudication_regression_snapshot",
+      "label": "Adjudication Regression Snapshot",
+      "path": "reports/comparisons/adjudication_regression_snapshot.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/adjudication_regression_check.py",
+      "input_paths": [
+        "traces/external/adjudication_manifest.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Saved deterministic aggregate snapshot for adjudication-aware regression checks.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "baseline_self_comparison_report",
+      "label": "Baseline Self Comparison Report",
+      "path": "reports/comparisons/baseline_self_comparison_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/compare_scored_traces.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/baseline_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Human-readable scored-trace self-comparison report for regression plumbing.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    }
+  ]
+}

@@ -20,7 +20,7 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
-See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md` for the adjudication manifest schema hardening closeout, `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md` for the manifest validator/report loader integration closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
+See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md` for the adjudication manifest schema hardening closeout, `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md` for the manifest validator/report loader integration closeout, `docs/milestones/m19-report-artifact-manifest-closeout.md` for the report artifact manifest closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
 
 ## Repository Structure
 
@@ -60,6 +60,7 @@ src/
   promote_reviewed_outputs.py   # Reviewed adapter-output fixture promotion helper
   validate_adjudications.py     # Human adjudication fixture validator
   validate_adjudication_manifest.py # Adjudication manifest schema and contract validator
+  validate_report_manifest.py # Generated report artifact manifest validator
   adjudication_report.py        # Adjudication-aware Markdown report generator
   adjudication_regression_check.py # Adjudication aggregate snapshot checker
   compare_scored_traces.py      # Generic before-vs-after scored trace comparison
@@ -102,6 +103,7 @@ reports/
     external_fixture_comparison_report.md # Generated controlled external fixture comparison
     adjudication_summary_report.md # Generated reviewer decision summary
     adjudicated_aggregate_report.md # Generated adjudicated aggregate report
+    report_manifest.json        # Generated report/snapshot artifact provenance index
 
 schemas/
   eval_case.schema.json         # Planned schema validation support
@@ -112,6 +114,7 @@ schemas/
   target_registry.schema.json   # Target registry contract
   adjudication.schema.json      # Human adjudication record contract
   adjudication_manifest.schema.json # Adjudication fixture manifest contract
+  report_manifest.schema.json   # Generated report artifact manifest contract
 ```
 
 ## Eval Categories
@@ -400,6 +403,14 @@ The validator checks `schemas/adjudication_manifest.schema.json`, fixture paths,
 
 M18 makes that validator the manifest preflight for adjudication report loading. Manifest-backed report generation and regression checks now reject schema, safety, path, count, and threshold-key errors through the same standalone validator before constructing report dataclasses.
 
+M19 adds a report artifact manifest for generated report and snapshot provenance:
+
+```bash
+python3 src/validate_report_manifest.py
+```
+
+The validator checks `reports/comparisons/report_manifest.json` against `schemas/report_manifest.schema.json`, verifies report and snapshot paths, generator scripts, declared input paths, snapshot dependencies, and public-safe assertions.
+
 M9 also adds arbitrary scored-trace comparison:
 
 ```bash
@@ -419,7 +430,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, both adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, both adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, report manifest validation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 
