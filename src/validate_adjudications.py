@@ -9,41 +9,17 @@ from __future__ import annotations
 
 import argparse
 import json
-import re
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
+from schema_validation_utils import load_json_object, validate_schema_value
 from validate_schemas import ValidationError, validate_trace_record
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_INPUT_PATH = REPO_ROOT / "traces/external/adjudications.example.jsonl"
-
-REQUIRED_FIELDS = {
-    "adjudication_id",
-    "source_trace_path",
-    "run_id",
-    "case_id",
-    "profile_name",
-    "reviewed_at",
-    "reviewer_id",
-    "reviewer_decision",
-    "original_passed",
-    "original_score",
-    "original_failure_modes",
-    "adjudicated_passed",
-    "adjudicated_failure_modes",
-    "rationale",
-    "public_safe",
-}
-ALLOWED_REVIEWER_DECISIONS = {
-    "uphold_score",
-    "override_pass",
-    "override_fail",
-    "needs_discussion",
-}
-UTC_TIMESTAMP_PATTERN = re.compile(r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$")
+DEFAULT_SCHEMA_PATH = REPO_ROOT / "schemas/adjudication.schema.json"
 
 
 class AdjudicationValidationError(Exception):
@@ -59,6 +35,7 @@ def load_adjudications(path: Path) -> list[dict[str, Any]]:
     records = []
     trace_cache: dict[Path, list[dict[str, Any]]] = {}
     seen_ids: set[str] = set()
+    schema = load_json_object(DEFAULT_SCHEMA_PATH, "schema", REPO_ROOT, AdjudicationValidationError)
     with path.open("r", encoding="utf-8") as input_file:
         for line_number, line in enumerate(input_file, start=1):
             stripped = line.strip()
@@ -70,7 +47,7 @@ def load_adjudications(path: Path) -> list[dict[str, Any]]:
                 raise AdjudicationValidationError(
                     f"{display_path(path)}:{line_number}: invalid JSON: {exc.msg}"
                 ) from exc
-            validate_adjudication_record(record, path, line_number, seen_ids, trace_cache)
+            validate_adjudication_record(record, path, line_number, seen_ids, trace_cache, schema)
             records.append(record)
 
     if not records:
@@ -90,58 +67,35 @@ def validate_adjudication_record(
     line_number: int,
     seen_ids: set[str],
     trace_cache: dict[Path, list[dict[str, Any]]],
+    schema: dict[str, Any] | None = None,
 ) -> None:
     """Validate one adjudication record."""
 
     context = f"{display_path(path)}:{line_number}"
-    if not isinstance(record, dict):
-        raise AdjudicationValidationError(f"{context}: record must be a JSON object")
+    schema = schema if schema is not None else load_json_object(
+        DEFAULT_SCHEMA_PATH,
+        "schema",
+        REPO_ROOT,
+        AdjudicationValidationError,
+    )
+    validate_schema_value(record, schema, "", path, REPO_ROOT, validation_error_for_line(path, line_number))
 
-    missing_fields = sorted(REQUIRED_FIELDS - set(record))
-    if missing_fields:
-        raise AdjudicationValidationError(f"{context}: missing required fields: {', '.join(missing_fields)}")
-
-    unexpected_fields = sorted(set(record) - REQUIRED_FIELDS)
-    if unexpected_fields:
-        raise AdjudicationValidationError(f"{context}: unexpected fields: {', '.join(unexpected_fields)}")
-
-    adjudication_id = require_non_empty_string(record["adjudication_id"], f"{context}.adjudication_id")
+    adjudication_id = str(record["adjudication_id"])
     if adjudication_id in seen_ids:
         raise AdjudicationValidationError(f"{context}.adjudication_id duplicate value: {adjudication_id}")
     seen_ids.add(adjudication_id)
 
-    for field_name in ["run_id", "case_id", "profile_name", "reviewer_id", "rationale"]:
-        require_non_empty_string(record[field_name], f"{context}.{field_name}")
-    validate_utc_timestamp(record["reviewed_at"], f"{context}.reviewed_at")
-
-    reviewer_decision = require_enum(
-        record["reviewer_decision"],
-        ALLOWED_REVIEWER_DECISIONS,
-        f"{context}.reviewer_decision",
-    )
-    require_bool(record["original_passed"], f"{context}.original_passed")
-    require_number_between_zero_and_one(record["original_score"], f"{context}.original_score")
-    original_failure_modes = require_string_list(
-        record["original_failure_modes"],
-        f"{context}.original_failure_modes",
-        allow_empty=True,
-    )
-    require_bool(record["adjudicated_passed"], f"{context}.adjudicated_passed")
-    adjudicated_failure_modes = require_string_list(
-        record["adjudicated_failure_modes"],
-        f"{context}.adjudicated_failure_modes",
-        allow_empty=True,
-    )
-    require_bool(record["public_safe"], f"{context}.public_safe")
     if record["public_safe"] is not True:
         raise AdjudicationValidationError(f"{context}.public_safe must be true for committed adjudications")
 
     source_trace_path = require_existing_repo_path(record["source_trace_path"], f"{context}.source_trace_path")
     source_records = trace_cache.setdefault(source_trace_path, load_trace_records(source_trace_path))
     source_record = find_source_record(record, source_records, context)
+    original_failure_modes = [str(mode) for mode in record["original_failure_modes"]]
+    adjudicated_failure_modes = [str(mode) for mode in record["adjudicated_failure_modes"]]
     validate_original_fields(record, original_failure_modes, source_record, context)
     validate_decision_consistency(
-        reviewer_decision,
+        str(record["reviewer_decision"]),
         bool(record["original_passed"]),
         original_failure_modes,
         bool(record["adjudicated_passed"]),
@@ -242,32 +196,13 @@ def validate_decision_consistency(
             raise AdjudicationValidationError(f"{context}: override_fail requires adjudicated failure modes")
 
 
-def validate_utc_timestamp(value: Any, context: str) -> None:
-    text = require_non_empty_string(value, context)
-    if not UTC_TIMESTAMP_PATTERN.fullmatch(text):
-        raise AdjudicationValidationError(f"{context} must use YYYY-MM-DDTHH:MM:SSZ UTC format")
+def validation_error_for_line(path: Path, line_number: int) -> Callable[[str], AdjudicationValidationError]:
+    """Build line-aware adjudication validation errors for shared schema checks."""
 
+    def build_error(reason: str) -> AdjudicationValidationError:
+        return AdjudicationValidationError(f"{display_path(path)}:{line_number}: {reason}")
 
-def require_enum(value: Any, allowed_values: set[str], context: str) -> str:
-    text = require_non_empty_string(value, context)
-    if text not in allowed_values:
-        allowed = ", ".join(sorted(allowed_values))
-        raise AdjudicationValidationError(f"{context} must be one of: {allowed}")
-    return text
-
-
-def require_bool(value: Any, context: str) -> bool:
-    if not isinstance(value, bool):
-        raise AdjudicationValidationError(f"{context} must be a boolean")
-    return value
-
-
-def require_number_between_zero_and_one(value: Any, context: str) -> float:
-    if not isinstance(value, (int, float)) or isinstance(value, bool):
-        raise AdjudicationValidationError(f"{context} must be a number")
-    if value < 0 or value > 1:
-        raise AdjudicationValidationError(f"{context} must be between 0 and 1")
-    return float(value)
+    return build_error
 
 
 def require_non_empty_string(value: Any, context: str) -> str:
@@ -276,18 +211,6 @@ def require_non_empty_string(value: Any, context: str) -> str:
     if not value.strip():
         raise AdjudicationValidationError(f"{context} must not be empty")
     return value
-
-
-def require_string_list(value: Any, context: str, allow_empty: bool = False) -> list[str]:
-    if not isinstance(value, list):
-        raise AdjudicationValidationError(f"{context} must be an array")
-    if not value and not allow_empty:
-        raise AdjudicationValidationError(f"{context} must not be empty")
-
-    result = []
-    for index, item in enumerate(value):
-        result.append(require_non_empty_string(item, f"{context}[{index}]"))
-    return result
 
 
 def require_existing_repo_path(value: Any, context: str) -> Path:

@@ -5,6 +5,7 @@ Human adjudications are reviewer records over existing scored traces. They let a
 ## Contract
 
 Adjudication records live in JSONL and are validated by `src/validate_adjudications.py`.
+M26 loads `schemas/adjudication.schema.json` through `src/schema_validation_utils.py` for JSONL record shape while keeping duplicate adjudication IDs, source-trace consistency, and reviewer-decision result semantics local.
 
 Each record points to a source scored trace through:
 

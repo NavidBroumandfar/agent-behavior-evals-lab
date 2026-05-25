@@ -40,26 +40,50 @@ class ValidateAdjudicationsTests(unittest.TestCase):
         record = load_example_records()[0]
         del record["rationale"]
 
-        self.assert_adjudication_fails([record])
+        self.assert_adjudication_fails([record], "missing required fields: rationale")
+
+    def test_unexpected_field_is_rejected_by_schema(self):
+        record = load_example_records()[0]
+        record["unexpected"] = "value"
+
+        self.assert_adjudication_fails([record], "unexpected fields: unexpected")
+
+    def test_invalid_reviewer_decision_is_rejected_by_schema(self):
+        record = load_example_records()[0]
+        record["reviewer_decision"] = "dismiss"
+
+        self.assert_adjudication_fails([record], "reviewer_decision must be one of")
+
+    def test_blank_required_text_is_rejected_by_schema(self):
+        record = load_example_records()[0]
+        record["rationale"] = "   "
+
+        self.assert_adjudication_fails([record], "rationale must match pattern")
+
+    def test_invalid_reviewed_at_is_rejected_by_schema(self):
+        record = load_example_records()[0]
+        record["reviewed_at"] = "2026-05-23"
+
+        self.assert_adjudication_fails([record], "reviewed_at must match pattern")
 
     def test_duplicate_adjudication_id_is_rejected(self):
         records = load_example_records()
         records[1]["adjudication_id"] = records[0]["adjudication_id"]
 
-        self.assert_adjudication_fails(records)
+        self.assert_adjudication_fails(records, "adjudication_id duplicate value")
 
     def test_original_failure_modes_must_match_source_trace(self):
         record = load_example_records()[0]
         record["original_failure_modes"] = ["missing_approval_gate"]
 
-        self.assert_adjudication_fails([record])
+        self.assert_adjudication_fails([record], "original_failure_modes does not match source trace")
 
     def test_uphold_score_must_preserve_original_result(self):
         record = load_example_records()[0]
         record["adjudicated_passed"] = True
         record["adjudicated_failure_modes"] = []
 
-        self.assert_adjudication_fails([record])
+        self.assert_adjudication_fails([record], "uphold_score must preserve original_passed")
 
     def test_override_pass_requires_passing_adjudicated_result(self):
         record = load_example_records()[0]
@@ -75,13 +99,13 @@ class ValidateAdjudicationsTests(unittest.TestCase):
         record["adjudicated_passed"] = False
         record["adjudicated_failure_modes"] = []
 
-        self.assert_adjudication_fails([record])
+        self.assert_adjudication_fails([record], "override_fail requires adjudicated failure modes")
 
     def test_non_public_safe_adjudication_is_rejected(self):
         record = load_example_records()[0]
         record["public_safe"] = False
 
-        self.assert_adjudication_fails([record])
+        self.assert_adjudication_fails([record], "public_safe must equal True")
 
     def assert_adjudication_passes(self, records):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -90,12 +114,12 @@ class ValidateAdjudicationsTests(unittest.TestCase):
 
             self.assertEqual(validate_adjudication_file(path), len(records))
 
-    def assert_adjudication_fails(self, records):
+    def assert_adjudication_fails(self, records, message):
         with tempfile.TemporaryDirectory() as temp_dir:
             path = Path(temp_dir) / "adjudications.jsonl"
             write_jsonl(path, records)
 
-            with self.assertRaises(AdjudicationValidationError):
+            with self.assertRaisesRegex(AdjudicationValidationError, message):
                 validate_adjudication_file(path)
 
 

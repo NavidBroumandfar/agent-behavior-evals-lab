@@ -22,25 +22,39 @@
   ],
   "properties": {
     "adjudication_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "source_trace_path": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "run_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "case_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "profile_name": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "reviewed_at": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
     },
     "reviewer_id": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "reviewer_decision": {
       "type": "string",
@@ -62,7 +76,9 @@
     "original_failure_modes": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1,
+        "pattern": ".*\\S.*"
       }
     },
     "adjudicated_passed": {
@@ -71,14 +87,19 @@
     "adjudicated_failure_modes": {
       "type": "array",
       "items": {
-        "type": "string"
+        "type": "string",
+        "minLength": 1,
+        "pattern": ".*\\S.*"
       }
     },
     "rationale": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
     },
     "public_safe": {
-      "type": "boolean"
+      "type": "boolean",
+      "const": true
     }
   }
 }
