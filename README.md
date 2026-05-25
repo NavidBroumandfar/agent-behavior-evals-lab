@@ -20,7 +20,7 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
-See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
+See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md` for the adjudication manifest schema hardening closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
 
 ## Repository Structure
 
@@ -59,6 +59,7 @@ src/
   review_text_only_outputs.py   # Reviewed raw-output to adapter-output converter
   promote_reviewed_outputs.py   # Reviewed adapter-output fixture promotion helper
   validate_adjudications.py     # Human adjudication fixture validator
+  validate_adjudication_manifest.py # Adjudication manifest schema and contract validator
   adjudication_report.py        # Adjudication-aware Markdown report generator
   adjudication_regression_check.py # Adjudication aggregate snapshot checker
   compare_scored_traces.py      # Generic before-vs-after scored trace comparison
@@ -110,6 +111,7 @@ schemas/
   adapter_run_metadata.schema.json # Non-gated adapter experiment metadata contract
   target_registry.schema.json   # Target registry contract
   adjudication.schema.json      # Human adjudication record contract
+  adjudication_manifest.schema.json # Adjudication fixture manifest contract
 ```
 
 ## Eval Categories
@@ -387,6 +389,14 @@ python3 src/adjudication_regression_check.py \
 ```
 
 The threshold CLI options remain available as explicit local overrides.
+
+M17 adds a dedicated schema and standalone validator for the adjudication manifest:
+
+```bash
+python3 src/validate_adjudication_manifest.py
+```
+
+The validator checks `schemas/adjudication_manifest.schema.json`, fixture paths, fixture record counts, source trace references, quality-gate-compatible review statuses, public-safe assertions, and threshold keys before report generation consumes the manifest.
 
 M9 also adds arbitrary scored-trace comparison:
 

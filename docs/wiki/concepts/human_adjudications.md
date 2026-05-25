@@ -41,6 +41,8 @@ M14 adds fixture status governance to that manifest. Each fixture records `revie
 
 M16 adds optional manifest-declared `quality_gate_thresholds` for committed adjudication checks. Manifest-backed regression checks load those thresholds by default, while CLI threshold options remain available for local override experiments.
 
+M17 adds `schemas/adjudication_manifest.schema.json` and `src/validate_adjudication_manifest.py` so manifest structure, fixture references, public-safe assertions, and threshold keys are checked before report generation consumes the manifest.
+
 ## Reporting
 
 M10 adds `src/adjudication_report.py`, which writes:

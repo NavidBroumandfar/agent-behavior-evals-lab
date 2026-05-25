@@ -28,6 +28,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Promoted Reviewed Outputs](concepts/promoted_reviewed_outputs.md)
 - [Human Adjudications](concepts/human_adjudications.md)
 - [Adjudication-Aware Reporting](concepts/adjudication_aware_reporting.md)
+- [Adjudication Manifest Contract](concepts/adjudication_manifest_contract.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Reviewed Fixture Quality-Gate Promotion Checklist](concepts/reviewed_fixture_quality_gate_promotion.md)
@@ -58,7 +59,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Reviewed output promotion: `src/promote_reviewed_outputs.py`
 - Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, and `src/validate_adjudications.py`
-- Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`
+- Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`, `schemas/adjudication_manifest.schema.json`, and `src/validate_adjudication_manifest.py`
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
 - Shared reporting utilities: `src/reporting_utils.py`
@@ -81,6 +82,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 14 closeout: `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md`
 - Milestone 15 closeout: `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md`
 - Milestone 16 closeout: `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md`
+- Milestone 17 closeout: `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md`
 
 ## Reading Order
 

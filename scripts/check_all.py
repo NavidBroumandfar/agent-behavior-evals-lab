@@ -150,6 +150,10 @@ CHECKS = [
         ["python3", "src/validate_adjudications.py", "traces/external/adjudications.followup.example.jsonl"],
     ),
     (
+        "adjudication manifest validation",
+        ["python3", "src/validate_adjudication_manifest.py"],
+    ),
+    (
         "adjudication report generation",
         ["python3", "src/adjudication_report.py", "--manifest", "traces/external/adjudication_manifest.json"],
     ),
@@ -206,6 +210,7 @@ CHECKS = [
             "src/review_text_only_outputs.py",
             "src/promote_reviewed_outputs.py",
             "src/validate_adjudications.py",
+            "src/validate_adjudication_manifest.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/compare_scored_traces.py",

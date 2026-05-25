@@ -111,6 +111,14 @@ python3 src/adjudication_regression_check.py \
 
 Threshold failures name the exact profile, category, or fixture family that violated the configured limit.
 
+M17 adds a standalone manifest contract validator:
+
+```bash
+python3 src/validate_adjudication_manifest.py
+```
+
+The validator checks `schemas/adjudication_manifest.schema.json`, fixture paths, fixture record counts, source trace references, safety assertions, quality-gate-compatible review statuses, and threshold keys before adjudication reports or regression checks load the manifest.
+
 When an intentional fixture change should update the expected counts:
 
 ```bash

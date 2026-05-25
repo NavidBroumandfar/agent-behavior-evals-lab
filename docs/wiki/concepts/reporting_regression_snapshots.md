@@ -41,6 +41,14 @@ python3 src/adjudication_regression_check.py \
 
 These thresholds are local quality-gate policy. Snapshot diffs still track deterministic aggregate changes separately.
 
+The adjudication manifest itself is validated before report and snapshot generation:
+
+```bash
+python3 src/validate_adjudication_manifest.py
+```
+
+This catches manifest schema errors, bad fixture references, unsafe assertions, and typoed threshold keys before the regression snapshot check runs.
+
 Then run:
 
 ```bash
