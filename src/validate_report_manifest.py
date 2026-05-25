@@ -26,6 +26,20 @@ EXPECTED_SAFE_ASSERTIONS = {
     "contains_private_data": False,
     "credentials_required": False,
 }
+EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
+    "reports/baseline_report.md",
+    "reports/comparisons/profile_comparison_report.md",
+    "reports/comparisons/baseline_regression_snapshot.json",
+    "reports/comparisons/failure_inspection.md",
+    "reports/comparisons/manual_output_report.md",
+    "reports/comparisons/openclaw_manual_eval_report.md",
+    "reports/comparisons/saved_transcript_replay_report.md",
+    "reports/comparisons/external_fixture_comparison_report.md",
+    "reports/comparisons/adjudication_summary_report.md",
+    "reports/comparisons/adjudicated_aggregate_report.md",
+    "reports/comparisons/adjudication_regression_snapshot.json",
+    "reports/comparisons/baseline_self_comparison_report.md",
+}
 
 
 class ReportManifestValidationError(Exception):
@@ -51,6 +65,7 @@ def validate_manifest(
     )
     artifacts = manifest["report_artifacts"]
     validate_artifacts(artifacts, manifest_path, repo_root)
+    validate_quality_gate_artifact_coverage(artifacts, display_path(manifest_path, repo_root))
 
     return {
         "manifest_path": display_path(manifest_path, repo_root),
@@ -107,6 +122,21 @@ def validate_artifacts(artifacts: list[dict[str, Any]], manifest_path: Path, rep
                 )
 
         validate_safety_assertions(artifact["safety_assertions"], f"{context}.safety_assertions")
+
+
+def validate_quality_gate_artifact_coverage(artifacts: list[dict[str, Any]], context: str) -> None:
+    """Validate that known quality-gate reports and snapshots are indexed."""
+
+    quality_gate_paths = {
+        str(artifact["path"])
+        for artifact in artifacts
+        if artifact["quality_gate_included"] is True
+    }
+    missing_paths = sorted(EXPECTED_QUALITY_GATE_ARTIFACT_PATHS - quality_gate_paths)
+    if missing_paths:
+        raise ReportManifestValidationError(
+            f"{context}.report_artifacts missing quality-gate artifacts: {', '.join(missing_paths)}"
+        )
 
 
 def validate_artifact_path_shape(path: Path, artifact_type: str, context: str, repo_root: Path) -> None:

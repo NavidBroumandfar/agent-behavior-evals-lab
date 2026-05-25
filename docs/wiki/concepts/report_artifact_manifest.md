@@ -34,9 +34,11 @@ Each artifact entry declares:
 - `notes`, a short public-safe description.
 - `safety_assertions`, which must be public-safe and must not require live execution, external actions, private data, or credentials.
 
-The validator checks path existence, duplicate artifact IDs, duplicate artifact paths, expected file suffixes, non-empty Markdown reports, parseable JSON snapshots, generator script paths, input paths, snapshot dependency membership, and safety assertions.
+The validator checks path existence, duplicate artifact IDs, duplicate artifact paths, expected file suffixes, non-empty Markdown reports, parseable JSON snapshots, generator script paths, input paths, snapshot dependency membership, quality-gate artifact coverage, and safety assertions.
 
 M20 moves the shared JSON Schema subset mechanics used by this validator into `src/schema_validation_utils.py`. Report-specific artifact provenance checks remain in `src/validate_report_manifest.py`.
+
+M29 adds an explicit local coverage check for the known quality-gate report and snapshot paths. Removing one from `report_artifacts`, or marking it outside the quality gate, fails manifest validation.
 
 ## Boundaries
 

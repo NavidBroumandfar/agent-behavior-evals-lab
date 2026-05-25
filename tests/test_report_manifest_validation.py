@@ -80,6 +80,18 @@ class ReportManifestValidationTests(unittest.TestCase):
 
         self.assert_manifest_error(manifest, "path does not exist")
 
+    def test_rejects_missing_quality_gate_artifact(self):
+        manifest = load_manifest_object()
+        manifest["report_artifacts"] = manifest["report_artifacts"][1:]
+
+        self.assert_manifest_error(manifest, "missing quality-gate artifacts: reports/baseline_report.md")
+
+    def test_rejects_quality_gate_artifact_not_included(self):
+        manifest = load_manifest_object()
+        manifest["report_artifacts"][0]["quality_gate_included"] = False
+
+        self.assert_manifest_error(manifest, "missing quality-gate artifacts: reports/baseline_report.md")
+
     def test_rejects_markdown_artifact_with_json_path(self):
         manifest = load_manifest_object()
         manifest["report_artifacts"][0]["path"] = "reports/comparisons/baseline_regression_snapshot.json"
