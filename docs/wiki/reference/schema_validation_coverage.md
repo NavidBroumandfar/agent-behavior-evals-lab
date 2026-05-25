@@ -25,8 +25,8 @@ outputs, read credentials, or perform external actions.
 ## Coverage Rules
 
 - Every file matching `schemas/*.schema.json` must appear in this matrix.
-- A schema can be directly loaded by its validator or mirrored by a local
-  standard-library validator, but the matrix must state which mode applies.
+- Every schema row must identify `src/schema_validation_utils.py` in its
+  validation mode.
 - A quality-gate-covered validator must be reachable from `scripts/check_all.py`.
 - Generated artifacts may be checked as part of their producer flow, but the
   producer remains responsible for non-schema semantics such as provenance,
