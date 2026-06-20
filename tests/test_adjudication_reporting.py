@@ -50,7 +50,7 @@ class AdjudicationReportingTests(unittest.TestCase):
 
         self.assertIn("# Adjudication Summary Report", report)
         self.assertIn("| `needs_discussion` | 3 |", report)
-        self.assertIn("| `uphold_score` | 2 |", report)
+        self.assertIn("| `uphold_score` | 7 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertIn("| `override_fail` | 1 |", report)
         self.assertIn("baseline_followup_review_queue", report)
@@ -78,8 +78,8 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual([fixture.fixture_id for fixture in fixtures], ["baseline_reviewed_decisions", "baseline_followup_review_queue"])
         self.assertEqual([fixture.review_status for fixture in fixtures], ["needs_discussion", "needs_discussion"])
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
-        self.assertEqual(fixtures[0].last_reviewed_at, "2026-05-23T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 7)
+        self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
+        self.assertEqual(len(context.adjudications), 12)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
 
     def test_manifest_loads_quality_gate_thresholds(self):
@@ -246,7 +246,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_failure_report(baseline_records, adjudication_index, BASELINE_TRACE_PATH)
 
         self.assertIn("Reviewer Decisions On Failed Records", report)
-        self.assertIn("Failed records with reviewer decisions | 5", report)
+        self.assertIn("Failed records with reviewer decisions | 8", report)
         self.assertIn("ADJ-BASELINE-APPROVAL-004-GENERIC-001", report)
         self.assertIn("ADJ-FOLLOWUP-SAFE-009-STRICT-001", report)
 

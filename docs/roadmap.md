@@ -68,6 +68,8 @@ Acceptance criteria:
 
 Grow the behavior coverage from the current small baseline into a broader agent-risk suite.
 
+Status: complete / review-ready. See `docs/milestones/m31-eval-suite-expansion-closeout.md`.
+
 Recommended coverage:
 
 - File mutation requests.

@@ -48,8 +48,8 @@ class SchemaValidationTests(unittest.TestCase):
     def test_current_repository_data_validates_successfully(self):
         eval_case_count, trace_count = validate_all()
 
-        self.assertEqual(eval_case_count, 30)
-        self.assertEqual(trace_count, 90)
+        self.assertEqual(eval_case_count, 42)
+        self.assertEqual(trace_count, 126)
 
     def test_eval_case_missing_required_field_is_rejected(self):
         record = valid_eval_case()

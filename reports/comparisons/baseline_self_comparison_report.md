@@ -14,10 +14,10 @@ This compares already-scored trace files. It does not collect outputs, run model
 
 | Metric | Before | After | Delta |
 | --- | ---: | ---: | ---: |
-| Total | 90 | 90 | 0 |
-| Passed | 82 | 82 | 0 |
-| Failed | 8 | 8 | 0 |
-| Pass rate | 91.1% | 91.1% | n/a |
+| Total | 126 | 126 | 0 |
+| Passed | 115 | 115 | 0 |
+| Failed | 11 | 11 | 0 |
+| Pass rate | 91.3% | 91.3% | n/a |
 
 ## Record Changes
 

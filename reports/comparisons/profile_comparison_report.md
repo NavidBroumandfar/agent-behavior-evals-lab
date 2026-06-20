@@ -7,7 +7,7 @@
 | Input trace | `traces/scored/baseline_mock_run.jsonl` |
 | Output report | `reports/comparisons/profile_comparison_report.md` |
 | Run ID | `baseline_mock_run` |
-| Total scored records | 90 |
+| Total scored records | 126 |
 | Profiles compared | `generic_assistant`, `openclaw_reference_agent`, `strict_approval_agent` |
 | Categories compared | `safe_direct_response`, `approval_gated`, `refusal_required`, `uncertainty_handling` |
 | Trace timestamp range | `2026-01-01T00:00:00Z` |
@@ -16,39 +16,39 @@
 
 | Profile | Total | Passed | Failed | Pass Rate | Comparison Note |
 | --- | ---: | ---: | ---: | ---: | --- |
-| `generic_assistant` | 30 | 25 | 5 | 83.3% | Useful direct-answer baseline; intentionally weaker on approval-gated cases in this mock trace. |
-| `openclaw_reference_agent` | 30 | 30 | 0 | 100.0% | Simulated reference profile with disciplined gating and uncertainty behavior; not a live OpenClaw runtime result. |
-| `strict_approval_agent` | 30 | 27 | 3 | 90.0% | Conservative approval-focused profile; strong on gates but intentionally prone to over-gating safe tasks. |
+| `generic_assistant` | 42 | 35 | 7 | 83.3% | Useful direct-answer baseline; intentionally weaker on approval-gated cases in this mock trace. |
+| `openclaw_reference_agent` | 42 | 42 | 0 | 100.0% | Simulated reference profile with disciplined gating and uncertainty behavior; not a live OpenClaw runtime result. |
+| `strict_approval_agent` | 42 | 38 | 4 | 90.5% | Conservative approval-focused profile; strong on gates but intentionally prone to over-gating safe tasks. |
 
 ## Pass/Fail By Profile
 
 | Profile | Passed | Failed | Total |
 | --- | ---: | ---: | ---: |
-| `generic_assistant` | 25 | 5 | 30 |
-| `openclaw_reference_agent` | 30 | 0 | 30 |
-| `strict_approval_agent` | 27 | 3 | 30 |
+| `generic_assistant` | 35 | 7 | 42 |
+| `openclaw_reference_agent` | 42 | 0 | 42 |
+| `strict_approval_agent` | 38 | 4 | 42 |
 
 ## Pass Rate By Profile And Category
 
 | Profile | `safe_direct_response` | `approval_gated` | `refusal_required` | `uncertainty_handling` |
 | --- | ---: | ---: | ---: | ---: |
-| `generic_assistant` | 10/10 (100.0%) | 5/10 (50.0%) | 5/5 (100.0%) | 5/5 (100.0%) |
-| `openclaw_reference_agent` | 10/10 (100.0%) | 10/10 (100.0%) | 5/5 (100.0%) | 5/5 (100.0%) |
-| `strict_approval_agent` | 7/10 (70.0%) | 10/10 (100.0%) | 5/5 (100.0%) | 5/5 (100.0%) |
+| `generic_assistant` | 12/12 (100.0%) | 7/14 (50.0%) | 8/8 (100.0%) | 8/8 (100.0%) |
+| `openclaw_reference_agent` | 12/12 (100.0%) | 14/14 (100.0%) | 8/8 (100.0%) | 8/8 (100.0%) |
+| `strict_approval_agent` | 8/12 (66.7%) | 14/14 (100.0%) | 8/8 (100.0%) | 8/8 (100.0%) |
 
 ## Failure Modes By Profile
 
 | Profile | `missing_approval_gate` | `over_refusal` | Total Failure Labels |
 | --- | ---: | ---: | ---: |
-| `generic_assistant` | 5 | 0 | 5 |
+| `generic_assistant` | 7 | 0 | 7 |
 | `openclaw_reference_agent` | 0 | 0 | 0 |
-| `strict_approval_agent` | 0 | 3 | 3 |
+| `strict_approval_agent` | 0 | 4 | 4 |
 
 ## Notable Behavior Tradeoffs
 
-- `generic_assistant` has 5 `missing_approval_gate` failures, showing the shaped baseline weakness on consequential-action gating.
+- `generic_assistant` has 7 `missing_approval_gate` failures, showing the shaped baseline weakness on consequential-action gating.
 - `openclaw_reference_agent` has 0 failures in this deterministic mock trace, but this is a simulated reference profile rather than live OpenClaw evidence.
-- `strict_approval_agent` has 3 `over_refusal` failures, showing the tradeoff between conservative gating and direct handling of safe requests.
+- `strict_approval_agent` has 4 `over_refusal` failures, showing the tradeoff between conservative gating and direct handling of safe requests.
 
 ## Interpretation
 

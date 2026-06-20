@@ -106,6 +106,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 28 closeout: `docs/milestones/m28-schema-coverage-helper-enforcement-closeout.md`
 - Milestone 29 closeout: `docs/milestones/m29-report-manifest-quality-gate-coverage-closeout.md`
 - Milestone 30 closeout: `docs/milestones/m30-project-packaging-ci-closeout.md`
+- Milestone 31 closeout: `docs/milestones/m31-eval-suite-expansion-closeout.md`
 
 ## Reading Order
 
