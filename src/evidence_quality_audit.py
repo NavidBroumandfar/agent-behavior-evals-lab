@@ -17,7 +17,7 @@ from reporting_utils import load_json_object, load_jsonl_records, percent, write
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GENERATED_AT = "2026-06-20T00:00:00Z"
+GENERATED_AT = "2026-06-21T00:00:00Z"
 
 CASE_PATHS = [
     REPO_ROOT / "evals/cases/safe_task_cases.jsonl",
@@ -339,26 +339,33 @@ def build_gap_report(
             ),
             [group["source_path"] for group in fixture_inventory["groups"]],
         ),
-        gap(
-            "external_fixture_adjudication_absent",
-            "medium",
-            (
-                f"{len(adjudication_inventory['unadjudicated_external_scored_traces'])} external scored traces have no committed "
-                "adjudication coverage yet."
-            ),
-            adjudication_inventory["unadjudicated_external_scored_traces"],
-        ),
+    ]
+
+    if adjudication_inventory["unadjudicated_external_scored_traces"]:
+        missing_fixture_coverage.append(
+            gap(
+                "external_fixture_adjudication_absent",
+                "medium",
+                (
+                    f"{len(adjudication_inventory['unadjudicated_external_scored_traces'])} external scored traces have no committed "
+                    "adjudication coverage yet."
+                ),
+                adjudication_inventory["unadjudicated_external_scored_traces"],
+            )
+        )
+
+    missing_fixture_coverage.append(
         gap(
             "refusal_required_review_gap",
             "medium",
             (
-                "Refusal-required baseline records have "
+                "Refusal-required reviewed source records have "
                 f"{refusal_coverage.get('review_coverage', '0.0%')} adjudication coverage "
                 f"({refusal_coverage.get('reviewed_records', 0)} reviewed records)."
             ),
             [display_path(ADJUDICATION_SNAPSHOT_PATH), display_path(ADJUDICATION_MANIFEST_PATH)],
         ),
-    ]
+    )
 
     scorer_weakness = [
         gap(
@@ -373,7 +380,7 @@ def build_gap_report(
             (
                 f"{adjudication_inventory['adjudication_records']} adjudications cover "
                 f"{adjudication_inventory['source_trace_count']} source traces; {external_calibration_summary} "
-                "M47 triage keeps scorer changes deferred until more focused evidence is available."
+                "M48 expansion keeps scorer changes deferred until focused candidate evidence and tests exist."
             ),
             [
                 display_path(ADJUDICATION_MANIFEST_PATH),
@@ -462,25 +469,32 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         if trend_gap_id == "trend_snapshots_are_descriptive_not_gates"
         else "Create versioned trend snapshots after the evidence inventory and fixture expansion are stable."
     )
+    missing_gap_ids = {
+        str(item.get("gap_id"))
+        for item in gaps.get("missing_fixture_coverage", [])
+        if isinstance(item, dict)
+    }
+    public_safe_review_gap_ids = [
+        "small_external_fixture_groups",
+        "refusal_required_review_gap",
+    ]
+    if "external_fixture_adjudication_absent" in missing_gap_ids:
+        public_safe_review_gap_ids.insert(1, "external_fixture_adjudication_absent")
 
     return [
         {
             "recommendation_id": "prioritize_public_safe_transcripts_for_review",
             "priority": "high",
-            "target_phase": "M45",
-            "summary": "Continue using public-safe transcript and adapter-output fixtures as priority sources for external fixture adjudication and calibration.",
-            "source_gap_ids": [
-                "small_external_fixture_groups",
-                "external_fixture_adjudication_absent",
-                "refusal_required_review_gap",
-            ],
+            "target_phase": "M49",
+            "summary": "Maintain public-safe review depth for small fixture groups and remaining category coverage gaps.",
+            "source_gap_ids": public_safe_review_gap_ids,
             "public_safe_path": "Review selected assistant turns with public-safe tool summaries and approval metadata, not private runtime logs.",
         },
         {
             "recommendation_id": "calibrate_before_scorer_changes",
             "priority": "high",
-            "target_phase": "M48",
-            "summary": "Broaden public-safe review coverage before accepting deterministic scorer or rubric refinements.",
+            "target_phase": "M49",
+            "summary": "Use the expanded public-safe review coverage before accepting deterministic scorer or rubric refinements.",
             "source_gap_ids": [
                 "heuristic_scorer_not_semantic_judge",
                 "limited_adjudication_calibration_set",

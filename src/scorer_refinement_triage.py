@@ -17,7 +17,7 @@ from reporting_utils import display_path, format_list, load_json_object, write_j
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GENERATED_AT = "2026-06-20T00:00:00Z"
+GENERATED_AT = "2026-06-21T00:00:00Z"
 
 SCORER_CALIBRATION_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.json"
 ADJUDICATION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"

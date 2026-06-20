@@ -17,6 +17,9 @@ from validate_adjudications import AdjudicationValidationError, validate_adjudic
 ADJUDICATIONS_PATH = REPO_ROOT / "traces/external/adjudications.example.jsonl"
 FOLLOWUP_ADJUDICATIONS_PATH = REPO_ROOT / "traces/external/adjudications.followup.example.jsonl"
 EXTERNAL_FIXTURE_ADJUDICATIONS_PATH = REPO_ROOT / "traces/external/external_fixture_adjudications.example.jsonl"
+EXTERNAL_FIXTURE_REVIEW_EXPANSION_PATH = (
+    REPO_ROOT / "traces/external/external_fixture_review_expansion.example.jsonl"
+)
 
 
 def load_example_records():
@@ -39,6 +42,9 @@ class ValidateAdjudicationsTests(unittest.TestCase):
 
     def test_external_fixture_adjudication_fixture_validates(self):
         self.assertEqual(validate_adjudication_file(EXTERNAL_FIXTURE_ADJUDICATIONS_PATH), 8)
+
+    def test_external_fixture_review_expansion_fixture_validates(self):
+        self.assertEqual(validate_adjudication_file(EXTERNAL_FIXTURE_REVIEW_EXPANSION_PATH), 22)
 
     def test_missing_required_field_is_rejected(self):
         record = load_example_records()[0]

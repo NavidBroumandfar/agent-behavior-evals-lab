@@ -32,25 +32,13 @@
         "summary": "External fixture groups contain 3-8 scored records each (34 total), so they validate paths but are not representative samples."
       },
       {
-        "gap_id": "external_fixture_adjudication_absent",
-        "severity": "medium",
-        "source_paths": [
-          "traces/scored/manual_output_eval.jsonl",
-          "traces/scored/openclaw_manual_eval.jsonl",
-          "traces/scored/saved_transcript_replay_eval.jsonl",
-          "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
-          "traces/scored/dry_run_adapter_output_import.jsonl"
-        ],
-        "summary": "5 external scored traces have no committed adjudication coverage yet."
-      },
-      {
         "gap_id": "refusal_required_review_gap",
         "severity": "medium",
         "source_paths": [
           "reports/comparisons/adjudication_regression_snapshot.json",
           "traces/external/adjudication_manifest.json"
         ],
-        "summary": "Refusal-required baseline records have 7.4% adjudication coverage (2 reviewed records)."
+        "summary": "Refusal-required reviewed source records have 21.9% adjudication coverage (7 reviewed records)."
       }
     ],
     "reporting_weakness": [
@@ -80,7 +68,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "26 report artifacts are indexed, while 20 adjudication records exist."
+        "summary": "26 report artifacts are indexed, while 42 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -101,7 +89,7 @@
           "reports/comparisons/adjudication_regression_snapshot.json",
           "reports/comparisons/scorer_refinement_triage.json"
         ],
-        "summary": "20 adjudications cover 3 source traces; 5 external fixture traces still need calibration coverage. M47 triage keeps scorer changes deferred until more focused evidence is available."
+        "summary": "42 adjudications cover 8 source traces; all manifest-backed external fixture traces now have adjudication coverage. M48 expansion keeps scorer changes deferred until focused candidate evidence and tests exist."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -120,41 +108,41 @@
       }
     ],
     "summary": {
-      "adjudication_records": 20,
+      "adjudication_records": 42,
       "case_count": 42,
       "external_fixture_records": 34,
-      "gap_count": 10,
+      "gap_count": 9,
       "total_scored_records": 160
     }
   },
-  "generated_at": "2026-06-20T00:00:00Z",
+  "generated_at": "2026-06-21T00:00:00Z",
   "inventory": {
     "adjudications": {
-      "adjudication_fixture_count": 3,
-      "adjudication_records": 20,
+      "adjudication_fixture_count": 4,
+      "adjudication_records": 42,
       "category_coverage": {
         "approval_gated": {
-          "review_coverage": "15.6%",
-          "reviewed_records": 7,
-          "source_records": 45,
+          "review_coverage": "26.9%",
+          "reviewed_records": 14,
+          "source_records": 52,
           "unreviewed_records": 38
         },
         "refusal_required": {
-          "review_coverage": "7.4%",
-          "reviewed_records": 2,
-          "source_records": 27,
+          "review_coverage": "21.9%",
+          "reviewed_records": 7,
+          "source_records": 32,
           "unreviewed_records": 25
         },
         "safe_direct_response": {
-          "review_coverage": "17.9%",
-          "reviewed_records": 7,
-          "source_records": 39,
+          "review_coverage": "25.6%",
+          "reviewed_records": 11,
+          "source_records": 43,
           "unreviewed_records": 32
         },
         "uncertainty_handling": {
-          "review_coverage": "14.8%",
-          "reviewed_records": 4,
-          "source_records": 27,
+          "review_coverage": "30.3%",
+          "reviewed_records": 10,
+          "source_records": 33,
           "unreviewed_records": 23
         }
       },
@@ -163,26 +151,26 @@
       "override_pass": 1,
       "profile_coverage": {
         "generic_assistant": {
-          "review_coverage": "22.9%",
-          "reviewed_records": 11,
-          "source_records": 48,
+          "review_coverage": "32.7%",
+          "reviewed_records": 18,
+          "source_records": 55,
           "unreviewed_records": 37
         },
         "openclaw_reference_agent": {
-          "review_coverage": "4.4%",
-          "reviewed_records": 2,
-          "source_records": 45,
+          "review_coverage": "23.2%",
+          "reviewed_records": 13,
+          "source_records": 56,
           "unreviewed_records": 43
         },
         "strict_approval_agent": {
-          "review_coverage": "15.6%",
-          "reviewed_records": 7,
-          "source_records": 45,
+          "review_coverage": "22.4%",
+          "reviewed_records": 11,
+          "source_records": 49,
           "unreviewed_records": 38
         }
       },
       "reviewer_count": 1,
-      "source_trace_count": 3,
+      "source_trace_count": 8,
       "source_trace_coverage": {
         "traces/scored/adapter_output_fixture_import.jsonl": {
           "review_coverage": "100.0%",
@@ -196,20 +184,44 @@
           "source_records": 126,
           "unreviewed_records": 114
         },
+        "traces/scored/dry_run_adapter_output_import.jsonl": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 4,
+          "source_records": 4,
+          "unreviewed_records": 0
+        },
+        "traces/scored/manual_output_eval.jsonl": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 4,
+          "source_records": 4,
+          "unreviewed_records": 0
+        },
+        "traces/scored/openclaw_manual_eval.jsonl": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 6,
+          "source_records": 6,
+          "unreviewed_records": 0
+        },
+        "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 3,
+          "source_records": 3,
+          "unreviewed_records": 0
+        },
         "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
           "review_coverage": "50.0%",
           "reviewed_records": 4,
           "source_records": 8,
           "unreviewed_records": 4
+        },
+        "traces/scored/saved_transcript_replay_eval.jsonl": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 5,
+          "source_records": 5,
+          "unreviewed_records": 0
         }
       },
-      "unadjudicated_external_scored_traces": [
-        "traces/scored/manual_output_eval.jsonl",
-        "traces/scored/openclaw_manual_eval.jsonl",
-        "traces/scored/saved_transcript_replay_eval.jsonl",
-        "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
-        "traces/scored/dry_run_adapter_output_import.jsonl"
-      ]
+      "unadjudicated_external_scored_traces": []
     },
     "eval_cases": {
       "by_category": {
@@ -608,11 +620,10 @@
       "recommendation_id": "prioritize_public_safe_transcripts_for_review",
       "source_gap_ids": [
         "small_external_fixture_groups",
-        "external_fixture_adjudication_absent",
         "refusal_required_review_gap"
       ],
-      "summary": "Continue using public-safe transcript and adapter-output fixtures as priority sources for external fixture adjudication and calibration.",
-      "target_phase": "M45"
+      "summary": "Maintain public-safe review depth for small fixture groups and remaining category coverage gaps.",
+      "target_phase": "M49"
     },
     {
       "priority": "high",
@@ -622,8 +633,8 @@
         "heuristic_scorer_not_semantic_judge",
         "limited_adjudication_calibration_set"
       ],
-      "summary": "Broaden public-safe review coverage before accepting deterministic scorer or rubric refinements.",
-      "target_phase": "M48"
+      "summary": "Use the expanded public-safe review coverage before accepting deterministic scorer or rubric refinements.",
+      "target_phase": "M49"
     },
     {
       "priority": "medium",

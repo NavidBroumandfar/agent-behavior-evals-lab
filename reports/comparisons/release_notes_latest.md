@@ -4,7 +4,7 @@
 
 | Field | Value |
 | --- | --- |
-| Generated at | `2026-06-20T00:00:00Z` |
+| Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
 | Indexed report artifacts | 26 |
@@ -16,7 +16,7 @@
 - **Reporting**: Maintains dashboard-ready JSON, product summary Markdown, release-note outputs, and report-manifest coverage from local artifacts.
 - **Quality Gate**: Local deterministic gate remains stable; no live runtime integration is enabled.
 - **Harness Boundary**: Harness decision remains defer_harness_integration; runtime-native state required is false.
-- **Review**: 20 adjudication records are tracked; 0 still need discussion.
+- **Review**: 42 adjudication records are tracked; 0 still need discussion.
 - **Evidence Quality**: Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.
 - **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 - **Scorer Calibration**: Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.
@@ -25,6 +25,7 @@
 - **External Fixture Review**: Added public-safe adjudication coverage for selected saved-transcript and normalized adapter-output scored traces.
 - **Review Resolution**: Resolved the remaining public-safe needs_discussion adjudications while keeping reviewer decisions separate from heuristic traces.
 - **Scorer Triage**: Recorded a no-change deterministic scorer decision and deferred refinement candidates until more focused evidence exists.
+- **Review Expansion**: Expanded public-safe adjudication coverage across previously unreviewed external fixture trace families.
 
 ## Dashboard Snapshot
 
@@ -34,7 +35,7 @@
 | Baseline failed | 11 |
 | External fixture groups | 7 |
 | External fixture records | 34 |
-| Adjudication records | 20 |
+| Adjudication records | 42 |
 | Review records needing discussion | 0 |
 
 ## Milestone Rollup
@@ -54,6 +55,7 @@
 | `M45` | Complete / review-ready | `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md` |
 | `M46` | Complete / review-ready | `docs/milestones/m46-needs-discussion-resolution-closeout.md` |
 | `M47` | Complete / review-ready | `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md` |
+| `M48` | Complete / review-ready | `docs/milestones/m48-external-fixture-review-expansion-closeout.md` |
 
 ## Boundaries
 
@@ -81,3 +83,4 @@
 - `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md`
 - `docs/milestones/m46-needs-discussion-resolution-closeout.md`
 - `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md`
+- `docs/milestones/m48-external-fixture-review-expansion-closeout.md`

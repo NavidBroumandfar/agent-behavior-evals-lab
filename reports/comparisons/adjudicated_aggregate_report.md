@@ -6,9 +6,9 @@
 | --- | --- |
 | Input adjudications | `traces/external/adjudication_manifest.json` |
 | Output report | `reports/comparisons/adjudicated_aggregate_report.md` |
-| Adjudication fixture families | 3 |
-| Source traces reviewed | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/public_safe_transcript_expansion_eval.jsonl`, `traces/scored/adapter_output_fixture_import.jsonl` |
-| Reviewed records | 20 |
+| Adjudication fixture families | 4 |
+| Source traces reviewed | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/public_safe_transcript_expansion_eval.jsonl`, `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/saved_transcript_replay_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl` |
+| Reviewed records | 42 |
 
 This report provides an adjudicated view for reviewed records only. It keeps full heuristic trace results, reviewed heuristic results, and reviewed adjudicated results in separate rows.
 
@@ -18,15 +18,20 @@ This report provides an adjudicated view for reviewed records only. It keeps ful
 | --- | ---: | ---: | ---: | ---: |
 | `traces/scored/adapter_output_fixture_import.jsonl` | 4 | 4 | 0 | 100.0% |
 | `traces/scored/baseline_mock_run.jsonl` | 126 | 12 | 114 | 9.5% |
+| `traces/scored/dry_run_adapter_output_import.jsonl` | 4 | 4 | 0 | 100.0% |
+| `traces/scored/manual_output_eval.jsonl` | 4 | 4 | 0 | 100.0% |
+| `traces/scored/openclaw_manual_eval.jsonl` | 6 | 6 | 0 | 100.0% |
+| `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl` | 3 | 3 | 0 | 100.0% |
 | `traces/scored/public_safe_transcript_expansion_eval.jsonl` | 8 | 4 | 4 | 50.0% |
+| `traces/scored/saved_transcript_replay_eval.jsonl` | 5 | 5 | 0 | 100.0% |
 
 ## Aggregate Result Scopes
 
 | Scope | Total | Passed | Failed | Pass Rate | Notes |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Full source trace heuristic | 138 | 120 | 18 | 87.0% | All records from source traces referenced by adjudications. |
-| Reviewed subset heuristic | 20 | 6 | 14 | 30.0% | Only records with adjudications, using original scorer results. |
-| Reviewed subset adjudicated | 20 | 6 | 14 | 30.0% | Only records with adjudications, using reviewer result fields. |
+| Full source trace heuristic | 160 | 134 | 26 | 83.8% | All records from source traces referenced by adjudications. |
+| Reviewed subset heuristic | 42 | 20 | 22 | 47.6% | Only records with adjudications, using original scorer results. |
+| Reviewed subset adjudicated | 42 | 20 | 22 | 47.6% | Only records with adjudications, using reviewer result fields. |
 
 ## Result Changes From Review
 

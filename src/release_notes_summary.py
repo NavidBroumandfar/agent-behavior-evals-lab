@@ -17,7 +17,7 @@ from reporting_utils import load_json_object, write_json_object, write_text
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GENERATED_AT = "2026-06-20T00:00:00Z"
+GENERATED_AT = "2026-06-21T00:00:00Z"
 
 PRODUCT_SUMMARY_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
 REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
@@ -37,6 +37,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
     REPO_ROOT / "docs/milestones/m46-needs-discussion-resolution-closeout.md",
     REPO_ROOT / "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
+    REPO_ROOT / "docs/milestones/m48-external-fixture-review-expansion-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -234,6 +235,13 @@ def release_highlights(
             {
                 "area": "Scorer Triage",
                 "summary": "Recorded a no-change deterministic scorer decision and deferred refinement candidates until more focused evidence exists.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M48" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Review Expansion",
+                "summary": "Expanded public-safe adjudication coverage across previously unreviewed external fixture trace families.",
             }
         )
     return highlights

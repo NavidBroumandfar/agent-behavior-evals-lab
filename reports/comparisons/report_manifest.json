@@ -1,7 +1,7 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.1.0",
-  "generated_at": "2026-05-25T00:00:00Z",
+  "version": "0.2.0",
+  "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
     "Committed generated Markdown reports under reports/.",
@@ -239,7 +239,8 @@
       "artifact_type": "markdown_report",
       "generated_by": "src/adjudication_report.py",
       "input_paths": [
-        "traces/external/adjudication_manifest.json"
+        "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/adjudication_regression_snapshot.json"
@@ -261,7 +262,8 @@
       "artifact_type": "markdown_report",
       "generated_by": "src/adjudication_report.py",
       "input_paths": [
-        "traces/external/adjudication_manifest.json"
+        "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/adjudication_regression_snapshot.json"
@@ -283,7 +285,8 @@
       "artifact_type": "json_snapshot",
       "generated_by": "src/adjudication_regression_check.py",
       "input_paths": [
-        "traces/external/adjudication_manifest.json"
+        "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl"
       ],
       "snapshot_dependency_paths": [],
       "quality_gate_included": true,
@@ -304,6 +307,7 @@
       "generated_by": "src/scorer_calibration_summary.py",
       "input_paths": [
         "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         "reports/comparisons/adjudication_regression_snapshot.json",
         "src/scorers.py",
         "docs/wiki/concepts/v0_scorer_limitations.md"
@@ -329,6 +333,7 @@
       "generated_by": "src/scorer_calibration_summary.py",
       "input_paths": [
         "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         "reports/comparisons/adjudication_regression_snapshot.json",
         "src/scorers.py",
         "docs/wiki/concepts/v0_scorer_limitations.md"
@@ -427,6 +432,7 @@
         "traces/scored/baseline_mock_run.jsonl",
         "traces/external/fixture_manifest.json",
         "reports/comparisons/adjudication_regression_snapshot.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         "traces/external/harness_bridge_plan.example.json"
       ],
       "snapshot_dependency_paths": [
@@ -453,6 +459,7 @@
         "traces/scored/baseline_mock_run.jsonl",
         "traces/external/fixture_manifest.json",
         "reports/comparisons/adjudication_regression_snapshot.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         "traces/external/harness_bridge_plan.example.json"
       ],
       "snapshot_dependency_paths": [
@@ -482,6 +489,7 @@
         "traces/scored/baseline_mock_run.jsonl",
         "traces/external/fixture_manifest.json",
         "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         "reports/comparisons/adjudication_regression_snapshot.json",
         "reports/comparisons/report_manifest.json",
         "reports/comparisons/reporting_product_summary.json",
@@ -520,6 +528,7 @@
         "traces/scored/baseline_mock_run.jsonl",
         "traces/external/fixture_manifest.json",
         "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         "reports/comparisons/adjudication_regression_snapshot.json",
         "reports/comparisons/report_manifest.json",
         "reports/comparisons/reporting_product_summary.json",
@@ -567,6 +576,7 @@
         "traces/external/dry_run_adapter_outputs.jsonl",
         "traces/scored/dry_run_adapter_output_import.jsonl",
         "traces/external/adjudication_manifest.json",
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         "reports/comparisons/adjudication_regression_snapshot.json",
         "reports/comparisons/scorer_calibration_summary.json",
         "reports/comparisons/scorer_refinement_triage.json",
@@ -635,7 +645,8 @@
         "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
         "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
         "docs/milestones/m46-needs-discussion-resolution-closeout.md",
-        "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md"
+        "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
+        "docs/milestones/m48-external-fixture-review-expansion-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -672,7 +683,8 @@
         "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
         "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
         "docs/milestones/m46-needs-discussion-resolution-closeout.md",
-        "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md"
+        "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
+        "docs/milestones/m48-external-fixture-review-expansion-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

@@ -21,6 +21,8 @@ The triage reads `reports/comparisons/scorer_calibration_summary.json` and separ
 
 For M47, no scorer-code changes are accepted. The current false-positive and false-negative candidates each have only one adjudicated source example, so the triage defers them until more focused public-safe evidence and nearby control tests exist.
 
+M48 regenerates the triage after adding broader external fixture review coverage. The added records uphold existing scorer outcomes, so the same scorer-change candidates remain deferred.
+
 ## Boundary
 
 The triage does not change `src/scorers.py`, rewrite scored traces, call providers, run local models, execute Hermes or OpenClaw, inspect private logs, use credentials, use networks, or perform external actions.

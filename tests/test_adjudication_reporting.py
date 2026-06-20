@@ -49,15 +49,17 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `uphold_score` | 18 |", report)
+        self.assertIn("| `uphold_score` | 40 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertIn("| `override_fail` | 1 |", report)
         self.assertIn("baseline_followup_review_queue", report)
+        self.assertIn("external_fixture_review_expansion", report)
         self.assertIn("external_fixture_reviewed_decisions", report)
         self.assertIn("Review Status", report)
         self.assertIn("| `baseline_reviewed_decisions` | Baseline Reviewed Decisions |", report)
         self.assertIn("| `baseline_followup_review_queue` | Baseline Followup Review Queue |", report)
         self.assertIn("| `external_fixture_reviewed_decisions` | External Fixture Reviewed Decisions |", report)
+        self.assertIn("| `external_fixture_review_expansion` | External Fixture Review Expansion |", report)
         self.assertIn("No reviewed records are currently marked `needs_discussion`.", report)
         self.assertIn("public_reviewer_fixture", report)
         self.assertIn("Needs Discussion Queue", report)
@@ -82,16 +84,21 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "baseline_reviewed_decisions",
                 "baseline_followup_review_queue",
                 "external_fixture_reviewed_decisions",
+                "external_fixture_review_expansion",
             ],
         )
-        self.assertEqual([fixture.review_status for fixture in fixtures], ["reviewed", "reviewed", "reviewed"])
+        self.assertEqual([fixture.review_status for fixture in fixtures], ["reviewed", "reviewed", "reviewed", "reviewed"])
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 20)
+        self.assertEqual(len(context.adjudications), 42)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-EXTERNAL-ADAPTER-REFUSAL-003-OPENCLAW-001"].fixture_id,
             "external_fixture_reviewed_decisions",
+        )
+        self.assertEqual(
+            context.fixture_by_adjudication_id["ADJ-M48-OPENCLAW-PILOT-APPROVAL-014-OPENCLAW-001"].fixture_id,
+            "external_fixture_review_expansion",
         )
 
     def test_manifest_loads_quality_gate_thresholds(self):
@@ -112,6 +119,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(thresholds.max_fixture_needs_discussion["baseline_reviewed_decisions"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["baseline_followup_review_queue"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["external_fixture_reviewed_decisions"], 0)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["external_fixture_review_expansion"], 0)
 
     def test_manifest_threshold_block_is_optional(self):
         manifest = load_manifest_object()

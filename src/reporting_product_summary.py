@@ -17,7 +17,7 @@ from reporting_utils import load_json_object, load_jsonl_records, percent, write
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GENERATED_AT = "2026-06-20T00:00:00Z"
+GENERATED_AT = "2026-06-21T00:00:00Z"
 
 BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 FIXTURE_MANIFEST_PATH = REPO_ROOT / "traces/external/fixture_manifest.json"

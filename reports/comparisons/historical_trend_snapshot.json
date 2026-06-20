@@ -7,28 +7,28 @@
   "current_snapshot": {
     "adjudication_outcomes": {
       "accepted_scorer_changes": 0,
-      "adjudicated_pass_rate": "30.0%",
-      "adjudication_records": 20,
+      "adjudicated_pass_rate": "47.6%",
+      "adjudication_records": 42,
       "calibration_label_counts": {
         "ambiguous_review": 0,
         "scorer_false_negative": 1,
         "scorer_false_positive": 1,
-        "scorer_upheld_failure": 13,
-        "scorer_upheld_pass": 5
+        "scorer_upheld_failure": 21,
+        "scorer_upheld_pass": 19
       },
       "changed_result_count": 2,
-      "reviewed_external_source_trace_count": 2,
+      "reviewed_external_source_trace_count": 7,
       "reviewer_decisions": {
         "needs_discussion": 0,
         "override_fail": 1,
         "override_pass": 1,
-        "uphold_score": 18
+        "uphold_score": 40
       },
-      "source_trace_count": 3
+      "source_trace_count": 8
     },
     "evidence_quality": {
-      "gap_count": 10,
-      "missing_fixture_coverage_gaps": 4,
+      "gap_count": 9,
+      "missing_fixture_coverage_gaps": 3,
       "reporting_weakness_gaps": 3,
       "scorer_weakness_gaps": 3
     },
@@ -294,7 +294,7 @@
       "scorer_code_changed": false
     }
   },
-  "generated_at": "2026-06-20T00:00:00Z",
+  "generated_at": "2026-06-21T00:00:00Z",
   "regeneration_check": {
     "deterministic_local_only": true,
     "quality_gate_command": "python3 scripts/dev.py check",
@@ -321,6 +321,7 @@
     "traces/external/adapter_outputs.example.jsonl",
     "traces/external/adjudication_manifest.json",
     "traces/external/dry_run_adapter_outputs.jsonl",
+    "traces/external/external_fixture_review_expansion.example.jsonl",
     "traces/external/fixture_manifest.json",
     "traces/external/manual_outputs.example.jsonl",
     "traces/external/openclaw_manual_samples.example.jsonl",
@@ -362,7 +363,7 @@
     {
       "checkpoint_id": "m40_evidence_quality_audit",
       "metrics": {
-        "gap_count": 10,
+        "gap_count": 9,
         "product_kpi_count": 4,
         "total_scored_records": 160
       },
@@ -394,13 +395,13 @@
     {
       "checkpoint_id": "m42_scorer_calibration",
       "metrics": {
-        "adjudication_records": 20,
+        "adjudication_records": 42,
         "calibration_label_counts": {
           "ambiguous_review": 0,
           "scorer_false_negative": 1,
           "scorer_false_positive": 1,
-          "scorer_upheld_failure": 13,
-          "scorer_upheld_pass": 5
+          "scorer_upheld_failure": 21,
+          "scorer_upheld_pass": 19
         },
         "changed_result_count": 2
       },
@@ -427,10 +428,10 @@
     {
       "checkpoint_id": "m45_external_fixture_adjudication_coverage",
       "metrics": {
-        "adjudication_records": 20,
+        "adjudication_records": 42,
         "ambiguous_reviews": 0,
-        "external_source_trace_count": 2,
-        "source_trace_count": 3
+        "external_source_trace_count": 7,
+        "source_trace_count": 8
       },
       "phase": "review_coverage",
       "source_paths": [
@@ -442,7 +443,7 @@
     {
       "checkpoint_id": "m46_needs_discussion_resolution",
       "metrics": {
-        "adjudication_records": 20,
+        "adjudication_records": 42,
         "ambiguous_reviews": 0,
         "changed_result_count": 2,
         "needs_discussion": 0
@@ -467,6 +468,23 @@
         "reports/comparisons/scorer_refinement_triage.json",
         "reports/comparisons/scorer_calibration_summary.json",
         "src/scorers.py"
+      ]
+    },
+    {
+      "checkpoint_id": "m48_external_fixture_review_expansion",
+      "metrics": {
+        "accepted_scorer_changes": 0,
+        "adjudication_records": 42,
+        "external_source_trace_count": 7,
+        "source_trace_count": 8
+      },
+      "phase": "review_expansion",
+      "source_paths": [
+        "traces/external/external_fixture_review_expansion.example.jsonl",
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/scorer_calibration_summary.json",
+        "reports/comparisons/scorer_refinement_triage.json"
       ]
     }
   ]

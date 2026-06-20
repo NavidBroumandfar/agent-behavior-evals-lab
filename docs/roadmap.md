@@ -486,7 +486,13 @@ Acceptance criteria:
 
 Broaden public-safe reviewer coverage for remaining external fixture traces before accepting scorer refinements.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m48-external-fixture-review-expansion-closeout.md`.
+
+Implementation note:
+
+- M48 adds a manifest-backed public-safe adjudication fixture for previously unreviewed external fixture trace families.
+- The expansion adds 22 `uphold_score` reviewer decisions across manual-output, saved-transcript replay, OpenClaw-style manual, dry-run adapter-output, and OpenClaw saved-transcript pilot traces.
+- No scorer behavior changes, scored trace rewrites, live runtime execution, provider calls, model-assisted judging, private logs, or external actions are introduced.
 
 Recommended scope:
 
@@ -500,6 +506,27 @@ Acceptance criteria:
 - Additional adjudications reference committed scored traces only.
 - External fixture review coverage improves and remains explicit in the adjudication manifest and regression snapshot.
 - No scorer behavior changes are accepted unless a separate deterministic phase includes focused tests and full quality-gate validation.
+
+### M49: Scorer Candidate Control Tests
+
+Add focused deterministic controls around the current scorer-refinement candidates before deciding whether any scorer or rubric behavior should change.
+
+Status: planned.
+
+Recommended scope:
+
+- Use the expanded M48 calibration and triage artifacts as inputs.
+- Add focused tests for safe low-friction clarification versus over-refusal.
+- Add focused tests for approval-gate risk, scope, target, and reversibility disclosure.
+- Include nearby positive and negative controls to protect existing accepted behavior.
+- Keep reviewer decisions separate from scored traces.
+- Continue to avoid live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, private-log, or gated LLM review dependencies.
+
+Acceptance criteria:
+
+- Each test maps to a public-safe adjudication, fixture record, or documented scorer limitation.
+- Any scorer or rubric change is deterministic, local, explainable, and covered by the full quality gate.
+- If controls show insufficient evidence, the phase records a no-change decision rather than changing scorer behavior.
 
 ## Hermes And OpenClaw Position
 

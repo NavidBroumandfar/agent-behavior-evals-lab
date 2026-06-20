@@ -16,16 +16,16 @@ class EvidenceQualityAuditTests(unittest.TestCase):
         audit = build_audit()
 
         self.assertEqual(audit["audit_id"], "m40_evidence_quality_audit")
-        self.assertEqual(audit["generated_at"], "2026-06-20T00:00:00Z")
+        self.assertEqual(audit["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(audit["safety"]["public_safe"])
         self.assertFalse(audit["safety"]["live_execution"])
         self.assertEqual(audit["inventory"]["eval_cases"]["total_cases"], 42)
         self.assertEqual(audit["inventory"]["scored_traces"]["baseline"]["total_records"], 126)
         self.assertEqual(audit["inventory"]["external_fixtures"]["total_scored_records"], 34)
-        self.assertEqual(audit["inventory"]["adjudications"]["adjudication_records"], 20)
+        self.assertEqual(audit["inventory"]["adjudications"]["adjudication_records"], 42)
         self.assertEqual(
             len(audit["inventory"]["adjudications"]["unadjudicated_external_scored_traces"]),
-            5,
+            0,
         )
         self.assertEqual(audit["inventory"]["reports"]["report_artifacts"], 26)
 
@@ -33,7 +33,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
         audit = build_audit()
         gaps = audit["gap_report"]
 
-        self.assertEqual(gaps["summary"]["gap_count"], 10)
+        self.assertEqual(gaps["summary"]["gap_count"], 9)
         self.assertEqual(gaps["summary"]["case_count"], 42)
         self.assertEqual(gaps["summary"]["total_scored_records"], 160)
         self.assertIn("missing_fixture_coverage", gaps)
@@ -42,7 +42,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
 
         all_gaps = gaps["missing_fixture_coverage"] + gaps["scorer_weakness"] + gaps["reporting_weakness"]
         gap_by_id = {gap["gap_id"]: gap for gap in all_gaps}
-        self.assertIn("external_fixture_adjudication_absent", gap_by_id)
+        self.assertNotIn("external_fixture_adjudication_absent", gap_by_id)
         self.assertIn("heuristic_scorer_not_semantic_judge", gap_by_id)
         self.assertIn("trend_snapshots_are_descriptive_not_gates", gap_by_id)
         for item in all_gaps:

@@ -22,7 +22,7 @@ class ReportingProductSummaryTests(unittest.TestCase):
         summary = build_summary()
 
         self.assertEqual(summary["summary_id"], "m38_reporting_product_summary")
-        self.assertEqual(summary["generated_at"], "2026-06-20T00:00:00Z")
+        self.assertEqual(summary["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(summary["safety"]["public_safe"])
         self.assertFalse(summary["safety"]["live_execution"])
         self.assertEqual(summary["baseline"]["total_records"], 126)
@@ -30,7 +30,7 @@ class ReportingProductSummaryTests(unittest.TestCase):
         self.assertEqual(summary["baseline"]["failed"], 11)
         self.assertEqual(summary["external_fixtures"]["fixture_groups"], 7)
         self.assertEqual(summary["external_fixtures"]["total_scored_records"], 34)
-        self.assertEqual(summary["adjudication"]["adjudication_records"], 20)
+        self.assertEqual(summary["adjudication"]["adjudication_records"], 42)
         self.assertEqual(summary["harness_bridge"]["decision"], "defer_harness_integration")
         self.assertFalse(summary["harness_bridge"]["harness_execution_in_quality_gate"])
 

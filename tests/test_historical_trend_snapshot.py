@@ -22,7 +22,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         snapshot = build_trend_snapshot()
 
         self.assertEqual(snapshot["snapshot_id"], "m43_historical_trend_snapshot")
-        self.assertEqual(snapshot["generated_at"], "2026-06-20T00:00:00Z")
+        self.assertEqual(snapshot["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(snapshot["safety"]["public_safe"])
         self.assertFalse(snapshot["safety"]["live_execution"])
 
@@ -31,9 +31,9 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         self.assertEqual(current["pass_rates"]["baseline"]["pass_rate"], "91.3%")
         self.assertEqual(current["fixture_counts"]["fixture_groups"], 7)
         self.assertEqual(current["fixture_counts"]["scored_records"], 34)
-        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 20)
-        self.assertEqual(current["adjudication_outcomes"]["source_trace_count"], 3)
-        self.assertEqual(current["adjudication_outcomes"]["reviewed_external_source_trace_count"], 2)
+        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 42)
+        self.assertEqual(current["adjudication_outcomes"]["source_trace_count"], 8)
+        self.assertEqual(current["adjudication_outcomes"]["reviewed_external_source_trace_count"], 7)
         self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 2)
         self.assertEqual(current["adjudication_outcomes"]["reviewer_decisions"]["needs_discussion"], 0)
         self.assertEqual(current["adjudication_outcomes"]["calibration_label_counts"]["ambiguous_review"], 0)
@@ -58,6 +58,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
                 "m45_external_fixture_adjudication_coverage",
                 "m46_needs_discussion_resolution",
                 "m47_deterministic_scorer_refinement_triage",
+                "m48_external_fixture_review_expansion",
             ],
         )
 

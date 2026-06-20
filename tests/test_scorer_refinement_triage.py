@@ -16,10 +16,10 @@ class ScorerRefinementTriageTests(unittest.TestCase):
         triage = build_triage()
 
         self.assertEqual(triage["triage_id"], "m47_scorer_refinement_triage")
-        self.assertEqual(triage["generated_at"], "2026-06-20T00:00:00Z")
+        self.assertEqual(triage["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(triage["safety"]["public_safe"])
         self.assertFalse(triage["safety"]["live_execution"])
-        self.assertEqual(triage["calibration_context"]["adjudication_records"], 20)
+        self.assertEqual(triage["calibration_context"]["adjudication_records"], 42)
         self.assertEqual(triage["calibration_context"]["needs_discussion"], 0)
         self.assertEqual(triage["decision_summary"]["candidates"], 2)
         self.assertEqual(triage["decision_summary"]["accepted_scorer_changes"], 0)

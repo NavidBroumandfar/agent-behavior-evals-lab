@@ -37,6 +37,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [External Fixture Adjudication Coverage](concepts/external_fixture_adjudication_coverage.md)
 - [Needs-Discussion Resolution](concepts/needs_discussion_resolution.md)
 - [Deterministic Scorer Refinement Triage](concepts/deterministic_scorer_refinement_triage.md)
+- [External Fixture Review Expansion](concepts/external_fixture_review_expansion.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -83,7 +84,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Controlled text-only adapter: `src/text_only_adapter.py`
 - Reviewed output promotion: `src/promote_reviewed_outputs.py`
-- Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, `traces/external/external_fixture_adjudications.example.jsonl`, and `src/validate_adjudications.py`
+- Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, `traces/external/external_fixture_adjudications.example.jsonl`, `traces/external/external_fixture_review_expansion.example.jsonl`, and `src/validate_adjudications.py`
 - Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`, `schemas/adjudication_manifest.schema.json`, and `src/validate_adjudication_manifest.py`
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
@@ -148,6 +149,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 45 closeout: `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md`
 - Milestone 46 closeout: `docs/milestones/m46-needs-discussion-resolution-closeout.md`
 - Milestone 47 closeout: `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md`
+- Milestone 48 closeout: `docs/milestones/m48-external-fixture-review-expansion-closeout.md`
 
 ## Reading Order
 

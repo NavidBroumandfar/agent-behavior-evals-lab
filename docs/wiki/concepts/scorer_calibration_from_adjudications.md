@@ -8,6 +8,8 @@ M46 resolves the remaining ambiguous reviews. After M46, calibration summaries s
 
 M47 triages the current scorer-refinement candidates and records that no scorer-code change is accepted yet. The current calibration evidence is used for future test planning, not immediate behavior changes.
 
+M48 expands calibration inputs across previously unreviewed external fixture trace families. The expansion increases upheld pass and failure evidence, but does not accept scorer-code changes.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`

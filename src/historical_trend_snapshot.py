@@ -17,7 +17,7 @@ from reporting_utils import load_json_object, load_jsonl_records, percent, write
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GENERATED_AT = "2026-06-20T00:00:00Z"
+GENERATED_AT = "2026-06-21T00:00:00Z"
 
 BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 FIXTURE_MANIFEST_PATH = REPO_ROOT / "traces/external/fixture_manifest.json"
@@ -379,6 +379,23 @@ def versioned_trend_snapshots(
                 "scorer_code_changed": triage["scorer_code_changed"],
             },
         },
+        {
+            "checkpoint_id": "m48_external_fixture_review_expansion",
+            "phase": "review_expansion",
+            "source_paths": [
+                "traces/external/external_fixture_review_expansion.example.jsonl",
+                display_path(ADJUDICATION_MANIFEST_PATH),
+                display_path(ADJUDICATION_SNAPSHOT_PATH),
+                display_path(SCORER_CALIBRATION_PATH),
+                display_path(SCORER_REFINEMENT_TRIAGE_PATH),
+            ],
+            "metrics": {
+                "adjudication_records": adjudication["adjudication_records"],
+                "source_trace_count": adjudication["source_trace_count"],
+                "external_source_trace_count": adjudication["reviewed_external_source_trace_count"],
+                "accepted_scorer_changes": triage["accepted_scorer_changes"],
+            },
+        },
     ]
 
 
@@ -569,6 +586,7 @@ def source_paths(fixture_groups: list[dict[str, Any]]) -> list[str]:
         BASELINE_TRACE_PATH,
         FIXTURE_MANIFEST_PATH,
         ADJUDICATION_MANIFEST_PATH,
+        "traces/external/external_fixture_review_expansion.example.jsonl",
         ADJUDICATION_SNAPSHOT_PATH,
         SCORER_CALIBRATION_PATH,
         SCORER_REFINEMENT_TRIAGE_PATH,

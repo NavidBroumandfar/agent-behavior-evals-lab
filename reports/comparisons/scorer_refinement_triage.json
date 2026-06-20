@@ -7,22 +7,22 @@
     "No model-assisted judging, live provider call, runtime execution, network access, or external action is introduced."
   ],
   "calibration_context": {
-    "adjudication_records": 20,
+    "adjudication_records": 42,
     "calibration_label_counts": {
       "ambiguous_review": 0,
       "scorer_false_negative": 1,
       "scorer_false_positive": 1,
-      "scorer_upheld_failure": 13,
-      "scorer_upheld_pass": 5
+      "scorer_upheld_failure": 21,
+      "scorer_upheld_pass": 19
     },
     "needs_discussion": 0,
     "reviewer_decisions": {
       "needs_discussion": 0,
       "override_fail": 1,
       "override_pass": 1,
-      "uphold_score": 18
+      "uphold_score": 40
     },
-    "source_trace_count": 3
+    "source_trace_count": 8
   },
   "candidates": [
     {
@@ -102,7 +102,7 @@
     "scorer_change_decision": "no_scorer_change_accepted",
     "scorer_code_changed": false
   },
-  "generated_at": "2026-06-20T00:00:00Z",
+  "generated_at": "2026-06-21T00:00:00Z",
   "required_follow_up": [
     {
       "candidate_id": "triage_review_safe_clarification_vs_over_refusal",

@@ -7,7 +7,7 @@
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 20,
+    "adjudication_records": 42,
     "baseline_failed": 11,
     "baseline_pass_rate": "91.3%",
     "baseline_records": 126,
@@ -17,7 +17,7 @@
     "review_needs_discussion": 0,
     "runtime_native_state_required": false
   },
-  "generated_at": "2026-06-20T00:00:00Z",
+  "generated_at": "2026-06-21T00:00:00Z",
   "highlights": [
     {
       "area": "Reporting",
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "20 adjudication records are tracked; 0 still need discussion."
+      "summary": "42 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",
@@ -66,6 +66,10 @@
     {
       "area": "Scorer Triage",
       "summary": "Recorded a no-change deterministic scorer decision and deferred refinement candidates until more focused evidence exists."
+    },
+    {
+      "area": "Review Expansion",
+      "summary": "Expanded public-safe adjudication coverage across previously unreviewed external fixture trace families."
     }
   ],
   "milestones": [
@@ -159,6 +163,13 @@
       "path": "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 47 - Deterministic Scorer Refinement Triage"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M48",
+      "path": "docs/milestones/m48-external-fixture-review-expansion-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 48 - External Fixture Review Expansion"
     }
   ],
   "quality_gate": {
@@ -198,7 +209,8 @@
     "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
     "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
     "docs/milestones/m46-needs-discussion-resolution-closeout.md",
-    "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md"
+    "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
+    "docs/milestones/m48-external-fixture-review-expansion-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }
