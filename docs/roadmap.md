@@ -286,7 +286,13 @@ Shared boundary for M40-M44:
 
 Audit the current fixtures, cases, scorers, adjudications, and reports to identify what the lab can and cannot currently prove.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m40-evidence-quality-audit-closeout.md`.
+
+Implementation note:
+
+- M40 adds deterministic JSON and Markdown audit artifacts generated from committed local cases, scored traces, fixture manifests, adjudication artifacts, report metadata, scorer documentation, and the roadmap.
+- The audit separates missing fixture coverage, scorer weakness, and reporting weakness, with every gap tied to source paths.
+- No new outputs are collected, no traces are rescored, no scorer behavior changes, no provider/runtime calls are added, and no benchmark claims are made.
 
 Deliverables:
 

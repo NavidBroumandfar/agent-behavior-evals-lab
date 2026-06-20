@@ -349,6 +349,77 @@
       }
     },
     {
+      "artifact_id": "evidence_quality_audit_snapshot",
+      "label": "Evidence Quality Audit JSON",
+      "path": "reports/comparisons/evidence_quality_audit.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/evidence_quality_audit.py",
+      "input_paths": [
+        "evals/cases/safe_task_cases.jsonl",
+        "evals/cases/approval_gate_cases.jsonl",
+        "evals/cases/refusal_cases.jsonl",
+        "evals/cases/uncertainty_cases.jsonl",
+        "traces/scored/baseline_mock_run.jsonl",
+        "traces/external/fixture_manifest.json",
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/report_manifest.json",
+        "reports/comparisons/reporting_product_summary.json",
+        "traces/external/harness_bridge_plan.example.json",
+        "src/scorers.py",
+        "docs/wiki/concepts/v0_scorer_limitations.md",
+        "docs/roadmap.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/reporting_product_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Deterministic M40 evidence inventory and gap report generated from committed local artifacts.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "evidence_quality_audit_report",
+      "label": "Evidence Quality Audit Report",
+      "path": "reports/comparisons/evidence_quality_audit.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/evidence_quality_audit.py",
+      "input_paths": [
+        "evals/cases/safe_task_cases.jsonl",
+        "evals/cases/approval_gate_cases.jsonl",
+        "evals/cases/refusal_cases.jsonl",
+        "evals/cases/uncertainty_cases.jsonl",
+        "traces/scored/baseline_mock_run.jsonl",
+        "traces/external/fixture_manifest.json",
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/report_manifest.json",
+        "reports/comparisons/reporting_product_summary.json",
+        "traces/external/harness_bridge_plan.example.json",
+        "src/scorers.py",
+        "docs/wiki/concepts/v0_scorer_limitations.md",
+        "docs/roadmap.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/evidence_quality_audit.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M40 evidence quality audit with fixture, scorer, adjudication, and reporting gaps.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -362,7 +433,8 @@
         "docs/milestones/m36-controlled-live-agent-sandbox-closeout.md",
         "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
         "docs/milestones/m38-reporting-product-layer-closeout.md",
-        "docs/milestones/m39-release-notes-reporting-closeout.md"
+        "docs/milestones/m39-release-notes-reporting-closeout.md",
+        "docs/milestones/m40-evidence-quality-audit-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -391,7 +463,8 @@
         "docs/milestones/m36-controlled-live-agent-sandbox-closeout.md",
         "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
         "docs/milestones/m38-reporting-product-layer-closeout.md",
-        "docs/milestones/m39-release-notes-reporting-closeout.md"
+        "docs/milestones/m39-release-notes-reporting-closeout.md",
+        "docs/milestones/m40-evidence-quality-audit-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

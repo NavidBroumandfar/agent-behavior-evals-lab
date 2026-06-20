@@ -1,10 +1,10 @@
 """Generate deterministic release notes from committed reporting artifacts.
 
-This M39 layer converts the M38 product summary and milestone closeouts into a
-release-ready JSON snapshot and Markdown report. It reads local committed
-artifacts only. It does not collect outputs, rescore traces, call providers,
-run models, execute agents, inspect private logs, use networks, or perform
-external actions.
+This release-note layer converts the product summary and milestone closeouts
+into a release-ready JSON snapshot and Markdown report. It reads local
+committed artifacts only. It does not collect outputs, rescore traces, call
+providers, run models, execute agents, inspect private logs, use networks, or
+perform external actions.
 """
 
 from __future__ import annotations
@@ -29,6 +29,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
     REPO_ROOT / "docs/milestones/m38-reporting-product-layer-closeout.md",
     REPO_ROOT / "docs/milestones/m39-release-notes-reporting-closeout.md",
+    REPO_ROOT / "docs/milestones/m40-evidence-quality-audit-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -51,7 +52,7 @@ def build_release_notes() -> dict[str, Any]:
 
     dashboard = dashboard_snapshot(product_summary)
     return {
-        "release_id": "m39_release_notes_latest",
+        "release_id": "release_notes_latest",
         "generated_at": GENERATED_AT,
         "title": "Agent Behavior Evals Lab Release Notes",
         "source_paths": [
@@ -77,7 +78,7 @@ def build_release_notes() -> dict[str, Any]:
         },
         "dashboard_snapshot": dashboard,
         "milestones": milestones,
-        "highlights": release_highlights(product_summary, dashboard),
+        "highlights": release_highlights(product_summary, dashboard, milestones),
         "release_readiness": {
             "status": "local_quality_gate_ready",
             "summary": "The release notes summarize committed local artifacts and preserve the no-live-execution boundary.",
@@ -140,14 +141,18 @@ def dashboard_snapshot(product_summary: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def release_highlights(product_summary: dict[str, Any], dashboard: dict[str, Any]) -> list[dict[str, str]]:
+def release_highlights(
+    product_summary: dict[str, Any],
+    dashboard: dict[str, Any],
+    milestones: list[dict[str, str]],
+) -> list[dict[str, str]]:
     """Create concise release-note highlights."""
 
     release_view = product_summary.get("release_view", {})
-    return [
+    highlights = [
         {
             "area": "Reporting",
-            "summary": "Added dashboard-ready JSON, product summary Markdown, and release-note outputs from local artifacts.",
+            "summary": "Maintains dashboard-ready JSON, product summary Markdown, release-note outputs, and report-manifest coverage from local artifacts.",
         },
         {
             "area": "Quality Gate",
@@ -168,6 +173,14 @@ def release_highlights(product_summary: dict[str, Any], dashboard: dict[str, Any
             ),
         },
     ]
+    if any(milestone["milestone_id"] == "M40" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Evidence Quality",
+                "summary": "Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.",
+            }
+        )
+    return highlights
 
 
 def generate_markdown(release_notes: dict[str, Any]) -> str:

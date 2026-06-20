@@ -42,6 +42,8 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/baseline_self_comparison_report.md",
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/reporting_product_summary.md",
+    "reports/comparisons/evidence_quality_audit.json",
+    "reports/comparisons/evidence_quality_audit.md",
     "reports/comparisons/release_notes_latest.json",
     "reports/comparisons/release_notes_latest.md",
 }

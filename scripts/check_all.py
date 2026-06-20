@@ -33,6 +33,8 @@ EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/exter
 BASELINE_SELF_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/baseline_self_comparison_report.md"
 REPORTING_PRODUCT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
 REPORTING_PRODUCT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.md"
+EVIDENCE_QUALITY_AUDIT_JSON_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.json"
+EVIDENCE_QUALITY_AUDIT_REPORT_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.md"
 RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
 RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
@@ -226,6 +228,10 @@ CHECKS = [
         ["python3", "src/reporting_product_summary.py"],
     ),
     (
+        "evidence quality audit generation",
+        ["python3", "src/evidence_quality_audit.py"],
+    ),
+    (
         "release notes summary generation",
         ["python3", "src/release_notes_summary.py"],
     ),
@@ -272,6 +278,7 @@ CHECKS = [
             "src/adjudication_regression_check.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
+            "src/evidence_quality_audit.py",
             "src/release_notes_summary.py",
             "scripts/dev.py",
         ],
@@ -366,6 +373,9 @@ def main() -> int:
             if name == "reporting product summary generation":
                 verify_report_exists(REPORTING_PRODUCT_SUMMARY_JSON_PATH)
                 verify_report_exists(REPORTING_PRODUCT_SUMMARY_REPORT_PATH)
+            if name == "evidence quality audit generation":
+                verify_report_exists(EVIDENCE_QUALITY_AUDIT_JSON_PATH)
+                verify_report_exists(EVIDENCE_QUALITY_AUDIT_REPORT_PATH)
             if name == "release notes summary generation":
                 verify_report_exists(RELEASE_NOTES_JSON_PATH)
                 verify_report_exists(RELEASE_NOTES_REPORT_PATH)

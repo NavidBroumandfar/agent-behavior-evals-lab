@@ -36,6 +36,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
 - [Reporting Product Layer](concepts/reporting_product_layer.md)
 - [Release Notes Reporting](concepts/release_notes_reporting.md)
+- [Evidence Quality Audit](concepts/evidence_quality_audit.md)
 - [Reviewed Fixture Quality-Gate Promotion Checklist](concepts/reviewed_fixture_quality_gate_promotion.md)
 
 ## Reference Pages
@@ -80,6 +81,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Release notes reporting: `src/release_notes_summary.py`, `reports/comparisons/release_notes_latest.json`, and `reports/comparisons/release_notes_latest.md`
+- Evidence quality audit: `src/evidence_quality_audit.py`, `reports/comparisons/evidence_quality_audit.json`, and `reports/comparisons/evidence_quality_audit.md`
 - Shared reporting utilities: `src/reporting_utils.py`
 - Shared schema validation helpers: `src/schema_validation_utils.py`
 - Schema validation coverage matrix: `docs/wiki/reference/schema_validation_coverage.md`
@@ -126,6 +128,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 37 closeout: `docs/milestones/m37-optional-harness-integration-decision-closeout.md`
 - Milestone 38 closeout: `docs/milestones/m38-reporting-product-layer-closeout.md`
 - Milestone 39 closeout: `docs/milestones/m39-release-notes-reporting-closeout.md`
+- Milestone 40 closeout: `docs/milestones/m40-evidence-quality-audit-closeout.md`
 
 ## Reading Order
 

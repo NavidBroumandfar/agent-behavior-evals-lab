@@ -1,0 +1,613 @@
+{
+  "audit_id": "m40_evidence_quality_audit",
+  "claim_boundary": [
+    "This audit can describe local fixture, scorer, adjudication, and reporting coverage.",
+    "This audit cannot rank models, agents, Hermes, OpenClaw, hosted systems, or production behavior.",
+    "This audit does not prove live runtime behavior because it uses committed saved artifacts only."
+  ],
+  "gap_report": {
+    "missing_fixture_coverage": [
+      {
+        "gap_id": "no_live_runtime_evidence",
+        "severity": "high",
+        "source_paths": [
+          "traces/external/fixture_manifest.json",
+          "traces/external/harness_bridge_plan.example.json",
+          "docs/roadmap.md"
+        ],
+        "summary": "The committed evidence is saved, sanitized, synthetic, or mock evidence only; it does not prove live runtime behavior."
+      },
+      {
+        "gap_id": "small_external_fixture_groups",
+        "severity": "medium",
+        "source_paths": [
+          "traces/external/manual_outputs.example.jsonl",
+          "traces/external/openclaw_manual_samples.example.jsonl",
+          "traces/external/saved_transcripts.example.jsonl",
+          "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+          "traces/external/adapter_outputs.example.jsonl",
+          "traces/external/dry_run_adapter_outputs.jsonl"
+        ],
+        "summary": "External fixture groups contain 3-6 scored records each (26 total), so they validate paths but are not representative samples."
+      },
+      {
+        "gap_id": "external_fixture_adjudication_absent",
+        "severity": "medium",
+        "source_paths": [
+          "traces/scored/manual_output_eval.jsonl",
+          "traces/scored/openclaw_manual_eval.jsonl",
+          "traces/scored/saved_transcript_replay_eval.jsonl",
+          "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "traces/scored/adapter_output_fixture_import.jsonl",
+          "traces/scored/dry_run_adapter_output_import.jsonl"
+        ],
+        "summary": "6 external scored traces have no committed adjudication coverage yet."
+      },
+      {
+        "gap_id": "refusal_required_review_gap",
+        "severity": "medium",
+        "source_paths": [
+          "reports/comparisons/adjudication_regression_snapshot.json",
+          "traces/external/adjudication_manifest.json"
+        ],
+        "summary": "Refusal-required baseline records have 0.0% adjudication coverage (0 reviewed records)."
+      }
+    ],
+    "reporting_weakness": [
+      {
+        "gap_id": "no_historical_trend_snapshots_yet",
+        "severity": "medium",
+        "source_paths": [
+          "docs/roadmap.md",
+          "reports/comparisons/reporting_product_summary.json"
+        ],
+        "summary": "Reports are point-in-time artifacts; M43 is still needed for versioned evaluator-health trends."
+      },
+      {
+        "gap_id": "audit_findings_are_not_gate_thresholds",
+        "severity": "low",
+        "source_paths": [
+          "reports/comparisons/report_manifest.json",
+          "reports/comparisons/evidence_quality_audit.json"
+        ],
+        "summary": "M40 recommendations are descriptive evidence gaps; they do not automatically fail or rewrite scored traces."
+      },
+      {
+        "gap_id": "report_artifacts_outpace_review_depth",
+        "severity": "low",
+        "source_paths": [
+          "reports/comparisons/report_manifest.json",
+          "reports/comparisons/adjudication_regression_snapshot.json"
+        ],
+        "summary": "19 report artifacts are indexed, while 12 adjudication records exist."
+      }
+    ],
+    "scorer_weakness": [
+      {
+        "gap_id": "heuristic_scorer_not_semantic_judge",
+        "severity": "high",
+        "source_paths": [
+          "src/scorers.py",
+          "docs/wiki/concepts/v0_scorer_limitations.md"
+        ],
+        "summary": "The v0 scorer uses deterministic phrase and pattern checks, so scores are triage signals rather than ground truth."
+      },
+      {
+        "gap_id": "limited_adjudication_calibration_set",
+        "severity": "medium",
+        "source_paths": [
+          "traces/external/adjudication_manifest.json",
+          "reports/comparisons/adjudication_regression_snapshot.json"
+        ],
+        "summary": "12 adjudications cover 1 source trace; external fixture traces are not calibrated yet."
+      },
+      {
+        "gap_id": "failure_modes_are_taxonomy_bound",
+        "severity": "medium",
+        "source_paths": [
+          "traces/scored/baseline_mock_run.jsonl",
+          "traces/scored/manual_output_eval.jsonl",
+          "traces/scored/openclaw_manual_eval.jsonl",
+          "traces/scored/saved_transcript_replay_eval.jsonl",
+          "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "traces/scored/adapter_output_fixture_import.jsonl",
+          "traces/scored/dry_run_adapter_output_import.jsonl"
+        ],
+        "summary": "Current scored traces surface this fixed failure-mode set: failure_to_clarify, fake_completion_claim, hallucinated_tool_use, incomplete_risk_disclosure, missing_approval_gate, over_refusal, unsafe_compliance, unsupported_claim; semantic variants still require review."
+      }
+    ],
+    "summary": {
+      "adjudication_records": 12,
+      "case_count": 42,
+      "external_fixture_records": 26,
+      "gap_count": 10,
+      "total_scored_records": 152
+    }
+  },
+  "generated_at": "2026-06-20T00:00:00Z",
+  "inventory": {
+    "adjudications": {
+      "adjudication_fixture_count": 2,
+      "adjudication_records": 12,
+      "category_coverage": {
+        "approval_gated": {
+          "review_coverage": "11.9%",
+          "reviewed_records": 5,
+          "source_records": 42,
+          "unreviewed_records": 37
+        },
+        "refusal_required": {
+          "review_coverage": "0.0%",
+          "reviewed_records": 0,
+          "source_records": 24,
+          "unreviewed_records": 24
+        },
+        "safe_direct_response": {
+          "review_coverage": "13.9%",
+          "reviewed_records": 5,
+          "source_records": 36,
+          "unreviewed_records": 31
+        },
+        "uncertainty_handling": {
+          "review_coverage": "8.3%",
+          "reviewed_records": 2,
+          "source_records": 24,
+          "unreviewed_records": 22
+        }
+      },
+      "needs_discussion": 3,
+      "override_fail": 1,
+      "override_pass": 1,
+      "profile_coverage": {
+        "generic_assistant": {
+          "review_coverage": "16.7%",
+          "reviewed_records": 7,
+          "source_records": 42,
+          "unreviewed_records": 35
+        },
+        "openclaw_reference_agent": {
+          "review_coverage": "0.0%",
+          "reviewed_records": 0,
+          "source_records": 42,
+          "unreviewed_records": 42
+        },
+        "strict_approval_agent": {
+          "review_coverage": "11.9%",
+          "reviewed_records": 5,
+          "source_records": 42,
+          "unreviewed_records": 37
+        }
+      },
+      "reviewer_count": 1,
+      "source_trace_count": 1,
+      "source_trace_coverage": {
+        "traces/scored/baseline_mock_run.jsonl": {
+          "review_coverage": "9.5%",
+          "reviewed_records": 12,
+          "source_records": 126,
+          "unreviewed_records": 114
+        }
+      },
+      "unadjudicated_external_scored_traces": [
+        "traces/scored/manual_output_eval.jsonl",
+        "traces/scored/openclaw_manual_eval.jsonl",
+        "traces/scored/saved_transcript_replay_eval.jsonl",
+        "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+        "traces/scored/adapter_output_fixture_import.jsonl",
+        "traces/scored/dry_run_adapter_output_import.jsonl"
+      ]
+    },
+    "eval_cases": {
+      "by_category": {
+        "approval_gated": 14,
+        "refusal_required": 8,
+        "safe_direct_response": 12,
+        "uncertainty_handling": 8
+      },
+      "by_severity": {
+        "critical": 6,
+        "high": 14,
+        "low": 12,
+        "medium": 10
+      },
+      "case_files": 4,
+      "expected_failure_modes": {
+        "failure_to_clarify": 8,
+        "fake_completion_claim": 31,
+        "hallucinated_tool_use": 39,
+        "incomplete_risk_disclosure": 14,
+        "missing_approval_gate": 15,
+        "over_refusal": 11,
+        "unsafe_compliance": 11,
+        "unsupported_claim": 20
+      },
+      "files": [
+        {
+          "cases": 12,
+          "categories": {
+            "safe_direct_response": 12
+          },
+          "expected_failure_modes": {
+            "fake_completion_claim": 6,
+            "hallucinated_tool_use": 9,
+            "over_refusal": 11,
+            "unsupported_claim": 10
+          },
+          "path": "evals/cases/safe_task_cases.jsonl",
+          "severities": {
+            "low": 12
+          }
+        },
+        {
+          "cases": 14,
+          "categories": {
+            "approval_gated": 14
+          },
+          "expected_failure_modes": {
+            "fake_completion_claim": 14,
+            "hallucinated_tool_use": 14,
+            "incomplete_risk_disclosure": 14,
+            "missing_approval_gate": 14,
+            "unsafe_compliance": 3
+          },
+          "path": "evals/cases/approval_gate_cases.jsonl",
+          "severities": {
+            "high": 11,
+            "medium": 3
+          }
+        },
+        {
+          "cases": 8,
+          "categories": {
+            "refusal_required": 8
+          },
+          "expected_failure_modes": {
+            "fake_completion_claim": 8,
+            "hallucinated_tool_use": 8,
+            "unsafe_compliance": 8,
+            "unsupported_claim": 2
+          },
+          "path": "evals/cases/refusal_cases.jsonl",
+          "severities": {
+            "critical": 6,
+            "high": 2
+          }
+        },
+        {
+          "cases": 8,
+          "categories": {
+            "uncertainty_handling": 8
+          },
+          "expected_failure_modes": {
+            "failure_to_clarify": 8,
+            "fake_completion_claim": 3,
+            "hallucinated_tool_use": 8,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 8
+          },
+          "path": "evals/cases/uncertainty_cases.jsonl",
+          "severities": {
+            "high": 1,
+            "medium": 7
+          }
+        }
+      ],
+      "policy_ref_count": 16,
+      "total_cases": 42
+    },
+    "external_fixtures": {
+      "data_classification_counts": {
+        "public_safe_fixture": 3,
+        "public_sanitized": 2,
+        "public_synthetic": 1
+      },
+      "failed_records": 11,
+      "fixture_groups": 6,
+      "groups": [
+        {
+          "data_classification": "public_safe_fixture",
+          "failed": 2,
+          "fixture_id": "manual_outputs",
+          "limitations": [
+            "Small curated public-safe examples, not a benchmark sample.",
+            "Manual outputs are saved text and do not prove behavior from a live target system.",
+            "Scoring reflects the current deterministic v0 heuristic scorer."
+          ],
+          "observed_failure_modes": {
+            "failure_to_clarify": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "50.0%",
+          "passed": 2,
+          "provenance_class": "manual_saved_output",
+          "quality_gate_included": true,
+          "scored_records": 4,
+          "scored_trace_path": "traces/scored/manual_output_eval.jsonl",
+          "source_path": "traces/external/manual_outputs.example.jsonl",
+          "source_records": 4,
+          "source_type": "manual_output"
+        },
+        {
+          "data_classification": "public_sanitized",
+          "failed": 2,
+          "fixture_id": "sanitized_openclaw_style_manual_samples",
+          "limitations": [
+            "Fictional sanitized OpenClaw-style examples only.",
+            "Not evidence from a live OpenClaw runtime.",
+            "Small fixture size is useful for pipeline coverage, not ranking systems."
+          ],
+          "observed_failure_modes": {
+            "failure_to_clarify": 1,
+            "fake_completion_claim": 1,
+            "hallucinated_tool_use": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "66.7%",
+          "passed": 4,
+          "provenance_class": "sanitized_external_sample",
+          "quality_gate_included": true,
+          "scored_records": 6,
+          "scored_trace_path": "traces/scored/openclaw_manual_eval.jsonl",
+          "source_path": "traces/external/openclaw_manual_samples.example.jsonl",
+          "source_records": 6,
+          "source_type": "openclaw_style_manual_output"
+        },
+        {
+          "data_classification": "public_safe_fixture",
+          "failed": 2,
+          "fixture_id": "saved_transcript_replay",
+          "limitations": [
+            "Static public-safe transcript fixtures only.",
+            "Replay selects existing assistant turns and does not execute a target system.",
+            "Transcript examples are small and curated for evaluator coverage."
+          ],
+          "observed_failure_modes": {
+            "failure_to_clarify": 1,
+            "fake_completion_claim": 1,
+            "hallucinated_tool_use": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "60.0%",
+          "passed": 3,
+          "provenance_class": "saved_transcript",
+          "quality_gate_included": true,
+          "scored_records": 5,
+          "scored_trace_path": "traces/scored/saved_transcript_replay_eval.jsonl",
+          "source_path": "traces/external/saved_transcripts.example.jsonl",
+          "source_records": 5,
+          "source_type": "saved_transcript_replay"
+        },
+        {
+          "data_classification": "public_sanitized",
+          "failed": 0,
+          "fixture_id": "openclaw_saved_transcript_pilot",
+          "limitations": [
+            "Sanitized OpenClaw-style saved transcript pilot only.",
+            "No live OpenClaw runtime is executed by the deterministic quality gate.",
+            "Small reviewed fixture is useful for contract validation, not benchmark ranking."
+          ],
+          "observed_failure_modes": {},
+          "pass_rate": "100.0%",
+          "passed": 3,
+          "provenance_class": "sanitized_external_sample",
+          "quality_gate_included": true,
+          "scored_records": 3,
+          "scored_trace_path": "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "source_path": "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+          "source_records": 3,
+          "source_type": "openclaw_saved_transcript_pilot"
+        },
+        {
+          "data_classification": "public_safe_fixture",
+          "failed": 3,
+          "fixture_id": "normalized_adapter_outputs",
+          "limitations": [
+            "Normalized records are saved fixtures, not live adapter execution.",
+            "The fixture contains a small mix of source_type values for contract coverage.",
+            "Importer preserves provenance details but scoring remains based on output_text."
+          ],
+          "observed_failure_modes": {
+            "failure_to_clarify": 1,
+            "incomplete_risk_disclosure": 1,
+            "unsafe_compliance": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "25.0%",
+          "passed": 1,
+          "provenance_class": "public_safe_adapter_fixture",
+          "quality_gate_included": true,
+          "scored_records": 4,
+          "scored_trace_path": "traces/scored/adapter_output_fixture_import.jsonl",
+          "source_path": "traces/external/adapter_outputs.example.jsonl",
+          "source_records": 4,
+          "source_type": "normalized_adapter_output"
+        },
+        {
+          "data_classification": "public_synthetic",
+          "failed": 2,
+          "fixture_id": "dry_run_adapter_outputs",
+          "limitations": [
+            "Deterministic dry-run contract output only.",
+            "No provider, local model, CLI agent, or OpenClaw runtime is executed.",
+            "Intentionally includes pass and fail examples to exercise the import path."
+          ],
+          "observed_failure_modes": {
+            "failure_to_clarify": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "50.0%",
+          "passed": 2,
+          "provenance_class": "dry_run_contract",
+          "quality_gate_included": true,
+          "scored_records": 4,
+          "scored_trace_path": "traces/scored/dry_run_adapter_output_import.jsonl",
+          "source_path": "traces/external/dry_run_adapter_outputs.jsonl",
+          "source_records": 4,
+          "source_type": "dry_run_adapter_output"
+        }
+      ],
+      "pass_rate": "57.7%",
+      "provenance_class_counts": {
+        "dry_run_contract": 1,
+        "manual_saved_output": 1,
+        "public_safe_adapter_fixture": 1,
+        "sanitized_external_sample": 2,
+        "saved_transcript": 1
+      },
+      "quality_gate_included_groups": 6,
+      "source_type_counts": {
+        "dry_run_adapter_output": 1,
+        "manual_output": 1,
+        "normalized_adapter_output": 1,
+        "openclaw_saved_transcript_pilot": 1,
+        "openclaw_style_manual_output": 1,
+        "saved_transcript_replay": 1
+      },
+      "total_scored_records": 26,
+      "total_source_records": 26
+    },
+    "reports": {
+      "artifact_paths": [
+        "reports/baseline_report.md",
+        "reports/comparisons/profile_comparison_report.md",
+        "reports/comparisons/baseline_regression_snapshot.json",
+        "reports/comparisons/failure_inspection.md",
+        "reports/comparisons/manual_output_report.md",
+        "reports/comparisons/openclaw_manual_eval_report.md",
+        "reports/comparisons/saved_transcript_replay_report.md",
+        "reports/comparisons/openclaw_saved_transcript_pilot_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md",
+        "reports/comparisons/adjudication_summary_report.md",
+        "reports/comparisons/adjudicated_aggregate_report.md",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/baseline_self_comparison_report.md",
+        "reports/comparisons/reporting_product_summary.json",
+        "reports/comparisons/reporting_product_summary.md",
+        "reports/comparisons/evidence_quality_audit.json",
+        "reports/comparisons/evidence_quality_audit.md",
+        "reports/comparisons/release_notes_latest.json",
+        "reports/comparisons/release_notes_latest.md"
+      ],
+      "json_snapshots": 5,
+      "markdown_reports": 14,
+      "public_safe_artifacts": 19,
+      "quality_gate_artifacts": 19,
+      "report_artifacts": 19
+    },
+    "scored_traces": {
+      "baseline": {
+        "categories": {
+          "approval_gated": 42,
+          "refusal_required": 24,
+          "safe_direct_response": 36,
+          "uncertainty_handling": 24
+        },
+        "failed": 11,
+        "failure_modes": {
+          "missing_approval_gate": 7,
+          "over_refusal": 4
+        },
+        "pass_rate": "91.3%",
+        "passed": 115,
+        "path": "traces/scored/baseline_mock_run.jsonl",
+        "profiles": {
+          "generic_assistant": 42,
+          "openclaw_reference_agent": 42,
+          "strict_approval_agent": 42
+        },
+        "total_records": 126,
+        "unique_cases": 42
+      },
+      "external_fixture_traces": {
+        "failed": 11,
+        "pass_rate": "57.7%",
+        "passed": 15,
+        "total_records": 26,
+        "trace_groups": 6,
+        "trace_paths": [
+          "traces/scored/manual_output_eval.jsonl",
+          "traces/scored/openclaw_manual_eval.jsonl",
+          "traces/scored/saved_transcript_replay_eval.jsonl",
+          "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "traces/scored/adapter_output_fixture_import.jsonl",
+          "traces/scored/dry_run_adapter_output_import.jsonl"
+        ]
+      },
+      "observed_failure_modes": {
+        "failure_to_clarify": 5,
+        "fake_completion_claim": 2,
+        "hallucinated_tool_use": 2,
+        "incomplete_risk_disclosure": 1,
+        "missing_approval_gate": 11,
+        "over_refusal": 4,
+        "unsafe_compliance": 1,
+        "unsupported_claim": 5
+      },
+      "total_scored_records": 152
+    }
+  },
+  "recommendations": [
+    {
+      "priority": "high",
+      "public_safe_path": "Use reviewed saved transcripts with tool summaries and approval metadata, not private runtime logs.",
+      "recommendation_id": "expand_public_safe_transcripts",
+      "source_gap_ids": [
+        "small_external_fixture_groups",
+        "external_fixture_adjudication_absent",
+        "refusal_required_review_gap"
+      ],
+      "summary": "Add sanitized saved transcript fixtures for the weakest external fixture and adjudication coverage areas.",
+      "target_phase": "M41"
+    },
+    {
+      "priority": "high",
+      "public_safe_path": "Keep heuristic scores and reviewer decisions separate in committed local artifacts.",
+      "recommendation_id": "calibrate_before_scorer_changes",
+      "source_gap_ids": [
+        "heuristic_scorer_not_semantic_judge",
+        "limited_adjudication_calibration_set"
+      ],
+      "summary": "Add adjudications for external fixtures before accepting scorer refinements.",
+      "target_phase": "M42"
+    },
+    {
+      "priority": "medium",
+      "public_safe_path": "Trend evaluator artifact counts, fixture counts, failure modes, and review coverage without benchmark claims.",
+      "recommendation_id": "add_evaluator_health_trends",
+      "source_gap_ids": [
+        "no_historical_trend_snapshots_yet",
+        "report_artifacts_outpace_review_depth"
+      ],
+      "summary": "Create versioned trend snapshots after the evidence inventory and fixture expansion are stable.",
+      "target_phase": "M43"
+    }
+  ],
+  "safety": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "scope": "Deterministic evidence inventory and gap report for committed local evaluator artifacts.",
+  "source_paths": [
+    "evals/cases/safe_task_cases.jsonl",
+    "evals/cases/approval_gate_cases.jsonl",
+    "evals/cases/refusal_cases.jsonl",
+    "evals/cases/uncertainty_cases.jsonl",
+    "traces/scored/baseline_mock_run.jsonl",
+    "traces/external/fixture_manifest.json",
+    "traces/external/adjudication_manifest.json",
+    "reports/comparisons/adjudication_regression_snapshot.json",
+    "reports/comparisons/report_manifest.json",
+    "reports/comparisons/reporting_product_summary.json",
+    "traces/external/harness_bridge_plan.example.json",
+    "src/scorers.py",
+    "docs/wiki/concepts/v0_scorer_limitations.md",
+    "docs/roadmap.md"
+  ]
+}
