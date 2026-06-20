@@ -329,6 +329,21 @@ def versioned_trend_snapshots(
                 "ambiguous_reviews": adjudication["calibration_label_counts"].get("ambiguous_review", 0),
             },
         },
+        {
+            "checkpoint_id": "m46_needs_discussion_resolution",
+            "phase": "review_resolution",
+            "source_paths": [
+                display_path(ADJUDICATION_MANIFEST_PATH),
+                display_path(ADJUDICATION_SNAPSHOT_PATH),
+                display_path(SCORER_CALIBRATION_PATH),
+            ],
+            "metrics": {
+                "adjudication_records": adjudication["adjudication_records"],
+                "needs_discussion": adjudication["reviewer_decisions"].get("needs_discussion", 0),
+                "ambiguous_reviews": adjudication["calibration_label_counts"].get("ambiguous_review", 0),
+                "changed_result_count": adjudication["changed_result_count"],
+            },
+        },
     ]
 
 

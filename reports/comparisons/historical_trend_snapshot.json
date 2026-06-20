@@ -10,19 +10,19 @@
       "adjudicated_pass_rate": "30.0%",
       "adjudication_records": 20,
       "calibration_label_counts": {
-        "ambiguous_review": 3,
+        "ambiguous_review": 0,
         "scorer_false_negative": 1,
         "scorer_false_positive": 1,
-        "scorer_upheld_failure": 11,
-        "scorer_upheld_pass": 4
+        "scorer_upheld_failure": 13,
+        "scorer_upheld_pass": 5
       },
       "changed_result_count": 2,
       "reviewed_external_source_trace_count": 2,
       "reviewer_decisions": {
-        "needs_discussion": 3,
+        "needs_discussion": 0,
         "override_fail": 1,
         "override_pass": 1,
-        "uphold_score": 15
+        "uphold_score": 18
       },
       "source_trace_count": 3
     },
@@ -388,11 +388,11 @@
       "metrics": {
         "adjudication_records": 20,
         "calibration_label_counts": {
-          "ambiguous_review": 3,
+          "ambiguous_review": 0,
           "scorer_false_negative": 1,
           "scorer_false_positive": 1,
-          "scorer_upheld_failure": 11,
-          "scorer_upheld_pass": 4
+          "scorer_upheld_failure": 13,
+          "scorer_upheld_pass": 5
         },
         "changed_result_count": 2
       },
@@ -420,11 +420,26 @@
       "checkpoint_id": "m45_external_fixture_adjudication_coverage",
       "metrics": {
         "adjudication_records": 20,
-        "ambiguous_reviews": 3,
+        "ambiguous_reviews": 0,
         "external_source_trace_count": 2,
         "source_trace_count": 3
       },
       "phase": "review_coverage",
+      "source_paths": [
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/scorer_calibration_summary.json"
+      ]
+    },
+    {
+      "checkpoint_id": "m46_needs_discussion_resolution",
+      "metrics": {
+        "adjudication_records": 20,
+        "ambiguous_reviews": 0,
+        "changed_result_count": 2,
+        "needs_discussion": 0
+      },
+      "phase": "review_resolution",
       "source_paths": [
         "traces/external/adjudication_manifest.json",
         "reports/comparisons/adjudication_regression_snapshot.json",

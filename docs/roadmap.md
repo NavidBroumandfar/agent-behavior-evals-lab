@@ -436,7 +436,13 @@ Acceptance criteria:
 
 Resolve the remaining public-safe adjudication records that are still marked `needs_discussion` before considering deterministic scorer changes.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m46-needs-discussion-resolution-closeout.md`.
+
+Implementation note:
+
+- M46 resolves the three remaining discussion records as `uphold_score` adjudications with updated public-safe rationales.
+- Manifest quality-gate thresholds now require zero unresolved `needs_discussion` records.
+- No scored traces are rewritten, no scorer changes are accepted, and reviewer decisions remain a report-time interpretation layer.
 
 Recommended scope:
 
@@ -450,6 +456,25 @@ Acceptance criteria:
 - The remaining `needs_discussion` count is lower and explicitly tracked in the adjudication regression snapshot.
 - Any override has a concrete policy rationale and remains separate from heuristic scored traces.
 - No scorer change is accepted unless a separate deterministic phase adds focused tests and regression coverage.
+
+### M47: Deterministic Scorer Refinement Triage
+
+Decide whether the resolved adjudication and calibration evidence supports narrow deterministic scorer or rubric refinements.
+
+Status: planned.
+
+Recommended scope:
+
+- Review current false positive and false negative evidence from `reports/comparisons/scorer_calibration_summary.json`.
+- Separate scorer-code candidates from rubric/documentation candidates.
+- Add focused tests before accepting any deterministic scorer behavior change.
+- Keep model-assisted judging, live providers, local models, runtime harnesses, browser/email, shell, file-mutation, credentials, private logs, and gated LLM review out of scope.
+
+Acceptance criteria:
+
+- Each accepted candidate is tied to a public-safe adjudication or fixture record.
+- Any scorer change is deterministic, local, and covered by focused tests plus the full quality gate.
+- If evidence is insufficient, the phase records a no-change decision rather than changing scorer behavior prematurely.
 
 ## Hermes And OpenClaw Position
 

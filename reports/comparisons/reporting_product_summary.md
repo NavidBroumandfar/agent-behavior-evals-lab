@@ -7,7 +7,7 @@
 | Generated at | `2026-06-20T00:00:00Z` |
 | Baseline result | 115 passed, 11 failed (91.3% pass rate) |
 | External fixture records | 34 scored records across 7 groups |
-| Review status | 20 adjudication records; 3 need discussion |
+| Review status | 20 adjudication records; 0 need discussion |
 | Harness status | defer_harness_integration for openclaw; harness execution remains outside the quality gate |
 
 This report is generated from committed local artifacts. It is a product-oriented summary for repeated development decisions, not a live model benchmark.
@@ -18,7 +18,7 @@ This report is generated from committed local artifacts. It is a product-oriente
 | --- | ---: | --- |
 | Baseline Pass Rate | `91.3%` | 115 passed of 126 scored records |
 | External Fixture Pass Rate | `55.9%` | 19 passed of 34 scored fixture records |
-| Review Records Needing Discussion | `3` | Reviewer decisions still marked needs_discussion |
+| Review Records Needing Discussion | `0` | Reviewer decisions still marked needs_discussion |
 | Harness Bridge Decision | `defer_harness_integration` | Runtime-native state required: false |
 
 ## Baseline By Profile

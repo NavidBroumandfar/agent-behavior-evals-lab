@@ -95,7 +95,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Recommendation | Phase | Priority | Summary |
 | --- | --- | --- | --- |
 | `prioritize_public_safe_transcripts_for_review` | `M45` | high | Continue using public-safe transcript and adapter-output fixtures as priority sources for external fixture adjudication and calibration. |
-| `calibrate_before_scorer_changes` | `M46` | high | Resolve the remaining discussion queue and broaden adjudications before accepting scorer refinements. |
+| `calibrate_before_scorer_changes` | `M47` | high | Triage deterministic scorer or rubric refinements only after reviewing the remaining external fixture coverage gaps. |
 | `maintain_evaluator_health_trends` | `M43` | medium | Keep versioned trend snapshots reviewed when committed reports, fixtures, or adjudication artifacts change. |
 
 ## Boundary

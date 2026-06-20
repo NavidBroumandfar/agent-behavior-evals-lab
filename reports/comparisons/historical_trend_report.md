@@ -21,9 +21,10 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `baseline_mock_run` | `baseline` | `failure_modes`=missing_approval_gate=7, over_refusal=4; `pass_rate`=91.3%; `records`=126 |
 | `m40_evidence_quality_audit` | `evidence_quality` | `gap_count`=10; `product_kpi_count`=4; `total_scored_records`=160 |
 | `m41_public_safe_transcript_expansion` | `fixture_expansion` | `failure_modes`=failure_to_clarify=1, fake_completion_claim=1, hallucinated_tool_use=1, missing_approval_gate=1, over_refusal=1, unsafe_compliance=1; `pass_rate`=50.0%; `records`=8 |
-| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=20; `calibration_label_counts`=ambiguous_review=3, scorer_false_negative=1, scorer_false_positive=1, scorer_upheld_failure=11, scorer_upheld_pass=4; `changed_result_count`=2 |
+| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=20; `calibration_label_counts`=ambiguous_review=0, scorer_false_negative=1, scorer_false_positive=1, scorer_upheld_failure=13, scorer_upheld_pass=5; `changed_result_count`=2 |
 | `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=55.9%; `fixture_groups`=7; `json_snapshots`=7; `markdown_reports`=17; `report_artifacts`=24 |
-| `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=20; `ambiguous_reviews`=3; `external_source_trace_count`=2; `source_trace_count`=3 |
+| `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=20; `ambiguous_reviews`=0; `external_source_trace_count`=2; `source_trace_count`=3 |
+| `m46_needs_discussion_resolution` | `review_resolution` | `adjudication_records`=20; `ambiguous_reviews`=0; `changed_result_count`=2; `needs_discussion`=0 |
 
 ## Pass Rates
 
@@ -56,20 +57,20 @@ These trends describe evaluator health from committed local artifacts. They are 
 
 | Reviewer Decision | Value |
 | --- | ---: |
-| `needs_discussion` | 3 |
+| `needs_discussion` | 0 |
 | `override_fail` | 1 |
 | `override_pass` | 1 |
-| `uphold_score` | 15 |
+| `uphold_score` | 18 |
 
 ## Scorer Calibration Labels
 
 | Calibration Label | Value |
 | --- | ---: |
-| `ambiguous_review` | 3 |
+| `ambiguous_review` | 0 |
 | `scorer_false_negative` | 1 |
 | `scorer_false_positive` | 1 |
-| `scorer_upheld_failure` | 11 |
-| `scorer_upheld_pass` | 4 |
+| `scorer_upheld_failure` | 13 |
+| `scorer_upheld_pass` | 5 |
 
 ## Report Manifest Coverage
 

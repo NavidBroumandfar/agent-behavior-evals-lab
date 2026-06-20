@@ -157,7 +157,7 @@
           "unreviewed_records": 23
         }
       },
-      "needs_discussion": 3,
+      "needs_discussion": 0,
       "override_fail": 1,
       "override_pass": 1,
       "profile_coverage": {
@@ -619,8 +619,8 @@
         "heuristic_scorer_not_semantic_judge",
         "limited_adjudication_calibration_set"
       ],
-      "summary": "Resolve the remaining discussion queue and broaden adjudications before accepting scorer refinements.",
-      "target_phase": "M46"
+      "summary": "Triage deterministic scorer or rubric refinements only after reviewing the remaining external fixture coverage gaps.",
+      "target_phase": "M47"
     },
     {
       "priority": "medium",

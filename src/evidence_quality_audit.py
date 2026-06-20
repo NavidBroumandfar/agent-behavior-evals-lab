@@ -472,8 +472,8 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "recommendation_id": "calibrate_before_scorer_changes",
             "priority": "high",
-            "target_phase": "M46",
-            "summary": "Resolve the remaining discussion queue and broaden adjudications before accepting scorer refinements.",
+            "target_phase": "M47",
+            "summary": "Triage deterministic scorer or rubric refinements only after reviewing the remaining external fixture coverage gaps.",
             "source_gap_ids": [
                 "heuristic_scorer_not_semantic_judge",
                 "limited_adjudication_calibration_set",

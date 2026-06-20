@@ -49,8 +49,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `needs_discussion` | 3 |", report)
-        self.assertIn("| `uphold_score` | 15 |", report)
+        self.assertIn("| `uphold_score` | 18 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertIn("| `override_fail` | 1 |", report)
         self.assertIn("baseline_followup_review_queue", report)
@@ -59,7 +58,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("| `baseline_reviewed_decisions` | Baseline Reviewed Decisions |", report)
         self.assertIn("| `baseline_followup_review_queue` | Baseline Followup Review Queue |", report)
         self.assertIn("| `external_fixture_reviewed_decisions` | External Fixture Reviewed Decisions |", report)
-        self.assertIn("`needs_discussion`", report)
+        self.assertIn("No reviewed records are currently marked `needs_discussion`.", report)
         self.assertIn("public_reviewer_fixture", report)
         self.assertIn("Needs Discussion Queue", report)
         self.assertIn("Original Vs Adjudicated Reviewed Results", report)
@@ -85,7 +84,7 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "external_fixture_reviewed_decisions",
             ],
         )
-        self.assertEqual([fixture.review_status for fixture in fixtures], ["needs_discussion", "needs_discussion", "reviewed"])
+        self.assertEqual([fixture.review_status for fixture in fixtures], ["reviewed", "reviewed", "reviewed"])
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
         self.assertEqual(len(context.adjudications), 20)
@@ -100,7 +99,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         thresholds = manifest.quality_gate_thresholds
 
         self.assertEqual(thresholds.min_review_coverage, 5.0)
-        self.assertEqual(thresholds.max_needs_discussion, 3)
+        self.assertEqual(thresholds.max_needs_discussion, 0)
         self.assertEqual(
             thresholds.min_profile_review_coverage,
             {
@@ -110,7 +109,8 @@ class AdjudicationReportingTests(unittest.TestCase):
             },
         )
         self.assertEqual(thresholds.min_category_review_coverage["uncertainty_handling"], 5.0)
-        self.assertEqual(thresholds.max_fixture_needs_discussion["baseline_reviewed_decisions"], 2)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["baseline_reviewed_decisions"], 0)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["baseline_followup_review_queue"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["external_fixture_reviewed_decisions"], 0)
 
     def test_manifest_threshold_block_is_optional(self):

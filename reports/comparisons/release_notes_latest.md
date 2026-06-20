@@ -16,13 +16,14 @@
 - **Reporting**: Maintains dashboard-ready JSON, product summary Markdown, release-note outputs, and report-manifest coverage from local artifacts.
 - **Quality Gate**: Local deterministic gate remains stable; no live runtime integration is enabled.
 - **Harness Boundary**: Harness decision remains defer_harness_integration; runtime-native state required is false.
-- **Review**: 20 adjudication records are tracked; 3 still need discussion.
+- **Review**: 20 adjudication records are tracked; 0 still need discussion.
 - **Evidence Quality**: Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.
 - **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 - **Scorer Calibration**: Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.
 - **Historical Trends**: Added versioned evaluator-health trend snapshots for pass rates, failure modes, adjudication outcomes, fixture counts, and report coverage.
 - **Runtime Trial**: Added a validation-only optional runtime-trial plan with manual, disposable, non-gated controls and a reviewed-output promotion path.
 - **External Fixture Review**: Added public-safe adjudication coverage for selected saved-transcript and normalized adapter-output scored traces.
+- **Review Resolution**: Resolved the remaining public-safe needs_discussion adjudications while keeping reviewer decisions separate from heuristic traces.
 
 ## Dashboard Snapshot
 
@@ -33,7 +34,7 @@
 | External fixture groups | 7 |
 | External fixture records | 34 |
 | Adjudication records | 20 |
-| Review records needing discussion | 3 |
+| Review records needing discussion | 0 |
 
 ## Milestone Rollup
 
@@ -50,6 +51,7 @@
 | `M43` | Complete / review-ready | `docs/milestones/m43-historical-trend-snapshots-closeout.md` |
 | `M44` | Complete / review-ready | `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md` |
 | `M45` | Complete / review-ready | `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md` |
+| `M46` | Complete / review-ready | `docs/milestones/m46-needs-discussion-resolution-closeout.md` |
 
 ## Boundaries
 
@@ -75,3 +77,4 @@
 - `docs/milestones/m43-historical-trend-snapshots-closeout.md`
 - `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md`
 - `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md`
+- `docs/milestones/m46-needs-discussion-resolution-closeout.md`

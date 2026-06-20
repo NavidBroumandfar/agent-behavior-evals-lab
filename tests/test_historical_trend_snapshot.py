@@ -35,6 +35,8 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         self.assertEqual(current["adjudication_outcomes"]["source_trace_count"], 3)
         self.assertEqual(current["adjudication_outcomes"]["reviewed_external_source_trace_count"], 2)
         self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 2)
+        self.assertEqual(current["adjudication_outcomes"]["reviewer_decisions"]["needs_discussion"], 0)
+        self.assertEqual(current["adjudication_outcomes"]["calibration_label_counts"]["ambiguous_review"], 0)
         self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 24)
         self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 7)
         self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 17)
@@ -52,6 +54,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
                 "m42_scorer_calibration",
                 "m43_historical_trend_snapshot",
                 "m45_external_fixture_adjudication_coverage",
+                "m46_needs_discussion_resolution",
             ],
         )
 

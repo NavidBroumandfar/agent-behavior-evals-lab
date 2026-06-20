@@ -14,7 +14,7 @@
     "external_fixture_groups": 7,
     "external_fixture_records": 34,
     "harness_bridge_decision": "defer_harness_integration",
-    "review_needs_discussion": 3,
+    "review_needs_discussion": 0,
     "runtime_native_state_required": false
   },
   "generated_at": "2026-06-20T00:00:00Z",
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "20 adjudication records are tracked; 3 still need discussion."
+      "summary": "20 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",
@@ -58,6 +58,10 @@
     {
       "area": "External Fixture Review",
       "summary": "Added public-safe adjudication coverage for selected saved-transcript and normalized adapter-output scored traces."
+    },
+    {
+      "area": "Review Resolution",
+      "summary": "Resolved the remaining public-safe needs_discussion adjudications while keeping reviewer decisions separate from heuristic traces."
     }
   ],
   "milestones": [
@@ -137,6 +141,13 @@
       "path": "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 45 - External Fixture Adjudication Coverage"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M46",
+      "path": "docs/milestones/m46-needs-discussion-resolution-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 46 - Needs-Discussion Resolution"
     }
   ],
   "quality_gate": {
@@ -174,7 +185,8 @@
     "docs/milestones/m42-scorer-calibration-closeout.md",
     "docs/milestones/m43-historical-trend-snapshots-closeout.md",
     "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
-    "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md"
+    "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
+    "docs/milestones/m46-needs-discussion-resolution-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

@@ -35,6 +35,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Adjudication Manifest Contract](concepts/adjudication_manifest_contract.md)
 - [Scorer Calibration From Adjudications](concepts/scorer_calibration_from_adjudications.md)
 - [External Fixture Adjudication Coverage](concepts/external_fixture_adjudication_coverage.md)
+- [Needs-Discussion Resolution](concepts/needs_discussion_resolution.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -143,6 +144,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 43 closeout: `docs/milestones/m43-historical-trend-snapshots-closeout.md`
 - Milestone 44 closeout: `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md`
 - Milestone 45 closeout: `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md`
+- Milestone 46 closeout: `docs/milestones/m46-needs-discussion-resolution-closeout.md`
 
 ## Reading Order
 

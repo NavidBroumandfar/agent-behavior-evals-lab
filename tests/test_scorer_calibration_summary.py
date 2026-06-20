@@ -24,15 +24,15 @@ class ScorerCalibrationSummaryTests(unittest.TestCase):
         self.assertEqual(summary["result_changes"]["changed_result_count"], 2)
         self.assertEqual(summary["result_changes"]["scorer_false_positive_count"], 1)
         self.assertEqual(summary["result_changes"]["scorer_false_negative_count"], 1)
-        self.assertEqual(summary["result_changes"]["ambiguous_review_count"], 3)
+        self.assertEqual(summary["result_changes"]["ambiguous_review_count"], 0)
         self.assertEqual(
             summary["calibration_labels"]["counts"],
             {
-                "scorer_upheld_failure": 11,
-                "scorer_upheld_pass": 4,
+                "scorer_upheld_failure": 13,
+                "scorer_upheld_pass": 5,
                 "scorer_false_positive": 1,
                 "scorer_false_negative": 1,
-                "ambiguous_review": 3,
+                "ambiguous_review": 0,
             },
         )
 
@@ -42,7 +42,7 @@ class ScorerCalibrationSummaryTests(unittest.TestCase):
         self.assertEqual(summary["accepted_scorer_changes"], [])
         self.assertEqual(summary["regression_check"]["status"], "no_scorer_changes_accepted")
         self.assertFalse(summary["regression_check"]["scorer_changed"])
-        self.assertEqual(len(summary["suggested_refinements"]), 3)
+        self.assertEqual(len(summary["suggested_refinements"]), 2)
         self.assertTrue(all(item["status"] == "advisory_not_accepted" for item in summary["suggested_refinements"]))
 
     def test_calibration_label_classifies_core_outcomes(self):

@@ -4,6 +4,8 @@ M42 adds an advisory calibration layer that compares deterministic v0 scorer out
 
 M45 expands the calibration inputs beyond the baseline mock trace by adding public-safe adjudications for selected saved-transcript and normalized adapter-output scored traces.
 
+M46 resolves the remaining ambiguous reviews. After M46, calibration summaries should show zero `ambiguous_review` records unless a future review fixture deliberately reintroduces discussion items.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`

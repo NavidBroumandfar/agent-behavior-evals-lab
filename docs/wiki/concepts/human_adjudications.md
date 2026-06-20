@@ -61,6 +61,8 @@ M18 makes the standalone validator the manifest-backed report loader preflight, 
 
 M45 adds external fixture adjudication coverage for selected public-safe saved-transcript and normalized adapter-output scored traces. Those decisions are still report-time review records and do not rewrite the external scored traces.
 
+M46 resolves the remaining `needs_discussion` records as reviewed adjudications and tightens manifest thresholds to require zero unresolved discussion records.
+
 ## Reporting
 
 M10 adds `src/adjudication_report.py`, which writes:

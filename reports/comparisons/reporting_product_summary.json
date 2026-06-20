@@ -3,7 +3,7 @@
     "adjudicated_pass_rate": "30.0%",
     "adjudication_records": 20,
     "changed_result_count": 2,
-    "needs_discussion": 3,
+    "needs_discussion": 0,
     "override_fail": 1,
     "override_pass": 1,
     "reviewer_count": 1,
@@ -276,7 +276,7 @@
       "detail": "Reviewer decisions still marked needs_discussion",
       "label": "Review Records Needing Discussion",
       "metric_id": "review_needs_discussion",
-      "value": 3
+      "value": 0
     },
     {
       "detail": "Runtime-native state required: false",
@@ -289,7 +289,7 @@
     "baseline_result": "115 passed, 11 failed (91.3% pass rate)",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
     "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
-    "review_status": "20 adjudication records; 3 need discussion"
+    "review_status": "20 adjudication records; 0 need discussion"
   },
   "safety": {
     "contains_private_data": false,

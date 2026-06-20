@@ -578,7 +578,8 @@
         "docs/milestones/m42-scorer-calibration-closeout.md",
         "docs/milestones/m43-historical-trend-snapshots-closeout.md",
         "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
-        "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md"
+        "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
+        "docs/milestones/m46-needs-discussion-resolution-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -613,7 +614,8 @@
         "docs/milestones/m42-scorer-calibration-closeout.md",
         "docs/milestones/m43-historical-trend-snapshots-closeout.md",
         "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
-        "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md"
+        "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
+        "docs/milestones/m46-needs-discussion-resolution-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

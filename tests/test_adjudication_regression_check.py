@@ -26,12 +26,12 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         self.assertEqual(snapshot["adjudication_input"], "traces/external/adjudication_manifest.json")
         self.assertEqual(snapshot["adjudication_fixture_count"], 3)
-        self.assertEqual(snapshot["adjudication_fixture_statuses"], {"needs_discussion": 2, "reviewed": 1})
+        self.assertEqual(snapshot["adjudication_fixture_statuses"], {"reviewed": 3})
         self.assertEqual(snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["records"], 4)
         self.assertEqual(snapshot["adjudication_fixtures"]["external_fixture_reviewed_decisions"]["records"], 8)
         self.assertEqual(
             snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["review_status"],
-            "needs_discussion",
+            "reviewed",
         )
         self.assertEqual(
             snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["owner"],
@@ -46,8 +46,8 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
         self.assertEqual(snapshot["review_coverage_by_category"]["safe_direct_response"]["review_coverage"], "17.9%")
         self.assertEqual(snapshot["review_coverage_by_category"]["refusal_required"]["review_coverage"], "7.4%")
         self.assertEqual(snapshot["review_coverage_by_category"]["uncertainty_handling"]["review_coverage"], "14.8%")
-        self.assertEqual(snapshot["reviewer_decisions"]["uphold_score"], 15)
-        self.assertEqual(snapshot["reviewer_decisions"]["needs_discussion"], 3)
+        self.assertEqual(snapshot["reviewer_decisions"]["uphold_score"], 18)
+        self.assertEqual(snapshot["reviewer_decisions"]["needs_discussion"], 0)
         self.assertEqual(snapshot["reviewer_decisions"]["override_pass"], 1)
         self.assertEqual(snapshot["reviewer_decisions"]["override_fail"], 1)
         self.assertEqual(snapshot["result_summary"]["changed_result_count"], 2)
@@ -101,7 +101,7 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         self.assertEqual(differences, ["adjudication_records: expected 20, found 99"])
 
-    def test_threshold_violations_report_coverage_and_discussion_failures(self):
+    def test_threshold_violations_report_coverage_failures(self):
         context = load_adjudication_context_from_manifest(ADJUDICATION_MANIFEST_PATH)
         snapshot = build_snapshot(context, ADJUDICATION_MANIFEST_PATH)
 
@@ -111,7 +111,6 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
             differences,
             [
                 "traces/scored/baseline_mock_run.jsonl.review_coverage: expected at least 10.0%, found 9.5%",
-                "reviewer_decisions.needs_discussion: expected at most 2, found 3",
             ],
         )
 
@@ -123,7 +122,7 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
             snapshot,
             min_profile_review_coverage={"generic_assistant": 25.0},
             min_category_review_coverage={"uncertainty_handling": 20.0},
-            max_fixture_needs_discussion={"baseline_followup_review_queue": 0},
+            max_fixture_needs_discussion={"missing_fixture": 0},
         )
 
         self.assertEqual(
@@ -131,7 +130,7 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
             [
                 "profile.generic_assistant.review_coverage: expected at least 25.0%, found 22.9%",
                 "category.uncertainty_handling.review_coverage: expected at least 20.0%, found 14.8%",
-                "fixture.baseline_followup_review_queue.needs_discussion: expected at most 0, found 1",
+                "fixture.missing_fixture.needs_discussion: missing fixture",
             ],
         )
 
@@ -140,7 +139,7 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
             ADJUDICATIONS_PATH,
             SNAPSHOT_PATH,
             min_review_coverage=5.0,
-            max_needs_discussion=3,
+            max_needs_discussion=0,
             manifest_path=ADJUDICATION_MANIFEST_PATH,
             min_profile_review_coverage={
                 "generic_assistant": 10.0,
@@ -154,8 +153,8 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
                 "uncertainty_handling": 5.0,
             },
             max_fixture_needs_discussion={
-                "baseline_reviewed_decisions": 2,
-                "baseline_followup_review_queue": 1,
+                "baseline_reviewed_decisions": 0,
+                "baseline_followup_review_queue": 0,
                 "external_fixture_reviewed_decisions": 0,
             },
         )

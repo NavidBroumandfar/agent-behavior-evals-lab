@@ -35,6 +35,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m43-historical-trend-snapshots-closeout.md",
     REPO_ROOT / "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
     REPO_ROOT / "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
+    REPO_ROOT / "docs/milestones/m46-needs-discussion-resolution-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -218,6 +219,13 @@ def release_highlights(
             {
                 "area": "External Fixture Review",
                 "summary": "Added public-safe adjudication coverage for selected saved-transcript and normalized adapter-output scored traces.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M46" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Review Resolution",
+                "summary": "Resolved the remaining public-safe needs_discussion adjudications while keeping reviewer decisions separate from heuristic traces.",
             }
         )
     return highlights
