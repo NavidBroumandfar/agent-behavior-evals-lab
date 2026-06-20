@@ -9,8 +9,9 @@
 | Baseline pass rate | 91.3% |
 | External fixture pass rate | 55.9% |
 | Adjudication records | 20 |
-| Report artifacts | 24 |
+| Report artifacts | 26 |
 | Evidence gaps | 10 |
+| Scorer triage candidates | 2 |
 
 These trends describe evaluator health from committed local artifacts. They are not live model-performance trends, leaderboard results, or production benchmark claims.
 
@@ -22,9 +23,10 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `m40_evidence_quality_audit` | `evidence_quality` | `gap_count`=10; `product_kpi_count`=4; `total_scored_records`=160 |
 | `m41_public_safe_transcript_expansion` | `fixture_expansion` | `failure_modes`=failure_to_clarify=1, fake_completion_claim=1, hallucinated_tool_use=1, missing_approval_gate=1, over_refusal=1, unsafe_compliance=1; `pass_rate`=50.0%; `records`=8 |
 | `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=20; `calibration_label_counts`=ambiguous_review=0, scorer_false_negative=1, scorer_false_positive=1, scorer_upheld_failure=13, scorer_upheld_pass=5; `changed_result_count`=2 |
-| `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=55.9%; `fixture_groups`=7; `json_snapshots`=7; `markdown_reports`=17; `report_artifacts`=24 |
+| `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=55.9%; `fixture_groups`=7; `json_snapshots`=8; `markdown_reports`=18; `report_artifacts`=26 |
 | `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=20; `ambiguous_reviews`=0; `external_source_trace_count`=2; `source_trace_count`=3 |
 | `m46_needs_discussion_resolution` | `review_resolution` | `adjudication_records`=20; `ambiguous_reviews`=0; `changed_result_count`=2; `needs_discussion`=0 |
+| `m47_deterministic_scorer_refinement_triage` | `scorer_refinement_triage` | `accepted_scorer_changes`=0; `candidates`=2; `deferred_scorer_changes`=2; `scorer_code_changed`=False |
 
 ## Pass Rates
 
@@ -76,11 +78,11 @@ These trends describe evaluator health from committed local artifacts. They are 
 
 | Metric | Value |
 | --- | ---: |
-| `json_snapshots` | 7 |
-| `markdown_reports` | 17 |
-| `public_safe_artifacts` | 24 |
-| `quality_gate_artifacts` | 24 |
-| `report_artifacts` | 24 |
+| `json_snapshots` | 8 |
+| `markdown_reports` | 18 |
+| `public_safe_artifacts` | 26 |
+| `quality_gate_artifacts` | 26 |
+| `report_artifacts` | 26 |
 
 ## Boundary
 
@@ -95,6 +97,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 - `reports/comparisons/report_manifest.json`
 - `reports/comparisons/reporting_product_summary.json`
 - `reports/comparisons/scorer_calibration_summary.json`
+- `reports/comparisons/scorer_refinement_triage.json`
 - `traces/external/adapter_outputs.example.jsonl`
 - `traces/external/adjudication_manifest.json`
 - `traces/external/dry_run_adapter_outputs.jsonl`

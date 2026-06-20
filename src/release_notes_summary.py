@@ -36,6 +36,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
     REPO_ROOT / "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
     REPO_ROOT / "docs/milestones/m46-needs-discussion-resolution-closeout.md",
+    REPO_ROOT / "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -226,6 +227,13 @@ def release_highlights(
             {
                 "area": "Review Resolution",
                 "summary": "Resolved the remaining public-safe needs_discussion adjudications while keeping reviewer decisions separate from heuristic traces.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M47" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Scorer Triage",
+                "summary": "Recorded a no-change deterministic scorer decision and deferred refinement candidates until more focused evidence exists.",
             }
         )
     return highlights

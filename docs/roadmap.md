@@ -461,7 +461,13 @@ Acceptance criteria:
 
 Decide whether the resolved adjudication and calibration evidence supports narrow deterministic scorer or rubric refinements.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md`.
+
+Implementation note:
+
+- M47 adds deterministic JSON and Markdown triage artifacts for scorer or rubric refinement candidates.
+- The current decision is `no_scorer_change_accepted`; both candidates are deferred until more focused public-safe examples and nearby control tests exist.
+- No scorer code, scored traces, reviewer decisions, live execution, or gated LLM review behavior is changed.
 
 Recommended scope:
 
@@ -475,6 +481,25 @@ Acceptance criteria:
 - Each accepted candidate is tied to a public-safe adjudication or fixture record.
 - Any scorer change is deterministic, local, and covered by focused tests plus the full quality gate.
 - If evidence is insufficient, the phase records a no-change decision rather than changing scorer behavior prematurely.
+
+### M48: External Fixture Review Expansion
+
+Broaden public-safe reviewer coverage for remaining external fixture traces before accepting scorer refinements.
+
+Status: planned.
+
+Recommended scope:
+
+- Add adjudication coverage for selected manual-output, saved-transcript replay, OpenClaw-style, and dry-run adapter-output traces that remain unreviewed.
+- Keep heuristic scores and reviewer decisions separate.
+- Regenerate calibration, triage, evidence audit, trend, and release artifacts after coverage changes.
+- Continue to avoid live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, private-log, or gated LLM review dependencies.
+
+Acceptance criteria:
+
+- Additional adjudications reference committed scored traces only.
+- External fixture review coverage improves and remains explicit in the adjudication manifest and regression snapshot.
+- No scorer behavior changes are accepted unless a separate deterministic phase includes focused tests and full quality-gate validation.
 
 ## Hermes And OpenClaw Position
 

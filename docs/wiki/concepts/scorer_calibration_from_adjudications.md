@@ -6,6 +6,8 @@ M45 expands the calibration inputs beyond the baseline mock trace by adding publ
 
 M46 resolves the remaining ambiguous reviews. After M46, calibration summaries should show zero `ambiguous_review` records unless a future review fixture deliberately reintroduces discussion items.
 
+M47 triages the current scorer-refinement candidates and records that no scorer-code change is accepted yet. The current calibration evidence is used for future test planning, not immediate behavior changes.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`

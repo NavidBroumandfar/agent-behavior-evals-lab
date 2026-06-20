@@ -58,10 +58,10 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 
 | Metric | Value |
 | --- | ---: |
-| Report artifacts | 24 |
-| Quality-gate artifacts | 24 |
-| Markdown reports | 17 |
-| JSON snapshots | 7 |
+| Report artifacts | 26 |
+| Quality-gate artifacts | 26 |
+| Markdown reports | 18 |
+| JSON snapshots | 8 |
 
 ## Gap Report
 
@@ -79,7 +79,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Gap | Severity | Summary | Sources |
 | --- | --- | --- | --- |
 | `heuristic_scorer_not_semantic_judge` | high | The v0 scorer uses deterministic phrase and pattern checks, so scores are triage signals rather than ground truth. | `src/scorers.py`, `docs/wiki/concepts/v0_scorer_limitations.md` |
-| `limited_adjudication_calibration_set` | medium | 20 adjudications cover 3 source traces; 5 external fixture traces still need calibration coverage. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
+| `limited_adjudication_calibration_set` | medium | 20 adjudications cover 3 source traces; 5 external fixture traces still need calibration coverage. M47 triage keeps scorer changes deferred until more focused evidence is available. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json`, `reports/comparisons/scorer_refinement_triage.json` |
 | `failure_modes_are_taxonomy_bound` | medium | Current scored traces surface this fixed failure-mode set: failure_to_clarify, fake_completion_claim, hallucinated_tool_use, incomplete_risk_disclosure, missing_approval_gate, over_refusal, unsafe_compliance, unsupported_claim; semantic variants still require review. | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, +5 more |
 
 ### Reporting Weakness
@@ -88,14 +88,14 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | --- | --- | --- | --- |
 | `trend_snapshots_are_descriptive_not_gates` | low | Historical trend snapshots are present, but they describe evaluator health and do not prove model performance. | `reports/comparisons/historical_trend_snapshot.json`, `reports/comparisons/historical_trend_report.md`, `reports/comparisons/report_manifest.json` |
 | `audit_findings_are_not_gate_thresholds` | low | M40 recommendations are descriptive evidence gaps; they do not automatically fail or rewrite scored traces. | `reports/comparisons/report_manifest.json`, `reports/comparisons/evidence_quality_audit.json` |
-| `report_artifacts_outpace_review_depth` | low | 24 report artifacts are indexed, while 20 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
+| `report_artifacts_outpace_review_depth` | low | 26 report artifacts are indexed, while 20 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
 
 ## Recommendations
 
 | Recommendation | Phase | Priority | Summary |
 | --- | --- | --- | --- |
 | `prioritize_public_safe_transcripts_for_review` | `M45` | high | Continue using public-safe transcript and adapter-output fixtures as priority sources for external fixture adjudication and calibration. |
-| `calibrate_before_scorer_changes` | `M47` | high | Triage deterministic scorer or rubric refinements only after reviewing the remaining external fixture coverage gaps. |
+| `calibrate_before_scorer_changes` | `M48` | high | Broaden public-safe review coverage before accepting deterministic scorer or rubric refinements. |
 | `maintain_evaluator_health_trends` | `M43` | medium | Keep versioned trend snapshots reviewed when committed reports, fixtures, or adjudication artifacts change. |
 
 ## Boundary
@@ -118,6 +118,8 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 - `reports/comparisons/reporting_product_summary.json`
 - `reports/comparisons/historical_trend_snapshot.json`
 - `reports/comparisons/historical_trend_report.md`
+- `reports/comparisons/scorer_refinement_triage.json`
+- `reports/comparisons/scorer_refinement_triage.md`
 - `traces/external/harness_bridge_plan.example.json`
 - `src/scorers.py`
 - `docs/wiki/concepts/v0_scorer_limitations.md`

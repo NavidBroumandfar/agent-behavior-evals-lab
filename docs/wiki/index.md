@@ -36,6 +36,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Scorer Calibration From Adjudications](concepts/scorer_calibration_from_adjudications.md)
 - [External Fixture Adjudication Coverage](concepts/external_fixture_adjudication_coverage.md)
 - [Needs-Discussion Resolution](concepts/needs_discussion_resolution.md)
+- [Deterministic Scorer Refinement Triage](concepts/deterministic_scorer_refinement_triage.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -87,6 +88,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
 - Scorer calibration from adjudications: `src/scorer_calibration_summary.py`, `reports/comparisons/scorer_calibration_summary.json`, and `reports/comparisons/scorer_calibration_summary.md`
+- Scorer refinement triage: `src/scorer_refinement_triage.py`, `reports/comparisons/scorer_refinement_triage.json`, and `reports/comparisons/scorer_refinement_triage.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`
@@ -145,6 +147,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 44 closeout: `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md`
 - Milestone 45 closeout: `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md`
 - Milestone 46 closeout: `docs/milestones/m46-needs-discussion-resolution-closeout.md`
+- Milestone 47 closeout: `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md`
 
 ## Reading Order
 

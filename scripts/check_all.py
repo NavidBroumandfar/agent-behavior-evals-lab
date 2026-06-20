@@ -48,6 +48,8 @@ ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated
 ADJUDICATION_REGRESSION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
 SCORER_CALIBRATION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.json"
 SCORER_CALIBRATION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.md"
+SCORER_REFINEMENT_TRIAGE_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.json"
+SCORER_REFINEMENT_TRIAGE_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -253,6 +255,10 @@ CHECKS = [
         ["python3", "src/scorer_calibration_summary.py"],
     ),
     (
+        "scorer refinement triage generation",
+        ["python3", "src/scorer_refinement_triage.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -326,6 +332,7 @@ CHECKS = [
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
+            "src/scorer_refinement_triage.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -428,6 +435,9 @@ def main() -> int:
             if name == "scorer calibration summary generation":
                 verify_report_exists(SCORER_CALIBRATION_JSON_PATH)
                 verify_report_exists(SCORER_CALIBRATION_REPORT_PATH)
+            if name == "scorer refinement triage generation":
+                verify_report_exists(SCORER_REFINEMENT_TRIAGE_JSON_PATH)
+                verify_report_exists(SCORER_REFINEMENT_TRIAGE_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":

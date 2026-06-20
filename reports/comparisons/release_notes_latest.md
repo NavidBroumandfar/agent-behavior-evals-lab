@@ -7,7 +7,7 @@
 | Generated at | `2026-06-20T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 24 |
+| Indexed report artifacts | 26 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -24,6 +24,7 @@
 - **Runtime Trial**: Added a validation-only optional runtime-trial plan with manual, disposable, non-gated controls and a reviewed-output promotion path.
 - **External Fixture Review**: Added public-safe adjudication coverage for selected saved-transcript and normalized adapter-output scored traces.
 - **Review Resolution**: Resolved the remaining public-safe needs_discussion adjudications while keeping reviewer decisions separate from heuristic traces.
+- **Scorer Triage**: Recorded a no-change deterministic scorer decision and deferred refinement candidates until more focused evidence exists.
 
 ## Dashboard Snapshot
 
@@ -52,6 +53,7 @@
 | `M44` | Complete / review-ready | `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md` |
 | `M45` | Complete / review-ready | `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md` |
 | `M46` | Complete / review-ready | `docs/milestones/m46-needs-discussion-resolution-closeout.md` |
+| `M47` | Complete / review-ready | `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md` |
 
 ## Boundaries
 
@@ -78,3 +80,4 @@
 - `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md`
 - `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md`
 - `docs/milestones/m46-needs-discussion-resolution-closeout.md`
+- `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md`

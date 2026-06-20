@@ -33,6 +33,8 @@ REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
 PRODUCT_SUMMARY_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
 HISTORICAL_TREND_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_snapshot.json"
 HISTORICAL_TREND_REPORT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_report.md"
+SCORER_REFINEMENT_TRIAGE_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.json"
+SCORER_REFINEMENT_TRIAGE_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.md"
 HARNESS_BRIDGE_PLAN_PATH = REPO_ROOT / "traces/external/harness_bridge_plan.example.json"
 SCORER_PATH = REPO_ROOT / "src/scorers.py"
 SCORER_LIMITATIONS_PATH = REPO_ROOT / "docs/wiki/concepts/v0_scorer_limitations.md"
@@ -370,9 +372,14 @@ def build_gap_report(
             "medium",
             (
                 f"{adjudication_inventory['adjudication_records']} adjudications cover "
-                f"{adjudication_inventory['source_trace_count']} source traces; {external_calibration_summary}"
+                f"{adjudication_inventory['source_trace_count']} source traces; {external_calibration_summary} "
+                "M47 triage keeps scorer changes deferred until more focused evidence is available."
             ),
-            [display_path(ADJUDICATION_MANIFEST_PATH), display_path(ADJUDICATION_SNAPSHOT_PATH)],
+            [
+                display_path(ADJUDICATION_MANIFEST_PATH),
+                display_path(ADJUDICATION_SNAPSHOT_PATH),
+                display_path(SCORER_REFINEMENT_TRIAGE_PATH),
+            ],
         ),
         gap(
             "failure_modes_are_taxonomy_bound",
@@ -472,8 +479,8 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "recommendation_id": "calibrate_before_scorer_changes",
             "priority": "high",
-            "target_phase": "M47",
-            "summary": "Triage deterministic scorer or rubric refinements only after reviewing the remaining external fixture coverage gaps.",
+            "target_phase": "M48",
+            "summary": "Broaden public-safe review coverage before accepting deterministic scorer or rubric refinements.",
             "source_gap_ids": [
                 "heuristic_scorer_not_semantic_judge",
                 "limited_adjudication_calibration_set",
@@ -577,6 +584,8 @@ def source_paths() -> list[str]:
         PRODUCT_SUMMARY_PATH,
         HISTORICAL_TREND_SNAPSHOT_PATH,
         HISTORICAL_TREND_REPORT_PATH,
+        SCORER_REFINEMENT_TRIAGE_PATH,
+        SCORER_REFINEMENT_TRIAGE_REPORT_PATH,
         HARNESS_BRIDGE_PLAN_PATH,
         SCORER_PATH,
         SCORER_LIMITATIONS_PATH,

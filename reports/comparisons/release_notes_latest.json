@@ -62,6 +62,10 @@
     {
       "area": "Review Resolution",
       "summary": "Resolved the remaining public-safe needs_discussion adjudications while keeping reviewer decisions separate from heuristic traces."
+    },
+    {
+      "area": "Scorer Triage",
+      "summary": "Recorded a no-change deterministic scorer decision and deferred refinement candidates until more focused evidence exists."
     }
   ],
   "milestones": [
@@ -148,15 +152,22 @@
       "path": "docs/milestones/m46-needs-discussion-resolution-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 46 - Needs-Discussion Resolution"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M47",
+      "path": "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 47 - Deterministic Scorer Refinement Triage"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 7,
+    "json_snapshots": 8,
     "live_execution": false,
-    "markdown_reports": 17,
-    "report_artifacts_indexed": 24
+    "markdown_reports": 18,
+    "report_artifacts_indexed": 26
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -186,7 +197,8 @@
     "docs/milestones/m43-historical-trend-snapshots-closeout.md",
     "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
     "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
-    "docs/milestones/m46-needs-discussion-resolution-closeout.md"
+    "docs/milestones/m46-needs-discussion-resolution-closeout.md",
+    "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

@@ -280,11 +280,18 @@
       ]
     },
     "report_manifest_coverage": {
-      "json_snapshots": 7,
-      "markdown_reports": 17,
-      "public_safe_artifacts": 24,
-      "quality_gate_artifacts": 24,
-      "report_artifacts": 24
+      "json_snapshots": 8,
+      "markdown_reports": 18,
+      "public_safe_artifacts": 26,
+      "quality_gate_artifacts": 26,
+      "report_artifacts": 26
+    },
+    "scorer_refinement_triage": {
+      "accepted_scorer_changes": 0,
+      "candidates": 2,
+      "deferred_scorer_changes": 2,
+      "scorer_change_decision": "no_scorer_change_accepted",
+      "scorer_code_changed": false
     }
   },
   "generated_at": "2026-06-20T00:00:00Z",
@@ -310,6 +317,7 @@
     "reports/comparisons/report_manifest.json",
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/scorer_calibration_summary.json",
+    "reports/comparisons/scorer_refinement_triage.json",
     "traces/external/adapter_outputs.example.jsonl",
     "traces/external/adjudication_manifest.json",
     "traces/external/dry_run_adapter_outputs.jsonl",
@@ -406,9 +414,9 @@
       "metrics": {
         "external_fixture_pass_rate": "55.9%",
         "fixture_groups": 7,
-        "json_snapshots": 7,
-        "markdown_reports": 17,
-        "report_artifacts": 24
+        "json_snapshots": 8,
+        "markdown_reports": 18,
+        "report_artifacts": 26
       },
       "phase": "reporting_history",
       "source_paths": [
@@ -444,6 +452,21 @@
         "traces/external/adjudication_manifest.json",
         "reports/comparisons/adjudication_regression_snapshot.json",
         "reports/comparisons/scorer_calibration_summary.json"
+      ]
+    },
+    {
+      "checkpoint_id": "m47_deterministic_scorer_refinement_triage",
+      "metrics": {
+        "accepted_scorer_changes": 0,
+        "candidates": 2,
+        "deferred_scorer_changes": 2,
+        "scorer_code_changed": false
+      },
+      "phase": "scorer_refinement_triage",
+      "source_paths": [
+        "reports/comparisons/scorer_refinement_triage.json",
+        "reports/comparisons/scorer_calibration_summary.json",
+        "src/scorers.py"
       ]
     }
   ]

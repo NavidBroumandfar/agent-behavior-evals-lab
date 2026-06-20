@@ -37,9 +37,11 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 2)
         self.assertEqual(current["adjudication_outcomes"]["reviewer_decisions"]["needs_discussion"], 0)
         self.assertEqual(current["adjudication_outcomes"]["calibration_label_counts"]["ambiguous_review"], 0)
-        self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 24)
-        self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 7)
-        self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 17)
+        self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 26)
+        self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 8)
+        self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 18)
+        self.assertEqual(current["scorer_refinement_triage"]["accepted_scorer_changes"], 0)
+        self.assertEqual(current["scorer_refinement_triage"]["deferred_scorer_changes"], 2)
 
     def test_versioned_checkpoints_cover_recent_roadmap_phases(self):
         snapshot = build_trend_snapshot()
@@ -55,6 +57,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
                 "m43_historical_trend_snapshot",
                 "m45_external_fixture_adjudication_coverage",
                 "m46_needs_discussion_resolution",
+                "m47_deterministic_scorer_refinement_triage",
             ],
         )
 

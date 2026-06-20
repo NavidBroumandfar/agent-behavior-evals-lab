@@ -80,7 +80,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "24 report artifacts are indexed, while 20 adjudication records exist."
+        "summary": "26 report artifacts are indexed, while 20 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -98,9 +98,10 @@
         "severity": "medium",
         "source_paths": [
           "traces/external/adjudication_manifest.json",
-          "reports/comparisons/adjudication_regression_snapshot.json"
+          "reports/comparisons/adjudication_regression_snapshot.json",
+          "reports/comparisons/scorer_refinement_triage.json"
         ],
-        "summary": "20 adjudications cover 3 source traces; 5 external fixture traces still need calibration coverage."
+        "summary": "20 adjudications cover 3 source traces; 5 external fixture traces still need calibration coverage. M47 triage keeps scorer changes deferred until more focused evidence is available."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -529,6 +530,8 @@
         "reports/comparisons/adjudication_regression_snapshot.json",
         "reports/comparisons/scorer_calibration_summary.json",
         "reports/comparisons/scorer_calibration_summary.md",
+        "reports/comparisons/scorer_refinement_triage.json",
+        "reports/comparisons/scorer_refinement_triage.md",
         "reports/comparisons/baseline_self_comparison_report.md",
         "reports/comparisons/reporting_product_summary.json",
         "reports/comparisons/reporting_product_summary.md",
@@ -539,11 +542,11 @@
         "reports/comparisons/release_notes_latest.json",
         "reports/comparisons/release_notes_latest.md"
       ],
-      "json_snapshots": 7,
-      "markdown_reports": 17,
-      "public_safe_artifacts": 24,
-      "quality_gate_artifacts": 24,
-      "report_artifacts": 24
+      "json_snapshots": 8,
+      "markdown_reports": 18,
+      "public_safe_artifacts": 26,
+      "quality_gate_artifacts": 26,
+      "report_artifacts": 26
     },
     "scored_traces": {
       "baseline": {
@@ -619,8 +622,8 @@
         "heuristic_scorer_not_semantic_judge",
         "limited_adjudication_calibration_set"
       ],
-      "summary": "Triage deterministic scorer or rubric refinements only after reviewing the remaining external fixture coverage gaps.",
-      "target_phase": "M47"
+      "summary": "Broaden public-safe review coverage before accepting deterministic scorer or rubric refinements.",
+      "target_phase": "M48"
     },
     {
       "priority": "medium",
@@ -655,6 +658,8 @@
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/historical_trend_snapshot.json",
     "reports/comparisons/historical_trend_report.md",
+    "reports/comparisons/scorer_refinement_triage.json",
+    "reports/comparisons/scorer_refinement_triage.md",
     "traces/external/harness_bridge_plan.example.json",
     "src/scorers.py",
     "docs/wiki/concepts/v0_scorer_limitations.md",
