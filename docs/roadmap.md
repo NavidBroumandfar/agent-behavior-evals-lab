@@ -18,6 +18,7 @@ The repository currently has a deterministic local evaluation harness:
 - Regression snapshots, comparison reports, failure inspection, and human adjudication overlays.
 - Schema validators, fixture manifests, report manifests, and a local quality gate.
 - Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, a controlled local agent sandbox pilot, and an optional harness-integration decision gate.
+- Reporting product summaries and deterministic release-note artifacts.
 
 The current baseline is still a mock evaluation. It is useful for validating the evaluator pipeline, but it is not a live model, Hermes, OpenClaw, or production agent benchmark.
 
@@ -245,6 +246,30 @@ Acceptance criteria:
 - Reports remain traceable to source fixtures and scored traces.
 - Report manifests continue to index deterministic quality-gate artifacts.
 - The lab helps decide whether behavior improved, regressed, or needs review.
+
+### M39: Release Notes Reporting
+
+Turn the reporting product layer into release-ready handoff artifacts.
+
+Status: complete / review-ready. See `docs/milestones/m39-release-notes-reporting-closeout.md`.
+
+Implementation note:
+
+- M39 adds deterministic release-note JSON and Markdown generated from the M38 product summary, report manifest, roadmap, and M35-M39 milestone closeouts.
+- No live output collection, scorer changes, provider calls, model execution, harness execution, network access, private data, or external actions are introduced.
+
+Deliverables:
+
+- Release-ready JSON snapshot.
+- Reader-facing release notes.
+- Milestone rollup for recent roadmap phases.
+- Report-manifest coverage for release artifacts.
+
+Acceptance criteria:
+
+- Release notes remain traceable to committed local artifacts.
+- Report manifests index the new release artifacts.
+- The release handoff preserves the evaluator boundary and avoids benchmark claims.
 
 ## Hermes And OpenClaw Position
 

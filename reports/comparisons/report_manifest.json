@@ -347,6 +347,64 @@
         "contains_private_data": false,
         "credentials_required": false
       }
+    },
+    {
+      "artifact_id": "release_notes_latest_snapshot",
+      "label": "Latest Release Notes JSON",
+      "path": "reports/comparisons/release_notes_latest.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/release_notes_summary.py",
+      "input_paths": [
+        "reports/comparisons/reporting_product_summary.json",
+        "reports/comparisons/report_manifest.json",
+        "docs/roadmap.md",
+        "docs/milestones/m35-openclaw-saved-transcript-pilot-closeout.md",
+        "docs/milestones/m36-controlled-live-agent-sandbox-closeout.md",
+        "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
+        "docs/milestones/m38-reporting-product-layer-closeout.md",
+        "docs/milestones/m39-release-notes-reporting-closeout.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/reporting_product_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Release-ready deterministic JSON snapshot generated from reporting summary, manifest, roadmap, and milestone closeouts.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "release_notes_latest_report",
+      "label": "Latest Release Notes Report",
+      "path": "reports/comparisons/release_notes_latest.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/release_notes_summary.py",
+      "input_paths": [
+        "reports/comparisons/reporting_product_summary.json",
+        "reports/comparisons/report_manifest.json",
+        "docs/roadmap.md",
+        "docs/milestones/m35-openclaw-saved-transcript-pilot-closeout.md",
+        "docs/milestones/m36-controlled-live-agent-sandbox-closeout.md",
+        "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
+        "docs/milestones/m38-reporting-product-layer-closeout.md",
+        "docs/milestones/m39-release-notes-reporting-closeout.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/release_notes_latest.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing release notes generated from the M39 release-note JSON snapshot sources.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
     }
   ]
 }

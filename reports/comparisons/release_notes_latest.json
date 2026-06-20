@@ -1,0 +1,108 @@
+{
+  "boundaries": [
+    "No live provider APIs or provider SDKs.",
+    "No local model execution.",
+    "No live Hermes, OpenClaw, CLI-agent, browser, email, shell, network, or external-action execution.",
+    "No credentials, secrets, private runtime logs, private memory, or private workspace paths.",
+    "No leaderboard or production benchmark claims."
+  ],
+  "dashboard_snapshot": {
+    "adjudication_records": 12,
+    "baseline_failed": 11,
+    "baseline_pass_rate": "91.3%",
+    "baseline_records": 126,
+    "external_fixture_groups": 6,
+    "external_fixture_records": 26,
+    "harness_bridge_decision": "defer_harness_integration",
+    "review_needs_discussion": 3,
+    "runtime_native_state_required": false
+  },
+  "generated_at": "2026-06-20T00:00:00Z",
+  "highlights": [
+    {
+      "area": "Reporting",
+      "summary": "Added dashboard-ready JSON, product summary Markdown, and release-note outputs from local artifacts."
+    },
+    {
+      "area": "Quality Gate",
+      "summary": "Local deterministic gate remains stable; no live runtime integration is enabled."
+    },
+    {
+      "area": "Harness Boundary",
+      "summary": "Harness decision remains defer_harness_integration; runtime-native state required is false."
+    },
+    {
+      "area": "Review",
+      "summary": "12 adjudication records are tracked; 3 still need discussion."
+    }
+  ],
+  "milestones": [
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M35",
+      "path": "docs/milestones/m35-openclaw-saved-transcript-pilot-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 35 - OpenClaw Saved-Transcript Pilot"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M36",
+      "path": "docs/milestones/m36-controlled-live-agent-sandbox-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 36 - Controlled Live Agent Sandbox"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M37",
+      "path": "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 37 - Optional Harness Integration Decision"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M38",
+      "path": "docs/milestones/m38-reporting-product-layer-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 38 - Reporting Product Layer"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M39",
+      "path": "docs/milestones/m39-release-notes-reporting-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 39 - Release Notes Reporting"
+    }
+  ],
+  "quality_gate": {
+    "command": "python3 scripts/dev.py check",
+    "deterministic_local_only": true,
+    "json_snapshots": 4,
+    "live_execution": false,
+    "markdown_reports": 13,
+    "report_artifacts_indexed": 17
+  },
+  "release_id": "m39_release_notes_latest",
+  "release_readiness": {
+    "next_step": "Use the release notes as the reader-facing handoff for the completed local roadmap extension.",
+    "status": "local_quality_gate_ready",
+    "summary": "The release notes summarize committed local artifacts and preserve the no-live-execution boundary."
+  },
+  "safety": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "source_paths": [
+    "reports/comparisons/reporting_product_summary.json",
+    "reports/comparisons/report_manifest.json",
+    "docs/roadmap.md",
+    "docs/milestones/m35-openclaw-saved-transcript-pilot-closeout.md",
+    "docs/milestones/m36-controlled-live-agent-sandbox-closeout.md",
+    "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
+    "docs/milestones/m38-reporting-product-layer-closeout.md",
+    "docs/milestones/m39-release-notes-reporting-closeout.md"
+  ],
+  "title": "Agent Behavior Evals Lab Release Notes"
+}

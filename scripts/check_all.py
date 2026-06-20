@@ -33,6 +33,8 @@ EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/exter
 BASELINE_SELF_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/baseline_self_comparison_report.md"
 REPORTING_PRODUCT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
 REPORTING_PRODUCT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.md"
+RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
+RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 ADJUDICATION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudication_summary_report.md"
 ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated_aggregate_report.md"
@@ -224,6 +226,10 @@ CHECKS = [
         ["python3", "src/reporting_product_summary.py"],
     ),
     (
+        "release notes summary generation",
+        ["python3", "src/release_notes_summary.py"],
+    ),
+    (
         "report manifest validation",
         ["python3", "src/validate_report_manifest.py"],
     ),
@@ -266,6 +272,7 @@ CHECKS = [
             "src/adjudication_regression_check.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
+            "src/release_notes_summary.py",
             "scripts/dev.py",
         ],
     ),
@@ -359,6 +366,9 @@ def main() -> int:
             if name == "reporting product summary generation":
                 verify_report_exists(REPORTING_PRODUCT_SUMMARY_JSON_PATH)
                 verify_report_exists(REPORTING_PRODUCT_SUMMARY_REPORT_PATH)
+            if name == "release notes summary generation":
+                verify_report_exists(RELEASE_NOTES_JSON_PATH)
+                verify_report_exists(RELEASE_NOTES_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
