@@ -208,6 +208,7 @@ CHECKS = [
             "src/validate_adapter_outputs.py",
             "src/import_adapter_outputs.py",
             "src/dry_run_adapter.py",
+            "src/text_only_adapter.py",
             "src/compare_external_fixtures.py",
             "src/validate_fixture_manifest.py",
             "src/validate_adapter_run_metadata.py",

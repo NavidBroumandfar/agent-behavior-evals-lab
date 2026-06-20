@@ -112,6 +112,8 @@ Acceptance criteria:
 
 Add one controlled adapter path for real target outputs, final text only.
 
+Status: complete / review-ready. See `docs/milestones/m33-first-real-text-only-adapter-closeout.md`.
+
 Scope:
 
 - No tool execution.

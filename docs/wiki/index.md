@@ -65,6 +65,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adapter run metadata: `traces/external/adapter_run_metadata.example.json` and `src/validate_adapter_run_metadata.py`
 - Target registry: `targets/target_registry.json` and `src/target_registry.py`
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
+- Controlled text-only adapter: `src/text_only_adapter.py`
 - Reviewed output promotion: `src/promote_reviewed_outputs.py`
 - Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, and `src/validate_adjudications.py`
 - Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`, `schemas/adjudication_manifest.schema.json`, and `src/validate_adjudication_manifest.py`
@@ -110,6 +111,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 30 closeout: `docs/milestones/m30-project-packaging-ci-closeout.md`
 - Milestone 31 closeout: `docs/milestones/m31-eval-suite-expansion-closeout.md`
 - Milestone 32 closeout: `docs/milestones/m32-scorer-review-hardening-closeout.md`
+- Milestone 33 closeout: `docs/milestones/m33-first-real-text-only-adapter-closeout.md`
 
 ## Reading Order
 
