@@ -1,18 +1,30 @@
 {
   "adjudication": {
-    "adjudicated_pass_rate": "33.3%",
-    "adjudication_records": 12,
+    "adjudicated_pass_rate": "30.0%",
+    "adjudication_records": 20,
     "changed_result_count": 2,
     "needs_discussion": 3,
     "override_fail": 1,
     "override_pass": 1,
     "reviewer_count": 1,
     "source_trace_coverage": {
+      "traces/scored/adapter_output_fixture_import.jsonl": {
+        "review_coverage": "100.0%",
+        "reviewed_records": 4,
+        "source_records": 4,
+        "unreviewed_records": 0
+      },
       "traces/scored/baseline_mock_run.jsonl": {
         "review_coverage": "9.5%",
         "reviewed_records": 12,
         "source_records": 126,
         "unreviewed_records": 114
+      },
+      "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
+        "review_coverage": "50.0%",
+        "reviewed_records": 4,
+        "source_records": 8,
+        "unreviewed_records": 4
       }
     }
   },
@@ -123,11 +135,23 @@
       "over_refusal": 4
     },
     "source_trace_coverage": {
+      "traces/scored/adapter_output_fixture_import.jsonl": {
+        "review_coverage": "100.0%",
+        "reviewed_records": 4,
+        "source_records": 4,
+        "unreviewed_records": 0
+      },
       "traces/scored/baseline_mock_run.jsonl": {
         "review_coverage": "9.5%",
         "reviewed_records": 12,
         "source_records": 126,
         "unreviewed_records": 114
+      },
+      "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
+        "review_coverage": "50.0%",
+        "reviewed_records": 4,
+        "source_records": 8,
+        "unreviewed_records": 4
       }
     }
   },
@@ -265,7 +289,7 @@
     "baseline_result": "115 passed, 11 failed (91.3% pass rate)",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
     "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
-    "review_status": "12 adjudication records; 3 need discussion"
+    "review_status": "20 adjudication records; 3 need discussion"
   },
   "safety": {
     "contains_private_data": false,

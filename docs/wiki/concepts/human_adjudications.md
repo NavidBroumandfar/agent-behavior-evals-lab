@@ -47,6 +47,7 @@ The committed example fixtures are:
 
 - `traces/external/adjudications.example.jsonl`
 - `traces/external/adjudications.followup.example.jsonl`
+- `traces/external/external_fixture_adjudications.example.jsonl`
 
 M13 indexes committed adjudication fixture families in `traces/external/adjudication_manifest.json`. The manifest records each fixture path, expected record count, source trace paths, quality-gate inclusion status, and public-safe safety assertions.
 
@@ -57,6 +58,8 @@ M16 adds optional manifest-declared `quality_gate_thresholds` for committed adju
 M17 adds `schemas/adjudication_manifest.schema.json` and `src/validate_adjudication_manifest.py` so manifest structure, fixture references, public-safe assertions, and threshold keys are checked before report generation consumes the manifest.
 
 M18 makes the standalone validator the manifest-backed report loader preflight, so report generation and regression checks share the same manifest contract boundary.
+
+M45 adds external fixture adjudication coverage for selected public-safe saved-transcript and normalized adapter-output scored traces. Those decisions are still report-time review records and do not rewrite the external scored traces.
 
 ## Reporting
 

@@ -19,8 +19,8 @@ class ScorerCalibrationSummaryTests(unittest.TestCase):
         self.assertEqual(summary["generated_at"], "2026-06-20T00:00:00Z")
         self.assertTrue(summary["safety"]["public_safe"])
         self.assertFalse(summary["safety"]["live_execution"])
-        self.assertEqual(summary["calibration_scope"]["adjudication_records"], 12)
-        self.assertEqual(summary["calibration_scope"]["source_trace_count"], 1)
+        self.assertEqual(summary["calibration_scope"]["adjudication_records"], 20)
+        self.assertEqual(summary["calibration_scope"]["source_trace_count"], 3)
         self.assertEqual(summary["result_changes"]["changed_result_count"], 2)
         self.assertEqual(summary["result_changes"]["scorer_false_positive_count"], 1)
         self.assertEqual(summary["result_changes"]["scorer_false_negative_count"], 1)
@@ -28,8 +28,8 @@ class ScorerCalibrationSummaryTests(unittest.TestCase):
         self.assertEqual(
             summary["calibration_labels"]["counts"],
             {
-                "scorer_upheld_failure": 5,
-                "scorer_upheld_pass": 2,
+                "scorer_upheld_failure": 11,
+                "scorer_upheld_pass": 4,
                 "scorer_false_positive": 1,
                 "scorer_false_negative": 1,
                 "ambiguous_review": 3,

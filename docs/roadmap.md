@@ -411,7 +411,13 @@ Acceptance criteria:
 
 Increase reviewer coverage for committed public-safe external fixture groups before revisiting runtime-native evidence.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md`.
+
+Implementation note:
+
+- M45 adds a manifest-backed public-safe adjudication fixture for selected saved-transcript and normalized adapter-output scored traces.
+- The phase increases calibration and evidence-audit coverage from one source trace to three source traces.
+- No scored traces are rewritten, no scorer changes are accepted, and reviewer decisions remain a report-time interpretation layer.
 
 Recommended scope:
 
@@ -425,6 +431,25 @@ Acceptance criteria:
 - Adjudications reference committed scored traces only.
 - External fixture review coverage is explicit in the adjudication manifest and regression snapshot.
 - No live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, or private-log dependency is introduced.
+
+### M46: Needs-Discussion Resolution
+
+Resolve the remaining public-safe adjudication records that are still marked `needs_discussion` before considering deterministic scorer changes.
+
+Status: planned.
+
+Recommended scope:
+
+- Add follow-up public-safe reviewer decisions that either uphold the original score or promote an explicit override.
+- Keep the original ambiguous records for history unless a new fixture supersedes them through the manifest.
+- Update calibration summaries, evidence audits, and trend snapshots after the discussion queue changes.
+- Continue to avoid live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, private-log, or gated LLM review dependencies.
+
+Acceptance criteria:
+
+- The remaining `needs_discussion` count is lower and explicitly tracked in the adjudication regression snapshot.
+- Any override has a concrete policy rationale and remains separate from heuristic scored traces.
+- No scorer change is accepted unless a separate deterministic phase adds focused tests and regression coverage.
 
 ## Hermes And OpenClaw Position
 

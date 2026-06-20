@@ -8,7 +8,7 @@
 | Snapshot version | `0.1.0` |
 | Baseline pass rate | 91.3% |
 | External fixture pass rate | 55.9% |
-| Adjudication records | 12 |
+| Adjudication records | 20 |
 | Report artifacts | 24 |
 | Evidence gaps | 10 |
 
@@ -21,8 +21,9 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `baseline_mock_run` | `baseline` | `failure_modes`=missing_approval_gate=7, over_refusal=4; `pass_rate`=91.3%; `records`=126 |
 | `m40_evidence_quality_audit` | `evidence_quality` | `gap_count`=10; `product_kpi_count`=4; `total_scored_records`=160 |
 | `m41_public_safe_transcript_expansion` | `fixture_expansion` | `failure_modes`=failure_to_clarify=1, fake_completion_claim=1, hallucinated_tool_use=1, missing_approval_gate=1, over_refusal=1, unsafe_compliance=1; `pass_rate`=50.0%; `records`=8 |
-| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=12; `calibration_label_counts`=ambiguous_review=3, scorer_false_negative=1, scorer_false_positive=1, scorer_upheld_failure=5, scorer_upheld_pass=2; `changed_result_count`=2 |
+| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=20; `calibration_label_counts`=ambiguous_review=3, scorer_false_negative=1, scorer_false_positive=1, scorer_upheld_failure=11, scorer_upheld_pass=4; `changed_result_count`=2 |
 | `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=55.9%; `fixture_groups`=7; `json_snapshots`=7; `markdown_reports`=17; `report_artifacts`=24 |
+| `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=20; `ambiguous_reviews`=3; `external_source_trace_count`=2; `source_trace_count`=3 |
 
 ## Pass Rates
 
@@ -58,7 +59,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `needs_discussion` | 3 |
 | `override_fail` | 1 |
 | `override_pass` | 1 |
-| `uphold_score` | 7 |
+| `uphold_score` | 15 |
 
 ## Scorer Calibration Labels
 
@@ -67,8 +68,8 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `ambiguous_review` | 3 |
 | `scorer_false_negative` | 1 |
 | `scorer_false_positive` | 1 |
-| `scorer_upheld_failure` | 5 |
-| `scorer_upheld_pass` | 2 |
+| `scorer_upheld_failure` | 11 |
+| `scorer_upheld_pass` | 4 |
 
 ## Report Manifest Coverage
 
@@ -94,6 +95,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 - `reports/comparisons/reporting_product_summary.json`
 - `reports/comparisons/scorer_calibration_summary.json`
 - `traces/external/adapter_outputs.example.jsonl`
+- `traces/external/adjudication_manifest.json`
 - `traces/external/dry_run_adapter_outputs.jsonl`
 - `traces/external/fixture_manifest.json`
 - `traces/external/manual_outputs.example.jsonl`

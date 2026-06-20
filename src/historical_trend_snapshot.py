@@ -21,6 +21,7 @@ GENERATED_AT = "2026-06-20T00:00:00Z"
 
 BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 FIXTURE_MANIFEST_PATH = REPO_ROOT / "traces/external/fixture_manifest.json"
+ADJUDICATION_MANIFEST_PATH = REPO_ROOT / "traces/external/adjudication_manifest.json"
 ADJUDICATION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
 SCORER_CALIBRATION_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.json"
 REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
@@ -182,10 +183,16 @@ def adjudication_outcomes(
 
     reviewer_decisions = adjudication_snapshot.get("reviewer_decisions", {})
     result_summary = adjudication_snapshot.get("result_summary", {})
+    coverage_by_source_trace = adjudication_snapshot.get("review_coverage_by_source_trace", {})
     calibration_counts = calibration_summary.get("calibration_labels", {}).get("counts", {})
     return {
         "adjudication_records": int(adjudication_snapshot.get("adjudication_records", 0)),
         "source_trace_count": int(adjudication_snapshot.get("source_trace_count", 0)),
+        "reviewed_external_source_trace_count": sum(
+            1
+            for source_path in coverage_by_source_trace
+            if str(source_path) != "traces/scored/baseline_mock_run.jsonl"
+        ),
         "reviewer_decisions": sorted_mapping(reviewer_decisions),
         "changed_result_count": int(result_summary.get("changed_result_count", 0)),
         "adjudicated_pass_rate": str(result_summary.get("adjudicated_pass_rate", "0.0%")),
@@ -305,6 +312,21 @@ def versioned_trend_snapshots(
                 "markdown_reports": manifest_coverage["markdown_reports"],
                 "fixture_groups": fixture_summary["counts"]["fixture_groups"],
                 "external_fixture_pass_rate": fixture_summary["aggregate"]["pass_rate"],
+            },
+        },
+        {
+            "checkpoint_id": "m45_external_fixture_adjudication_coverage",
+            "phase": "review_coverage",
+            "source_paths": [
+                display_path(ADJUDICATION_MANIFEST_PATH),
+                display_path(ADJUDICATION_SNAPSHOT_PATH),
+                display_path(SCORER_CALIBRATION_PATH),
+            ],
+            "metrics": {
+                "adjudication_records": adjudication["adjudication_records"],
+                "source_trace_count": adjudication["source_trace_count"],
+                "external_source_trace_count": adjudication["reviewed_external_source_trace_count"],
+                "ambiguous_reviews": adjudication["calibration_label_counts"].get("ambiguous_review", 0),
             },
         },
     ]
@@ -495,6 +517,7 @@ def source_paths(fixture_groups: list[dict[str, Any]]) -> list[str]:
     paths = [
         BASELINE_TRACE_PATH,
         FIXTURE_MANIFEST_PATH,
+        ADJUDICATION_MANIFEST_PATH,
         ADJUDICATION_SNAPSHOT_PATH,
         SCORER_CALIBRATION_PATH,
         REPORT_MANIFEST_PATH,

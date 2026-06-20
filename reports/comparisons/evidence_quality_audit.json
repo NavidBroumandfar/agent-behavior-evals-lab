@@ -39,11 +39,9 @@
           "traces/scored/openclaw_manual_eval.jsonl",
           "traces/scored/saved_transcript_replay_eval.jsonl",
           "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
-          "traces/scored/public_safe_transcript_expansion_eval.jsonl",
-          "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ],
-        "summary": "7 external scored traces have no committed adjudication coverage yet."
+        "summary": "5 external scored traces have no committed adjudication coverage yet."
       },
       {
         "gap_id": "refusal_required_review_gap",
@@ -52,7 +50,7 @@
           "reports/comparisons/adjudication_regression_snapshot.json",
           "traces/external/adjudication_manifest.json"
         ],
-        "summary": "Refusal-required baseline records have 0.0% adjudication coverage (0 reviewed records)."
+        "summary": "Refusal-required baseline records have 7.4% adjudication coverage (2 reviewed records)."
       }
     ],
     "reporting_weakness": [
@@ -82,7 +80,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "24 report artifacts are indexed, while 12 adjudication records exist."
+        "summary": "24 report artifacts are indexed, while 20 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -102,7 +100,7 @@
           "traces/external/adjudication_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "12 adjudications cover 1 source trace; external fixture traces are not calibrated yet."
+        "summary": "20 adjudications cover 3 source traces; 5 external fixture traces still need calibration coverage."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -121,7 +119,7 @@
       }
     ],
     "summary": {
-      "adjudication_records": 12,
+      "adjudication_records": 20,
       "case_count": 42,
       "external_fixture_records": 34,
       "gap_count": 10,
@@ -131,32 +129,32 @@
   "generated_at": "2026-06-20T00:00:00Z",
   "inventory": {
     "adjudications": {
-      "adjudication_fixture_count": 2,
-      "adjudication_records": 12,
+      "adjudication_fixture_count": 3,
+      "adjudication_records": 20,
       "category_coverage": {
         "approval_gated": {
-          "review_coverage": "11.9%",
-          "reviewed_records": 5,
-          "source_records": 42,
-          "unreviewed_records": 37
+          "review_coverage": "15.6%",
+          "reviewed_records": 7,
+          "source_records": 45,
+          "unreviewed_records": 38
         },
         "refusal_required": {
-          "review_coverage": "0.0%",
-          "reviewed_records": 0,
-          "source_records": 24,
-          "unreviewed_records": 24
+          "review_coverage": "7.4%",
+          "reviewed_records": 2,
+          "source_records": 27,
+          "unreviewed_records": 25
         },
         "safe_direct_response": {
-          "review_coverage": "13.9%",
-          "reviewed_records": 5,
-          "source_records": 36,
-          "unreviewed_records": 31
+          "review_coverage": "17.9%",
+          "reviewed_records": 7,
+          "source_records": 39,
+          "unreviewed_records": 32
         },
         "uncertainty_handling": {
-          "review_coverage": "8.3%",
-          "reviewed_records": 2,
-          "source_records": 24,
-          "unreviewed_records": 22
+          "review_coverage": "14.8%",
+          "reviewed_records": 4,
+          "source_records": 27,
+          "unreviewed_records": 23
         }
       },
       "needs_discussion": 3,
@@ -164,32 +162,44 @@
       "override_pass": 1,
       "profile_coverage": {
         "generic_assistant": {
-          "review_coverage": "16.7%",
-          "reviewed_records": 7,
-          "source_records": 42,
-          "unreviewed_records": 35
+          "review_coverage": "22.9%",
+          "reviewed_records": 11,
+          "source_records": 48,
+          "unreviewed_records": 37
         },
         "openclaw_reference_agent": {
-          "review_coverage": "0.0%",
-          "reviewed_records": 0,
-          "source_records": 42,
-          "unreviewed_records": 42
+          "review_coverage": "4.4%",
+          "reviewed_records": 2,
+          "source_records": 45,
+          "unreviewed_records": 43
         },
         "strict_approval_agent": {
-          "review_coverage": "11.9%",
-          "reviewed_records": 5,
-          "source_records": 42,
-          "unreviewed_records": 37
+          "review_coverage": "15.6%",
+          "reviewed_records": 7,
+          "source_records": 45,
+          "unreviewed_records": 38
         }
       },
       "reviewer_count": 1,
-      "source_trace_count": 1,
+      "source_trace_count": 3,
       "source_trace_coverage": {
+        "traces/scored/adapter_output_fixture_import.jsonl": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 4,
+          "source_records": 4,
+          "unreviewed_records": 0
+        },
         "traces/scored/baseline_mock_run.jsonl": {
           "review_coverage": "9.5%",
           "reviewed_records": 12,
           "source_records": 126,
           "unreviewed_records": 114
+        },
+        "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
+          "review_coverage": "50.0%",
+          "reviewed_records": 4,
+          "source_records": 8,
+          "unreviewed_records": 4
         }
       },
       "unadjudicated_external_scored_traces": [
@@ -197,8 +207,6 @@
         "traces/scored/openclaw_manual_eval.jsonl",
         "traces/scored/saved_transcript_replay_eval.jsonl",
         "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
-        "traces/scored/public_safe_transcript_expansion_eval.jsonl",
-        "traces/scored/adapter_output_fixture_import.jsonl",
         "traces/scored/dry_run_adapter_output_import.jsonl"
       ]
     },
@@ -600,8 +608,8 @@
         "external_fixture_adjudication_absent",
         "refusal_required_review_gap"
       ],
-      "summary": "Use the public-safe transcript expansion as a priority source for external fixture adjudication and calibration.",
-      "target_phase": "M42"
+      "summary": "Continue using public-safe transcript and adapter-output fixtures as priority sources for external fixture adjudication and calibration.",
+      "target_phase": "M45"
     },
     {
       "priority": "high",
@@ -611,8 +619,8 @@
         "heuristic_scorer_not_semantic_judge",
         "limited_adjudication_calibration_set"
       ],
-      "summary": "Add adjudications for external fixtures before accepting scorer refinements.",
-      "target_phase": "M42"
+      "summary": "Resolve the remaining discussion queue and broaden adjudications before accepting scorer refinements.",
+      "target_phase": "M46"
     },
     {
       "priority": "medium",

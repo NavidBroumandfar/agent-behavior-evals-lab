@@ -228,6 +228,10 @@ CHECKS = [
         ["python3", "src/validate_adjudications.py", "traces/external/adjudications.followup.example.jsonl"],
     ),
     (
+        "external fixture adjudication validation",
+        ["python3", "src/validate_adjudications.py", "traces/external/external_fixture_adjudications.example.jsonl"],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),

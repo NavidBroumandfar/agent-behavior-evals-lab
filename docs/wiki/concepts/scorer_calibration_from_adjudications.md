@@ -2,6 +2,8 @@
 
 M42 adds an advisory calibration layer that compares deterministic v0 scorer outcomes with committed public-safe adjudication records.
 
+M45 expands the calibration inputs beyond the baseline mock trace by adding public-safe adjudications for selected saved-transcript and normalized adapter-output scored traces.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`

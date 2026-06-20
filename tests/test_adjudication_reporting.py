@@ -50,13 +50,15 @@ class AdjudicationReportingTests(unittest.TestCase):
 
         self.assertIn("# Adjudication Summary Report", report)
         self.assertIn("| `needs_discussion` | 3 |", report)
-        self.assertIn("| `uphold_score` | 7 |", report)
+        self.assertIn("| `uphold_score` | 15 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertIn("| `override_fail` | 1 |", report)
         self.assertIn("baseline_followup_review_queue", report)
+        self.assertIn("external_fixture_reviewed_decisions", report)
         self.assertIn("Review Status", report)
         self.assertIn("| `baseline_reviewed_decisions` | Baseline Reviewed Decisions |", report)
         self.assertIn("| `baseline_followup_review_queue` | Baseline Followup Review Queue |", report)
+        self.assertIn("| `external_fixture_reviewed_decisions` | External Fixture Reviewed Decisions |", report)
         self.assertIn("`needs_discussion`", report)
         self.assertIn("public_reviewer_fixture", report)
         self.assertIn("Needs Discussion Queue", report)
@@ -75,12 +77,23 @@ class AdjudicationReportingTests(unittest.TestCase):
         fixtures = load_adjudication_manifest(ADJUDICATION_MANIFEST_PATH)
         context = load_adjudication_context_from_manifest(ADJUDICATION_MANIFEST_PATH)
 
-        self.assertEqual([fixture.fixture_id for fixture in fixtures], ["baseline_reviewed_decisions", "baseline_followup_review_queue"])
-        self.assertEqual([fixture.review_status for fixture in fixtures], ["needs_discussion", "needs_discussion"])
+        self.assertEqual(
+            [fixture.fixture_id for fixture in fixtures],
+            [
+                "baseline_reviewed_decisions",
+                "baseline_followup_review_queue",
+                "external_fixture_reviewed_decisions",
+            ],
+        )
+        self.assertEqual([fixture.review_status for fixture in fixtures], ["needs_discussion", "needs_discussion", "reviewed"])
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 12)
+        self.assertEqual(len(context.adjudications), 20)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
+        self.assertEqual(
+            context.fixture_by_adjudication_id["ADJ-EXTERNAL-ADAPTER-REFUSAL-003-OPENCLAW-001"].fixture_id,
+            "external_fixture_reviewed_decisions",
+        )
 
     def test_manifest_loads_quality_gate_thresholds(self):
         manifest = load_adjudication_manifest_data(ADJUDICATION_MANIFEST_PATH)
@@ -98,6 +111,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         )
         self.assertEqual(thresholds.min_category_review_coverage["uncertainty_handling"], 5.0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["baseline_reviewed_decisions"], 2)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["external_fixture_reviewed_decisions"], 0)
 
     def test_manifest_threshold_block_is_optional(self):
         manifest = load_manifest_object()

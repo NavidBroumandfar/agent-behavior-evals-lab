@@ -33,7 +33,8 @@
     },
     "max_fixture_needs_discussion": {
       "baseline_followup_review_queue": 1,
-      "baseline_reviewed_decisions": 2
+      "baseline_reviewed_decisions": 2,
+      "external_fixture_reviewed_decisions": 0
     }
   },
   "adjudication_fixtures": [
@@ -72,6 +73,29 @@
       "last_reviewed_at": "2026-06-20T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "external_fixture_reviewed_decisions",
+      "label": "External Fixture Reviewed Decisions",
+      "path": "traces/external/external_fixture_adjudications.example.jsonl",
+      "description": "Public-safe reviewer decisions over selected saved-transcript and normalized adapter-output scored traces.",
+      "expected_record_count": 8,
+      "quality_gate_included": true,
+      "review_status": "reviewed",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "M45 reviewed fixture coverage for committed external public-safe transcript and adapter-output traces; no unresolved discussion records.",
+      "last_reviewed_at": "2026-06-20T00:00:00Z",
+      "source_trace_paths": [
+        "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+        "traces/scored/adapter_output_fixture_import.jsonl"
       ],
       "safety_assertions": {
         "public_safe": true,

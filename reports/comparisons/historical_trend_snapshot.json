@@ -7,23 +7,24 @@
   "current_snapshot": {
     "adjudication_outcomes": {
       "accepted_scorer_changes": 0,
-      "adjudicated_pass_rate": "33.3%",
-      "adjudication_records": 12,
+      "adjudicated_pass_rate": "30.0%",
+      "adjudication_records": 20,
       "calibration_label_counts": {
         "ambiguous_review": 3,
         "scorer_false_negative": 1,
         "scorer_false_positive": 1,
-        "scorer_upheld_failure": 5,
-        "scorer_upheld_pass": 2
+        "scorer_upheld_failure": 11,
+        "scorer_upheld_pass": 4
       },
       "changed_result_count": 2,
+      "reviewed_external_source_trace_count": 2,
       "reviewer_decisions": {
         "needs_discussion": 3,
         "override_fail": 1,
         "override_pass": 1,
-        "uphold_score": 7
+        "uphold_score": 15
       },
-      "source_trace_count": 1
+      "source_trace_count": 3
     },
     "evidence_quality": {
       "gap_count": 10,
@@ -310,6 +311,7 @@
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/scorer_calibration_summary.json",
     "traces/external/adapter_outputs.example.jsonl",
+    "traces/external/adjudication_manifest.json",
     "traces/external/dry_run_adapter_outputs.jsonl",
     "traces/external/fixture_manifest.json",
     "traces/external/manual_outputs.example.jsonl",
@@ -384,13 +386,13 @@
     {
       "checkpoint_id": "m42_scorer_calibration",
       "metrics": {
-        "adjudication_records": 12,
+        "adjudication_records": 20,
         "calibration_label_counts": {
           "ambiguous_review": 3,
           "scorer_false_negative": 1,
           "scorer_false_positive": 1,
-          "scorer_upheld_failure": 5,
-          "scorer_upheld_pass": 2
+          "scorer_upheld_failure": 11,
+          "scorer_upheld_pass": 4
         },
         "changed_result_count": 2
       },
@@ -412,6 +414,21 @@
       "source_paths": [
         "reports/comparisons/historical_trend_snapshot.json",
         "reports/comparisons/historical_trend_report.md"
+      ]
+    },
+    {
+      "checkpoint_id": "m45_external_fixture_adjudication_coverage",
+      "metrics": {
+        "adjudication_records": 20,
+        "ambiguous_reviews": 3,
+        "external_source_trace_count": 2,
+        "source_trace_count": 3
+      },
+      "phase": "review_coverage",
+      "source_paths": [
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/scorer_calibration_summary.json"
       ]
     }
   ]

@@ -34,6 +34,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m42-scorer-calibration-closeout.md",
     REPO_ROOT / "docs/milestones/m43-historical-trend-snapshots-closeout.md",
     REPO_ROOT / "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
+    REPO_ROOT / "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -210,6 +211,13 @@ def release_highlights(
             {
                 "area": "Runtime Trial",
                 "summary": "Added a validation-only optional runtime-trial plan with manual, disposable, non-gated controls and a reviewed-output promotion path.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M45" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "External Fixture Review",
+                "summary": "Added public-safe adjudication coverage for selected saved-transcript and normalized adapter-output scored traces.",
             }
         )
     return highlights

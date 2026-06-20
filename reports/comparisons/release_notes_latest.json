@@ -7,7 +7,7 @@
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 12,
+    "adjudication_records": 20,
     "baseline_failed": 11,
     "baseline_pass_rate": "91.3%",
     "baseline_records": 126,
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "12 adjudication records are tracked; 3 still need discussion."
+      "summary": "20 adjudication records are tracked; 3 still need discussion."
     },
     {
       "area": "Evidence Quality",
@@ -54,6 +54,10 @@
     {
       "area": "Runtime Trial",
       "summary": "Added a validation-only optional runtime-trial plan with manual, disposable, non-gated controls and a reviewed-output promotion path."
+    },
+    {
+      "area": "External Fixture Review",
+      "summary": "Added public-safe adjudication coverage for selected saved-transcript and normalized adapter-output scored traces."
     }
   ],
   "milestones": [
@@ -126,6 +130,13 @@
       "path": "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 44 - Optional Non-Gated Runtime Trial"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M45",
+      "path": "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 45 - External Fixture Adjudication Coverage"
     }
   ],
   "quality_gate": {
@@ -162,7 +173,8 @@
     "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
     "docs/milestones/m42-scorer-calibration-closeout.md",
     "docs/milestones/m43-historical-trend-snapshots-closeout.md",
-    "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md"
+    "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
+    "docs/milestones/m45-external-fixture-adjudication-coverage-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

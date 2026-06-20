@@ -25,9 +25,10 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
         snapshot = build_snapshot(context, ADJUDICATION_MANIFEST_PATH)
 
         self.assertEqual(snapshot["adjudication_input"], "traces/external/adjudication_manifest.json")
-        self.assertEqual(snapshot["adjudication_fixture_count"], 2)
-        self.assertEqual(snapshot["adjudication_fixture_statuses"], {"needs_discussion": 2})
+        self.assertEqual(snapshot["adjudication_fixture_count"], 3)
+        self.assertEqual(snapshot["adjudication_fixture_statuses"], {"needs_discussion": 2, "reviewed": 1})
         self.assertEqual(snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["records"], 4)
+        self.assertEqual(snapshot["adjudication_fixtures"]["external_fixture_reviewed_decisions"]["records"], 8)
         self.assertEqual(
             snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["review_status"],
             "needs_discussion",
@@ -36,20 +37,29 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
             snapshot["adjudication_fixtures"]["baseline_followup_review_queue"]["owner"],
             "public_reviewer_fixture",
         )
-        self.assertEqual(snapshot["adjudication_records"], 12)
-        self.assertEqual(snapshot["source_trace_count"], 1)
-        self.assertEqual(snapshot["review_coverage_by_profile"]["generic_assistant"]["review_coverage"], "16.7%")
-        self.assertEqual(snapshot["review_coverage_by_profile"]["strict_approval_agent"]["review_coverage"], "11.9%")
-        self.assertEqual(snapshot["review_coverage_by_profile"]["openclaw_reference_agent"]["review_coverage"], "0.0%")
-        self.assertEqual(snapshot["review_coverage_by_category"]["approval_gated"]["review_coverage"], "11.9%")
-        self.assertEqual(snapshot["review_coverage_by_category"]["safe_direct_response"]["review_coverage"], "13.9%")
-        self.assertEqual(snapshot["review_coverage_by_category"]["uncertainty_handling"]["review_coverage"], "8.3%")
-        self.assertEqual(snapshot["reviewer_decisions"]["uphold_score"], 7)
+        self.assertEqual(snapshot["adjudication_records"], 20)
+        self.assertEqual(snapshot["source_trace_count"], 3)
+        self.assertEqual(snapshot["review_coverage_by_profile"]["generic_assistant"]["review_coverage"], "22.9%")
+        self.assertEqual(snapshot["review_coverage_by_profile"]["strict_approval_agent"]["review_coverage"], "15.6%")
+        self.assertEqual(snapshot["review_coverage_by_profile"]["openclaw_reference_agent"]["review_coverage"], "4.4%")
+        self.assertEqual(snapshot["review_coverage_by_category"]["approval_gated"]["review_coverage"], "15.6%")
+        self.assertEqual(snapshot["review_coverage_by_category"]["safe_direct_response"]["review_coverage"], "17.9%")
+        self.assertEqual(snapshot["review_coverage_by_category"]["refusal_required"]["review_coverage"], "7.4%")
+        self.assertEqual(snapshot["review_coverage_by_category"]["uncertainty_handling"]["review_coverage"], "14.8%")
+        self.assertEqual(snapshot["reviewer_decisions"]["uphold_score"], 15)
         self.assertEqual(snapshot["reviewer_decisions"]["needs_discussion"], 3)
         self.assertEqual(snapshot["reviewer_decisions"]["override_pass"], 1)
         self.assertEqual(snapshot["reviewer_decisions"]["override_fail"], 1)
         self.assertEqual(snapshot["result_summary"]["changed_result_count"], 2)
         self.assertEqual(snapshot["review_coverage_by_source_trace"]["traces/scored/baseline_mock_run.jsonl"]["reviewed_records"], 12)
+        self.assertEqual(
+            snapshot["review_coverage_by_source_trace"]["traces/scored/adapter_output_fixture_import.jsonl"]["review_coverage"],
+            "100.0%",
+        )
+        self.assertEqual(
+            snapshot["review_coverage_by_source_trace"]["traces/scored/public_safe_transcript_expansion_eval.jsonl"]["review_coverage"],
+            "50.0%",
+        )
 
     def test_compare_snapshots_reports_nested_differences(self):
         expected = {"result_summary": {"changed_result_count": 0}}
@@ -89,7 +99,7 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         differences = compare_snapshots(expected, current)
 
-        self.assertEqual(differences, ["adjudication_records: expected 12, found 99"])
+        self.assertEqual(differences, ["adjudication_records: expected 20, found 99"])
 
     def test_threshold_violations_report_coverage_and_discussion_failures(self):
         context = load_adjudication_context_from_manifest(ADJUDICATION_MANIFEST_PATH)
@@ -111,16 +121,16 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
 
         differences = threshold_violations(
             snapshot,
-            min_profile_review_coverage={"generic_assistant": 20.0},
-            min_category_review_coverage={"uncertainty_handling": 10.0},
+            min_profile_review_coverage={"generic_assistant": 25.0},
+            min_category_review_coverage={"uncertainty_handling": 20.0},
             max_fixture_needs_discussion={"baseline_followup_review_queue": 0},
         )
 
         self.assertEqual(
             differences,
             [
-                "profile.generic_assistant.review_coverage: expected at least 20.0%, found 16.7%",
-                "category.uncertainty_handling.review_coverage: expected at least 10.0%, found 8.3%",
+                "profile.generic_assistant.review_coverage: expected at least 25.0%, found 22.9%",
+                "category.uncertainty_handling.review_coverage: expected at least 20.0%, found 14.8%",
                 "fixture.baseline_followup_review_queue.needs_discussion: expected at most 0, found 1",
             ],
         )
@@ -146,6 +156,7 @@ class AdjudicationRegressionCheckTests(unittest.TestCase):
             max_fixture_needs_discussion={
                 "baseline_reviewed_decisions": 2,
                 "baseline_followup_review_queue": 1,
+                "external_fixture_reviewed_decisions": 0,
             },
         )
 

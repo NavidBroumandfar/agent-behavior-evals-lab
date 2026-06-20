@@ -314,6 +314,12 @@ def build_gap_report(
     max_group = max(external_group_sizes)
     observed_failure_modes = sorted(scored_trace_inventory["observed_failure_modes"])
     refusal_coverage = adjudication_inventory["category_coverage"].get("refusal_required", {})
+    remaining_unadjudicated_external = len(adjudication_inventory["unadjudicated_external_scored_traces"])
+    external_calibration_summary = (
+        "all manifest-backed external fixture traces now have adjudication coverage."
+        if remaining_unadjudicated_external == 0
+        else f"{remaining_unadjudicated_external} external fixture traces still need calibration coverage."
+    )
 
     missing_fixture_coverage = [
         gap(
@@ -364,7 +370,7 @@ def build_gap_report(
             "medium",
             (
                 f"{adjudication_inventory['adjudication_records']} adjudications cover "
-                f"{adjudication_inventory['source_trace_count']} source trace; external fixture traces are not calibrated yet."
+                f"{adjudication_inventory['source_trace_count']} source traces; {external_calibration_summary}"
             ),
             [display_path(ADJUDICATION_MANIFEST_PATH), display_path(ADJUDICATION_SNAPSHOT_PATH)],
         ),
@@ -454,8 +460,8 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "recommendation_id": "prioritize_public_safe_transcripts_for_review",
             "priority": "high",
-            "target_phase": "M42",
-            "summary": "Use the public-safe transcript expansion as a priority source for external fixture adjudication and calibration.",
+            "target_phase": "M45",
+            "summary": "Continue using public-safe transcript and adapter-output fixtures as priority sources for external fixture adjudication and calibration.",
             "source_gap_ids": [
                 "small_external_fixture_groups",
                 "external_fixture_adjudication_absent",
@@ -466,8 +472,8 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "recommendation_id": "calibrate_before_scorer_changes",
             "priority": "high",
-            "target_phase": "M42",
-            "summary": "Add adjudications for external fixtures before accepting scorer refinements.",
+            "target_phase": "M46",
+            "summary": "Resolve the remaining discussion queue and broaden adjudications before accepting scorer refinements.",
             "source_gap_ids": [
                 "heuristic_scorer_not_semantic_judge",
                 "limited_adjudication_calibration_set",

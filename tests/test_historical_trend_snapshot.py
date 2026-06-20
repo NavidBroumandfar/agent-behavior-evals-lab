@@ -31,7 +31,9 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         self.assertEqual(current["pass_rates"]["baseline"]["pass_rate"], "91.3%")
         self.assertEqual(current["fixture_counts"]["fixture_groups"], 7)
         self.assertEqual(current["fixture_counts"]["scored_records"], 34)
-        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 12)
+        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 20)
+        self.assertEqual(current["adjudication_outcomes"]["source_trace_count"], 3)
+        self.assertEqual(current["adjudication_outcomes"]["reviewed_external_source_trace_count"], 2)
         self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 2)
         self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 24)
         self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 7)
@@ -49,6 +51,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
                 "m41_public_safe_transcript_expansion",
                 "m42_scorer_calibration",
                 "m43_historical_trend_snapshot",
+                "m45_external_fixture_adjudication_coverage",
             ],
         )
 
