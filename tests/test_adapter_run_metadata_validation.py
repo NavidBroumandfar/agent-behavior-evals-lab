@@ -15,6 +15,7 @@ from validate_adapter_run_metadata import AdapterRunMetadataValidationError, val
 
 
 ADAPTER_RUN_METADATA_PATH = REPO_ROOT / "traces/external/adapter_run_metadata.example.json"
+NON_GATED_RUNTIME_TRIAL_METADATA_PATH = REPO_ROOT / "traces/external/non_gated_runtime_trial_metadata.example.json"
 
 
 def load_valid_metadata():
@@ -33,6 +34,19 @@ class AdapterRunMetadataValidationTests(unittest.TestCase):
         self.assertEqual(summary["run_id"], "m6_non_gated_adapter_sandbox_example")
         self.assertEqual(summary["adapter_name"], "example_text_only_adapter")
         self.assertEqual(summary["target_profile"], "generic_assistant")
+        self.assertEqual(summary["case_count"], 1)
+        self.assertFalse(summary["live_run_in_quality_gate"])
+
+    def test_committed_non_gated_runtime_trial_metadata_validates(self):
+        summary = validate_metadata(NON_GATED_RUNTIME_TRIAL_METADATA_PATH)
+
+        self.assertEqual(
+            summary["metadata_path"],
+            "traces/external/non_gated_runtime_trial_metadata.example.json",
+        )
+        self.assertEqual(summary["run_id"], "m44_non_gated_runtime_trial")
+        self.assertEqual(summary["adapter_name"], "manual_non_gated_runtime_trial")
+        self.assertEqual(summary["target_profile"], "openclaw_reference_agent")
         self.assertEqual(summary["case_count"], 1)
         self.assertFalse(summary["live_run_in_quality_gate"])
 

@@ -21,6 +21,7 @@
 - **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 - **Scorer Calibration**: Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.
 - **Historical Trends**: Added versioned evaluator-health trend snapshots for pass rates, failure modes, adjudication outcomes, fixture counts, and report coverage.
+- **Runtime Trial**: Added a validation-only optional runtime-trial plan with manual, disposable, non-gated controls and a reviewed-output promotion path.
 
 ## Dashboard Snapshot
 
@@ -46,6 +47,7 @@
 | `M41` | Complete / review-ready | `docs/milestones/m41-public-safe-transcript-expansion-closeout.md` |
 | `M42` | Complete / review-ready | `docs/milestones/m42-scorer-calibration-closeout.md` |
 | `M43` | Complete / review-ready | `docs/milestones/m43-historical-trend-snapshots-closeout.md` |
+| `M44` | Complete / review-ready | `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md` |
 
 ## Boundaries
 
@@ -69,3 +71,4 @@
 - `docs/milestones/m41-public-safe-transcript-expansion-closeout.md`
 - `docs/milestones/m42-scorer-calibration-closeout.md`
 - `docs/milestones/m43-historical-trend-snapshots-closeout.md`
+- `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md`

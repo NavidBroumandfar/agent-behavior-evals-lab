@@ -1,0 +1,59 @@
+{
+  "metadata_id": "M44-NON-GATED-RUNTIME-TRIAL-EXAMPLE",
+  "version": "0.1.0",
+  "created_at": "2026-06-20T00:00:00Z",
+  "run_id": "m44_non_gated_runtime_trial",
+  "status": "planned_only",
+  "adapter": {
+    "adapter_name": "manual_non_gated_runtime_trial",
+    "adapter_version": "0.1.0-m44",
+    "adapter_type": "cli_agent_text_only"
+  },
+  "target": {
+    "target_profile": "openclaw_reference_agent",
+    "profile_path": "targets/profiles/openclaw_reference_agent.md"
+  },
+  "case_selection": {
+    "case_source_paths": [
+      "evals/cases/approval_gate_cases.jsonl"
+    ],
+    "case_ids": [
+      "APPROVAL-014"
+    ],
+    "case_count": 1
+  },
+  "sandbox": {
+    "execution_mode": "planned_non_gated_live_output",
+    "network_access": "disabled_for_committed_example",
+    "tool_execution": "none",
+    "external_actions": false,
+    "credentials_required": false,
+    "human_approval_required": true,
+    "risk_level": "high"
+  },
+  "outputs": {
+    "raw_output_path": "traces/raw/m44_non_gated_runtime_trial.local.jsonl",
+    "normalized_output_path": "traces/external/m44_non_gated_runtime_trial.reviewed.jsonl",
+    "scored_trace_path": "traces/scored/m44_non_gated_runtime_trial.local.jsonl",
+    "commit_policy": "reviewed_public_safe_outputs_only"
+  },
+  "review": {
+    "approval_checklist_path": "targets/adapters/non_gated_runtime_trial.md",
+    "sanitization_required": true,
+    "raw_outputs_committable": false,
+    "normalized_outputs_committable_after_review": false,
+    "notes": "M44 metadata describes one optional manual trial prompt. The planned trial is non-gated, disposable, reviewed before promotion, and excluded from deterministic scoring unless a public-safe reviewed output is promoted later."
+  },
+  "quality_gate": {
+    "metadata_validation_in_quality_gate": true,
+    "live_run_in_quality_gate": false,
+    "reason": "The deterministic quality gate validates this public-safe metadata plan but does not run a runtime, collect raw output, or score local trial output."
+  },
+  "provenance": {
+    "public_safe": true,
+    "live_execution": false,
+    "external_actions": false,
+    "contains_private_data": false,
+    "credentials_required": false
+  }
+}

@@ -208,7 +208,12 @@ CHECKS = [
             "src/validate_adapter_run_metadata.py",
             "traces/external/adapter_run_metadata.example.json",
             "traces/external/controlled_live_agent_sandbox_metadata.example.json",
+            "traces/external/non_gated_runtime_trial_metadata.example.json",
         ],
+    ),
+    (
+        "runtime trial plan validation",
+        ["python3", "src/validate_runtime_trial_plan.py"],
     ),
     (
         "harness bridge plan validation",
@@ -303,6 +308,7 @@ CHECKS = [
             "src/dry_run_adapter.py",
             "src/text_only_adapter.py",
             "src/controlled_live_agent_sandbox.py",
+            "src/validate_runtime_trial_plan.py",
             "src/validate_harness_bridge_plan.py",
             "src/compare_external_fixtures.py",
             "src/validate_fixture_manifest.py",

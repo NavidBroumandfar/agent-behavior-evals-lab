@@ -33,6 +33,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
     REPO_ROOT / "docs/milestones/m42-scorer-calibration-closeout.md",
     REPO_ROOT / "docs/milestones/m43-historical-trend-snapshots-closeout.md",
+    REPO_ROOT / "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -202,6 +203,13 @@ def release_highlights(
             {
                 "area": "Historical Trends",
                 "summary": "Added versioned evaluator-health trend snapshots for pass rates, failure modes, adjudication outcomes, fixture counts, and report coverage.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M44" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Runtime Trial",
+                "summary": "Added a validation-only optional runtime-trial plan with manual, disposable, non-gated controls and a reviewed-output promotion path.",
             }
         )
     return highlights

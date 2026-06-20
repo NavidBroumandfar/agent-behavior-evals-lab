@@ -386,7 +386,13 @@ Acceptance criteria:
 
 Only after evidence quality improves, run a tightly scoped runtime trial that cannot affect the deterministic gate by default.
 
-Status: planned / optional.
+Status: complete / review-ready. See `docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md`.
+
+Implementation note:
+
+- M44 adds a schema-backed, validation-only runtime-trial plan for one prepared public-safe prompt.
+- The closeout decision is `defer_live_runtime_trial` because runtime-native evidence is not needed yet.
+- No raw runtime output is committed, no runtime is executed by the quality gate, and promotion remains limited to reviewed public-safe adapter-output fixtures.
 
 Deliverables:
 
@@ -400,6 +406,25 @@ Acceptance criteria:
 - The trial does not run inside `python3 scripts/dev.py check`.
 - No credentials, providers, private accounts, network collection, browser/email actions, shell actions, or file-mutation actions are introduced.
 - The default evaluator remains saved-output and saved-transcript first.
+
+### M45: External Fixture Adjudication Coverage
+
+Increase reviewer coverage for committed public-safe external fixture groups before revisiting runtime-native evidence.
+
+Status: planned.
+
+Recommended scope:
+
+- Add adjudication fixtures for selected public-safe transcript and adapter-output scored traces.
+- Keep heuristic scores and reviewer decisions separate.
+- Update calibration and evidence audit outputs after review coverage changes.
+- Avoid scorer changes unless they are deterministic, focused, and backed by reviewed examples.
+
+Acceptance criteria:
+
+- Adjudications reference committed scored traces only.
+- External fixture review coverage is explicit in the adjudication manifest and regression snapshot.
+- No live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, or private-log dependency is introduced.
 
 ## Hermes And OpenClaw Position
 

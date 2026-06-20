@@ -50,6 +50,10 @@
     {
       "area": "Historical Trends",
       "summary": "Added versioned evaluator-health trend snapshots for pass rates, failure modes, adjudication outcomes, fixture counts, and report coverage."
+    },
+    {
+      "area": "Runtime Trial",
+      "summary": "Added a validation-only optional runtime-trial plan with manual, disposable, non-gated controls and a reviewed-output promotion path."
     }
   ],
   "milestones": [
@@ -115,6 +119,13 @@
       "path": "docs/milestones/m43-historical-trend-snapshots-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 43 - Historical Trend Snapshots"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M44",
+      "path": "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 44 - Optional Non-Gated Runtime Trial"
     }
   ],
   "quality_gate": {
@@ -150,7 +161,8 @@
     "docs/milestones/m40-evidence-quality-audit-closeout.md",
     "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
     "docs/milestones/m42-scorer-calibration-closeout.md",
-    "docs/milestones/m43-historical-trend-snapshots-closeout.md"
+    "docs/milestones/m43-historical-trend-snapshots-closeout.md",
+    "docs/milestones/m44-optional-non-gated-runtime-trial-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

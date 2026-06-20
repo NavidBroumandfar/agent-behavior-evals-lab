@@ -15,7 +15,7 @@ The generator reads committed local artifacts:
 - `reports/comparisons/reporting_product_summary.json`
 - `reports/comparisons/report_manifest.json`
 - `docs/roadmap.md`
-- M35 through M43 closeout documents
+- M35 through M44 closeout documents
 
 It does not collect outputs, call providers, run local models, execute agents, inspect private logs, use network access, rescore records, or perform external actions.
 

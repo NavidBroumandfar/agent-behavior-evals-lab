@@ -1,0 +1,329 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Non-Gated Runtime Trial Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "plan_id",
+    "version",
+    "created_at",
+    "status",
+    "trial_type",
+    "target_runtime",
+    "prepared_prompt",
+    "adapter_run_metadata_path",
+    "procedure_path",
+    "trial_controls",
+    "output_policy",
+    "promotion_path",
+    "quality_gate",
+    "closeout_decision",
+    "safety_assertions",
+    "blocked_capabilities"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned_only",
+        "manual_trial_deferred",
+        "reviewed_output_promotion_ready"
+      ]
+    },
+    "trial_type": {
+      "type": "string",
+      "enum": [
+        "optional_non_gated_runtime_trial"
+      ]
+    },
+    "target_runtime": {
+      "type": "string",
+      "enum": [
+        "openclaw",
+        "hermes",
+        "cli_agent",
+        "local_assistant"
+      ]
+    },
+    "prepared_prompt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_source_path",
+        "case_id",
+        "prompt_count",
+        "public_safe_prompt_only"
+      ],
+      "properties": {
+        "case_source_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "case_id": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "prompt_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "public_safe_prompt_only": {
+          "type": "boolean"
+        }
+      }
+    },
+    "adapter_run_metadata_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "procedure_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "trial_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "manual_execution_required",
+        "non_gated",
+        "disposable",
+        "review_required_before_promotion",
+        "tools_disabled",
+        "network_access",
+        "credentials_required",
+        "external_actions",
+        "browser_email_actions",
+        "shell_execution",
+        "file_mutation",
+        "private_logs_allowed"
+      ],
+      "properties": {
+        "manual_execution_required": {
+          "type": "boolean"
+        },
+        "non_gated": {
+          "type": "boolean"
+        },
+        "disposable": {
+          "type": "boolean"
+        },
+        "review_required_before_promotion": {
+          "type": "boolean"
+        },
+        "tools_disabled": {
+          "type": "boolean"
+        },
+        "network_access": {
+          "type": "boolean"
+        },
+        "credentials_required": {
+          "type": "boolean"
+        },
+        "external_actions": {
+          "type": "boolean"
+        },
+        "browser_email_actions": {
+          "type": "boolean"
+        },
+        "shell_execution": {
+          "type": "boolean"
+        },
+        "file_mutation": {
+          "type": "boolean"
+        },
+        "private_logs_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "output_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_output_path",
+        "reviewed_output_path",
+        "scored_trace_path",
+        "raw_outputs_committable",
+        "reviewed_outputs_committable_after_validation"
+      ],
+      "properties": {
+        "raw_output_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "reviewed_output_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "scored_trace_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "raw_outputs_committable": {
+          "type": "boolean"
+        },
+        "reviewed_outputs_committable_after_validation": {
+          "type": "boolean"
+        }
+      }
+    },
+    "promotion_path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_format",
+        "validator",
+        "importer",
+        "review_notes_required",
+        "deterministic_scoring_after_promotion"
+      ],
+      "properties": {
+        "promotion_format": {
+          "type": "string",
+          "enum": [
+            "adapter_output_jsonl",
+            "saved_transcript_jsonl"
+          ]
+        },
+        "validator": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "importer": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "review_notes_required": {
+          "type": "boolean"
+        },
+        "deterministic_scoring_after_promotion": {
+          "type": "boolean"
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plan_validation_in_quality_gate",
+        "metadata_validation_in_quality_gate",
+        "runtime_execution_in_quality_gate",
+        "raw_output_validation_in_quality_gate",
+        "reason"
+      ],
+      "properties": {
+        "plan_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "metadata_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "runtime_execution_in_quality_gate": {
+          "type": "boolean"
+        },
+        "raw_output_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "closeout_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "decision",
+        "runtime_native_evidence_needed",
+        "rationale",
+        "next_review_trigger"
+      ],
+      "properties": {
+        "decision": {
+          "type": "string",
+          "enum": [
+            "defer_live_runtime_trial",
+            "manual_trial_allowed_after_human_review",
+            "promote_reviewed_output_only"
+          ]
+        },
+        "runtime_native_evidence_needed": {
+          "type": "boolean"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "next_review_trigger": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean"
+        },
+        "live_execution": {
+          "type": "boolean"
+        },
+        "external_actions": {
+          "type": "boolean"
+        },
+        "contains_private_data": {
+          "type": "boolean"
+        },
+        "credentials_required": {
+          "type": "boolean"
+        }
+      }
+    },
+    "blocked_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": ".*\\S.*"
+      }
+    }
+  }
+}

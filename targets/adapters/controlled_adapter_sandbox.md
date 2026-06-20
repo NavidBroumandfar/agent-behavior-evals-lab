@@ -105,3 +105,17 @@ The M36 sandbox is deliberately blocked from:
 - Quality-gate execution of the sandbox run.
 
 The deterministic quality gate validates the committed M36 metadata plan and compiles the runner, but it does not run the sandbox command or commit the raw output.
+
+## M44 Optional Non-Gated Runtime Trial
+
+M44 adds a validation-only plan for one optional manual runtime trial:
+
+```bash
+python3 src/validate_runtime_trial_plan.py
+```
+
+The plan is `traces/external/non_gated_runtime_trial_plan.example.json`, and the corresponding adapter-run metadata is `traces/external/non_gated_runtime_trial_metadata.example.json`.
+
+The M44 closeout decision is to defer live runtime execution. The quality gate validates the plan and metadata only; it does not run OpenClaw, Hermes, a CLI agent, provider, local model, shell, browser, email, network collection, or external actions.
+
+If a future human-approved trial is run, raw output must remain local-only and disposable until separately reviewed, sanitized, validated, and promoted through an existing public-safe fixture format.

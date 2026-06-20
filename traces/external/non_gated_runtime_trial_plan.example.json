@@ -1,0 +1,78 @@
+{
+  "plan_id": "m44_optional_non_gated_runtime_trial",
+  "version": "0.1.0",
+  "created_at": "2026-06-20T00:00:00Z",
+  "status": "manual_trial_deferred",
+  "trial_type": "optional_non_gated_runtime_trial",
+  "target_runtime": "openclaw",
+  "prepared_prompt": {
+    "case_source_path": "evals/cases/approval_gate_cases.jsonl",
+    "case_id": "APPROVAL-014",
+    "prompt_count": 1,
+    "public_safe_prompt_only": true
+  },
+  "adapter_run_metadata_path": "traces/external/non_gated_runtime_trial_metadata.example.json",
+  "procedure_path": "targets/adapters/non_gated_runtime_trial.md",
+  "trial_controls": {
+    "manual_execution_required": true,
+    "non_gated": true,
+    "disposable": true,
+    "review_required_before_promotion": true,
+    "tools_disabled": true,
+    "network_access": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "browser_email_actions": false,
+    "shell_execution": false,
+    "file_mutation": false,
+    "private_logs_allowed": false
+  },
+  "output_policy": {
+    "raw_output_path": "traces/raw/m44_non_gated_runtime_trial.local.jsonl",
+    "reviewed_output_path": "traces/external/m44_non_gated_runtime_trial.reviewed.jsonl",
+    "scored_trace_path": "traces/scored/m44_non_gated_runtime_trial.local.jsonl",
+    "raw_outputs_committable": false,
+    "reviewed_outputs_committable_after_validation": false
+  },
+  "promotion_path": {
+    "promotion_format": "adapter_output_jsonl",
+    "validator": "src/validate_adapter_outputs.py",
+    "importer": "src/import_adapter_outputs.py",
+    "review_notes_required": true,
+    "deterministic_scoring_after_promotion": true
+  },
+  "quality_gate": {
+    "plan_validation_in_quality_gate": true,
+    "metadata_validation_in_quality_gate": true,
+    "runtime_execution_in_quality_gate": false,
+    "raw_output_validation_in_quality_gate": false,
+    "reason": "The quality gate validates the public-safe M44 plan and metadata only; it does not run OpenClaw, Hermes, a CLI agent, a provider, a local model, shell, browser, email, network collection, or external actions."
+  },
+  "closeout_decision": {
+    "decision": "defer_live_runtime_trial",
+    "runtime_native_evidence_needed": false,
+    "rationale": "Current saved-output, saved-transcript, fixture, adjudication, calibration, and trend artifacts are enough for the evaluator-health goal. Runtime-native evidence is not required for M44, so live execution remains deferred.",
+    "next_review_trigger": "Reconsider a manual non-gated trial only when a future evidence gap cannot be represented by saved transcripts or reviewed adapter-output fixtures."
+  },
+  "safety_assertions": {
+    "public_safe": true,
+    "live_execution": false,
+    "external_actions": false,
+    "contains_private_data": false,
+    "credentials_required": false
+  },
+  "blocked_capabilities": [
+    "network_collection",
+    "credentials",
+    "private_runtime_logs",
+    "private_memory",
+    "private_workspace_paths",
+    "external_actions",
+    "browser_email_actions",
+    "file_mutation",
+    "shell_execution",
+    "provider_execution",
+    "local_model_execution",
+    "live_quality_gate_execution"
+  ]
+}
