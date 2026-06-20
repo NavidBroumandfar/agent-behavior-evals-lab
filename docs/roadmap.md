@@ -271,6 +271,112 @@ Acceptance criteria:
 - Report manifests index the new release artifacts.
 - The release handoff preserves the evaluator boundary and avoids benchmark claims.
 
+## Next Roadmap Section
+
+The post-M39 work should shift from scaffold completeness to evidence quality. The lab now has local runners, schemas, validators, replay, adapter contracts, adjudication reporting, product summaries, and release notes. The next phases should make the evidence more representative before adding deeper live-agent integration.
+
+Shared boundary for M40-M44:
+
+- Keep the deterministic quality gate local and public-safe.
+- Do not add live provider calls, credentials, private logs, browser/email actions, network collection, shell actions, file-mutation actions, or gated LLM review.
+- Prefer saved transcripts, reviewed text-only outputs, and normalized local fixtures over runtime harness integration.
+- Treat any optional runtime trial as non-gated, manually reviewed, and disposable unless a later phase explicitly promotes public-safe output.
+
+### M40: Evidence Quality Audit
+
+Audit the current fixtures, cases, scorers, adjudications, and reports to identify what the lab can and cannot currently prove.
+
+Status: planned.
+
+Deliverables:
+
+- A deterministic evidence inventory across eval cases, saved outputs, saved transcripts, adjudications, scored traces, and reports.
+- A gap report that separates missing fixture coverage from scorer weakness and reporting weakness.
+- Public-safe recommendations for the next fixture expansion.
+- Quality-gate coverage for the audit artifact if it becomes a committed report.
+
+Acceptance criteria:
+
+- The audit is generated from committed local artifacts only.
+- Gaps are tied to specific source files or fixture groups.
+- The report does not make benchmark, leaderboard, or real-world model quality claims.
+
+### M41: Public-Safe Transcript Expansion
+
+Expand saved transcript coverage using realistic but sanitized local examples.
+
+Status: planned.
+
+Deliverables:
+
+- Additional saved transcript fixtures covering representative assistant behaviors.
+- Manifest entries and schema validation for every new fixture.
+- Replay coverage that exercises approval boundaries, refusal boundaries, and task-following behavior without external actions.
+- Promotion notes for any fixture derived from a manually reviewed run.
+
+Acceptance criteria:
+
+- Fixtures contain no credentials, private account data, private logs, or runtime-sensitive information.
+- Transcript replay remains deterministic and offline.
+- New coverage improves the evidence gaps identified in M40.
+
+### M42: Scorer Calibration From Adjudications
+
+Use adjudication history to make scorer behavior easier to inspect and tune without adding gated LLM judgment.
+
+Status: planned.
+
+Deliverables:
+
+- A local calibration summary comparing scorer outcomes against adjudication decisions.
+- Clear labels for scorer false positives, false negatives, and ambiguous cases.
+- Suggested scorer or rubric refinements that remain deterministic.
+- Regression checks for any accepted scorer changes.
+
+Acceptance criteria:
+
+- Calibration uses committed adjudication fixtures only.
+- Any scorer change is explainable, deterministic, and covered by tests.
+- Human review remains advisory unless explicitly promoted through a local deterministic artifact.
+
+### M43: Historical Trend Snapshots
+
+Turn the reporting layer into a simple history of evaluator health over time.
+
+Status: planned.
+
+Deliverables:
+
+- Versioned trend snapshots for pass rates, failure modes, adjudication outcomes, fixture counts, and report-manifest coverage.
+- A Markdown trend report suitable for release review.
+- Manifest coverage for committed trend artifacts.
+- Deterministic regeneration checks when source behavior changes.
+
+Acceptance criteria:
+
+- Trends are derived from committed local reports and scored traces.
+- Snapshot changes are intentional, reviewable, and tied to source artifacts.
+- Reports distinguish evaluator-health trends from model-performance claims.
+
+### M44: Optional Non-Gated Runtime Trial
+
+Only after evidence quality improves, run a tightly scoped runtime trial that cannot affect the deterministic gate by default.
+
+Status: planned / optional.
+
+Deliverables:
+
+- A documented non-gated trial procedure for one prepared prompt in a locked-down local-safe setup.
+- Metadata showing the run was manual, reviewed, disposable, and excluded from deterministic scoring until promoted.
+- A promotion path that converts reviewed output into an existing public-safe fixture format.
+- A closeout decision on whether runtime-native evidence is actually needed.
+
+Acceptance criteria:
+
+- The trial does not run inside `python3 scripts/dev.py check`.
+- No credentials, providers, private accounts, network collection, browser/email actions, shell actions, or file-mutation actions are introduced.
+- The default evaluator remains saved-output and saved-transcript first.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.
