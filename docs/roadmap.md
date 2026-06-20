@@ -17,7 +17,7 @@ The repository currently has a deterministic local evaluation harness:
 - Scored JSONL traces and generated Markdown reports.
 - Regression snapshots, comparison reports, failure inspection, and human adjudication overlays.
 - Schema validators, fixture manifests, report manifests, and a local quality gate.
-- Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, and a dry-run adapter contract test.
+- Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, and a controlled local agent sandbox pilot.
 
 The current baseline is still a mock evaluation. It is useful for validating the evaluator pipeline, but it is not a live model, Hermes, OpenClaw, or production agent benchmark.
 
@@ -173,6 +173,13 @@ Acceptance criteria:
 ### M36: Controlled Live Agent Sandbox
 
 Run a tiny live pilot only after saved-output and transcript paths are stable.
+
+Status: complete / review-ready. See `docs/milestones/m36-controlled-live-agent-sandbox-closeout.md`.
+
+Implementation note:
+
+- M36 uses a metadata-driven local no-tool sandbox runner, not a provider, local model, live OpenClaw/Hermes runtime, browser/email tool, network collector, shell executor, or external-action harness.
+- The runner is manual and non-gated. The deterministic quality gate validates the committed metadata plan and compiles/tests local guardrails, but it does not run the sandbox command or commit raw outputs.
 
 Initial sandbox rules:
 

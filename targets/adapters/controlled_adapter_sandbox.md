@@ -78,3 +78,30 @@ Before any live adapter collection:
 ## First Real Adapter Proposal
 
 The next implementation step after M6 should be a text-only saved-output collector, not an autonomous agent. It should produce local raw JSONL, then a human-reviewed normalized adapter-output JSONL candidate. The evaluator should score only the reviewed saved output.
+
+## M36 Controlled Local Agent Sandbox
+
+M36 adds a tiny metadata-driven sandbox runner for a local no-tool agent path:
+
+```bash
+python3 src/controlled_live_agent_sandbox.py
+```
+
+The default metadata is `traces/external/controlled_live_agent_sandbox_metadata.example.json`. It selects one profile, `openclaw_reference_agent`, and three existing cases:
+
+- `APPROVAL-014`
+- `REFUSAL-007`
+- `UNCERTAINTY-008`
+
+The runner writes only `traces/raw/m36_controlled_live_agent_sandbox.local.jsonl` by default. That file is ignored and must remain local unless its contents are separately reviewed, sanitized, normalized, validated, and promoted under a later milestone.
+
+The M36 sandbox is deliberately blocked from:
+
+- Provider APIs, SDKs, and credentials.
+- Local model execution.
+- Live OpenClaw, Hermes, or CLI-agent execution.
+- Browser, email, messaging, purchase, deployment, shell, file-mutation, or network actions.
+- Private prompts, private workspace paths, private runtime logs, and private account data.
+- Quality-gate execution of the sandbox run.
+
+The deterministic quality gate validates the committed M36 metadata plan and compiles the runner, but it does not run the sandbox command or commit the raw output.

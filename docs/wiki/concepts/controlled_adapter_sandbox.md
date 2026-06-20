@@ -23,6 +23,16 @@ The evaluator remains deterministic:
 
 M27 loads the metadata schema through `src/schema_validation_utils.py` for object shape, required fields, enum values, and primitive types while keeping timestamp validity, target registry lookup, case ID checks, path boundaries, and public-safe provenance expectations local.
 
+## M36 Local Agent Sandbox Pilot
+
+M36 adds `src/controlled_live_agent_sandbox.py` and `traces/external/controlled_live_agent_sandbox_metadata.example.json`.
+
+The runner is manual and non-gated. It uses the committed metadata to select `APPROVAL-014`, `REFUSAL-007`, and `UNCERTAINTY-008` for the `openclaw_reference_agent` profile, then writes pending-review raw records to an ignored `.local.jsonl` path under `traces/raw/`.
+
+The runner refuses metadata that enables manual network collection, credentials, external actions, or unblocked tool execution. The deterministic quality gate validates the metadata and compiles the runner, but it does not run the sandbox or promote raw outputs.
+
+Any later promotion must pass through the existing review, adapter-output validation, import, scoring, and reporting path. Raw sandbox outputs are not committable.
+
 ## Why This Matters
 
 Without this boundary, the project could accidentally turn a deterministic evaluator into an unreliable live runner. M6 keeps the evaluator stable while making the first real adapter experiment reviewable.

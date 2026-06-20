@@ -64,6 +64,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adapter interface conformance tests: `tests/test_adapter_output_conformance.py`
 - Controlled adapter sandbox: `targets/adapters/controlled_adapter_sandbox.md`
 - Adapter run metadata: `traces/external/adapter_run_metadata.example.json` and `src/validate_adapter_run_metadata.py`
+- Controlled live agent sandbox: `src/controlled_live_agent_sandbox.py` and `traces/external/controlled_live_agent_sandbox_metadata.example.json`
 - Target registry: `targets/target_registry.json` and `src/target_registry.py`
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Controlled text-only adapter: `src/text_only_adapter.py`
@@ -115,6 +116,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 33 closeout: `docs/milestones/m33-first-real-text-only-adapter-closeout.md`
 - Milestone 34 closeout: `docs/milestones/m34-rich-saved-transcript-contract-closeout.md`
 - Milestone 35 closeout: `docs/milestones/m35-openclaw-saved-transcript-pilot-closeout.md`
+- Milestone 36 closeout: `docs/milestones/m36-controlled-live-agent-sandbox-closeout.md`
 
 ## Reading Order
 

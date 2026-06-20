@@ -14,6 +14,8 @@ Runs eval cases against a local model process outside the deterministic gate, th
 
 Runs a command-line agent in a controlled harness outside the deterministic gate, captures final assistant outputs, and saves normalized records. Any tool or file action must be explicitly governed before this adapter becomes active.
 
+M36 adds a narrower local no-tool sandbox runner at `src/controlled_live_agent_sandbox.py`. It is not a live CLI-agent adapter and does not execute providers, local models, OpenClaw, Hermes, shell commands, file mutation, browser/email tools, network calls, or external actions. It writes only ignored pending-review raw JSONL for a tiny case subset.
+
 ## Controlled OpenClaw CLI Adapter
 
 Treats OpenClaw as one possible system under test through a controlled public-safe interface in a future milestone. It must not import private runtime data or rely on private workspace state.

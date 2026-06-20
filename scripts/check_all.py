@@ -166,7 +166,12 @@ CHECKS = [
     ),
     (
         "adapter run metadata validation",
-        ["python3", "src/validate_adapter_run_metadata.py"],
+        [
+            "python3",
+            "src/validate_adapter_run_metadata.py",
+            "traces/external/adapter_run_metadata.example.json",
+            "traces/external/controlled_live_agent_sandbox_metadata.example.json",
+        ],
     ),
     (
         "adjudication validation",
@@ -236,6 +241,7 @@ CHECKS = [
             "src/import_adapter_outputs.py",
             "src/dry_run_adapter.py",
             "src/text_only_adapter.py",
+            "src/controlled_live_agent_sandbox.py",
             "src/compare_external_fixtures.py",
             "src/validate_fixture_manifest.py",
             "src/validate_adapter_run_metadata.py",
