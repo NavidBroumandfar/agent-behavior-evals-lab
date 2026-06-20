@@ -35,6 +35,8 @@ HISTORICAL_TREND_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/historical_tre
 HISTORICAL_TREND_REPORT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_report.md"
 SCORER_REFINEMENT_TRIAGE_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.json"
 SCORER_REFINEMENT_TRIAGE_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.md"
+SCORER_CANDIDATE_CONTROLS_PATH = REPO_ROOT / "reports/comparisons/scorer_candidate_controls.json"
+SCORER_CANDIDATE_CONTROLS_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_candidate_controls.md"
 HARNESS_BRIDGE_PLAN_PATH = REPO_ROOT / "traces/external/harness_bridge_plan.example.json"
 SCORER_PATH = REPO_ROOT / "src/scorers.py"
 SCORER_LIMITATIONS_PATH = REPO_ROOT / "docs/wiki/concepts/v0_scorer_limitations.md"
@@ -57,6 +59,7 @@ def build_audit() -> dict[str, Any]:
     adjudication_manifest = load_json_object(ADJUDICATION_MANIFEST_PATH)
     adjudication_snapshot = load_json_object(ADJUDICATION_SNAPSHOT_PATH)
     report_manifest = load_json_object(REPORT_MANIFEST_PATH)
+    scorer_controls = load_json_object(SCORER_CANDIDATE_CONTROLS_PATH)
 
     fixture_inventory = build_fixture_inventory(fixture_manifest)
     scored_trace_inventory = build_scored_trace_inventory(baseline_records, fixture_inventory)
@@ -72,6 +75,7 @@ def build_audit() -> dict[str, Any]:
         fixture_inventory,
         adjudication_inventory,
         report_inventory,
+        scorer_controls,
     )
 
     return {
@@ -308,6 +312,7 @@ def build_gap_report(
     fixture_inventory: dict[str, Any],
     adjudication_inventory: dict[str, Any],
     report_inventory: dict[str, Any],
+    scorer_controls: dict[str, Any],
 ) -> dict[str, Any]:
     """Build source-backed evidence gaps grouped by type."""
 
@@ -322,6 +327,7 @@ def build_gap_report(
         if remaining_unadjudicated_external == 0
         else f"{remaining_unadjudicated_external} external fixture traces still need calibration coverage."
     )
+    control_decision = scorer_controls.get("decision_summary", {})
 
     missing_fixture_coverage = [
         gap(
@@ -380,12 +386,14 @@ def build_gap_report(
             (
                 f"{adjudication_inventory['adjudication_records']} adjudications cover "
                 f"{adjudication_inventory['source_trace_count']} source traces; {external_calibration_summary} "
-                "M48 expansion keeps scorer changes deferred until focused candidate evidence and tests exist."
+                f"M49 controls cover {control_decision.get('controls', 0)} focused scorer cases with "
+                f"{control_decision.get('accepted_scorer_changes', 0)} accepted scorer changes."
             ),
             [
                 display_path(ADJUDICATION_MANIFEST_PATH),
                 display_path(ADJUDICATION_SNAPSHOT_PATH),
                 display_path(SCORER_REFINEMENT_TRIAGE_PATH),
+                display_path(SCORER_CANDIDATE_CONTROLS_PATH),
             ],
         ),
         gap(
@@ -485,7 +493,7 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "recommendation_id": "prioritize_public_safe_transcripts_for_review",
             "priority": "high",
-            "target_phase": "M49",
+            "target_phase": "M50",
             "summary": "Maintain public-safe review depth for small fixture groups and remaining category coverage gaps.",
             "source_gap_ids": public_safe_review_gap_ids,
             "public_safe_path": "Review selected assistant turns with public-safe tool summaries and approval metadata, not private runtime logs.",
@@ -493,8 +501,8 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "recommendation_id": "calibrate_before_scorer_changes",
             "priority": "high",
-            "target_phase": "M49",
-            "summary": "Use the expanded public-safe review coverage before accepting deterministic scorer or rubric refinements.",
+            "target_phase": "M50",
+            "summary": "Use expanded review coverage and M49 controls before accepting deterministic scorer or rubric refinements.",
             "source_gap_ids": [
                 "heuristic_scorer_not_semantic_judge",
                 "limited_adjudication_calibration_set",
@@ -600,6 +608,8 @@ def source_paths() -> list[str]:
         HISTORICAL_TREND_REPORT_PATH,
         SCORER_REFINEMENT_TRIAGE_PATH,
         SCORER_REFINEMENT_TRIAGE_REPORT_PATH,
+        SCORER_CANDIDATE_CONTROLS_PATH,
+        SCORER_CANDIDATE_CONTROLS_REPORT_PATH,
         HARNESS_BRIDGE_PLAN_PATH,
         SCORER_PATH,
         SCORER_LIMITATIONS_PATH,

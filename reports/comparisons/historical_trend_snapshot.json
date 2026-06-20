@@ -280,11 +280,19 @@
       ]
     },
     "report_manifest_coverage": {
-      "json_snapshots": 8,
-      "markdown_reports": 18,
-      "public_safe_artifacts": 26,
-      "quality_gate_artifacts": 26,
-      "report_artifacts": 26
+      "json_snapshots": 9,
+      "markdown_reports": 19,
+      "public_safe_artifacts": 28,
+      "quality_gate_artifacts": 28,
+      "report_artifacts": 28
+    },
+    "scorer_candidate_controls": {
+      "accepted_scorer_changes": 0,
+      "candidate_source_mismatches": 2,
+      "controls": 4,
+      "current_differs_from_review_expectation": 2,
+      "current_matches_review_expectation": 2,
+      "scorer_code_changed": false
     },
     "scorer_refinement_triage": {
       "accepted_scorer_changes": 0,
@@ -317,6 +325,7 @@
     "reports/comparisons/report_manifest.json",
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/scorer_calibration_summary.json",
+    "reports/comparisons/scorer_candidate_controls.json",
     "reports/comparisons/scorer_refinement_triage.json",
     "traces/external/adapter_outputs.example.jsonl",
     "traces/external/adjudication_manifest.json",
@@ -415,9 +424,9 @@
       "metrics": {
         "external_fixture_pass_rate": "55.9%",
         "fixture_groups": 7,
-        "json_snapshots": 8,
-        "markdown_reports": 18,
-        "report_artifacts": 26
+        "json_snapshots": 9,
+        "markdown_reports": 19,
+        "report_artifacts": 28
       },
       "phase": "reporting_history",
       "source_paths": [
@@ -485,6 +494,22 @@
         "reports/comparisons/adjudication_regression_snapshot.json",
         "reports/comparisons/scorer_calibration_summary.json",
         "reports/comparisons/scorer_refinement_triage.json"
+      ]
+    },
+    {
+      "checkpoint_id": "m49_scorer_candidate_control_tests",
+      "metrics": {
+        "accepted_scorer_changes": 0,
+        "controls": 4,
+        "current_differs_from_review_expectation": 2,
+        "scorer_code_changed": false
+      },
+      "phase": "scorer_candidate_controls",
+      "source_paths": [
+        "reports/comparisons/scorer_candidate_controls.json",
+        "reports/comparisons/scorer_refinement_triage.json",
+        "reports/comparisons/scorer_calibration_summary.json",
+        "src/scorers.py"
       ]
     }
   ]

@@ -38,6 +38,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m46-needs-discussion-resolution-closeout.md",
     REPO_ROOT / "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
     REPO_ROOT / "docs/milestones/m48-external-fixture-review-expansion-closeout.md",
+    REPO_ROOT / "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -242,6 +243,13 @@ def release_highlights(
             {
                 "area": "Review Expansion",
                 "summary": "Expanded public-safe adjudication coverage across previously unreviewed external fixture trace families.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M49" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Scorer Controls",
+                "summary": "Added focused deterministic controls for current scorer-refinement candidates without accepting scorer-code changes.",
             }
         )
     return highlights

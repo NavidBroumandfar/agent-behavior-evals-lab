@@ -25,6 +25,7 @@ ADJUDICATION_MANIFEST_PATH = REPO_ROOT / "traces/external/adjudication_manifest.
 ADJUDICATION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
 SCORER_CALIBRATION_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.json"
 SCORER_REFINEMENT_TRIAGE_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.json"
+SCORER_CANDIDATE_CONTROLS_PATH = REPO_ROOT / "reports/comparisons/scorer_candidate_controls.json"
 REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
 EVIDENCE_QUALITY_AUDIT_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.json"
 REPORTING_PRODUCT_SUMMARY_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
@@ -46,6 +47,7 @@ def build_trend_snapshot() -> dict[str, Any]:
     adjudication_snapshot = load_json_object(ADJUDICATION_SNAPSHOT_PATH)
     calibration_summary = load_json_object(SCORER_CALIBRATION_PATH)
     scorer_triage = load_json_object(SCORER_REFINEMENT_TRIAGE_PATH)
+    scorer_controls = load_json_object(SCORER_CANDIDATE_CONTROLS_PATH)
     report_manifest = load_json_object(REPORT_MANIFEST_PATH)
     evidence_audit = load_json_object(EVIDENCE_QUALITY_AUDIT_PATH)
     product_summary = load_json_object(REPORTING_PRODUCT_SUMMARY_PATH)
@@ -71,6 +73,7 @@ def build_trend_snapshot() -> dict[str, Any]:
             "report_manifest_coverage": manifest_coverage,
             "evidence_quality": evidence,
             "scorer_refinement_triage": scorer_refinement_triage_outcomes(scorer_triage),
+            "scorer_candidate_controls": scorer_candidate_control_outcomes(scorer_controls),
         }
 
     return {
@@ -99,6 +102,7 @@ def build_trend_snapshot() -> dict[str, Any]:
             fixture_summary,
             adjudication,
             scorer_triage,
+            scorer_controls,
             manifest_coverage,
             evidence,
             product_summary,
@@ -239,6 +243,20 @@ def scorer_refinement_triage_outcomes(scorer_triage: dict[str, Any]) -> dict[str
     }
 
 
+def scorer_candidate_control_outcomes(scorer_controls: dict[str, Any]) -> dict[str, Any]:
+    """Summarize scorer candidate control outcomes."""
+
+    decision = scorer_controls.get("decision_summary", {})
+    return {
+        "controls": int(decision.get("controls", 0)),
+        "current_matches_review_expectation": int(decision.get("current_matches_review_expectation", 0)),
+        "current_differs_from_review_expectation": int(decision.get("current_differs_from_review_expectation", 0)),
+        "candidate_source_mismatches": int(decision.get("candidate_source_mismatches", 0)),
+        "accepted_scorer_changes": int(decision.get("accepted_scorer_changes", 0)),
+        "scorer_code_changed": bool(decision.get("scorer_code_changed", False)),
+    }
+
+
 def evidence_quality_trend(evidence_audit: dict[str, Any]) -> dict[str, Any]:
     """Extract gap counts from the current evidence quality audit."""
 
@@ -257,6 +275,7 @@ def versioned_trend_snapshots(
     fixture_summary: dict[str, Any],
     adjudication: dict[str, Any],
     scorer_triage: dict[str, Any],
+    scorer_controls: dict[str, Any],
     manifest_coverage: dict[str, Any],
     evidence: dict[str, Any],
     product_summary: dict[str, Any],
@@ -273,6 +292,7 @@ def versioned_trend_snapshots(
     )
     dashboard = product_summary.get("product_kpis", [])
     triage = scorer_refinement_triage_outcomes(scorer_triage)
+    controls = scorer_candidate_control_outcomes(scorer_controls)
     return [
         {
             "checkpoint_id": "baseline_mock_run",
@@ -396,6 +416,22 @@ def versioned_trend_snapshots(
                 "accepted_scorer_changes": triage["accepted_scorer_changes"],
             },
         },
+        {
+            "checkpoint_id": "m49_scorer_candidate_control_tests",
+            "phase": "scorer_candidate_controls",
+            "source_paths": [
+                display_path(SCORER_CANDIDATE_CONTROLS_PATH),
+                display_path(SCORER_REFINEMENT_TRIAGE_PATH),
+                display_path(SCORER_CALIBRATION_PATH),
+                display_path(SCORER_PATH),
+            ],
+            "metrics": {
+                "controls": controls["controls"],
+                "current_differs_from_review_expectation": controls["current_differs_from_review_expectation"],
+                "accepted_scorer_changes": controls["accepted_scorer_changes"],
+                "scorer_code_changed": controls["scorer_code_changed"],
+            },
+        },
     ]
 
 
@@ -441,6 +477,7 @@ def generate_markdown(snapshot: dict[str, Any]) -> str:
         f"| Report artifacts | {manifest['report_artifacts']} |",
         f"| Evidence gaps | {evidence['gap_count']} |",
         f"| Scorer triage candidates | {current['scorer_refinement_triage']['candidates']} |",
+        f"| Scorer candidate controls | {current['scorer_candidate_controls']['controls']} |",
         "",
         "These trends describe evaluator health from committed local artifacts. They are not live model-performance trends, leaderboard results, or production benchmark claims.",
         "",
@@ -590,6 +627,7 @@ def source_paths(fixture_groups: list[dict[str, Any]]) -> list[str]:
         ADJUDICATION_SNAPSHOT_PATH,
         SCORER_CALIBRATION_PATH,
         SCORER_REFINEMENT_TRIAGE_PATH,
+        SCORER_CANDIDATE_CONTROLS_PATH,
         REPORT_MANIFEST_PATH,
         EVIDENCE_QUALITY_AUDIT_PATH,
         REPORTING_PRODUCT_SUMMARY_PATH,

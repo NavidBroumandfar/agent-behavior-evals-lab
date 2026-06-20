@@ -10,6 +10,8 @@ M47 triages the current scorer-refinement candidates and records that no scorer-
 
 M48 expands calibration inputs across previously unreviewed external fixture trace families. The expansion increases upheld pass and failure evidence, but does not accept scorer-code changes.
 
+M49 adds focused scorer candidate controls around the current false-positive and false-negative evidence. The controls make current scorer/reviewer mismatches executable without changing scorer behavior.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`

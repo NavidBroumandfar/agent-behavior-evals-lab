@@ -23,6 +23,8 @@ For M47, no scorer-code changes are accepted. The current false-positive and fal
 
 M48 regenerates the triage after adding broader external fixture review coverage. The added records uphold existing scorer outcomes, so the same scorer-change candidates remain deferred.
 
+M49 adds focused control tests for those candidates and still records a no-change scorer decision. The controls are evidence for a later deterministic change-decision phase, not an automatic scorer update.
+
 ## Boundary
 
 The triage does not change `src/scorers.py`, rewrite scored traces, call providers, run local models, execute Hermes or OpenClaw, inspect private logs, use credentials, use networks, or perform external actions.

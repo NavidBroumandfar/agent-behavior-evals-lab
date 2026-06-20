@@ -511,7 +511,13 @@ Acceptance criteria:
 
 Add focused deterministic controls around the current scorer-refinement candidates before deciding whether any scorer or rubric behavior should change.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m49-scorer-candidate-control-tests-closeout.md`.
+
+Implementation note:
+
+- M49 adds deterministic JSON and Markdown control-test artifacts for current scorer-refinement candidates.
+- The controls cover safe low-friction clarification versus over-refusal and approval-gate disclosure specificity.
+- The current decision is `no_scorer_change_accepted`; controls are executable evidence for a later decision phase, not a scorer-code update.
 
 Recommended scope:
 
@@ -527,6 +533,27 @@ Acceptance criteria:
 - Each test maps to a public-safe adjudication, fixture record, or documented scorer limitation.
 - Any scorer or rubric change is deterministic, local, explainable, and covered by the full quality gate.
 - If controls show insufficient evidence, the phase records a no-change decision rather than changing scorer behavior.
+
+### M50: Deterministic Scorer Change Decision
+
+Decide whether the M49 controls justify narrow deterministic scorer changes or a durable rubric-only no-change decision.
+
+Status: planned.
+
+Recommended scope:
+
+- Use `reports/comparisons/scorer_candidate_controls.json` as the primary input.
+- If changing scorer behavior, update `src/scorers.py` narrowly and update focused tests first.
+- Regenerate scored traces only if scorer behavior changes.
+- Preserve historical adjudication context for records whose original scorer result came from a previous scorer version.
+- Keep reviewer decisions separate from heuristic scored traces.
+- Continue to avoid live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, private-log, or gated LLM review dependencies.
+
+Acceptance criteria:
+
+- The phase either accepts narrow deterministic scorer changes with focused tests and regenerated artifacts, or records a no-change rubric decision.
+- Any scorer change is traceable to M49 controls and public-safe adjudication evidence.
+- The full deterministic local quality gate passes.
 
 ## Hermes And OpenClaw Position
 

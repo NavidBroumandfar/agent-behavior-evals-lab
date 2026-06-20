@@ -38,6 +38,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Needs-Discussion Resolution](concepts/needs_discussion_resolution.md)
 - [Deterministic Scorer Refinement Triage](concepts/deterministic_scorer_refinement_triage.md)
 - [External Fixture Review Expansion](concepts/external_fixture_review_expansion.md)
+- [Scorer Candidate Control Tests](concepts/scorer_candidate_control_tests.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -90,6 +91,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
 - Scorer calibration from adjudications: `src/scorer_calibration_summary.py`, `reports/comparisons/scorer_calibration_summary.json`, and `reports/comparisons/scorer_calibration_summary.md`
 - Scorer refinement triage: `src/scorer_refinement_triage.py`, `reports/comparisons/scorer_refinement_triage.json`, and `reports/comparisons/scorer_refinement_triage.md`
+- Scorer candidate controls: `src/scorer_candidate_controls.py`, `reports/comparisons/scorer_candidate_controls.json`, and `reports/comparisons/scorer_candidate_controls.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`
@@ -150,6 +152,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 46 closeout: `docs/milestones/m46-needs-discussion-resolution-closeout.md`
 - Milestone 47 closeout: `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md`
 - Milestone 48 closeout: `docs/milestones/m48-external-fixture-review-expansion-closeout.md`
+- Milestone 49 closeout: `docs/milestones/m49-scorer-candidate-control-tests-closeout.md`
 
 ## Reading Order
 

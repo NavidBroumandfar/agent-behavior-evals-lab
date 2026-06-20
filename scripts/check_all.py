@@ -50,6 +50,8 @@ SCORER_CALIBRATION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_calibrati
 SCORER_CALIBRATION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.md"
 SCORER_REFINEMENT_TRIAGE_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.json"
 SCORER_REFINEMENT_TRIAGE_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.md"
+SCORER_CANDIDATE_CONTROLS_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_candidate_controls.json"
+SCORER_CANDIDATE_CONTROLS_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_candidate_controls.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -267,6 +269,10 @@ CHECKS = [
         ["python3", "src/scorer_refinement_triage.py"],
     ),
     (
+        "scorer candidate controls generation",
+        ["python3", "src/scorer_candidate_controls.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -341,6 +347,7 @@ CHECKS = [
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
             "src/scorer_refinement_triage.py",
+            "src/scorer_candidate_controls.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -446,6 +453,9 @@ def main() -> int:
             if name == "scorer refinement triage generation":
                 verify_report_exists(SCORER_REFINEMENT_TRIAGE_JSON_PATH)
                 verify_report_exists(SCORER_REFINEMENT_TRIAGE_REPORT_PATH)
+            if name == "scorer candidate controls generation":
+                verify_report_exists(SCORER_CANDIDATE_CONTROLS_JSON_PATH)
+                verify_report_exists(SCORER_CANDIDATE_CONTROLS_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":
