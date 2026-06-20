@@ -296,6 +296,57 @@
         "contains_private_data": false,
         "credentials_required": false
       }
+    },
+    {
+      "artifact_id": "reporting_product_summary_snapshot",
+      "label": "Reporting Product Summary JSON",
+      "path": "reports/comparisons/reporting_product_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/reporting_product_summary.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl",
+        "traces/external/fixture_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "traces/external/harness_bridge_plan.example.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/baseline_regression_snapshot.json",
+        "reports/comparisons/adjudication_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Dashboard-ready deterministic JSON summary for repeated development decisions.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "reporting_product_summary_report",
+      "label": "Reporting Product Summary Report",
+      "path": "reports/comparisons/reporting_product_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/reporting_product_summary.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl",
+        "traces/external/fixture_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "traces/external/harness_bridge_plan.example.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/reporting_product_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing executive and engineering view generated from the M38 dashboard-ready JSON summary sources.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
     }
   ]
 }

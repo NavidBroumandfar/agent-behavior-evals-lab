@@ -225,6 +225,13 @@ Decision rule:
 
 Make the lab easier to use for repeated development.
 
+Status: complete / review-ready. See `docs/milestones/m38-reporting-product-layer-closeout.md`.
+
+Implementation note:
+
+- M38 adds a deterministic dashboard-ready JSON summary and a Markdown executive/engineering report generated from already-scored traces, fixture manifests, adjudication snapshots, and the M37 harness decision plan.
+- No live output collection, scorer changes, provider calls, model execution, harness execution, network access, private data, or external actions are introduced.
+
 Deliverables:
 
 - Run comparison summaries across target versions.

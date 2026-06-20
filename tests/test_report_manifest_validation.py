@@ -45,10 +45,10 @@ class ReportManifestValidationTests(unittest.TestCase):
 
         self.assertEqual(summary["manifest_path"], "reports/comparisons/report_manifest.json")
         self.assertEqual(summary["schema_path"], "schemas/report_manifest.schema.json")
-        self.assertEqual(summary["artifact_count"], 13)
-        self.assertEqual(summary["markdown_report_count"], 11)
-        self.assertEqual(summary["json_snapshot_count"], 2)
-        self.assertEqual(summary["quality_gate_artifact_count"], 13)
+        self.assertEqual(summary["artifact_count"], 15)
+        self.assertEqual(summary["markdown_report_count"], 12)
+        self.assertEqual(summary["json_snapshot_count"], 3)
+        self.assertEqual(summary["quality_gate_artifact_count"], 15)
 
     def test_rejects_missing_required_top_level_field(self):
         manifest = load_manifest_object()

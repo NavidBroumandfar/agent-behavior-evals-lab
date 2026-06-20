@@ -31,6 +31,8 @@ DRY_RUN_ADAPTER_TRACE_PATH = REPO_ROOT / "traces/scored/dry_run_adapter_output_i
 EXPECTED_DRY_RUN_ADAPTER_TRACE_LINES = 4
 EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/external_fixture_comparison_report.md"
 BASELINE_SELF_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/baseline_self_comparison_report.md"
+REPORTING_PRODUCT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
+REPORTING_PRODUCT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 ADJUDICATION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudication_summary_report.md"
 ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated_aggregate_report.md"
@@ -218,6 +220,10 @@ CHECKS = [
         ],
     ),
     (
+        "reporting product summary generation",
+        ["python3", "src/reporting_product_summary.py"],
+    ),
+    (
         "report manifest validation",
         ["python3", "src/validate_report_manifest.py"],
     ),
@@ -259,6 +265,7 @@ CHECKS = [
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/compare_scored_traces.py",
+            "src/reporting_product_summary.py",
             "scripts/dev.py",
         ],
     ),
@@ -349,6 +356,9 @@ def main() -> int:
                 verify_report_exists(ADJUDICATION_REGRESSION_SNAPSHOT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
+            if name == "reporting product summary generation":
+                verify_report_exists(REPORTING_PRODUCT_SUMMARY_JSON_PATH)
+                verify_report_exists(REPORTING_PRODUCT_SUMMARY_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
