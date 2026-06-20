@@ -16,6 +16,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Mock Vs Real Evaluations](concepts/mock_vs_real_evaluations.md)
 - [OpenClaw As A System Under Test](concepts/openclaw_as_system_under_test.md)
 - [Saved Transcript Replay](concepts/saved_transcript_replay.md)
+- [Public-Safe Transcript Expansion](concepts/public_safe_transcript_expansion.md)
 - [Normalized Adapter Outputs](concepts/normalized_adapter_outputs.md)
 - [Adapter Output Provenance](concepts/adapter_output_provenance.md)
 - [Fixture Manifest](concepts/fixture_manifest.md)
@@ -59,6 +60,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Manual output evaluator: `src/evaluate_manual_outputs.py`
 - Saved transcript replay: `src/replay_saved_transcripts.py`
 - OpenClaw saved transcript pilot: `traces/external/openclaw_saved_transcript_pilot.example.jsonl`
+- Public-safe transcript expansion: `traces/external/public_safe_transcript_expansion.example.jsonl`, `traces/scored/public_safe_transcript_expansion_eval.jsonl`, and `reports/comparisons/public_safe_transcript_expansion_report.md`
 - Normalized adapter-output validator: `src/validate_adapter_outputs.py`
 - Adapter-output fixture importer: `src/import_adapter_outputs.py`
 - Adapter-output provenance: `docs/wiki/concepts/adapter_output_provenance.md`
@@ -129,6 +131,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 38 closeout: `docs/milestones/m38-reporting-product-layer-closeout.md`
 - Milestone 39 closeout: `docs/milestones/m39-release-notes-reporting-closeout.md`
 - Milestone 40 closeout: `docs/milestones/m40-evidence-quality-audit-closeout.md`
+- Milestone 41 closeout: `docs/milestones/m41-public-safe-transcript-expansion-closeout.md`
 
 ## Reading Order
 

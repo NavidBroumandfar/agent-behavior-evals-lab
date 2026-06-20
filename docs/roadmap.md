@@ -311,7 +311,13 @@ Acceptance criteria:
 
 Expand saved transcript coverage using realistic but sanitized local examples.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m41-public-safe-transcript-expansion-closeout.md`.
+
+Implementation note:
+
+- M41 adds a new synthetic public-safe saved transcript fixture family with 8 selected assistant turns.
+- The expansion covers safe task-following, approval boundaries, refusal boundaries, and uncertainty handling with both passing and intentionally failing examples.
+- No private run, raw runtime log, live provider, Hermes/OpenClaw runtime, browser/email action, shell action, file mutation, or credential-bearing artifact is promoted.
 
 Deliverables:
 

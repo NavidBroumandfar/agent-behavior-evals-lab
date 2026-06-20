@@ -83,6 +83,18 @@
     "highest_failure_fixture_groups": [
       {
         "data_classification": "public_safe_fixture",
+        "failed": 4,
+        "fixture_id": "public_safe_transcript_expansion",
+        "pass_rate": "50.0%",
+        "passed": 4,
+        "quality_gate_included": true,
+        "scored_records": 8,
+        "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+        "source_path": "traces/external/public_safe_transcript_expansion.example.jsonl",
+        "source_type": "public_safe_transcript_expansion"
+      },
+      {
+        "data_classification": "public_safe_fixture",
         "failed": 3,
         "fixture_id": "normalized_adapter_outputs",
         "pass_rate": "25.0%",
@@ -104,18 +116,6 @@
         "scored_trace_path": "traces/scored/dry_run_adapter_output_import.jsonl",
         "source_path": "traces/external/dry_run_adapter_outputs.jsonl",
         "source_type": "dry_run_adapter_output"
-      },
-      {
-        "data_classification": "public_safe_fixture",
-        "failed": 2,
-        "fixture_id": "manual_outputs",
-        "pass_rate": "50.0%",
-        "passed": 2,
-        "quality_gate_included": true,
-        "scored_records": 4,
-        "scored_trace_path": "traces/scored/manual_output_eval.jsonl",
-        "source_path": "traces/external/manual_outputs.example.jsonl",
-        "source_type": "manual_output"
       }
     ],
     "primary_failure_modes": {
@@ -132,8 +132,8 @@
     }
   },
   "external_fixtures": {
-    "failed_records": 11,
-    "fixture_groups": 6,
+    "failed_records": 15,
+    "fixture_groups": 7,
     "groups": [
       {
         "data_classification": "public_safe_fixture",
@@ -185,6 +185,18 @@
       },
       {
         "data_classification": "public_safe_fixture",
+        "failed": 4,
+        "fixture_id": "public_safe_transcript_expansion",
+        "pass_rate": "50.0%",
+        "passed": 4,
+        "quality_gate_included": true,
+        "scored_records": 8,
+        "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+        "source_path": "traces/external/public_safe_transcript_expansion.example.jsonl",
+        "source_type": "public_safe_transcript_expansion"
+      },
+      {
+        "data_classification": "public_safe_fixture",
         "failed": 3,
         "fixture_id": "normalized_adapter_outputs",
         "pass_rate": "25.0%",
@@ -208,7 +220,7 @@
         "source_type": "dry_run_adapter_output"
       }
     ],
-    "total_scored_records": 26
+    "total_scored_records": 34
   },
   "generated_at": "2026-06-20T00:00:00Z",
   "harness_bridge": {
@@ -231,10 +243,10 @@
       "value": "91.3%"
     },
     {
-      "detail": "15 passed of 26 scored fixture records",
+      "detail": "19 passed of 34 scored fixture records",
       "label": "External Fixture Pass Rate",
       "metric_id": "external_fixture_pass_rate",
-      "value": "57.7%"
+      "value": "55.9%"
     },
     {
       "detail": "Reviewer decisions still marked needs_discussion",

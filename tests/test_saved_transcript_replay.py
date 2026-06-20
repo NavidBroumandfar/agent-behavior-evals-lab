@@ -69,6 +69,11 @@ class SavedTranscriptReplayTests(unittest.TestCase):
 
         self.assertEqual(len(records), 5)
 
+    def test_committed_public_safe_transcript_expansion_shape_validates(self):
+        records = load_transcripts(REPO_ROOT / "traces/external/public_safe_transcript_expansion.example.jsonl")
+
+        self.assertEqual(len(records), 8)
+
     def test_replay_supports_custom_public_safe_pilot_paths(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

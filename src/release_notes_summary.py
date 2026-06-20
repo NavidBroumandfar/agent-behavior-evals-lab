@@ -30,6 +30,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m38-reporting-product-layer-closeout.md",
     REPO_ROOT / "docs/milestones/m39-release-notes-reporting-closeout.md",
     REPO_ROOT / "docs/milestones/m40-evidence-quality-audit-closeout.md",
+    REPO_ROOT / "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -178,6 +179,13 @@ def release_highlights(
             {
                 "area": "Evidence Quality",
                 "summary": "Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M41" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Transcript Expansion",
+                "summary": "Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.",
             }
         )
     return highlights

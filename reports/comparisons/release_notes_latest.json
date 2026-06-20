@@ -11,8 +11,8 @@
     "baseline_failed": 11,
     "baseline_pass_rate": "91.3%",
     "baseline_records": 126,
-    "external_fixture_groups": 6,
-    "external_fixture_records": 26,
+    "external_fixture_groups": 7,
+    "external_fixture_records": 34,
     "harness_bridge_decision": "defer_harness_integration",
     "review_needs_discussion": 3,
     "runtime_native_state_required": false
@@ -38,6 +38,10 @@
     {
       "area": "Evidence Quality",
       "summary": "Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage."
+    },
+    {
+      "area": "Transcript Expansion",
+      "summary": "Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior."
     }
   ],
   "milestones": [
@@ -82,6 +86,13 @@
       "path": "docs/milestones/m40-evidence-quality-audit-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 40 - Evidence Quality Audit"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M41",
+      "path": "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 41 - Public-Safe Transcript Expansion"
     }
   ],
   "quality_gate": {
@@ -89,8 +100,8 @@
     "deterministic_local_only": true,
     "json_snapshots": 5,
     "live_execution": false,
-    "markdown_reports": 14,
-    "report_artifacts_indexed": 19
+    "markdown_reports": 15,
+    "report_artifacts_indexed": 20
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -114,7 +125,8 @@
     "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
     "docs/milestones/m38-reporting-product-layer-closeout.md",
     "docs/milestones/m39-release-notes-reporting-closeout.md",
-    "docs/milestones/m40-evidence-quality-audit-closeout.md"
+    "docs/milestones/m40-evidence-quality-audit-closeout.md",
+    "docs/milestones/m41-public-safe-transcript-expansion-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

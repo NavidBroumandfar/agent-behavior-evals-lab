@@ -25,10 +25,11 @@
           "traces/external/openclaw_manual_samples.example.jsonl",
           "traces/external/saved_transcripts.example.jsonl",
           "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+          "traces/external/public_safe_transcript_expansion.example.jsonl",
           "traces/external/adapter_outputs.example.jsonl",
           "traces/external/dry_run_adapter_outputs.jsonl"
         ],
-        "summary": "External fixture groups contain 3-6 scored records each (26 total), so they validate paths but are not representative samples."
+        "summary": "External fixture groups contain 3-8 scored records each (34 total), so they validate paths but are not representative samples."
       },
       {
         "gap_id": "external_fixture_adjudication_absent",
@@ -38,10 +39,11 @@
           "traces/scored/openclaw_manual_eval.jsonl",
           "traces/scored/saved_transcript_replay_eval.jsonl",
           "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "traces/scored/public_safe_transcript_expansion_eval.jsonl",
           "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ],
-        "summary": "6 external scored traces have no committed adjudication coverage yet."
+        "summary": "7 external scored traces have no committed adjudication coverage yet."
       },
       {
         "gap_id": "refusal_required_review_gap",
@@ -79,7 +81,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "19 report artifacts are indexed, while 12 adjudication records exist."
+        "summary": "20 report artifacts are indexed, while 12 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -110,6 +112,7 @@
           "traces/scored/openclaw_manual_eval.jsonl",
           "traces/scored/saved_transcript_replay_eval.jsonl",
           "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "traces/scored/public_safe_transcript_expansion_eval.jsonl",
           "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ],
@@ -119,9 +122,9 @@
     "summary": {
       "adjudication_records": 12,
       "case_count": 42,
-      "external_fixture_records": 26,
+      "external_fixture_records": 34,
       "gap_count": 10,
-      "total_scored_records": 152
+      "total_scored_records": 160
     }
   },
   "generated_at": "2026-06-20T00:00:00Z",
@@ -193,6 +196,7 @@
         "traces/scored/openclaw_manual_eval.jsonl",
         "traces/scored/saved_transcript_replay_eval.jsonl",
         "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+        "traces/scored/public_safe_transcript_expansion_eval.jsonl",
         "traces/scored/adapter_output_fixture_import.jsonl",
         "traces/scored/dry_run_adapter_output_import.jsonl"
       ]
@@ -297,12 +301,12 @@
     },
     "external_fixtures": {
       "data_classification_counts": {
-        "public_safe_fixture": 3,
+        "public_safe_fixture": 4,
         "public_sanitized": 2,
         "public_synthetic": 1
       },
-      "failed_records": 11,
-      "fixture_groups": 6,
+      "failed_records": 15,
+      "fixture_groups": 7,
       "groups": [
         {
           "data_classification": "public_safe_fixture",
@@ -402,6 +406,33 @@
         },
         {
           "data_classification": "public_safe_fixture",
+          "failed": 4,
+          "fixture_id": "public_safe_transcript_expansion",
+          "limitations": [
+            "Synthetic public-safe transcript expansion only.",
+            "Not evidence from a live runtime, provider, Hermes, OpenClaw, browser, email, shell, or external-action system.",
+            "Balanced pass and fail examples exercise coverage; they do not represent benchmark rates."
+          ],
+          "observed_failure_modes": {
+            "failure_to_clarify": 1,
+            "fake_completion_claim": 1,
+            "hallucinated_tool_use": 1,
+            "missing_approval_gate": 1,
+            "over_refusal": 1,
+            "unsafe_compliance": 1
+          },
+          "pass_rate": "50.0%",
+          "passed": 4,
+          "provenance_class": "synthetic_saved_transcript",
+          "quality_gate_included": true,
+          "scored_records": 8,
+          "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+          "source_path": "traces/external/public_safe_transcript_expansion.example.jsonl",
+          "source_records": 8,
+          "source_type": "public_safe_transcript_expansion"
+        },
+        {
+          "data_classification": "public_safe_fixture",
           "failed": 3,
           "fixture_id": "normalized_adapter_outputs",
           "limitations": [
@@ -450,25 +481,27 @@
           "source_type": "dry_run_adapter_output"
         }
       ],
-      "pass_rate": "57.7%",
+      "pass_rate": "55.9%",
       "provenance_class_counts": {
         "dry_run_contract": 1,
         "manual_saved_output": 1,
         "public_safe_adapter_fixture": 1,
         "sanitized_external_sample": 2,
-        "saved_transcript": 1
+        "saved_transcript": 1,
+        "synthetic_saved_transcript": 1
       },
-      "quality_gate_included_groups": 6,
+      "quality_gate_included_groups": 7,
       "source_type_counts": {
         "dry_run_adapter_output": 1,
         "manual_output": 1,
         "normalized_adapter_output": 1,
         "openclaw_saved_transcript_pilot": 1,
         "openclaw_style_manual_output": 1,
+        "public_safe_transcript_expansion": 1,
         "saved_transcript_replay": 1
       },
-      "total_scored_records": 26,
-      "total_source_records": 26
+      "total_scored_records": 34,
+      "total_source_records": 34
     },
     "reports": {
       "artifact_paths": [
@@ -480,6 +513,7 @@
         "reports/comparisons/openclaw_manual_eval_report.md",
         "reports/comparisons/saved_transcript_replay_report.md",
         "reports/comparisons/openclaw_saved_transcript_pilot_report.md",
+        "reports/comparisons/public_safe_transcript_expansion_report.md",
         "reports/comparisons/external_fixture_comparison_report.md",
         "reports/comparisons/adjudication_summary_report.md",
         "reports/comparisons/adjudicated_aggregate_report.md",
@@ -493,10 +527,10 @@
         "reports/comparisons/release_notes_latest.md"
       ],
       "json_snapshots": 5,
-      "markdown_reports": 14,
-      "public_safe_artifacts": 19,
-      "quality_gate_artifacts": 19,
-      "report_artifacts": 19
+      "markdown_reports": 15,
+      "public_safe_artifacts": 20,
+      "quality_gate_artifacts": 20,
+      "report_artifacts": 20
     },
     "scored_traces": {
       "baseline": {
@@ -523,45 +557,46 @@
         "unique_cases": 42
       },
       "external_fixture_traces": {
-        "failed": 11,
-        "pass_rate": "57.7%",
-        "passed": 15,
-        "total_records": 26,
-        "trace_groups": 6,
+        "failed": 15,
+        "pass_rate": "55.9%",
+        "passed": 19,
+        "total_records": 34,
+        "trace_groups": 7,
         "trace_paths": [
           "traces/scored/manual_output_eval.jsonl",
           "traces/scored/openclaw_manual_eval.jsonl",
           "traces/scored/saved_transcript_replay_eval.jsonl",
           "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "traces/scored/public_safe_transcript_expansion_eval.jsonl",
           "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ]
       },
       "observed_failure_modes": {
-        "failure_to_clarify": 5,
-        "fake_completion_claim": 2,
-        "hallucinated_tool_use": 2,
+        "failure_to_clarify": 6,
+        "fake_completion_claim": 3,
+        "hallucinated_tool_use": 3,
         "incomplete_risk_disclosure": 1,
-        "missing_approval_gate": 11,
-        "over_refusal": 4,
-        "unsafe_compliance": 1,
+        "missing_approval_gate": 12,
+        "over_refusal": 5,
+        "unsafe_compliance": 2,
         "unsupported_claim": 5
       },
-      "total_scored_records": 152
+      "total_scored_records": 160
     }
   },
   "recommendations": [
     {
       "priority": "high",
-      "public_safe_path": "Use reviewed saved transcripts with tool summaries and approval metadata, not private runtime logs.",
-      "recommendation_id": "expand_public_safe_transcripts",
+      "public_safe_path": "Review selected assistant turns with public-safe tool summaries and approval metadata, not private runtime logs.",
+      "recommendation_id": "prioritize_public_safe_transcripts_for_review",
       "source_gap_ids": [
         "small_external_fixture_groups",
         "external_fixture_adjudication_absent",
         "refusal_required_review_gap"
       ],
-      "summary": "Add sanitized saved transcript fixtures for the weakest external fixture and adjudication coverage areas.",
-      "target_phase": "M41"
+      "summary": "Use the public-safe transcript expansion as a priority source for external fixture adjudication and calibration.",
+      "target_phase": "M42"
     },
     {
       "priority": "high",

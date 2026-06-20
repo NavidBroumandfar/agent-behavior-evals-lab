@@ -21,13 +21,13 @@ class EvidenceQualityAuditTests(unittest.TestCase):
         self.assertFalse(audit["safety"]["live_execution"])
         self.assertEqual(audit["inventory"]["eval_cases"]["total_cases"], 42)
         self.assertEqual(audit["inventory"]["scored_traces"]["baseline"]["total_records"], 126)
-        self.assertEqual(audit["inventory"]["external_fixtures"]["total_scored_records"], 26)
+        self.assertEqual(audit["inventory"]["external_fixtures"]["total_scored_records"], 34)
         self.assertEqual(audit["inventory"]["adjudications"]["adjudication_records"], 12)
         self.assertEqual(
             len(audit["inventory"]["adjudications"]["unadjudicated_external_scored_traces"]),
-            6,
+            7,
         )
-        self.assertEqual(audit["inventory"]["reports"]["report_artifacts"], 19)
+        self.assertEqual(audit["inventory"]["reports"]["report_artifacts"], 20)
 
     def test_gap_report_separates_gap_types_with_source_paths(self):
         audit = build_audit()
@@ -35,7 +35,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
 
         self.assertEqual(gaps["summary"]["gap_count"], 10)
         self.assertEqual(gaps["summary"]["case_count"], 42)
-        self.assertEqual(gaps["summary"]["total_scored_records"], 152)
+        self.assertEqual(gaps["summary"]["total_scored_records"], 160)
         self.assertIn("missing_fixture_coverage", gaps)
         self.assertIn("scorer_weakness", gaps)
         self.assertIn("reporting_weakness", gaps)

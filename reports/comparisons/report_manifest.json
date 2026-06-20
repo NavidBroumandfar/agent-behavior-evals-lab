@@ -192,6 +192,27 @@
       }
     },
     {
+      "artifact_id": "public_safe_transcript_expansion_report",
+      "label": "Public-Safe Transcript Expansion Report",
+      "path": "reports/comparisons/public_safe_transcript_expansion_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/replay_saved_transcripts.py",
+      "input_paths": [
+        "traces/external/public_safe_transcript_expansion.example.jsonl",
+        "traces/scored/public_safe_transcript_expansion_eval.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Human-readable report for the M41 synthetic public-safe saved-transcript expansion fixture.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "external_fixture_comparison_report",
       "label": "External Fixture Comparison Report",
       "path": "reports/comparisons/external_fixture_comparison_report.md",
@@ -434,7 +455,8 @@
         "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
         "docs/milestones/m38-reporting-product-layer-closeout.md",
         "docs/milestones/m39-release-notes-reporting-closeout.md",
-        "docs/milestones/m40-evidence-quality-audit-closeout.md"
+        "docs/milestones/m40-evidence-quality-audit-closeout.md",
+        "docs/milestones/m41-public-safe-transcript-expansion-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -464,13 +486,14 @@
         "docs/milestones/m37-optional-harness-integration-decision-closeout.md",
         "docs/milestones/m38-reporting-product-layer-closeout.md",
         "docs/milestones/m39-release-notes-reporting-closeout.md",
-        "docs/milestones/m40-evidence-quality-audit-closeout.md"
+        "docs/milestones/m40-evidence-quality-audit-closeout.md",
+        "docs/milestones/m41-public-safe-transcript-expansion-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"
       ],
       "quality_gate_included": true,
-      "notes": "Reader-facing release notes generated from the M39 release-note JSON snapshot sources.",
+      "notes": "Reader-facing release notes generated from the latest release-note JSON snapshot sources.",
       "safety_assertions": {
         "public_safe": true,
         "live_execution": false,

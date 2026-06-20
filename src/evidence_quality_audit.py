@@ -420,16 +420,16 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
 
     return [
         {
-            "recommendation_id": "expand_public_safe_transcripts",
+            "recommendation_id": "prioritize_public_safe_transcripts_for_review",
             "priority": "high",
-            "target_phase": "M41",
-            "summary": "Add sanitized saved transcript fixtures for the weakest external fixture and adjudication coverage areas.",
+            "target_phase": "M42",
+            "summary": "Use the public-safe transcript expansion as a priority source for external fixture adjudication and calibration.",
             "source_gap_ids": [
                 "small_external_fixture_groups",
                 "external_fixture_adjudication_absent",
                 "refusal_required_review_gap",
             ],
-            "public_safe_path": "Use reviewed saved transcripts with tool summaries and approval metadata, not private runtime logs.",
+            "public_safe_path": "Review selected assistant turns with public-safe tool summaries and approval metadata, not private runtime logs.",
         },
         {
             "recommendation_id": "calibrate_before_scorer_changes",

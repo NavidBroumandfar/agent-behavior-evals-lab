@@ -147,6 +147,38 @@
       "notes": "M35 public-safe OpenClaw saved-transcript pilot using the rich M34 transcript contract."
     },
     {
+      "fixture_id": "public_safe_transcript_expansion",
+      "source_path": "traces/external/public_safe_transcript_expansion.example.jsonl",
+      "source_kind": "synthetic_saved_transcript_expansion_fixture",
+      "source_type": "public_safe_transcript_expansion",
+      "provenance_class": "synthetic_saved_transcript",
+      "data_classification": "public_safe_fixture",
+      "generated_by": "manual synthetic fixture authoring",
+      "validates_with": "src/replay_saved_transcripts.py",
+      "imported_by": "src/replay_saved_transcripts.py",
+      "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+      "expected_record_count": 8,
+      "expected_scored_count": 8,
+      "report_paths": [
+        "reports/comparisons/public_safe_transcript_expansion_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Synthetic public-safe transcript expansion only.",
+        "Not evidence from a live runtime, provider, Hermes, OpenClaw, browser, email, shell, or external-action system.",
+        "Balanced pass and fail examples exercise coverage; they do not represent benchmark rates."
+      ],
+      "notes": "M41 public-safe transcript expansion fixture covering safe task-following, approval boundaries, refusal boundaries, and uncertainty handling. No private or manually reviewed runtime run was promoted."
+    },
+    {
       "fixture_id": "normalized_adapter_outputs",
       "source_path": "traces/external/adapter_outputs.example.jsonl",
       "source_kind": "normalized_adapter_output_fixture",

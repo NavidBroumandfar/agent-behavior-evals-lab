@@ -23,6 +23,8 @@ SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay
 EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES = 5
 OPENCLAW_SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl"
 EXPECTED_OPENCLAW_SAVED_TRANSCRIPT_TRACE_LINES = 3
+PUBLIC_SAFE_TRANSCRIPT_EXPANSION_TRACE_PATH = REPO_ROOT / "traces/scored/public_safe_transcript_expansion_eval.jsonl"
+EXPECTED_PUBLIC_SAFE_TRANSCRIPT_EXPANSION_TRACE_LINES = 8
 ADAPTER_OUTPUT_TRACE_PATH = REPO_ROOT / "traces/scored/adapter_output_fixture_import.jsonl"
 EXPECTED_ADAPTER_OUTPUT_TRACE_LINES = 4
 DRY_RUN_ADAPTER_OUTPUT_PATH = REPO_ROOT / "traces/external/dry_run_adapter_outputs.jsonl"
@@ -38,6 +40,7 @@ EVIDENCE_QUALITY_AUDIT_REPORT_PATH = REPO_ROOT / "reports/comparisons/evidence_q
 RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
 RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
+PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 ADJUDICATION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudication_summary_report.md"
 ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated_aggregate_report.md"
 ADJUDICATION_REGRESSION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
@@ -51,6 +54,11 @@ OPENCLAW_SAVED_TRANSCRIPT_REPORT_CONTEXT = (
     "This public-safe pilot treats sanitized OpenClaw-style saved transcripts as one system-under-test fixture family. "
     "The records exercise approval gates, refusal boundaries, and uncertainty handling through selected assistant turns "
     "only; no live OpenClaw execution, private runtime logs, credentials, tools, or external actions are used."
+)
+PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_CONTEXT = (
+    "M41 expands saved transcript coverage with synthetic public-safe examples spanning safe task-following, "
+    "approval boundaries, refusal boundaries, and uncertainty handling. The fixture uses selected assistant turns "
+    "only; no live runtime, private logs, credentials, tools, or external actions are used."
 )
 
 CHECKS = [
@@ -160,6 +168,25 @@ CHECKS = [
             "OpenClaw Saved Transcript Pilot Report",
             "--report-context",
             OPENCLAW_SAVED_TRANSCRIPT_REPORT_CONTEXT,
+        ],
+    ),
+    (
+        "public-safe transcript expansion generation",
+        [
+            "python3",
+            "src/replay_saved_transcripts.py",
+            "--input",
+            "traces/external/public_safe_transcript_expansion.example.jsonl",
+            "--output",
+            "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+            "--report",
+            "reports/comparisons/public_safe_transcript_expansion_report.md",
+            "--run-id",
+            "public_safe_transcript_expansion",
+            "--report-title",
+            "Public-Safe Transcript Expansion Report",
+            "--report-context",
+            PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_CONTEXT,
         ],
     ),
     (
@@ -361,6 +388,12 @@ def main() -> int:
             if name == "openclaw saved transcript pilot generation":
                 verify_trace_count(OPENCLAW_SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_OPENCLAW_SAVED_TRANSCRIPT_TRACE_LINES)
                 verify_report_exists(OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH)
+            if name == "public-safe transcript expansion generation":
+                verify_trace_count(
+                    PUBLIC_SAFE_TRANSCRIPT_EXPANSION_TRACE_PATH,
+                    EXPECTED_PUBLIC_SAFE_TRANSCRIPT_EXPANSION_TRACE_LINES,
+                )
+                verify_report_exists(PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH)
             if name == "external fixture comparison report generation":
                 verify_report_exists(EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH)
             if name == "adjudication report generation":

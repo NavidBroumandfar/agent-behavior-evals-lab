@@ -6,7 +6,7 @@
 | --- | --- |
 | Generated at | `2026-06-20T00:00:00Z` |
 | Baseline result | 115 passed, 11 failed (91.3% pass rate) |
-| External fixture records | 26 scored records across 6 groups |
+| External fixture records | 34 scored records across 7 groups |
 | Review status | 12 adjudication records; 3 need discussion |
 | Harness status | defer_harness_integration for openclaw; harness execution remains outside the quality gate |
 
@@ -17,7 +17,7 @@ This report is generated from committed local artifacts. It is a product-oriente
 | Metric | Value | Detail |
 | --- | ---: | --- |
 | Baseline Pass Rate | `91.3%` | 115 passed of 126 scored records |
-| External Fixture Pass Rate | `57.7%` | 15 passed of 26 scored fixture records |
+| External Fixture Pass Rate | `55.9%` | 19 passed of 34 scored fixture records |
 | Review Records Needing Discussion | `3` | Reviewer decisions still marked needs_discussion |
 | Harness Bridge Decision | `defer_harness_integration` | Runtime-native state required: false |
 
@@ -46,6 +46,7 @@ This report is generated from committed local artifacts. It is a product-oriente
 | `sanitized_openclaw_style_manual_samples` | 6 | 4 | 2 | 66.7% | yes |
 | `saved_transcript_replay` | 5 | 3 | 2 | 60.0% | yes |
 | `openclaw_saved_transcript_pilot` | 3 | 3 | 0 | 100.0% | yes |
+| `public_safe_transcript_expansion` | 8 | 4 | 4 | 50.0% | yes |
 | `normalized_adapter_outputs` | 4 | 1 | 3 | 25.0% | yes |
 | `dry_run_adapter_outputs` | 4 | 2 | 2 | 50.0% | yes |
 

@@ -7,7 +7,7 @@
 | Generated at | `2026-06-20T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 19 |
+| Indexed report artifacts | 20 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -18,6 +18,7 @@
 - **Harness Boundary**: Harness decision remains defer_harness_integration; runtime-native state required is false.
 - **Review**: 12 adjudication records are tracked; 3 still need discussion.
 - **Evidence Quality**: Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.
+- **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 
 ## Dashboard Snapshot
 
@@ -25,8 +26,8 @@
 | --- | ---: |
 | Baseline records | 126 |
 | Baseline failed | 11 |
-| External fixture groups | 6 |
-| External fixture records | 26 |
+| External fixture groups | 7 |
+| External fixture records | 34 |
 | Adjudication records | 12 |
 | Review records needing discussion | 3 |
 
@@ -40,6 +41,7 @@
 | `M38` | Complete / review-ready | `docs/milestones/m38-reporting-product-layer-closeout.md` |
 | `M39` | Complete / review-ready | `docs/milestones/m39-release-notes-reporting-closeout.md` |
 | `M40` | Complete / review-ready | `docs/milestones/m40-evidence-quality-audit-closeout.md` |
+| `M41` | Complete / review-ready | `docs/milestones/m41-public-safe-transcript-expansion-closeout.md` |
 
 ## Boundaries
 
@@ -60,3 +62,4 @@
 - `docs/milestones/m38-reporting-product-layer-closeout.md`
 - `docs/milestones/m39-release-notes-reporting-closeout.md`
 - `docs/milestones/m40-evidence-quality-audit-closeout.md`
+- `docs/milestones/m41-public-safe-transcript-expansion-closeout.md`
