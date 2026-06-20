@@ -36,6 +36,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 
 ## Reference Pages
 
+- [Roadmap](../roadmap.md)
 - [Schema Validation Coverage](reference/schema_validation_coverage.md)
 
 ## Current Source Artifacts
@@ -76,6 +77,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adapter contract: `targets/adapters/adapter_contract.md`
 - Provider-agnostic adapter interface: `targets/adapters/provider_agnostic_adapter_interface.md`
 - Real model adapter design: `targets/adapters/real_model_adapter_design.md`
+- Roadmap: `docs/roadmap.md`
 - Milestone 3 closeout: `docs/milestones/m3-controlled-real-output-prep-closeout.md`
 - Milestone 4 closeout: `docs/milestones/m4-adapter-readiness-closeout.md`
 - Milestone 5 closeout: `docs/milestones/m5-adapter-contract-hardening-closeout.md`
@@ -103,6 +105,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 27 closeout: `docs/milestones/m27-adapter-run-metadata-schema-helper-reuse-closeout.md`
 - Milestone 28 closeout: `docs/milestones/m28-schema-coverage-helper-enforcement-closeout.md`
 - Milestone 29 closeout: `docs/milestones/m29-report-manifest-quality-gate-coverage-closeout.md`
+- Milestone 30 closeout: `docs/milestones/m30-project-packaging-ci-closeout.md`
 
 ## Reading Order
 

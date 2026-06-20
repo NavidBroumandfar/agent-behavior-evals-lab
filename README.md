@@ -20,7 +20,29 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
-See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md` for the adjudication manifest schema hardening closeout, `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md` for the manifest validator/report loader integration closeout, `docs/milestones/m19-report-artifact-manifest-closeout.md` for the report artifact manifest closeout, `docs/milestones/m20-shared-schema-validation-helpers-closeout.md` for the shared schema validation helpers closeout, `docs/milestones/m21-schema-validator-helper-reuse-closeout.md` for the schema validator helper reuse closeout, `docs/milestones/m22-schema-validation-coverage-matrix-closeout.md` for the schema validation coverage matrix closeout, `docs/milestones/m23-target-registry-schema-helper-reuse-closeout.md` for the target registry schema helper reuse closeout, `docs/milestones/m24-saved-transcript-schema-helper-reuse-closeout.md` for the saved transcript schema helper reuse closeout, `docs/milestones/m25-adapter-output-schema-helper-reuse-closeout.md` for the adapter-output schema helper reuse closeout, `docs/milestones/m26-adjudication-schema-helper-reuse-closeout.md` for the adjudication schema helper reuse closeout, `docs/milestones/m27-adapter-run-metadata-schema-helper-reuse-closeout.md` for the adapter-run metadata schema helper reuse closeout, `docs/milestones/m28-schema-coverage-helper-enforcement-closeout.md` for the schema coverage helper enforcement closeout, `docs/milestones/m29-report-manifest-quality-gate-coverage-closeout.md` for the report manifest quality-gate coverage closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
+## Development Setup
+
+The repository is standard-library only at runtime. Development tooling is declared in `pyproject.toml`.
+
+Useful local commands:
+
+```bash
+python3 scripts/dev.py test
+python3 scripts/dev.py check
+```
+
+`test` runs the unit test suite. `check` runs the full deterministic local quality gate through `scripts/check_all.py`.
+
+Optional lint tooling:
+
+```bash
+python3 -m pip install ".[dev]"
+python3 scripts/dev.py lint
+```
+
+The lint command uses Ruff when it is installed. The deterministic quality gate remains the source of truth and does not call real model APIs, execute agents, use credentials, perform network collection, or trigger external actions.
+
+See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md` for the adjudication manifest schema hardening closeout, `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md` for the manifest validator/report loader integration closeout, `docs/milestones/m19-report-artifact-manifest-closeout.md` for the report artifact manifest closeout, `docs/milestones/m20-shared-schema-validation-helpers-closeout.md` for the shared schema validation helpers closeout, `docs/milestones/m21-schema-validator-helper-reuse-closeout.md` for the schema validator helper reuse closeout, `docs/milestones/m22-schema-validation-coverage-matrix-closeout.md` for the schema validation coverage matrix closeout, `docs/milestones/m23-target-registry-schema-helper-reuse-closeout.md` for the target registry schema helper reuse closeout, `docs/milestones/m24-saved-transcript-schema-helper-reuse-closeout.md` for the saved transcript schema helper reuse closeout, `docs/milestones/m25-adapter-output-schema-helper-reuse-closeout.md` for the adapter-output schema helper reuse closeout, `docs/milestones/m26-adjudication-schema-helper-reuse-closeout.md` for the adjudication schema helper reuse closeout, `docs/milestones/m27-adapter-run-metadata-schema-helper-reuse-closeout.md` for the adapter-run metadata schema helper reuse closeout, `docs/milestones/m28-schema-coverage-helper-enforcement-closeout.md` for the schema coverage helper enforcement closeout, `docs/milestones/m29-report-manifest-quality-gate-coverage-closeout.md` for the report manifest quality-gate coverage closeout, `docs/milestones/m30-project-packaging-ci-closeout.md` for the project packaging and CI closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
 
 ## Repository Structure
 
@@ -468,11 +490,15 @@ The profile comparison is simulated. For example, the generic profile intentiona
 
 ## Roadmap
 
-Near-term improvements:
+See `docs/roadmap.md` for the current roadmap.
 
-- Add schema validation for eval cases and scored traces.
-- Add unit tests for case loading, scoring, trace writing, and report aggregation.
-- Improve scorer heuristics and document known false positives and false negatives.
-- Add comparison reports across runs, profiles, and future adapters.
-- Move review threshold policy into the adjudication manifest instead of keeping gate thresholds only in CLI arguments.
-- Add controlled agent transcript capture later as one possible system under test, without making the lab OpenClaw-specific.
+The short version:
+
+- Keep Agent Behavior Evals Lab as the evaluator, not as an unconstrained live agent.
+- Harden packaging and CI before expanding runtime integrations.
+- Expand eval cases around realistic agent risks such as file edits, shell commands, credentials, private data, purchases, messaging, and fake completion claims.
+- Improve scorer tests and reviewer guidance while preserving deterministic local scoring.
+- Add real text-only saved-output adapters before any live agent execution.
+- Add richer saved transcript replay for tool summaries, approvals, denied actions, and source metadata.
+- Evaluate Hermes and OpenClaw as systems under test through saved outputs and transcripts first.
+- Consider deeper harness integration only after the saved-output and transcript paths prove insufficient.

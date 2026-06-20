@@ -220,6 +220,7 @@ CHECKS = [
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/compare_scored_traces.py",
+            "scripts/dev.py",
         ],
     ),
 ]
