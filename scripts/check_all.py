@@ -44,6 +44,8 @@ PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/
 ADJUDICATION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudication_summary_report.md"
 ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated_aggregate_report.md"
 ADJUDICATION_REGRESSION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
+SCORER_CALIBRATION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.json"
+SCORER_CALIBRATION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_summary.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -236,6 +238,10 @@ CHECKS = [
         ],
     ),
     (
+        "scorer calibration summary generation",
+        ["python3", "src/scorer_calibration_summary.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -303,6 +309,7 @@ CHECKS = [
             "src/validate_report_manifest.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
+            "src/scorer_calibration_summary.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -401,6 +408,9 @@ def main() -> int:
                 verify_report_exists(ADJUDICATED_AGGREGATE_REPORT_PATH)
             if name == "adjudication regression snapshot check":
                 verify_report_exists(ADJUDICATION_REGRESSION_SNAPSHOT_PATH)
+            if name == "scorer calibration summary generation":
+                verify_report_exists(SCORER_CALIBRATION_JSON_PATH)
+                verify_report_exists(SCORER_CALIBRATION_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":

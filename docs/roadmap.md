@@ -336,7 +336,13 @@ Acceptance criteria:
 
 Use adjudication history to make scorer behavior easier to inspect and tune without adding gated LLM judgment.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m42-scorer-calibration-closeout.md`.
+
+Implementation note:
+
+- M42 adds deterministic JSON and Markdown calibration artifacts generated from committed public-safe adjudication fixtures.
+- The calibration labels reviewed records as scorer upheld failures, upheld passes, false positives, false negatives, or ambiguous reviews.
+- No scorer changes are accepted in M42; suggested refinements remain advisory until a future deterministic change includes focused tests and regression coverage.
 
 Deliverables:
 

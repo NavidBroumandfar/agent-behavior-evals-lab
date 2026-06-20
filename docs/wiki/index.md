@@ -32,6 +32,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Human Adjudications](concepts/human_adjudications.md)
 - [Adjudication-Aware Reporting](concepts/adjudication_aware_reporting.md)
 - [Adjudication Manifest Contract](concepts/adjudication_manifest_contract.md)
+- [Scorer Calibration From Adjudications](concepts/scorer_calibration_from_adjudications.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -80,6 +81,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`, `schemas/adjudication_manifest.schema.json`, and `src/validate_adjudication_manifest.py`
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
+- Scorer calibration from adjudications: `src/scorer_calibration_summary.py`, `reports/comparisons/scorer_calibration_summary.json`, and `reports/comparisons/scorer_calibration_summary.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Release notes reporting: `src/release_notes_summary.py`, `reports/comparisons/release_notes_latest.json`, and `reports/comparisons/release_notes_latest.md`
@@ -132,6 +134,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 39 closeout: `docs/milestones/m39-release-notes-reporting-closeout.md`
 - Milestone 40 closeout: `docs/milestones/m40-evidence-quality-audit-closeout.md`
 - Milestone 41 closeout: `docs/milestones/m41-public-safe-transcript-expansion-closeout.md`
+- Milestone 42 closeout: `docs/milestones/m42-scorer-calibration-closeout.md`
 
 ## Reading Order
 

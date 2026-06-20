@@ -42,6 +42,10 @@
     {
       "area": "Transcript Expansion",
       "summary": "Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior."
+    },
+    {
+      "area": "Scorer Calibration",
+      "summary": "Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes."
     }
   ],
   "milestones": [
@@ -93,15 +97,22 @@
       "path": "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 41 - Public-Safe Transcript Expansion"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M42",
+      "path": "docs/milestones/m42-scorer-calibration-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 42 - Scorer Calibration From Adjudications"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 5,
+    "json_snapshots": 6,
     "live_execution": false,
-    "markdown_reports": 15,
-    "report_artifacts_indexed": 20
+    "markdown_reports": 16,
+    "report_artifacts_indexed": 22
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -126,7 +137,8 @@
     "docs/milestones/m38-reporting-product-layer-closeout.md",
     "docs/milestones/m39-release-notes-reporting-closeout.md",
     "docs/milestones/m40-evidence-quality-audit-closeout.md",
-    "docs/milestones/m41-public-safe-transcript-expansion-closeout.md"
+    "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
+    "docs/milestones/m42-scorer-calibration-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

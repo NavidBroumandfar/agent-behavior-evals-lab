@@ -56,10 +56,10 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 
 | Metric | Value |
 | --- | ---: |
-| Report artifacts | 20 |
-| Quality-gate artifacts | 20 |
-| Markdown reports | 15 |
-| JSON snapshots | 5 |
+| Report artifacts | 22 |
+| Quality-gate artifacts | 22 |
+| Markdown reports | 16 |
+| JSON snapshots | 6 |
 
 ## Gap Report
 
@@ -86,7 +86,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | --- | --- | --- | --- |
 | `no_historical_trend_snapshots_yet` | medium | Reports are point-in-time artifacts; M43 is still needed for versioned evaluator-health trends. | `docs/roadmap.md`, `reports/comparisons/reporting_product_summary.json` |
 | `audit_findings_are_not_gate_thresholds` | low | M40 recommendations are descriptive evidence gaps; they do not automatically fail or rewrite scored traces. | `reports/comparisons/report_manifest.json`, `reports/comparisons/evidence_quality_audit.json` |
-| `report_artifacts_outpace_review_depth` | low | 20 report artifacts are indexed, while 12 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
+| `report_artifacts_outpace_review_depth` | low | 22 report artifacts are indexed, while 12 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
 
 ## Recommendations
 

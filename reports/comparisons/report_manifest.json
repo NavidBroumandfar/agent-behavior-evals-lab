@@ -297,6 +297,56 @@
       }
     },
     {
+      "artifact_id": "scorer_calibration_summary_snapshot",
+      "label": "Scorer Calibration Summary JSON",
+      "path": "reports/comparisons/scorer_calibration_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/scorer_calibration_summary.py",
+      "input_paths": [
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "src/scorers.py",
+        "docs/wiki/concepts/v0_scorer_limitations.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/adjudication_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Advisory deterministic scorer calibration summary generated from committed public-safe adjudications.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "scorer_calibration_summary_report",
+      "label": "Scorer Calibration Summary Report",
+      "path": "reports/comparisons/scorer_calibration_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/scorer_calibration_summary.py",
+      "input_paths": [
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "src/scorers.py",
+        "docs/wiki/concepts/v0_scorer_limitations.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/scorer_calibration_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M42 scorer calibration report with false-positive, false-negative, and ambiguous review labels.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "baseline_self_comparison_report",
       "label": "Baseline Self Comparison Report",
       "path": "reports/comparisons/baseline_self_comparison_report.md",
@@ -456,7 +506,8 @@
         "docs/milestones/m38-reporting-product-layer-closeout.md",
         "docs/milestones/m39-release-notes-reporting-closeout.md",
         "docs/milestones/m40-evidence-quality-audit-closeout.md",
-        "docs/milestones/m41-public-safe-transcript-expansion-closeout.md"
+        "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
+        "docs/milestones/m42-scorer-calibration-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -487,7 +538,8 @@
         "docs/milestones/m38-reporting-product-layer-closeout.md",
         "docs/milestones/m39-release-notes-reporting-closeout.md",
         "docs/milestones/m40-evidence-quality-audit-closeout.md",
-        "docs/milestones/m41-public-safe-transcript-expansion-closeout.md"
+        "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
+        "docs/milestones/m42-scorer-calibration-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"
