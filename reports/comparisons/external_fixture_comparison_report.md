@@ -7,8 +7,8 @@
 | Manifest | `traces/external/fixture_manifest.json` |
 | Manifest generated timestamp | `2026-05-10T00:00:00Z` |
 | Output report | `reports/comparisons/external_fixture_comparison_report.md` |
-| Source groups compared | 5 |
-| Total scored records compared | 23 |
+| Source groups compared | 6 |
+| Total scored records compared | 26 |
 
 This is a controlled saved-output fixture comparison driven by `traces/external/fixture_manifest.json`, not live benchmark execution. It reads already-scored traces from public-safe fixtures and summarizes the existing scoring results.
 
@@ -21,6 +21,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Manual Outputs | `manual_outputs` | `traces/scored/manual_output_eval.jsonl` | `traces/external/manual_outputs.example.jsonl` | yes | 4 | `manual_output_eval_example` | Minimal saved-output path used before normalized adapter-output records were introduced. |
 | Sanitized Openclaw Style Manual Samples | `sanitized_openclaw_style_manual_samples` | `traces/scored/openclaw_manual_eval.jsonl` | `traces/external/openclaw_manual_samples.example.jsonl` | yes | 6 | `openclaw_manual_eval_example` | Keeps OpenClaw as one possible system-under-test label without coupling the evaluator to OpenClaw execution. |
 | Saved Transcript Replay | `saved_transcript_replay` | `traces/scored/saved_transcript_replay_eval.jsonl` | `traces/external/saved_transcripts.example.jsonl` | yes | 5 | `saved_transcript_replay_example` | Exercises selected-turn replay before scored traces are compared with other external fixture families. |
+| Openclaw Saved Transcript Pilot | `openclaw_saved_transcript_pilot` | `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl` | `traces/external/openclaw_saved_transcript_pilot.example.jsonl` | yes | 3 | `openclaw_saved_transcript_pilot` | M35 public-safe OpenClaw saved-transcript pilot using the rich M34 transcript contract. |
 | Normalized Adapter Outputs | `normalized_adapter_outputs` | `traces/scored/adapter_output_fixture_import.jsonl` | `traces/external/adapter_outputs.example.jsonl` | yes | 4 | `m4_adapter_output_fixture_import` | Primary M4/M5 adapter-output contract fixture with M5.2 provenance_details. |
 | Dry Run Adapter Outputs | `dry_run_adapter_outputs` | `traces/scored/dry_run_adapter_output_import.jsonl` | `traces/external/dry_run_adapter_outputs.jsonl` | yes | 4 | `m4_adapter_output_fixture_import` | Generated fixture proving an adapter-like producer can emit normalized records without live execution. |
 
@@ -31,6 +32,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Manual Outputs | 4 | 2 | 2 | 50.0% | 0.500 |
 | Sanitized Openclaw Style Manual Samples | 6 | 4 | 2 | 66.7% | 0.667 |
 | Saved Transcript Replay | 5 | 3 | 2 | 60.0% | 0.600 |
+| Openclaw Saved Transcript Pilot | 3 | 3 | 0 | 100.0% | 1.000 |
 | Normalized Adapter Outputs | 4 | 1 | 3 | 25.0% | 0.250 |
 | Dry Run Adapter Outputs | 4 | 2 | 2 | 50.0% | 0.500 |
 
@@ -41,6 +43,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Manual Outputs | 1 | 0 | 0 | 0 | 1 | 0 | 1 |
 | Sanitized Openclaw Style Manual Samples | 1 | 1 | 1 | 0 | 1 | 0 | 1 |
 | Saved Transcript Replay | 1 | 1 | 1 | 0 | 1 | 0 | 1 |
+| Openclaw Saved Transcript Pilot | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Normalized Adapter Outputs | 1 | 0 | 0 | 1 | 0 | 1 | 1 |
 | Dry Run Adapter Outputs | 1 | 0 | 0 | 0 | 1 | 0 | 1 |
 
@@ -51,6 +54,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Manual Outputs | 1 | 1 | 1 | 1 |
 | Sanitized Openclaw Style Manual Samples | 0 | 3 | 2 | 1 |
 | Saved Transcript Replay | 1 | 1 | 2 | 1 |
+| Openclaw Saved Transcript Pilot | 1 | 1 | 1 | 0 |
 | Normalized Adapter Outputs | 1 | 0 | 2 | 1 |
 | Dry Run Adapter Outputs | 1 | 0 | 2 | 1 |
 
@@ -61,6 +65,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Manual Outputs | 1 | 1 | 1 | 1 |
 | Sanitized Openclaw Style Manual Samples | 1 | 2 | 1 | 2 |
 | Saved Transcript Replay | 1 | 2 | 1 | 1 |
+| Openclaw Saved Transcript Pilot | 0 | 1 | 1 | 1 |
 | Normalized Adapter Outputs | 1 | 1 | 1 | 1 |
 | Dry Run Adapter Outputs | 1 | 1 | 1 | 1 |
 
@@ -118,7 +123,7 @@ The report does not rank live systems. Differences between source groups reflect
 
 - Inputs are already-scored local fixtures; this report does not rerun scoring or collect new outputs.
 - Source groups have small and uneven record counts, so pass rates are useful for fixture review, not benchmark claims.
-- The sanitized OpenClaw-style group is fictional public-safe sample data and is not evidence from a live OpenClaw runtime.
+- The sanitized OpenClaw-style groups are public-safe sample data and are not evidence from a live OpenClaw runtime.
 - The scorer is heuristic and unchanged; report findings inherit its known false positives and false negatives.
 - Trace metadata for source provenance still travels through existing trace fields such as `mock_behavior_notes`.
 

@@ -13,6 +13,7 @@ M5.3 adds a source index because the fixture ecosystem now spans several control
 - Manual saved outputs.
 - Sanitized OpenClaw-style manual samples.
 - Saved transcript replay.
+- Sanitized OpenClaw-style saved transcript pilot fixtures.
 - Normalized adapter-output fixtures.
 - Dry-run adapter-output fixtures.
 
@@ -20,7 +21,7 @@ The manifest makes those paths easy to audit without reading every script first.
 
 ## Source, Trace, Report
 
-A source fixture is public-safe input under `traces/external/`. It contains saved text, saved transcript turns, normalized adapter-output records, or deterministic dry-run adapter-output records.
+A source fixture is public-safe input under `traces/external/`. It contains saved text, saved transcript turns, sanitized saved transcript pilot turns, normalized adapter-output records, or deterministic dry-run adapter-output records.
 
 A generated scored trace is evaluator output under `traces/scored/`. It is created after the source fixture is validated or imported, joined to eval cases, scored by the existing scorer, and written in trace JSONL form.
 

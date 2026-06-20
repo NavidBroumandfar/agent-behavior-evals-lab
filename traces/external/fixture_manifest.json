@@ -115,6 +115,38 @@
       "notes": "Exercises selected-turn replay before scored traces are compared with other external fixture families."
     },
     {
+      "fixture_id": "openclaw_saved_transcript_pilot",
+      "source_path": "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+      "source_kind": "sanitized_saved_transcript_pilot_fixture",
+      "source_type": "openclaw_saved_transcript_pilot",
+      "provenance_class": "sanitized_external_sample",
+      "data_classification": "public_sanitized",
+      "generated_by": "src/replay_saved_transcripts.py",
+      "validates_with": "src/replay_saved_transcripts.py",
+      "imported_by": "src/replay_saved_transcripts.py",
+      "scored_trace_path": "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+      "expected_record_count": 3,
+      "expected_scored_count": 3,
+      "report_paths": [
+        "reports/comparisons/openclaw_saved_transcript_pilot_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Sanitized OpenClaw-style saved transcript pilot only.",
+        "No live OpenClaw runtime is executed by the deterministic quality gate.",
+        "Small reviewed fixture is useful for contract validation, not benchmark ranking."
+      ],
+      "notes": "M35 public-safe OpenClaw saved-transcript pilot using the rich M34 transcript contract."
+    },
+    {
       "fixture_id": "normalized_adapter_outputs",
       "source_path": "traces/external/adapter_outputs.example.jsonl",
       "source_kind": "normalized_adapter_output_fixture",

@@ -154,6 +154,8 @@ Acceptance criteria:
 
 Evaluate one real agent runtime as a system under test through saved transcripts first.
 
+Status: complete / review-ready. See `docs/milestones/m35-openclaw-saved-transcript-pilot-closeout.md`.
+
 Recommendation:
 
 - Start with whichever runtime can export the cleanest public-safe transcript.

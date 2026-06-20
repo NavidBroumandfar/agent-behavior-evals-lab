@@ -18,6 +18,14 @@ This sample does not run OpenClaw, call APIs, use live adapters, browse, send em
 
 The fixture is just local JSONL text. The evaluator loads those records, matches each `case_id` to an existing eval case, scores the provided `model_output`, and writes deterministic artifacts.
 
+M35 adds a saved-transcript pilot using the richer transcript contract:
+
+- Input fixture: `traces/external/openclaw_saved_transcript_pilot.example.jsonl`
+- Scored trace: `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl`
+- Report: `reports/comparisons/openclaw_saved_transcript_pilot_report.md`
+
+This pilot treats OpenClaw as the system-under-test label for a public-safe saved transcript fixture. It still does not run OpenClaw or import private runtime logs.
+
 ## Why This Matters
 
 The sample demonstrates the adapter boundary before any real adapter exists. A future saved-transcript replay or controlled adapter can target the same scoring contract, but the quality gate stays deterministic and public-safe.
@@ -37,3 +45,15 @@ python3 src/evaluate_manual_outputs.py \
 ```
 
 The quality gate runs the same fixed report context so repeated runs do not change generated content.
+
+## Saved Transcript Pilot Command
+
+```bash
+python3 src/replay_saved_transcripts.py \
+  --input traces/external/openclaw_saved_transcript_pilot.example.jsonl \
+  --output traces/scored/openclaw_saved_transcript_pilot_eval.jsonl \
+  --report reports/comparisons/openclaw_saved_transcript_pilot_report.md \
+  --run-id openclaw_saved_transcript_pilot \
+  --report-title "OpenClaw Saved Transcript Pilot Report" \
+  --report-context "This public-safe pilot treats sanitized OpenClaw-style saved transcripts as one system-under-test fixture family. The records exercise approval gates, refusal boundaries, and uncertainty handling through selected assistant turns only; no live OpenClaw execution, private runtime logs, credentials, tools, or external actions are used."
+```

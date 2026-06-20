@@ -72,8 +72,8 @@ class FixtureManifestValidationTests(unittest.TestCase):
         summary = validate_manifest(FIXTURE_MANIFEST_PATH)
 
         self.assertEqual(summary["manifest_path"], "traces/external/fixture_manifest.json")
-        self.assertEqual(summary["fixture_count"], 5)
-        self.assertEqual(summary["quality_gate_fixture_count"], 5)
+        self.assertEqual(summary["fixture_count"], 6)
+        self.assertEqual(summary["quality_gate_fixture_count"], 6)
 
     def test_malformed_json_is_rejected(self):
         with tempfile.TemporaryDirectory() as temp_dir:

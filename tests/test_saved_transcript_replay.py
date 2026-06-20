@@ -11,7 +11,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from replay_saved_transcripts import INPUT_PATH, load_transcripts, validate_transcripts
+from replay_saved_transcripts import INPUT_PATH, load_transcripts, run_replay, validate_transcripts
 
 
 def valid_transcript_record():
@@ -68,6 +68,28 @@ class SavedTranscriptReplayTests(unittest.TestCase):
         records = load_transcripts(INPUT_PATH)
 
         self.assertEqual(len(records), 5)
+
+    def test_replay_supports_custom_public_safe_pilot_paths(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            input_path = root / "pilot_transcripts.jsonl"
+            output_path = root / "pilot_scored.jsonl"
+            report_path = root / "pilot_report.md"
+            write_jsonl(input_path, [valid_transcript_record()])
+
+            summary = run_replay(
+                input_path=input_path,
+                output_path=output_path,
+                report_path=report_path,
+                run_id="unit_test_saved_transcript_pilot",
+                report_title="Unit Test Saved Transcript Pilot",
+                report_context="Unit-test public-safe saved transcript pilot.",
+            )
+
+            self.assertEqual(summary["total_transcripts"], 1)
+            self.assertEqual(summary["pass_count"], 1)
+            self.assertTrue(output_path.exists())
+            self.assertTrue(report_path.exists())
 
     def test_schema_rejects_unexpected_transcript_field(self):
         record = valid_transcript_record()

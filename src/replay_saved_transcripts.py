@@ -7,7 +7,9 @@ runtime data.
 
 from __future__ import annotations
 
+import argparse
 import json
+import sys
 from pathlib import Path
 from typing import Any, Callable
 
@@ -37,6 +39,12 @@ SCHEMA_PATH = REPO_ROOT / "schemas/saved_transcript.schema.json"
 
 RUN_ID = "saved_transcript_replay_example"
 TRACE_TIMESTAMP = "2026-01-01T00:00:00Z"
+REPORT_TITLE = "Saved Transcript Replay Report"
+REPORT_CONTEXT = (
+    "Saved transcript replay scores a selected assistant turn from each static transcript fixture against an existing "
+    "eval case. The lab remains the evaluator: transcripts are target-side fixtures under test, and replay uses the "
+    "same local cases and deterministic rule-based scorer as the mock and manual-output paths."
+)
 
 EXPECTED_TRANSCRIPT_PROVENANCE_VALUES = {
     "public_safe": True,
@@ -186,42 +194,59 @@ def validate_public_safe_transcript_metadata(record: dict[str, Any], input_path:
             )
 
 
-def run_replay() -> dict[str, Any]:
+def run_replay(
+    input_path: Path = INPUT_PATH,
+    output_path: Path = OUTPUT_PATH,
+    report_path: Path = REPORT_PATH,
+    run_id: str = RUN_ID,
+    trace_timestamp: str = TRACE_TIMESTAMP,
+    report_title: str = REPORT_TITLE,
+    report_context: str = REPORT_CONTEXT,
+) -> dict[str, Any]:
     """Replay all saved transcripts, score selected assistant turns, and write artifacts."""
 
     cases = load_cases(CASE_PATHS)
     cases_by_id = {str(case["case_id"]): case for case in cases}
-    transcripts = load_transcripts(INPUT_PATH)
-    validate_transcripts(transcripts, cases_by_id, INPUT_PATH)
+    transcripts = load_transcripts(input_path)
+    validate_transcripts(transcripts, cases_by_id, input_path)
 
     scored_traces = []
     for transcript in transcripts:
         case = cases_by_id[str(transcript["case_id"])]
-        response = transcript_response(transcript)
+        response = transcript_response(transcript, input_path)
         score = score_response(case, response)
-        scored_traces.append(build_trace_record(RUN_ID, TRACE_TIMESTAMP, case, response, score))
+        scored_traces.append(build_trace_record(run_id, trace_timestamp, case, response, score))
 
-    validate_scored_traces(scored_traces)
-    write_jsonl(scored_traces, OUTPUT_PATH)
+    validate_scored_traces(scored_traces, output_path)
+    write_jsonl(scored_traces, output_path)
 
-    report = generate_report(scored_traces)
-    REPORT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    REPORT_PATH.write_text(report, encoding="utf-8")
+    report = generate_report(
+        scored_traces,
+        input_path,
+        output_path,
+        report_path,
+        run_id,
+        trace_timestamp,
+        report_title,
+        report_context,
+    )
+    report_path.parent.mkdir(parents=True, exist_ok=True)
+    report_path.write_text(report, encoding="utf-8")
 
     pass_count = sum(1 for trace in scored_traces if trace["passed"])
     fail_count = len(scored_traces) - pass_count
     return {
-        "run_id": RUN_ID,
-        "input_path": _display_path(INPUT_PATH),
-        "output_path": _display_path(OUTPUT_PATH),
-        "report_path": _display_path(REPORT_PATH),
+        "run_id": run_id,
+        "input_path": _display_path(input_path),
+        "output_path": _display_path(output_path),
+        "report_path": _display_path(report_path),
         "total_transcripts": len(scored_traces),
         "pass_count": pass_count,
         "fail_count": fail_count,
     }
 
 
-def transcript_response(record: dict[str, Any]) -> dict[str, Any]:
+def transcript_response(record: dict[str, Any], input_path: Path = INPUT_PATH) -> dict[str, Any]:
     """Convert a selected assistant transcript turn into scorer response shape."""
 
     assistant_turn_index = int(record["assistant_turn_index"])
@@ -229,7 +254,7 @@ def transcript_response(record: dict[str, Any]) -> dict[str, Any]:
     assistant_content = str(assistant_turn["content"])
 
     notes = [
-        f"Saved transcript replay loaded from {_display_path(INPUT_PATH)}.",
+        f"Saved transcript replay loaded from {_display_path(input_path)}.",
         f"transcript_id={record['transcript_id']}.",
         f"assistant_turn_index={assistant_turn_index}.",
         f"selected_assistant_turn_id={record['selected_assistant_turn_id']}.",
@@ -288,17 +313,26 @@ def transcript_metadata(record: dict[str, Any], assistant_turn: dict[str, Any]) 
     return metadata
 
 
-def validate_scored_traces(records: list[dict[str, Any]]) -> None:
+def validate_scored_traces(records: list[dict[str, Any]], output_path: Path = OUTPUT_PATH) -> None:
     """Validate generated scored traces against the existing trace schema."""
 
     for index, record in enumerate(records, start=1):
         try:
-            validate_trace_record(record, str(OUTPUT_PATH), index)
+            validate_trace_record(record, str(output_path), index)
         except ValidationError as exc:
             raise ValueError(f"Generated saved-transcript trace failed schema validation: {exc}") from exc
 
 
-def generate_report(records: list[dict[str, Any]]) -> str:
+def generate_report(
+    records: list[dict[str, Any]],
+    input_path: Path = INPUT_PATH,
+    output_path: Path = OUTPUT_PATH,
+    report_path: Path = REPORT_PATH,
+    run_id: str = RUN_ID,
+    trace_timestamp: str = TRACE_TIMESTAMP,
+    report_title: str = REPORT_TITLE,
+    report_context: str = REPORT_CONTEXT,
+) -> str:
     """Build the deterministic saved transcript replay Markdown report."""
 
     if not records:
@@ -311,11 +345,11 @@ def generate_report(records: list[dict[str, Any]]) -> str:
     categories = _ordered_values(records, "category", CATEGORY_ORDER)
 
     lines = [
-        "# Saved Transcript Replay Report",
+        f"# {report_title}",
         "",
         "## Purpose",
         "",
-        "Saved transcript replay scores a selected assistant turn from each static transcript fixture against an existing eval case. The lab remains the evaluator: transcripts are target-side fixtures under test, and replay uses the same local cases and deterministic rule-based scorer as the mock and manual-output paths.",
+        report_context,
         "",
         "This mode does not call real APIs, run OpenClaw, use live adapters, execute tools, contact networks, use browser or email tools, or read private runtime data.",
         "",
@@ -323,11 +357,11 @@ def generate_report(records: list[dict[str, Any]]) -> str:
         "",
         "| Field | Value |",
         "| --- | --- |",
-        f"| Input saved transcripts | `{_display_path(INPUT_PATH)}` |",
-        f"| Output scored trace | `{_display_path(OUTPUT_PATH)}` |",
-        f"| Output report | `{_display_path(REPORT_PATH)}` |",
-        f"| Run ID | `{RUN_ID}` |",
-        f"| Fixed trace timestamp | `{TRACE_TIMESTAMP}` |",
+        f"| Input saved transcripts | `{_display_path(input_path)}` |",
+        f"| Output scored trace | `{_display_path(output_path)}` |",
+        f"| Output report | `{_display_path(report_path)}` |",
+        f"| Run ID | `{run_id}` |",
+        f"| Fixed trace timestamp | `{trace_timestamp}` |",
         "",
         "## Transcript Input Contract",
         "",
@@ -371,7 +405,7 @@ def generate_report(records: list[dict[str, Any]]) -> str:
         "",
         "## Next Step",
         "",
-        "Use the rich transcript contract for a public-safe Hermes or OpenClaw saved-transcript pilot before considering any live runtime harness integration.",
+        "Use saved-transcript evidence to decide whether a later controlled live sandbox is justified; keep any future runtime work tool-disabled or mocked until scope and safety controls are explicit.",
         "",
     ]
 
@@ -417,6 +451,18 @@ def print_summary(summary: dict[str, Any]) -> None:
     print(f"fail count: {summary['fail_count']}")
 
 
+def parse_args(argv: list[str]) -> argparse.Namespace:
+    parser = argparse.ArgumentParser(description="Replay saved transcript fixtures into scored traces.")
+    parser.add_argument("--input", type=Path, default=INPUT_PATH, help="Saved transcript JSONL input path.")
+    parser.add_argument("--output", type=Path, default=OUTPUT_PATH, help="Scored trace JSONL output path.")
+    parser.add_argument("--report", type=Path, default=REPORT_PATH, help="Markdown report output path.")
+    parser.add_argument("--run-id", default=RUN_ID, help="Run ID for generated scored traces.")
+    parser.add_argument("--timestamp", default=TRACE_TIMESTAMP, help="Fixed timestamp for generated scored traces.")
+    parser.add_argument("--report-title", default=REPORT_TITLE, help="Markdown report title.")
+    parser.add_argument("--report-context", default=REPORT_CONTEXT, help="Purpose paragraph for the report.")
+    return parser.parse_args(argv)
+
+
 def _notable_failures(records: list[dict[str, Any]], limit: int = 10) -> str:
     failures = [record for record in records if record.get("passed") is not True]
     if not failures:
@@ -452,9 +498,20 @@ def _pass_count(records: list[dict[str, Any]]) -> int:
     return sum(1 for record in records if record.get("passed") is True)
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
+    args = parse_args(sys.argv[1:] if argv is None else argv)
     try:
-        print_summary(run_replay())
+        print_summary(
+            run_replay(
+                input_path=args.input,
+                output_path=args.output,
+                report_path=args.report,
+                run_id=args.run_id,
+                trace_timestamp=args.timestamp,
+                report_title=args.report_title,
+                report_context=args.report_context,
+            )
+        )
     except (OSError, ValueError) as exc:
         print(f"FAILED: {exc}")
         return 1

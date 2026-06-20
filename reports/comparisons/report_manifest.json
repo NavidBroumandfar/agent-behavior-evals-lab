@@ -171,6 +171,27 @@
       }
     },
     {
+      "artifact_id": "openclaw_saved_transcript_pilot_report",
+      "label": "OpenClaw Saved Transcript Pilot Report",
+      "path": "reports/comparisons/openclaw_saved_transcript_pilot_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/replay_saved_transcripts.py",
+      "input_paths": [
+        "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+        "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Human-readable report for the public-safe OpenClaw saved-transcript pilot fixture.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "external_fixture_comparison_report",
       "label": "External Fixture Comparison Report",
       "path": "reports/comparisons/external_fixture_comparison_report.md",

@@ -21,6 +21,8 @@ OPENCLAW_MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_manual_eval.jso
 EXPECTED_OPENCLAW_MANUAL_TRACE_LINES = 6
 SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay_eval.jsonl"
 EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES = 5
+OPENCLAW_SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl"
+EXPECTED_OPENCLAW_SAVED_TRANSCRIPT_TRACE_LINES = 3
 ADAPTER_OUTPUT_TRACE_PATH = REPO_ROOT / "traces/scored/adapter_output_fixture_import.jsonl"
 EXPECTED_ADAPTER_OUTPUT_TRACE_LINES = 4
 DRY_RUN_ADAPTER_OUTPUT_PATH = REPO_ROOT / "traces/external/dry_run_adapter_outputs.jsonl"
@@ -29,6 +31,7 @@ DRY_RUN_ADAPTER_TRACE_PATH = REPO_ROOT / "traces/scored/dry_run_adapter_output_i
 EXPECTED_DRY_RUN_ADAPTER_TRACE_LINES = 4
 EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/external_fixture_comparison_report.md"
 BASELINE_SELF_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/baseline_self_comparison_report.md"
+OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 ADJUDICATION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudication_summary_report.md"
 ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated_aggregate_report.md"
 ADJUDICATION_REGRESSION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
@@ -37,6 +40,11 @@ OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
     "uncertainty handling, refusal boundaries, no fabricated tool use, and no fake completion claims; "
     "no live execution or private runtime data is used."
+)
+OPENCLAW_SAVED_TRANSCRIPT_REPORT_CONTEXT = (
+    "This public-safe pilot treats sanitized OpenClaw-style saved transcripts as one system-under-test fixture family. "
+    "The records exercise approval gates, refusal boundaries, and uncertainty handling through selected assistant turns "
+    "only; no live OpenClaw execution, private runtime logs, credentials, tools, or external actions are used."
 )
 
 CHECKS = [
@@ -128,6 +136,25 @@ CHECKS = [
     (
         "saved transcript replay generation",
         ["python3", "src/replay_saved_transcripts.py"],
+    ),
+    (
+        "openclaw saved transcript pilot generation",
+        [
+            "python3",
+            "src/replay_saved_transcripts.py",
+            "--input",
+            "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+            "--output",
+            "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+            "--report",
+            "reports/comparisons/openclaw_saved_transcript_pilot_report.md",
+            "--run-id",
+            "openclaw_saved_transcript_pilot",
+            "--report-title",
+            "OpenClaw Saved Transcript Pilot Report",
+            "--report-context",
+            OPENCLAW_SAVED_TRANSCRIPT_REPORT_CONTEXT,
+        ],
     ),
     (
         "external fixture comparison report generation",
@@ -299,6 +326,9 @@ def main() -> int:
                 verify_trace_count(OPENCLAW_MANUAL_TRACE_PATH, EXPECTED_OPENCLAW_MANUAL_TRACE_LINES)
             if name == "saved transcript replay generation":
                 verify_trace_count(SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES)
+            if name == "openclaw saved transcript pilot generation":
+                verify_trace_count(OPENCLAW_SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_OPENCLAW_SAVED_TRANSCRIPT_TRACE_LINES)
+                verify_report_exists(OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH)
             if name == "external fixture comparison report generation":
                 verify_report_exists(EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH)
             if name == "adjudication report generation":

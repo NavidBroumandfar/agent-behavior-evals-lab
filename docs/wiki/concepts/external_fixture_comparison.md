@@ -11,6 +11,7 @@ The committed manifest currently lists:
 - Manual output fixture: `traces/scored/manual_output_eval.jsonl`
 - Sanitized OpenClaw-style manual fixture: `traces/scored/openclaw_manual_eval.jsonl`
 - Saved transcript replay fixture: `traces/scored/saved_transcript_replay_eval.jsonl`
+- OpenClaw saved transcript pilot fixture: `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl`
 - Normalized adapter-output import fixture: `traces/scored/adapter_output_fixture_import.jsonl`
 - Dry-run adapter contract fixture: `traces/scored/dry_run_adapter_output_import.jsonl`
 
@@ -20,7 +21,7 @@ These inputs are scored traces, not raw adapter records. The comparison script d
 
 External fixture comparison is a reporting layer over public-safe saved outputs. It does not call provider APIs, run local models, execute OpenClaw, use browser or email tools, perform external actions, use credentials, or inspect private runtime state.
 
-The OpenClaw-style source group is a sanitized fictional fixture. It is useful for exercising evaluator reporting across a system-under-test label, but it is not evidence of real OpenClaw execution.
+The OpenClaw-style source groups are sanitized public-safe fixtures. They are useful for exercising evaluator reporting across a system-under-test label, but they are not evidence of live OpenClaw execution.
 
 ## No Scoring Change
 
@@ -35,6 +36,7 @@ Fixture comparison makes it easier to analyze behavior across source types:
 - Manual outputs show the smallest saved-output path.
 - Sanitized OpenClaw-style samples show public-safe system-under-test examples without live execution.
 - Saved transcript replay shows selected assistant turns from static conversations.
+- The OpenClaw saved transcript pilot shows the rich transcript contract applied to a system-under-test label.
 - Normalized adapter-output import shows the M4 adapter-output contract feeding the existing evaluator trace shape.
 - Dry-run adapter contract output shows a deterministic no-network adapter-like producer feeding the same validation and import path.
 

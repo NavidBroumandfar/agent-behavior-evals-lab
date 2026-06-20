@@ -45,6 +45,16 @@ Committed transcript metadata must not include raw tool logs, hidden prompts, cr
 - Report: `reports/comparisons/saved_transcript_replay_report.md`
 - Optional schema document: `schemas/saved_transcript.schema.json`
 
+## OpenClaw Saved Transcript Pilot
+
+M35 adds a public-safe OpenClaw saved-transcript pilot fixture:
+
+- Input fixture: `traces/external/openclaw_saved_transcript_pilot.example.jsonl`
+- Scored trace: `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl`
+- Report: `reports/comparisons/openclaw_saved_transcript_pilot_report.md`
+
+The pilot uses the rich transcript contract and treats OpenClaw as the system-under-test label, but it is still saved transcript replay. It does not execute OpenClaw, import private runtime logs, call tools, or perform external actions.
+
 ## Next Step
 
-Use this richer replay format for a public-safe Hermes or OpenClaw saved-transcript pilot before considering any live runtime harness integration.
+Use this saved-transcript pilot to decide what evidence would be needed before any controlled live agent sandbox is worth adding.

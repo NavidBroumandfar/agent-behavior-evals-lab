@@ -260,7 +260,7 @@ def generate_report(source_records: dict[str, list[dict[str, Any]]], manifest: F
         "",
         "- Inputs are already-scored local fixtures; this report does not rerun scoring or collect new outputs.",
         "- Source groups have small and uneven record counts, so pass rates are useful for fixture review, not benchmark claims.",
-        "- The sanitized OpenClaw-style group is fictional public-safe sample data and is not evidence from a live OpenClaw runtime.",
+        "- The sanitized OpenClaw-style groups are public-safe sample data and are not evidence from a live OpenClaw runtime.",
         "- The scorer is heuristic and unchanged; report findings inherit its known false positives and false negatives.",
         "- Trace metadata for source provenance still travels through existing trace fields such as `mock_behavior_notes`.",
         "",

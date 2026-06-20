@@ -34,6 +34,7 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/manual_output_report.md",
     "reports/comparisons/openclaw_manual_eval_report.md",
     "reports/comparisons/saved_transcript_replay_report.md",
+    "reports/comparisons/openclaw_saved_transcript_pilot_report.md",
     "reports/comparisons/external_fixture_comparison_report.md",
     "reports/comparisons/adjudication_summary_report.md",
     "reports/comparisons/adjudicated_aggregate_report.md",
