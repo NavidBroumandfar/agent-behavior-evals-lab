@@ -1,0 +1,79 @@
+{
+  "plan_id": "m37_optional_harness_integration_decision",
+  "version": "0.1.0",
+  "created_at": "2026-06-20T00:00:00Z",
+  "target_runtime": "openclaw",
+  "decision": "defer_harness_integration",
+  "runtime_native_state_required": false,
+  "rationale": "The current OpenClaw-style saved transcript pilot, normalized adapter-output path, and controlled local sandbox controls are sufficient for the current evidence goals. Runtime-native state is not required yet, so deeper harness integration remains deferred.",
+  "evidence": [
+    {
+      "evidence_id": "m35_openclaw_saved_transcript_pilot",
+      "path": "docs/milestones/m35-openclaw-saved-transcript-pilot-closeout.md",
+      "evidence_type": "saved_transcript_pilot",
+      "notes": "M35 showed that public-safe selected-turn transcript replay can score the current OpenClaw-style fixture without live runtime integration."
+    },
+    {
+      "evidence_id": "m36_controlled_live_agent_sandbox",
+      "path": "docs/milestones/m36-controlled-live-agent-sandbox-closeout.md",
+      "evidence_type": "controlled_sandbox_plan",
+      "notes": "M36 added non-gated local sandbox controls and kept raw output local-only."
+    },
+    {
+      "evidence_id": "openclaw_saved_transcript_report",
+      "path": "reports/comparisons/openclaw_saved_transcript_pilot_report.md",
+      "evidence_type": "scored_report",
+      "notes": "The committed report preserves the current pilot result without benchmark or live-execution claims."
+    }
+  ],
+  "preferred_paths": [
+    "saved_transcript_replay",
+    "normalized_adapter_output_import",
+    "controlled_live_sandbox"
+  ],
+  "bridge_contract": {
+    "candidate_bridge_name": "future_openclaw_harness_bridge",
+    "allowed_input_modes": [
+      "public_safe_saved_transcript",
+      "reviewed_text_output",
+      "metadata_only_plan"
+    ],
+    "allowed_output_modes": [
+      "saved_transcript_fixture",
+      "normalized_adapter_output",
+      "local_raw_pending_review"
+    ],
+    "raw_output_path_pattern": "traces/raw/*.local.jsonl",
+    "reviewed_output_path_pattern": "traces/external/*.reviewed.jsonl",
+    "external_actions": false,
+    "credentials_required": false,
+    "private_logs_allowed": false,
+    "quality_gate_execution_allowed": false,
+    "review_required_before_promotion": true
+  },
+  "quality_gate": {
+    "plan_validation_in_quality_gate": true,
+    "harness_execution_in_quality_gate": false,
+    "reason": "The quality gate validates this M37 decision plan but must not execute a Hermes, OpenClaw, CLI-agent, provider, local-model, browser, email, shell, or external-action harness."
+  },
+  "safety_assertions": {
+    "public_safe": true,
+    "live_execution": false,
+    "external_actions": false,
+    "contains_private_data": false,
+    "credentials_required": false
+  },
+  "blocked_capabilities": [
+    "network_collection",
+    "credentials",
+    "private_runtime_logs",
+    "private_memory",
+    "private_workspace_paths",
+    "external_actions",
+    "browser_email_actions",
+    "file_mutation",
+    "shell_execution",
+    "live_quality_gate_execution"
+  ],
+  "next_review_trigger": "Reconsider a non-gated harness bridge only when saved transcripts and normalized adapter outputs cannot preserve required approval state, tool summaries, or runtime-native evidence."
+}

@@ -174,6 +174,10 @@ CHECKS = [
         ],
     ),
     (
+        "harness bridge plan validation",
+        ["python3", "src/validate_harness_bridge_plan.py"],
+    ),
+    (
         "adjudication validation",
         ["python3", "src/validate_adjudications.py"],
     ),
@@ -242,6 +246,7 @@ CHECKS = [
             "src/dry_run_adapter.py",
             "src/text_only_adapter.py",
             "src/controlled_live_agent_sandbox.py",
+            "src/validate_harness_bridge_plan.py",
             "src/compare_external_fixtures.py",
             "src/validate_fixture_manifest.py",
             "src/validate_adapter_run_metadata.py",

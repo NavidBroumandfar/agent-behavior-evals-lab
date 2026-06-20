@@ -20,6 +20,8 @@ M36 adds a narrower local no-tool sandbox runner at `src/controlled_live_agent_s
 
 Treats OpenClaw as one possible system under test through a controlled public-safe interface in a future milestone. It must not import private runtime data or rely on private workspace state.
 
+M37 adds `targets/adapters/harness_bridge_contract.md` and `traces/external/harness_bridge_plan.example.json` as the decision gate for this kind of integration. The current decision defers deeper harness work because saved transcripts and normalized adapter outputs remain sufficient.
+
 ## Saved External Transcript Importer
 
 Imports already-saved external transcripts into the saved transcript replay format. It must sanitize private data, preserve stable turn identifiers, and select exactly which assistant turn is scored.

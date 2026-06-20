@@ -17,7 +17,7 @@ The repository currently has a deterministic local evaluation harness:
 - Scored JSONL traces and generated Markdown reports.
 - Regression snapshots, comparison reports, failure inspection, and human adjudication overlays.
 - Schema validators, fixture manifests, report manifests, and a local quality gate.
-- Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, and a controlled local agent sandbox pilot.
+- Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, a controlled local agent sandbox pilot, and an optional harness-integration decision gate.
 
 The current baseline is still a mock evaluation. It is useful for validating the evaluator pipeline, but it is not a live model, Hermes, OpenClaw, or production agent benchmark.
 
@@ -201,6 +201,13 @@ Acceptance criteria:
 ### M37: Optional Harness Integration
 
 Consider deeper Hermes or OpenClaw integration only if transcript replay is not enough.
+
+Status: complete / review-ready. See `docs/milestones/m37-optional-harness-integration-decision-closeout.md`.
+
+Implementation note:
+
+- M37 adds a local harness bridge plan schema, validator, example decision plan, and adapter contract.
+- The current decision is `defer_harness_integration` because runtime-native state is not yet required. The deterministic quality gate validates the plan, but it does not run Hermes, OpenClaw, a CLI agent, a provider, a local model, shell commands, browser/email tools, network collection, or external actions.
 
 Possible directions:
 

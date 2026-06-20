@@ -1,0 +1,268 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Harness Bridge Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "plan_id",
+    "version",
+    "created_at",
+    "target_runtime",
+    "decision",
+    "runtime_native_state_required",
+    "rationale",
+    "evidence",
+    "preferred_paths",
+    "bridge_contract",
+    "quality_gate",
+    "safety_assertions",
+    "blocked_capabilities",
+    "next_review_trigger"
+  ],
+  "properties": {
+    "plan_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "target_runtime": {
+      "type": "string",
+      "enum": [
+        "openclaw",
+        "hermes",
+        "local_cli_agent",
+        "future_agent_runtime"
+      ]
+    },
+    "decision": {
+      "type": "string",
+      "enum": [
+        "defer_harness_integration",
+        "prepare_non_gated_bridge_only",
+        "approved_for_future_non_gated_experiment"
+      ]
+    },
+    "runtime_native_state_required": {
+      "type": "boolean"
+    },
+    "rationale": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "evidence_id",
+          "path",
+          "evidence_type",
+          "notes"
+        ],
+        "properties": {
+          "evidence_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "evidence_type": {
+            "type": "string",
+            "enum": [
+              "saved_transcript_pilot",
+              "controlled_sandbox_plan",
+              "scored_report",
+              "adapter_contract",
+              "closeout"
+            ]
+          },
+          "notes": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          }
+        }
+      }
+    },
+    "preferred_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "saved_transcript_replay",
+          "normalized_adapter_output_import",
+          "controlled_live_sandbox",
+          "harness_bridge"
+        ]
+      }
+    },
+    "bridge_contract": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "candidate_bridge_name",
+        "allowed_input_modes",
+        "allowed_output_modes",
+        "raw_output_path_pattern",
+        "reviewed_output_path_pattern",
+        "external_actions",
+        "credentials_required",
+        "private_logs_allowed",
+        "quality_gate_execution_allowed",
+        "review_required_before_promotion"
+      ],
+      "properties": {
+        "candidate_bridge_name": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "allowed_input_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "public_safe_saved_transcript",
+              "reviewed_text_output",
+              "metadata_only_plan"
+            ]
+          }
+        },
+        "allowed_output_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "saved_transcript_fixture",
+              "normalized_adapter_output",
+              "local_raw_pending_review"
+            ]
+          }
+        },
+        "raw_output_path_pattern": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "reviewed_output_path_pattern": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "external_actions": {
+          "type": "boolean"
+        },
+        "credentials_required": {
+          "type": "boolean"
+        },
+        "private_logs_allowed": {
+          "type": "boolean"
+        },
+        "quality_gate_execution_allowed": {
+          "type": "boolean"
+        },
+        "review_required_before_promotion": {
+          "type": "boolean"
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "plan_validation_in_quality_gate",
+        "harness_execution_in_quality_gate",
+        "reason"
+      ],
+      "properties": {
+        "plan_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "harness_execution_in_quality_gate": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "blocked_capabilities": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "network_collection",
+          "credentials",
+          "private_runtime_logs",
+          "private_memory",
+          "private_workspace_paths",
+          "external_actions",
+          "browser_email_actions",
+          "file_mutation",
+          "shell_execution",
+          "live_quality_gate_execution"
+        ]
+      }
+    },
+    "next_review_trigger": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    }
+  }
+}

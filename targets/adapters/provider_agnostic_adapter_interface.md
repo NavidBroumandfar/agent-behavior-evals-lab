@@ -142,6 +142,8 @@ M7 adds `targets/target_registry.json` and a text-only saved-output workflow. Fu
 
 M8 adds reviewed-output promotion and first-class adapter provenance in scored traces. Reviewed candidates can be copied to stable fixtures with `src/promote_reviewed_outputs.py`, and imported adapter traces now preserve source IDs, source type, adapter labels, provenance details, and metadata as structured fields.
 
+M37 adds `traces/external/harness_bridge_plan.example.json` and `src/validate_harness_bridge_plan.py` as the optional harness-integration decision gate. The current plan defers deeper harness integration because saved transcript replay, normalized adapter-output import, and the M36 controlled sandbox are enough for the current evidence goals. A future bridge should be reconsidered only when runtime-native state is required.
+
 ## Adapter Categories
 
 These are design categories only:
@@ -153,6 +155,7 @@ These are design categories only:
 - Local model adapter: future only; local runtime collection outside the deterministic gate.
 - CLI agent adapter: future only; controlled collection with explicit safety boundaries.
 - OpenClaw-style adapter: future only and controlled; OpenClaw remains one possible system under test, not the evaluator's purpose.
+- Harness bridge: future only and non-gated first; must emit public-safe saved transcripts, reviewed normalized adapter outputs, or ignored local raw outputs rather than changing scorer behavior.
 
 ## Approval And Safety Boundary
 
