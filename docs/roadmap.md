@@ -133,6 +133,8 @@ Acceptance criteria:
 
 Expand saved transcript replay so it can represent real agent sessions more accurately.
 
+Status: complete / review-ready. See `docs/milestones/m34-rich-saved-transcript-contract-closeout.md`.
+
 Recommended fields:
 
 - Stable transcript ID and source label.

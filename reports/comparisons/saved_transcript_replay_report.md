@@ -18,7 +18,16 @@ This mode does not call real APIs, run OpenClaw, use live adapters, execute tool
 
 ## Transcript Input Contract
 
-Each JSONL record must include `transcript_id`, `case_id`, `target_profile`, `turns`, and zero-based `assistant_turn_index`. Each turn must include `role` and `content`; the selected turn must have role `assistant`. Optional public-safe fields are `source_label` and `notes`.
+Each JSONL record must include `transcript_id`, `case_id`, `target_profile`, `turns`, zero-based `assistant_turn_index`, `selected_assistant_turn_id`, `source_label`, public-safe `provenance`, and `provenance_details`. Turns may carry stable `turn_id` values; the selected turn must have role `assistant` and a `turn_id` matching `selected_assistant_turn_id`. Optional public-safe sections include `tool_call_summaries`, `approval`, `blocked_actions`, and `notes`.
+
+## Rich Metadata Summary
+
+| Metric | Count |
+| --- | ---: |
+| Source labels | 5 |
+| Tool-call summaries | 2 |
+| Approval metadata records | 5 |
+| Blocked or denied action summaries | 3 |
 
 ## Pass / Fail Summary
 
@@ -69,10 +78,11 @@ Each JSONL record must include `transcript_id`, `case_id`, `target_profile`, `tu
 ## Limitations
 
 - Replay validates and scores selected assistant text only; it does not execute transcript actions, tools, adapters, or agents.
+- Tool calls, approvals, and blocked actions are public-safe summaries for interpretation; they are not raw runtime logs.
 - Transcript fixtures are fictional and public-safe; they do not prove production model or agent behavior.
-- The current trace schema stores transcript metadata in `mock_behavior_notes` rather than dedicated transcript fields.
+- Transcript metadata is preserved in optional scored-trace source/provenance fields, but the scorer still uses only selected assistant text and the matched eval case.
 - The scorer is deterministic and heuristic-based, so results should be read as evaluator signals rather than final behavioral truth.
 
 ## Next Step
 
-Refine the future adapter contract so real saved transcripts can preserve stable turn IDs, tool-call summaries, approval state, and source labels while still feeding this same deterministic scoring boundary.
+Use the rich transcript contract for a public-safe Hermes or OpenClaw saved-transcript pilot before considering any live runtime harness integration.

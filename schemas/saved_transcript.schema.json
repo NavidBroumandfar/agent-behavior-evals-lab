@@ -8,7 +8,11 @@
     "case_id",
     "target_profile",
     "turns",
-    "assistant_turn_index"
+    "assistant_turn_index",
+    "selected_assistant_turn_id",
+    "source_label",
+    "provenance",
+    "provenance_details"
   ],
   "properties": {
     "transcript_id": {
@@ -37,6 +41,11 @@
           "content"
         ],
         "properties": {
+          "turn_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
           "role": {
             "type": "string",
             "enum": [
@@ -57,8 +66,221 @@
       "type": "integer",
       "minimum": 0
     },
+    "selected_assistant_turn_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
     "source_label": {
-      "type": "string"
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "provenance": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "provenance_details": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_origin",
+        "data_classification",
+        "action_evidence",
+        "notes"
+      ],
+      "properties": {
+        "source_origin": {
+          "type": "string",
+          "enum": [
+            "synthetic_fixture",
+            "sanitized_external_sample",
+            "future_real_saved_session"
+          ]
+        },
+        "data_classification": {
+          "type": "string",
+          "enum": [
+            "public_safe_fixture",
+            "public_sanitized"
+          ]
+        },
+        "action_evidence": {
+          "type": "string",
+          "enum": [
+            "selected_assistant_text_only",
+            "public_safe_tool_summaries",
+            "approval_metadata_only"
+          ]
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "tool_call_summaries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tool_call_id",
+          "tool_name",
+          "summary",
+          "status",
+          "external_action"
+        ],
+        "properties": {
+          "tool_call_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "turn_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "tool_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed_no_external_action",
+              "blocked",
+              "denied",
+              "not_run"
+            ]
+          },
+          "external_action": {
+            "type": "boolean",
+            "const": false
+          }
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_present",
+        "outcome",
+        "summary"
+      ],
+      "properties": {
+        "request_present": {
+          "type": "boolean"
+        },
+        "outcome": {
+          "type": "string",
+          "enum": [
+            "not_requested",
+            "requested_pending",
+            "approved",
+            "denied",
+            "blocked"
+          ]
+        },
+        "summary": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "blocked_actions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "action_id",
+          "action_type",
+          "status",
+          "summary",
+          "reason"
+        ],
+        "properties": {
+          "action_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "turn_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "action_type": {
+            "type": "string",
+            "enum": [
+              "tool_execution",
+              "external_message",
+              "file_mutation",
+              "credential_access",
+              "approval_required",
+              "other"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "blocked",
+              "denied",
+              "not_attempted"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          }
+        }
+      }
     },
     "notes": {
       "type": "string"

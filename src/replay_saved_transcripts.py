@@ -38,6 +38,14 @@ SCHEMA_PATH = REPO_ROOT / "schemas/saved_transcript.schema.json"
 RUN_ID = "saved_transcript_replay_example"
 TRACE_TIMESTAMP = "2026-01-01T00:00:00Z"
 
+EXPECTED_TRANSCRIPT_PROVENANCE_VALUES = {
+    "public_safe": True,
+    "live_execution": False,
+    "external_actions": False,
+    "contains_private_data": False,
+    "credentials_required": False,
+}
+
 
 def load_transcripts(path: Path) -> list[dict[str, Any]]:
     """Load and validate saved transcript JSONL records."""
@@ -133,6 +141,50 @@ def validate_transcripts(
                 f"points to role {selected_turn['role']!r}, expected 'assistant'"
             )
 
+        selected_turn_id = str(record["selected_assistant_turn_id"])
+        actual_turn_id = str(selected_turn.get("turn_id", ""))
+        if actual_turn_id != selected_turn_id:
+            raise ValueError(
+                f"{_display_path(input_path)}:{line_number}: selected_assistant_turn_id {selected_turn_id!r} "
+                f"does not match selected turn_id {actual_turn_id!r}"
+            )
+
+        validate_public_safe_transcript_metadata(record, input_path, line_number)
+
+
+def validate_public_safe_transcript_metadata(record: dict[str, Any], input_path: Path, line_number: int) -> None:
+    """Validate public-safe rich transcript metadata beyond schema shape."""
+
+    provenance = record["provenance"]
+    for field_name, expected_value in EXPECTED_TRANSCRIPT_PROVENANCE_VALUES.items():
+        if provenance[field_name] is not expected_value:
+            expected_text = str(expected_value).lower()
+            raise ValueError(
+                f"{_display_path(input_path)}:{line_number}: provenance.{field_name} must be {expected_text}"
+            )
+
+    for index, summary in enumerate(record.get("tool_call_summaries", [])):
+        if summary["external_action"] is not False:
+            raise ValueError(
+                f"{_display_path(input_path)}:{line_number}: "
+                f"tool_call_summaries[{index}].external_action must be false"
+            )
+
+    approval = record.get("approval")
+    if approval:
+        request_present = approval["request_present"]
+        outcome = approval["outcome"]
+        if request_present is False and outcome != "not_requested":
+            raise ValueError(
+                f"{_display_path(input_path)}:{line_number}: approval.outcome must be not_requested "
+                "when request_present is false"
+            )
+        if request_present is True and outcome == "not_requested":
+            raise ValueError(
+                f"{_display_path(input_path)}:{line_number}: approval.outcome must not be not_requested "
+                "when request_present is true"
+            )
+
 
 def run_replay() -> dict[str, Any]:
     """Replay all saved transcripts, score selected assistant turns, and write artifacts."""
@@ -169,20 +221,28 @@ def run_replay() -> dict[str, Any]:
     }
 
 
-def transcript_response(record: dict[str, Any]) -> dict[str, str]:
+def transcript_response(record: dict[str, Any]) -> dict[str, Any]:
     """Convert a selected assistant transcript turn into scorer response shape."""
 
     assistant_turn_index = int(record["assistant_turn_index"])
-    assistant_content = str(record["turns"][assistant_turn_index]["content"])
+    assistant_turn = record["turns"][assistant_turn_index]
+    assistant_content = str(assistant_turn["content"])
 
     notes = [
         f"Saved transcript replay loaded from {_display_path(INPUT_PATH)}.",
         f"transcript_id={record['transcript_id']}.",
         f"assistant_turn_index={assistant_turn_index}.",
+        f"selected_assistant_turn_id={record['selected_assistant_turn_id']}.",
     ]
-    source_label = str(record.get("source_label", "")).strip()
-    if source_label:
-        notes.append(f"source_label={source_label}.")
+    source_label = str(record["source_label"]).strip()
+    notes.append(f"source_label={source_label}.")
+    notes.append(f"tool_call_summaries={len(record.get('tool_call_summaries', []))}.")
+    if "approval" in record:
+        notes.append(f"approval={json.dumps(record['approval'], sort_keys=True, separators=(',', ':'))}.")
+    if "blocked_actions" in record:
+        notes.append(
+            f"blocked_actions={json.dumps(record['blocked_actions'], sort_keys=True, separators=(',', ':'))}."
+        )
     reviewer_notes = str(record.get("notes", "")).strip()
     if reviewer_notes:
         notes.append(f"notes={reviewer_notes}")
@@ -192,7 +252,40 @@ def transcript_response(record: dict[str, Any]) -> dict[str, str]:
         "case_id": str(record["case_id"]),
         "output_text": assistant_content,
         "mock_behavior_notes": " ".join(notes),
+        "source_record_id": str(record["transcript_id"]),
+        "source_type": "saved_transcript_output",
+        "adapter_name": "saved_transcript_replay",
+        "adapter_version": "0.2.0-m34",
+        "adapter_provenance": {
+            "public_safe": record["provenance"]["public_safe"],
+            "live_execution": record["provenance"]["live_execution"],
+            "external_actions": record["provenance"]["external_actions"],
+            "contains_private_data": record["provenance"]["contains_private_data"],
+        },
+        "adapter_provenance_details": record["provenance_details"],
+        "adapter_metadata": transcript_metadata(record, assistant_turn),
     }
+
+
+def transcript_metadata(record: dict[str, Any], assistant_turn: dict[str, Any]) -> dict[str, Any]:
+    """Build public-safe transcript metadata for the scored trace."""
+
+    metadata: dict[str, Any] = {
+        "transcript_id": record["transcript_id"],
+        "source_label": record["source_label"],
+        "assistant_turn_index": record["assistant_turn_index"],
+        "selected_assistant_turn_id": record["selected_assistant_turn_id"],
+        "selected_turn_role": assistant_turn["role"],
+        "turn_count": len(record["turns"]),
+        "tool_call_summaries": record.get("tool_call_summaries", []),
+    }
+    if "approval" in record:
+        metadata["approval"] = record["approval"]
+    if "blocked_actions" in record:
+        metadata["blocked_actions"] = record["blocked_actions"]
+    if "notes" in record:
+        metadata["notes"] = record["notes"]
+    return metadata
 
 
 def validate_scored_traces(records: list[dict[str, Any]]) -> None:
@@ -238,7 +331,11 @@ def generate_report(records: list[dict[str, Any]]) -> str:
         "",
         "## Transcript Input Contract",
         "",
-        "Each JSONL record must include `transcript_id`, `case_id`, `target_profile`, `turns`, and zero-based `assistant_turn_index`. Each turn must include `role` and `content`; the selected turn must have role `assistant`. Optional public-safe fields are `source_label` and `notes`.",
+        "Each JSONL record must include `transcript_id`, `case_id`, `target_profile`, `turns`, zero-based `assistant_turn_index`, `selected_assistant_turn_id`, `source_label`, public-safe `provenance`, and `provenance_details`. Turns may carry stable `turn_id` values; the selected turn must have role `assistant` and a `turn_id` matching `selected_assistant_turn_id`. Optional public-safe sections include `tool_call_summaries`, `approval`, `blocked_actions`, and `notes`.",
+        "",
+        "## Rich Metadata Summary",
+        "",
+        _rich_metadata_summary(records),
         "",
         "## Pass / Fail Summary",
         "",
@@ -267,16 +364,44 @@ def generate_report(records: list[dict[str, Any]]) -> str:
         "## Limitations",
         "",
         "- Replay validates and scores selected assistant text only; it does not execute transcript actions, tools, adapters, or agents.",
+        "- Tool calls, approvals, and blocked actions are public-safe summaries for interpretation; they are not raw runtime logs.",
         "- Transcript fixtures are fictional and public-safe; they do not prove production model or agent behavior.",
-        "- The current trace schema stores transcript metadata in `mock_behavior_notes` rather than dedicated transcript fields.",
+        "- Transcript metadata is preserved in optional scored-trace source/provenance fields, but the scorer still uses only selected assistant text and the matched eval case.",
         "- The scorer is deterministic and heuristic-based, so results should be read as evaluator signals rather than final behavioral truth.",
         "",
         "## Next Step",
         "",
-        "Refine the future adapter contract so real saved transcripts can preserve stable turn IDs, tool-call summaries, approval state, and source labels while still feeding this same deterministic scoring boundary.",
+        "Use the rich transcript contract for a public-safe Hermes or OpenClaw saved-transcript pilot before considering any live runtime harness integration.",
         "",
     ]
 
+    return "\n".join(lines)
+
+
+def _rich_metadata_summary(records: list[dict[str, Any]]) -> str:
+    tool_summary_count = 0
+    approval_metadata_count = 0
+    blocked_action_count = 0
+    source_labels = set()
+    for record in records:
+        metadata = record.get("adapter_metadata", {})
+        if isinstance(metadata, dict):
+            tool_summary_count += len(metadata.get("tool_call_summaries", []))
+            blocked_action_count += len(metadata.get("blocked_actions", []))
+            if "approval" in metadata:
+                approval_metadata_count += 1
+            source_label = str(metadata.get("source_label", "")).strip()
+            if source_label:
+                source_labels.add(source_label)
+
+    lines = [
+        "| Metric | Count |",
+        "| --- | ---: |",
+        f"| Source labels | {len(source_labels)} |",
+        f"| Tool-call summaries | {tool_summary_count} |",
+        f"| Approval metadata records | {approval_metadata_count} |",
+        f"| Blocked or denied action summaries | {blocked_action_count} |",
+    ]
     return "\n".join(lines)
 
 

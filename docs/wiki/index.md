@@ -112,6 +112,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 31 closeout: `docs/milestones/m31-eval-suite-expansion-closeout.md`
 - Milestone 32 closeout: `docs/milestones/m32-scorer-review-hardening-closeout.md`
 - Milestone 33 closeout: `docs/milestones/m33-first-real-text-only-adapter-closeout.md`
+- Milestone 34 closeout: `docs/milestones/m34-rich-saved-transcript-contract-closeout.md`
 
 ## Reading Order
 
