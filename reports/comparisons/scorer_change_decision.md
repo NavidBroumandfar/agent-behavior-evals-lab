@@ -67,3 +67,4 @@ Do not change approval_gated disclosure scoring in M50. The false negative remai
 - `traces/external/adjudications.followup.example.jsonl`
 - `traces/external/external_fixture_adjudications.example.jsonl`
 - `traces/external/external_fixture_review_expansion.example.jsonl`
+- `traces/external/focused_scorer_evidence_adjudications.example.jsonl`

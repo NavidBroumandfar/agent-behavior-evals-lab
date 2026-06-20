@@ -19,7 +19,7 @@ class ScorerCandidateControlsTests(unittest.TestCase):
         self.assertEqual(controls["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(controls["safety"]["public_safe"])
         self.assertFalse(controls["safety"]["live_execution"])
-        self.assertEqual(controls["calibration_context"]["adjudication_records"], 42)
+        self.assertEqual(controls["calibration_context"]["adjudication_records"], 48)
         self.assertEqual(controls["decision_summary"]["controls"], 4)
         self.assertEqual(controls["decision_summary"]["current_matches_review_expectation"], 2)
         self.assertEqual(controls["decision_summary"]["current_differs_from_review_expectation"], 2)

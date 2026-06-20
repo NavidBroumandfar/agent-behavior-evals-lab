@@ -41,6 +41,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
     REPO_ROOT / "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
     REPO_ROOT / "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
+    REPO_ROOT / "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -266,6 +267,13 @@ def release_highlights(
             {
                 "area": "Scorer Versioning",
                 "summary": "Added optional historical scorer context validation so future scorer changes can preserve pre-change adjudication outcomes.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M52" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Focused Scorer Evidence",
+                "summary": "Added public-safe focused evidence for safe-task clarification and approval-disclosure scorer candidates without accepting scorer-code changes.",
             }
         )
     return highlights

@@ -19,6 +19,8 @@ MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/manual_output_eval.jsonl"
 EXPECTED_MANUAL_TRACE_LINES = 4
 OPENCLAW_MANUAL_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_manual_eval.jsonl"
 EXPECTED_OPENCLAW_MANUAL_TRACE_LINES = 6
+FOCUSED_SCORER_EVIDENCE_TRACE_PATH = REPO_ROOT / "traces/scored/focused_scorer_evidence_eval.jsonl"
+EXPECTED_FOCUSED_SCORER_EVIDENCE_TRACE_LINES = 6
 SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/saved_transcript_replay_eval.jsonl"
 EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES = 5
 OPENCLAW_SAVED_TRANSCRIPT_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl"
@@ -43,6 +45,7 @@ RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.
 RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
+FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
 ADJUDICATION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudication_summary_report.md"
 ADJUDICATED_AGGREGATE_REPORT_PATH = REPO_ROOT / "reports/comparisons/adjudicated_aggregate_report.md"
 ADJUDICATION_REGRESSION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
@@ -56,6 +59,10 @@ SCORER_CHANGE_DECISION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_chang
 SCORER_CHANGE_DECISION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_change_decision.md"
 SCORER_VERSIONING_GUARDRAILS_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.json"
 SCORER_VERSIONING_GUARDRAILS_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.md"
+FOCUSED_SCORER_EVIDENCE_JSON_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_expansion.json"
+FOCUSED_SCORER_EVIDENCE_EXPANSION_REPORT_PATH = (
+    REPO_ROOT / "reports/comparisons/focused_scorer_evidence_expansion.md"
+)
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -71,6 +78,11 @@ PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_CONTEXT = (
     "M41 expands saved transcript coverage with synthetic public-safe examples spanning safe task-following, "
     "approval boundaries, refusal boundaries, and uncertainty handling. The fixture uses selected assistant turns "
     "only; no live runtime, private logs, credentials, tools, or external actions are used."
+)
+FOCUSED_SCORER_EVIDENCE_REPORT_CONTEXT = (
+    "M52 adds synthetic public-safe focused scorer evidence for safe-task clarification and approval-disclosure "
+    "controls. The fixture is local saved text only; no live runtime, provider, network, browser/email, shell, "
+    "file mutation, credentials, private logs, or external actions are used."
 )
 
 CHECKS = [
@@ -157,6 +169,25 @@ CHECKS = [
             "Public OpenClaw-Style Manual Evaluation Report",
             "--report-context",
             OPENCLAW_MANUAL_REPORT_CONTEXT,
+        ],
+    ),
+    (
+        "focused scorer evidence generation",
+        [
+            "python3",
+            "src/evaluate_manual_outputs.py",
+            "--input",
+            "traces/external/focused_scorer_evidence.example.jsonl",
+            "--output",
+            "traces/scored/focused_scorer_evidence_eval.jsonl",
+            "--report",
+            "reports/comparisons/focused_scorer_evidence_report.md",
+            "--run-id",
+            "focused_scorer_evidence",
+            "--report-title",
+            "Focused Scorer Evidence Report",
+            "--report-context",
+            FOCUSED_SCORER_EVIDENCE_REPORT_CONTEXT,
         ],
     ),
     (
@@ -248,6 +279,14 @@ CHECKS = [
         ],
     ),
     (
+        "focused scorer evidence adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),
@@ -283,6 +322,10 @@ CHECKS = [
     (
         "scorer versioning guardrails generation",
         ["python3", "src/scorer_versioning_guardrails.py"],
+    ),
+    (
+        "focused scorer evidence expansion generation",
+        ["python3", "src/focused_scorer_evidence_expansion.py"],
     ),
     (
         "baseline self trace comparison",
@@ -362,6 +405,7 @@ CHECKS = [
             "src/scorer_candidate_controls.py",
             "src/scorer_change_decision.py",
             "src/scorer_versioning_guardrails.py",
+            "src/focused_scorer_evidence_expansion.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -443,6 +487,12 @@ def main() -> int:
                 verify_trace_count(MANUAL_TRACE_PATH, EXPECTED_MANUAL_TRACE_LINES)
             if name == "openclaw-style manual eval generation":
                 verify_trace_count(OPENCLAW_MANUAL_TRACE_PATH, EXPECTED_OPENCLAW_MANUAL_TRACE_LINES)
+            if name == "focused scorer evidence generation":
+                verify_trace_count(
+                    FOCUSED_SCORER_EVIDENCE_TRACE_PATH,
+                    EXPECTED_FOCUSED_SCORER_EVIDENCE_TRACE_LINES,
+                )
+                verify_report_exists(FOCUSED_SCORER_EVIDENCE_REPORT_PATH)
             if name == "saved transcript replay generation":
                 verify_trace_count(SAVED_TRANSCRIPT_TRACE_PATH, EXPECTED_SAVED_TRANSCRIPT_TRACE_LINES)
             if name == "openclaw saved transcript pilot generation":
@@ -476,6 +526,9 @@ def main() -> int:
             if name == "scorer versioning guardrails generation":
                 verify_report_exists(SCORER_VERSIONING_GUARDRAILS_JSON_PATH)
                 verify_report_exists(SCORER_VERSIONING_GUARDRAILS_REPORT_PATH)
+            if name == "focused scorer evidence expansion generation":
+                verify_report_exists(FOCUSED_SCORER_EVIDENCE_JSON_PATH)
+                verify_report_exists(FOCUSED_SCORER_EVIDENCE_EXPANSION_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":

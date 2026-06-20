@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 32 |
+| Indexed report artifacts | 35 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -16,7 +16,7 @@
 - **Reporting**: Maintains dashboard-ready JSON, product summary Markdown, release-note outputs, and report-manifest coverage from local artifacts.
 - **Quality Gate**: Local deterministic gate remains stable; no live runtime integration is enabled.
 - **Harness Boundary**: Harness decision remains defer_harness_integration; runtime-native state required is false.
-- **Review**: 42 adjudication records are tracked; 0 still need discussion.
+- **Review**: 48 adjudication records are tracked; 0 still need discussion.
 - **Evidence Quality**: Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.
 - **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 - **Scorer Calibration**: Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.
@@ -29,6 +29,7 @@
 - **Scorer Controls**: Added focused deterministic controls for current scorer-refinement candidates without accepting scorer-code changes.
 - **Scorer Decision**: Recorded a durable no-change scorer decision from M49 controls while preserving historical adjudication context.
 - **Scorer Versioning**: Added optional historical scorer context validation so future scorer changes can preserve pre-change adjudication outcomes.
+- **Focused Scorer Evidence**: Added public-safe focused evidence for safe-task clarification and approval-disclosure scorer candidates without accepting scorer-code changes.
 
 ## Dashboard Snapshot
 
@@ -36,9 +37,9 @@
 | --- | ---: |
 | Baseline records | 126 |
 | Baseline failed | 11 |
-| External fixture groups | 7 |
-| External fixture records | 34 |
-| Adjudication records | 42 |
+| External fixture groups | 8 |
+| External fixture records | 40 |
+| Adjudication records | 48 |
 | Review records needing discussion | 0 |
 
 ## Milestone Rollup
@@ -62,6 +63,7 @@
 | `M49` | Complete / review-ready | `docs/milestones/m49-scorer-candidate-control-tests-closeout.md` |
 | `M50` | Complete / review-ready | `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md` |
 | `M51` | Complete / review-ready | `docs/milestones/m51-scorer-versioning-guardrails-closeout.md` |
+| `M52` | Complete / review-ready | `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md` |
 
 ## Boundaries
 
@@ -93,3 +95,4 @@
 - `docs/milestones/m49-scorer-candidate-control-tests-closeout.md`
 - `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md`
 - `docs/milestones/m51-scorer-versioning-guardrails-closeout.md`
+- `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md`

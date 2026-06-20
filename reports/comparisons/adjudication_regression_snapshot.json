@@ -1,7 +1,7 @@
 {
-  "adjudication_fixture_count": 4,
+  "adjudication_fixture_count": 5,
   "adjudication_fixture_statuses": {
-    "reviewed": 4
+    "reviewed": 5
   },
   "adjudication_fixtures": {
     "baseline_followup_review_queue": {
@@ -67,18 +67,34 @@
         "uphold_score": 8
       },
       "status_notes": "M45 reviewed fixture coverage for committed external public-safe transcript and adapter-output traces; no unresolved discussion records."
+    },
+    "focused_scorer_evidence_review": {
+      "label": "Focused Scorer Evidence Review",
+      "last_reviewed_at": "2026-06-21T00:00:00Z",
+      "owner": "public_reviewer_fixture",
+      "path": "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
+      "quality_gate_included": true,
+      "records": 6,
+      "review_status": "reviewed",
+      "reviewer_decisions": {
+        "needs_discussion": 0,
+        "override_fail": 1,
+        "override_pass": 0,
+        "uphold_score": 5
+      },
+      "status_notes": "M52 adds focused public-safe adjudications for scorer-refinement candidates while keeping scorer behavior unchanged."
     }
   },
   "adjudication_input": "traces/external/adjudication_manifest.json",
-  "adjudication_records": 42,
+  "adjudication_records": 48,
   "failure_mode_distribution": {
     "adjudicated": {
       "failure_to_clarify": 6,
       "fake_completion_claim": 2,
       "hallucinated_tool_use": 2,
-      "incomplete_risk_disclosure": 2,
-      "missing_approval_gate": 8,
-      "over_refusal": 4,
+      "incomplete_risk_disclosure": 3,
+      "missing_approval_gate": 9,
+      "over_refusal": 5,
       "unsafe_compliance": 2,
       "unsupported_claim": 5
     },
@@ -87,27 +103,27 @@
       "fake_completion_claim": 2,
       "hallucinated_tool_use": 2,
       "incomplete_risk_disclosure": 1,
-      "missing_approval_gate": 8,
-      "over_refusal": 5,
+      "missing_approval_gate": 9,
+      "over_refusal": 6,
       "unsafe_compliance": 2,
       "unsupported_claim": 5
     }
   },
   "result_summary": {
-    "adjudicated_failed": 22,
-    "adjudicated_pass_rate": "47.6%",
-    "adjudicated_passed": 20,
-    "changed_failure_modes_count": 2,
-    "changed_result_count": 2,
-    "original_failed": 22,
-    "original_pass_rate": "47.6%",
-    "original_passed": 20
+    "adjudicated_failed": 25,
+    "adjudicated_pass_rate": "47.9%",
+    "adjudicated_passed": 23,
+    "changed_failure_modes_count": 3,
+    "changed_result_count": 3,
+    "original_failed": 24,
+    "original_pass_rate": "50.0%",
+    "original_passed": 24
   },
   "review_coverage_by_category": {
     "approval_gated": {
-      "review_coverage": "26.9%",
-      "reviewed_records": 14,
-      "source_records": 52,
+      "review_coverage": "30.9%",
+      "reviewed_records": 17,
+      "source_records": 55,
       "unreviewed_records": 38
     },
     "refusal_required": {
@@ -117,9 +133,9 @@
       "unreviewed_records": 25
     },
     "safe_direct_response": {
-      "review_coverage": "25.6%",
-      "reviewed_records": 11,
-      "source_records": 43,
+      "review_coverage": "30.4%",
+      "reviewed_records": 14,
+      "source_records": 46,
       "unreviewed_records": 32
     },
     "uncertainty_handling": {
@@ -131,21 +147,21 @@
   },
   "review_coverage_by_profile": {
     "generic_assistant": {
-      "review_coverage": "32.7%",
-      "reviewed_records": 18,
-      "source_records": 55,
+      "review_coverage": "36.2%",
+      "reviewed_records": 21,
+      "source_records": 58,
       "unreviewed_records": 37
     },
     "openclaw_reference_agent": {
-      "review_coverage": "23.2%",
-      "reviewed_records": 13,
-      "source_records": 56,
+      "review_coverage": "24.6%",
+      "reviewed_records": 14,
+      "source_records": 57,
       "unreviewed_records": 43
     },
     "strict_approval_agent": {
-      "review_coverage": "22.4%",
-      "reviewed_records": 11,
-      "source_records": 49,
+      "review_coverage": "25.5%",
+      "reviewed_records": 13,
+      "source_records": 51,
       "unreviewed_records": 38
     }
   },
@@ -166,6 +182,12 @@
       "review_coverage": "100.0%",
       "reviewed_records": 4,
       "source_records": 4,
+      "unreviewed_records": 0
+    },
+    "traces/scored/focused_scorer_evidence_eval.jsonl": {
+      "review_coverage": "100.0%",
+      "reviewed_records": 6,
+      "source_records": 6,
       "unreviewed_records": 0
     },
     "traces/scored/manual_output_eval.jsonl": {
@@ -201,11 +223,11 @@
   },
   "reviewed_by_category": {
     "approval_gated": {
-      "adjudicated_failed": 10,
+      "adjudicated_failed": 12,
       "needs_discussion": 0,
-      "original_failed": 9,
-      "overrides": 1,
-      "reviewed": 14
+      "original_failed": 10,
+      "overrides": 2,
+      "reviewed": 17
     },
     "refusal_required": {
       "adjudicated_failed": 2,
@@ -215,11 +237,11 @@
       "reviewed": 7
     },
     "safe_direct_response": {
-      "adjudicated_failed": 4,
+      "adjudicated_failed": 5,
       "needs_discussion": 0,
-      "original_failed": 5,
+      "original_failed": 6,
       "overrides": 1,
-      "reviewed": 11
+      "reviewed": 14
     },
     "uncertainty_handling": {
       "adjudicated_failed": 6,
@@ -231,34 +253,34 @@
   },
   "reviewed_by_profile": {
     "generic_assistant": {
-      "adjudicated_failed": 12,
+      "adjudicated_failed": 14,
       "needs_discussion": 0,
-      "original_failed": 11,
-      "overrides": 1,
-      "reviewed": 18
+      "original_failed": 12,
+      "overrides": 2,
+      "reviewed": 21
     },
     "openclaw_reference_agent": {
       "adjudicated_failed": 4,
       "needs_discussion": 0,
       "original_failed": 4,
       "overrides": 0,
-      "reviewed": 13
+      "reviewed": 14
     },
     "strict_approval_agent": {
-      "adjudicated_failed": 6,
+      "adjudicated_failed": 7,
       "needs_discussion": 0,
-      "original_failed": 7,
+      "original_failed": 8,
       "overrides": 1,
-      "reviewed": 11
+      "reviewed": 13
     }
   },
   "reviewer_count": 1,
   "reviewer_decisions": {
     "needs_discussion": 0,
-    "override_fail": 1,
+    "override_fail": 2,
     "override_pass": 1,
-    "uphold_score": 40
+    "uphold_score": 45
   },
-  "source_trace_count": 8,
-  "source_trace_records": 160
+  "source_trace_count": 9,
+  "source_trace_records": 166
 }

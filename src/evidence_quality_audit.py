@@ -41,6 +41,8 @@ SCORER_CHANGE_DECISION_PATH = REPO_ROOT / "reports/comparisons/scorer_change_dec
 SCORER_CHANGE_DECISION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_change_decision.md"
 SCORER_VERSIONING_GUARDRAILS_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.json"
 SCORER_VERSIONING_GUARDRAILS_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.md"
+FOCUSED_SCORER_EVIDENCE_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_expansion.json"
+FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_expansion.md"
 HARNESS_BRIDGE_PLAN_PATH = REPO_ROOT / "traces/external/harness_bridge_plan.example.json"
 SCORER_PATH = REPO_ROOT / "src/scorers.py"
 SCORER_LIMITATIONS_PATH = REPO_ROOT / "docs/wiki/concepts/v0_scorer_limitations.md"
@@ -66,6 +68,7 @@ def build_audit() -> dict[str, Any]:
     scorer_controls = load_json_object(SCORER_CANDIDATE_CONTROLS_PATH)
     scorer_decision = load_json_object(SCORER_CHANGE_DECISION_PATH)
     scorer_guardrails = load_json_object(SCORER_VERSIONING_GUARDRAILS_PATH)
+    focused_evidence = load_json_object(FOCUSED_SCORER_EVIDENCE_PATH)
 
     fixture_inventory = build_fixture_inventory(fixture_manifest)
     scored_trace_inventory = build_scored_trace_inventory(baseline_records, fixture_inventory)
@@ -84,6 +87,7 @@ def build_audit() -> dict[str, Any]:
         scorer_controls,
         scorer_decision,
         scorer_guardrails,
+        focused_evidence,
     )
 
     return {
@@ -323,6 +327,7 @@ def build_gap_report(
     scorer_controls: dict[str, Any],
     scorer_decision: dict[str, Any],
     scorer_guardrails: dict[str, Any],
+    focused_evidence: dict[str, Any],
 ) -> dict[str, Any]:
     """Build source-backed evidence gaps grouped by type."""
 
@@ -340,6 +345,7 @@ def build_gap_report(
     control_decision = scorer_controls.get("decision_summary", {})
     scorer_change_decision = scorer_decision.get("decision_summary", {})
     guardrail_decision = scorer_guardrails.get("decision_summary", {})
+    focused_decision = focused_evidence.get("decision_summary", {})
 
     missing_fixture_coverage = [
         gap(
@@ -403,7 +409,9 @@ def build_gap_report(
                 f"M50 records decision `{scorer_change_decision.get('decision', 'unknown')}` with "
                 f"{scorer_change_decision.get('accepted_scorer_changes', 0)} accepted scorer changes. "
                 f"M51 historical scorer context support is "
-                f"{str(guardrail_decision.get('historical_scorer_context_supported', False)).lower()}."
+                f"{str(guardrail_decision.get('historical_scorer_context_supported', False)).lower()}. "
+                f"M52 adds {focused_decision.get('focused_controls', 0)} focused controls with decision "
+                f"`{focused_decision.get('decision', 'unknown')}`."
             ),
             [
                 display_path(ADJUDICATION_MANIFEST_PATH),
@@ -412,6 +420,7 @@ def build_gap_report(
                 display_path(SCORER_CANDIDATE_CONTROLS_PATH),
                 display_path(SCORER_CHANGE_DECISION_PATH),
                 display_path(SCORER_VERSIONING_GUARDRAILS_PATH),
+                display_path(FOCUSED_SCORER_EVIDENCE_PATH),
             ],
         ),
         gap(
@@ -511,16 +520,16 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
         {
             "recommendation_id": "prioritize_public_safe_transcripts_for_review",
             "priority": "high",
-            "target_phase": "M52",
-            "summary": "Maintain public-safe review depth for small fixture groups and remaining category coverage gaps.",
+            "target_phase": "M53",
+            "summary": "Continue public-safe review depth for small fixture groups and remaining category coverage gaps.",
             "source_gap_ids": public_safe_review_gap_ids,
             "public_safe_path": "Review selected assistant turns with public-safe tool summaries and approval metadata, not private runtime logs.",
         },
         {
             "recommendation_id": "calibrate_before_scorer_changes",
             "priority": "high",
-            "target_phase": "M52",
-            "summary": "Use the M51 scorer-versioning guardrails and focused evidence expansion before accepting scorer refinements.",
+            "target_phase": "M53",
+            "summary": "Use the M51 guardrails and M52 focused evidence before accepting scorer or rubric refinements.",
             "source_gap_ids": [
                 "heuristic_scorer_not_semantic_judge",
                 "limited_adjudication_calibration_set",
@@ -632,6 +641,8 @@ def source_paths() -> list[str]:
         SCORER_CHANGE_DECISION_REPORT_PATH,
         SCORER_VERSIONING_GUARDRAILS_PATH,
         SCORER_VERSIONING_GUARDRAILS_REPORT_PATH,
+        FOCUSED_SCORER_EVIDENCE_PATH,
+        FOCUSED_SCORER_EVIDENCE_REPORT_PATH,
         HARNESS_BRIDGE_PLAN_PATH,
         SCORER_PATH,
         SCORER_LIMITATIONS_PATH,

@@ -7,14 +7,15 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Snapshot version | `0.1.0` |
 | Baseline pass rate | 91.3% |
-| External fixture pass rate | 55.9% |
-| Adjudication records | 42 |
-| Report artifacts | 32 |
+| External fixture pass rate | 57.5% |
+| Adjudication records | 48 |
+| Report artifacts | 35 |
 | Evidence gaps | 9 |
 | Scorer triage candidates | 2 |
 | Scorer candidate controls | 4 |
 | Scorer change decision | `rubric_only_no_scorer_change` |
 | Scorer versioning guardrails | true |
+| Focused scorer evidence | `evidence_expanded_no_scorer_change` |
 
 These trends describe evaluator health from committed local artifacts. They are not live model-performance trends, leaderboard results, or production benchmark claims.
 
@@ -23,26 +24,28 @@ These trends describe evaluator health from committed local artifacts. They are 
 | Checkpoint | Phase | Key Metrics |
 | --- | --- | --- |
 | `baseline_mock_run` | `baseline` | `failure_modes`=missing_approval_gate=7, over_refusal=4; `pass_rate`=91.3%; `records`=126 |
-| `m40_evidence_quality_audit` | `evidence_quality` | `gap_count`=9; `product_kpi_count`=4; `total_scored_records`=160 |
+| `m40_evidence_quality_audit` | `evidence_quality` | `gap_count`=9; `product_kpi_count`=4; `total_scored_records`=166 |
 | `m41_public_safe_transcript_expansion` | `fixture_expansion` | `failure_modes`=failure_to_clarify=1, fake_completion_claim=1, hallucinated_tool_use=1, missing_approval_gate=1, over_refusal=1, unsafe_compliance=1; `pass_rate`=50.0%; `records`=8 |
-| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=42; `calibration_label_counts`=ambiguous_review=0, scorer_false_negative=1, scorer_false_positive=1, scorer_upheld_failure=21, scorer_upheld_pass=19; `changed_result_count`=2 |
-| `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=55.9%; `fixture_groups`=7; `json_snapshots`=11; `markdown_reports`=21; `report_artifacts`=32 |
-| `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=42; `ambiguous_reviews`=0; `external_source_trace_count`=7; `source_trace_count`=8 |
-| `m46_needs_discussion_resolution` | `review_resolution` | `adjudication_records`=42; `ambiguous_reviews`=0; `changed_result_count`=2; `needs_discussion`=0 |
+| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=48; `calibration_label_counts`=ambiguous_review=0, scorer_false_negative=2, scorer_false_positive=1, scorer_upheld_failure=23, scorer_upheld_pass=22; `changed_result_count`=3 |
+| `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=57.5%; `fixture_groups`=8; `json_snapshots`=12; `markdown_reports`=23; `report_artifacts`=35 |
+| `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=48; `ambiguous_reviews`=0; `external_source_trace_count`=8; `source_trace_count`=9 |
+| `m46_needs_discussion_resolution` | `review_resolution` | `adjudication_records`=48; `ambiguous_reviews`=0; `changed_result_count`=3; `needs_discussion`=0 |
 | `m47_deterministic_scorer_refinement_triage` | `scorer_refinement_triage` | `accepted_scorer_changes`=0; `candidates`=2; `deferred_scorer_changes`=2; `scorer_code_changed`=False |
-| `m48_external_fixture_review_expansion` | `review_expansion` | `accepted_scorer_changes`=0; `adjudication_records`=42; `external_source_trace_count`=7; `source_trace_count`=8 |
+| `m48_external_fixture_review_expansion` | `review_expansion` | `accepted_scorer_changes`=0; `adjudication_records`=48; `external_source_trace_count`=8; `source_trace_count`=9 |
 | `m49_scorer_candidate_control_tests` | `scorer_candidate_controls` | `accepted_scorer_changes`=0; `controls`=4; `current_differs_from_review_expectation`=2; `scorer_code_changed`=False |
 | `m50_deterministic_scorer_change_decision` | `scorer_change_decision` | `accepted_scorer_changes`=0; `candidates_evaluated`=2; `rubric_only_no_change_decisions`=2; `scorer_code_changed`=False |
 | `m51_scorer_versioning_guardrails` | `scorer_versioning_guardrails` | `accepted_scorer_changes`=0; `current_records_with_historical_context`=0; `historical_scorer_context_supported`=True; `migration_required_now`=False |
+| `m52_focused_scorer_evidence_expansion` | `focused_scorer_evidence` | `accepted_scorer_changes`=0; `candidate_groups`=2; `decision`=evidence_expanded_no_scorer_change; `focused_controls`=6; `review_scorer_result_mismatches`=1 |
 
 ## Pass Rates
 
 | Trend | Records | Passed | Failed | Pass Rate |
 | --- | ---: | ---: | ---: | ---: |
 | `baseline_mock_run` | 126 | 115 | 11 | 91.3% |
-| `external_fixtures_all` | 34 | 19 | 15 | 55.9% |
+| `external_fixtures_all` | 40 | 23 | 17 | 57.5% |
 | `manual_outputs` | 4 | 2 | 2 | 50.0% |
 | `sanitized_openclaw_style_manual_samples` | 6 | 4 | 2 | 66.7% |
+| `focused_scorer_evidence` | 6 | 4 | 2 | 66.7% |
 | `saved_transcript_replay` | 5 | 3 | 2 | 60.0% |
 | `openclaw_saved_transcript_pilot` | 3 | 3 | 0 | 100.0% |
 | `public_safe_transcript_expansion` | 8 | 4 | 4 | 50.0% |
@@ -57,8 +60,8 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `fake_completion_claim` | 3 |
 | `hallucinated_tool_use` | 3 |
 | `incomplete_risk_disclosure` | 1 |
-| `missing_approval_gate` | 12 |
-| `over_refusal` | 5 |
+| `missing_approval_gate` | 13 |
+| `over_refusal` | 6 |
 | `unsafe_compliance` | 2 |
 | `unsupported_claim` | 5 |
 
@@ -67,29 +70,29 @@ These trends describe evaluator health from committed local artifacts. They are 
 | Reviewer Decision | Value |
 | --- | ---: |
 | `needs_discussion` | 0 |
-| `override_fail` | 1 |
+| `override_fail` | 2 |
 | `override_pass` | 1 |
-| `uphold_score` | 40 |
+| `uphold_score` | 45 |
 
 ## Scorer Calibration Labels
 
 | Calibration Label | Value |
 | --- | ---: |
 | `ambiguous_review` | 0 |
-| `scorer_false_negative` | 1 |
+| `scorer_false_negative` | 2 |
 | `scorer_false_positive` | 1 |
-| `scorer_upheld_failure` | 21 |
-| `scorer_upheld_pass` | 19 |
+| `scorer_upheld_failure` | 23 |
+| `scorer_upheld_pass` | 22 |
 
 ## Report Manifest Coverage
 
 | Metric | Value |
 | --- | ---: |
-| `json_snapshots` | 11 |
-| `markdown_reports` | 21 |
-| `public_safe_artifacts` | 32 |
-| `quality_gate_artifacts` | 32 |
-| `report_artifacts` | 32 |
+| `json_snapshots` | 12 |
+| `markdown_reports` | 23 |
+| `public_safe_artifacts` | 35 |
+| `quality_gate_artifacts` | 35 |
+| `report_artifacts` | 35 |
 
 ## Boundary
 
@@ -101,6 +104,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 
 - `reports/comparisons/adjudication_regression_snapshot.json`
 - `reports/comparisons/evidence_quality_audit.json`
+- `reports/comparisons/focused_scorer_evidence_expansion.json`
 - `reports/comparisons/report_manifest.json`
 - `reports/comparisons/reporting_product_summary.json`
 - `reports/comparisons/scorer_calibration_summary.json`
@@ -113,6 +117,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 - `traces/external/dry_run_adapter_outputs.jsonl`
 - `traces/external/external_fixture_review_expansion.example.jsonl`
 - `traces/external/fixture_manifest.json`
+- `traces/external/focused_scorer_evidence.example.jsonl`
 - `traces/external/manual_outputs.example.jsonl`
 - `traces/external/openclaw_manual_samples.example.jsonl`
 - `traces/external/openclaw_saved_transcript_pilot.example.jsonl`
@@ -121,6 +126,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 - `traces/scored/adapter_output_fixture_import.jsonl`
 - `traces/scored/baseline_mock_run.jsonl`
 - `traces/scored/dry_run_adapter_output_import.jsonl`
+- `traces/scored/focused_scorer_evidence_eval.jsonl`
 - `traces/scored/manual_output_eval.jsonl`
 - `traces/scored/openclaw_manual_eval.jsonl`
 - `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl`

@@ -14,6 +14,8 @@ M49 adds focused scorer candidate controls around the current false-positive and
 
 M50 evaluates those controls and records a durable no-change scorer decision. The calibration false positive and false negative remain documented review signals rather than accepted scorer-code changes.
 
+M52 adds focused public-safe scorer evidence for the same candidate areas. The added records increase calibration depth while keeping accepted scorer-code changes at zero.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`

@@ -41,6 +41,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Scorer Candidate Control Tests](concepts/scorer_candidate_control_tests.md)
 - [Scorer Change Decision](concepts/scorer_change_decision.md)
 - [Scorer Versioning Guardrails](concepts/scorer_versioning_guardrails.md)
+- [Focused Scorer Evidence Expansion](concepts/focused_scorer_evidence_expansion.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -96,6 +97,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Scorer candidate controls: `src/scorer_candidate_controls.py`, `reports/comparisons/scorer_candidate_controls.json`, and `reports/comparisons/scorer_candidate_controls.md`
 - Scorer change decision: `src/scorer_change_decision.py`, `reports/comparisons/scorer_change_decision.json`, and `reports/comparisons/scorer_change_decision.md`
 - Scorer versioning guardrails: `src/scorer_versioning_guardrails.py`, `reports/comparisons/scorer_versioning_guardrails.json`, and `reports/comparisons/scorer_versioning_guardrails.md`
+- Focused scorer evidence expansion: `src/focused_scorer_evidence_expansion.py`, `reports/comparisons/focused_scorer_evidence_expansion.json`, and `reports/comparisons/focused_scorer_evidence_expansion.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`
@@ -159,6 +161,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 49 closeout: `docs/milestones/m49-scorer-candidate-control-tests-closeout.md`
 - Milestone 50 closeout: `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md`
 - Milestone 51 closeout: `docs/milestones/m51-scorer-versioning-guardrails-closeout.md`
+- Milestone 52 closeout: `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md`
 
 ## Reading Order
 

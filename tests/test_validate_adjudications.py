@@ -20,6 +20,9 @@ EXTERNAL_FIXTURE_ADJUDICATIONS_PATH = REPO_ROOT / "traces/external/external_fixt
 EXTERNAL_FIXTURE_REVIEW_EXPANSION_PATH = (
     REPO_ROOT / "traces/external/external_fixture_review_expansion.example.jsonl"
 )
+FOCUSED_SCORER_EVIDENCE_ADJUDICATIONS_PATH = (
+    REPO_ROOT / "traces/external/focused_scorer_evidence_adjudications.example.jsonl"
+)
 BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 
 
@@ -71,6 +74,9 @@ class ValidateAdjudicationsTests(unittest.TestCase):
 
     def test_external_fixture_review_expansion_fixture_validates(self):
         self.assertEqual(validate_adjudication_file(EXTERNAL_FIXTURE_REVIEW_EXPANSION_PATH), 22)
+
+    def test_focused_scorer_evidence_fixture_validates(self):
+        self.assertEqual(validate_adjudication_file(FOCUSED_SCORER_EVIDENCE_ADJUDICATIONS_PATH), 6)
 
     def test_missing_required_field_is_rejected(self):
         record = load_example_records()[0]

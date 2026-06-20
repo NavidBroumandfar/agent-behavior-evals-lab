@@ -5,9 +5,9 @@
 | Field | Value |
 | --- | ---: |
 | Eval cases | 42 |
-| Total scored records | 160 |
-| External fixture records | 34 |
-| Adjudication records | 42 |
+| Total scored records | 166 |
+| External fixture records | 40 |
+| Adjudication records | 48 |
 | Evidence gaps | 9 |
 
 This is an audit of committed local evidence. It is not a live model benchmark, leaderboard, or real-world agent quality claim.
@@ -28,7 +28,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Evidence set | Records | Passed | Failed | Pass rate |
 | --- | ---: | ---: | ---: | ---: |
 | Baseline mock trace | 126 | 115 | 11 | 91.3% |
-| External fixture traces | 34 | 19 | 15 | 55.9% |
+| External fixture traces | 40 | 23 | 17 | 57.5% |
 
 ### External Fixtures
 
@@ -36,6 +36,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | --- | --- | ---: | ---: | ---: |
 | `manual_outputs` | `manual_output` | 4 | 2 | 50.0% |
 | `sanitized_openclaw_style_manual_samples` | `openclaw_style_manual_output` | 6 | 2 | 66.7% |
+| `focused_scorer_evidence` | `focused_scorer_evidence` | 6 | 2 | 66.7% |
 | `saved_transcript_replay` | `saved_transcript_replay` | 5 | 2 | 60.0% |
 | `openclaw_saved_transcript_pilot` | `openclaw_saved_transcript_pilot` | 3 | 0 | 100.0% |
 | `public_safe_transcript_expansion` | `public_safe_transcript_expansion` | 8 | 4 | 50.0% |
@@ -49,24 +50,25 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | `traces/scored/adapter_output_fixture_import.jsonl` | 4 | 4 | 100.0% |
 | `traces/scored/baseline_mock_run.jsonl` | 12 | 126 | 9.5% |
 | `traces/scored/dry_run_adapter_output_import.jsonl` | 4 | 4 | 100.0% |
+| `traces/scored/focused_scorer_evidence_eval.jsonl` | 6 | 6 | 100.0% |
 | `traces/scored/manual_output_eval.jsonl` | 4 | 4 | 100.0% |
 | `traces/scored/openclaw_manual_eval.jsonl` | 6 | 6 | 100.0% |
 | `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl` | 3 | 3 | 100.0% |
 | `traces/scored/public_safe_transcript_expansion_eval.jsonl` | 4 | 8 | 50.0% |
 | `traces/scored/saved_transcript_replay_eval.jsonl` | 5 | 5 | 100.0% |
-| category `approval_gated` | 14 | 52 | 26.9% |
+| category `approval_gated` | 17 | 55 | 30.9% |
 | category `refusal_required` | 7 | 32 | 21.9% |
-| category `safe_direct_response` | 11 | 43 | 25.6% |
+| category `safe_direct_response` | 14 | 46 | 30.4% |
 | category `uncertainty_handling` | 10 | 33 | 30.3% |
 
 ### Report Artifacts
 
 | Metric | Value |
 | --- | ---: |
-| Report artifacts | 32 |
-| Quality-gate artifacts | 32 |
-| Markdown reports | 21 |
-| JSON snapshots | 11 |
+| Report artifacts | 35 |
+| Quality-gate artifacts | 35 |
+| Markdown reports | 23 |
+| JSON snapshots | 12 |
 
 ## Gap Report
 
@@ -75,7 +77,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Gap | Severity | Summary | Sources |
 | --- | --- | --- | --- |
 | `no_live_runtime_evidence` | high | The committed evidence is saved, sanitized, synthetic, or mock evidence only; it does not prove live runtime behavior. | `traces/external/fixture_manifest.json`, `traces/external/harness_bridge_plan.example.json`, `docs/roadmap.md` |
-| `small_external_fixture_groups` | medium | External fixture groups contain 3-8 scored records each (34 total), so they validate paths but are not representative samples. | `traces/external/manual_outputs.example.jsonl`, `traces/external/openclaw_manual_samples.example.jsonl`, `traces/external/saved_transcripts.example.jsonl`, +4 more |
+| `small_external_fixture_groups` | medium | External fixture groups contain 3-8 scored records each (40 total), so they validate paths but are not representative samples. | `traces/external/manual_outputs.example.jsonl`, `traces/external/openclaw_manual_samples.example.jsonl`, `traces/external/focused_scorer_evidence.example.jsonl`, +5 more |
 | `refusal_required_review_gap` | medium | Refusal-required reviewed source records have 21.9% adjudication coverage (7 reviewed records). | `reports/comparisons/adjudication_regression_snapshot.json`, `traces/external/adjudication_manifest.json` |
 
 ### Scorer Weakness
@@ -83,8 +85,8 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Gap | Severity | Summary | Sources |
 | --- | --- | --- | --- |
 | `heuristic_scorer_not_semantic_judge` | high | The v0 scorer uses deterministic phrase and pattern checks, so scores are triage signals rather than ground truth. | `src/scorers.py`, `docs/wiki/concepts/v0_scorer_limitations.md` |
-| `limited_adjudication_calibration_set` | medium | 42 adjudications cover 8 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json`, `reports/comparisons/scorer_refinement_triage.json`, +3 more |
-| `failure_modes_are_taxonomy_bound` | medium | Current scored traces surface this fixed failure-mode set: failure_to_clarify, fake_completion_claim, hallucinated_tool_use, incomplete_risk_disclosure, missing_approval_gate, over_refusal, unsafe_compliance, unsupported_claim; semantic variants still require review. | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, +5 more |
+| `limited_adjudication_calibration_set` | medium | 48 adjudications cover 9 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json`, `reports/comparisons/scorer_refinement_triage.json`, +4 more |
+| `failure_modes_are_taxonomy_bound` | medium | Current scored traces surface this fixed failure-mode set: failure_to_clarify, fake_completion_claim, hallucinated_tool_use, incomplete_risk_disclosure, missing_approval_gate, over_refusal, unsafe_compliance, unsupported_claim; semantic variants still require review. | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, +6 more |
 
 ### Reporting Weakness
 
@@ -92,14 +94,14 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | --- | --- | --- | --- |
 | `trend_snapshots_are_descriptive_not_gates` | low | Historical trend snapshots are present, but they describe evaluator health and do not prove model performance. | `reports/comparisons/historical_trend_snapshot.json`, `reports/comparisons/historical_trend_report.md`, `reports/comparisons/report_manifest.json` |
 | `audit_findings_are_not_gate_thresholds` | low | M40 recommendations are descriptive evidence gaps; they do not automatically fail or rewrite scored traces. | `reports/comparisons/report_manifest.json`, `reports/comparisons/evidence_quality_audit.json` |
-| `report_artifacts_outpace_review_depth` | low | 32 report artifacts are indexed, while 42 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
+| `report_artifacts_outpace_review_depth` | low | 35 report artifacts are indexed, while 48 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
 
 ## Recommendations
 
 | Recommendation | Phase | Priority | Summary |
 | --- | --- | --- | --- |
-| `prioritize_public_safe_transcripts_for_review` | `M52` | high | Maintain public-safe review depth for small fixture groups and remaining category coverage gaps. |
-| `calibrate_before_scorer_changes` | `M52` | high | Use the M51 scorer-versioning guardrails and focused evidence expansion before accepting scorer refinements. |
+| `prioritize_public_safe_transcripts_for_review` | `M53` | high | Continue public-safe review depth for small fixture groups and remaining category coverage gaps. |
+| `calibrate_before_scorer_changes` | `M53` | high | Use the M51 guardrails and M52 focused evidence before accepting scorer or rubric refinements. |
 | `maintain_evaluator_health_trends` | `M43` | medium | Keep versioned trend snapshots reviewed when committed reports, fixtures, or adjudication artifacts change. |
 
 ## Boundary
@@ -130,6 +132,8 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 - `reports/comparisons/scorer_change_decision.md`
 - `reports/comparisons/scorer_versioning_guardrails.json`
 - `reports/comparisons/scorer_versioning_guardrails.md`
+- `reports/comparisons/focused_scorer_evidence_expansion.json`
+- `reports/comparisons/focused_scorer_evidence_expansion.md`
 - `traces/external/harness_bridge_plan.example.json`
 - `src/scorers.py`
 - `docs/wiki/concepts/v0_scorer_limitations.md`

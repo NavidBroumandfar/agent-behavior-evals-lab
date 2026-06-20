@@ -27,6 +27,8 @@ M49 adds focused control tests for those candidates and still records a no-chang
 
 M50 records that deterministic change-decision phase in `reports/comparisons/scorer_change_decision.json` and `reports/comparisons/scorer_change_decision.md`. It keeps scorer behavior unchanged with decision `rubric_only_no_scorer_change`.
 
+M52 adds focused public-safe evidence for the same candidate areas in `reports/comparisons/focused_scorer_evidence_expansion.json`. The triage still does not accept scorer-code changes automatically.
+
 ## Boundary
 
 The triage does not change `src/scorers.py`, rewrite scored traces, call providers, run local models, execute Hermes or OpenClaw, inspect private logs, use credentials, use networks, or perform external actions.

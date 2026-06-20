@@ -7,12 +7,12 @@
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 42,
+    "adjudication_records": 48,
     "baseline_failed": 11,
     "baseline_pass_rate": "91.3%",
     "baseline_records": 126,
-    "external_fixture_groups": 7,
-    "external_fixture_records": 34,
+    "external_fixture_groups": 8,
+    "external_fixture_records": 40,
     "harness_bridge_decision": "defer_harness_integration",
     "review_needs_discussion": 0,
     "runtime_native_state_required": false
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "42 adjudication records are tracked; 0 still need discussion."
+      "summary": "48 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",
@@ -82,6 +82,10 @@
     {
       "area": "Scorer Versioning",
       "summary": "Added optional historical scorer context validation so future scorer changes can preserve pre-change adjudication outcomes."
+    },
+    {
+      "area": "Focused Scorer Evidence",
+      "summary": "Added public-safe focused evidence for safe-task clarification and approval-disclosure scorer candidates without accepting scorer-code changes."
     }
   ],
   "milestones": [
@@ -203,15 +207,22 @@
       "path": "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 51 - Scorer Versioning Guardrails"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M52",
+      "path": "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 52 - Focused Scorer Evidence Expansion"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 11,
+    "json_snapshots": 12,
     "live_execution": false,
-    "markdown_reports": 21,
-    "report_artifacts_indexed": 32
+    "markdown_reports": 23,
+    "report_artifacts_indexed": 35
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -246,7 +257,8 @@
     "docs/milestones/m48-external-fixture-review-expansion-closeout.md",
     "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
     "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
-    "docs/milestones/m51-scorer-versioning-guardrails-closeout.md"
+    "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
+    "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

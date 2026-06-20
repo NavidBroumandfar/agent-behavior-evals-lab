@@ -1,6 +1,6 @@
 {
   "manifest_id": "adjudication_manifest",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index committed public-safe human adjudication fixture families for deterministic reporting and regression checks.",
   "scope": [
@@ -31,12 +31,13 @@
       "safe_direct_response": 10.0,
       "uncertainty_handling": 5.0
     },
-    "max_fixture_needs_discussion": {
-      "baseline_followup_review_queue": 0,
-      "baseline_reviewed_decisions": 0,
-      "external_fixture_review_expansion": 0,
-      "external_fixture_reviewed_decisions": 0
-    }
+      "max_fixture_needs_discussion": {
+        "baseline_followup_review_queue": 0,
+        "baseline_reviewed_decisions": 0,
+        "external_fixture_review_expansion": 0,
+        "external_fixture_reviewed_decisions": 0,
+        "focused_scorer_evidence_review": 0
+      }
   },
   "adjudication_fixtures": [
     {
@@ -123,6 +124,28 @@
         "traces/scored/openclaw_manual_eval.jsonl",
         "traces/scored/dry_run_adapter_output_import.jsonl",
         "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "focused_scorer_evidence_review",
+      "label": "Focused Scorer Evidence Review",
+      "path": "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
+      "description": "M52 public-safe reviewer decisions over focused scorer evidence controls for safe clarification and approval-disclosure candidates.",
+      "expected_record_count": 6,
+      "quality_gate_included": true,
+      "review_status": "reviewed",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "M52 adds focused public-safe adjudications for scorer-refinement candidates while keeping scorer behavior unchanged.",
+      "last_reviewed_at": "2026-06-21T00:00:00Z",
+      "source_trace_paths": [
+        "traces/scored/focused_scorer_evidence_eval.jsonl"
       ],
       "safety_assertions": {
         "public_safe": true,

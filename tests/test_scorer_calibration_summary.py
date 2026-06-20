@@ -19,19 +19,19 @@ class ScorerCalibrationSummaryTests(unittest.TestCase):
         self.assertEqual(summary["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(summary["safety"]["public_safe"])
         self.assertFalse(summary["safety"]["live_execution"])
-        self.assertEqual(summary["calibration_scope"]["adjudication_records"], 42)
-        self.assertEqual(summary["calibration_scope"]["source_trace_count"], 8)
-        self.assertEqual(summary["result_changes"]["changed_result_count"], 2)
+        self.assertEqual(summary["calibration_scope"]["adjudication_records"], 48)
+        self.assertEqual(summary["calibration_scope"]["source_trace_count"], 9)
+        self.assertEqual(summary["result_changes"]["changed_result_count"], 3)
         self.assertEqual(summary["result_changes"]["scorer_false_positive_count"], 1)
-        self.assertEqual(summary["result_changes"]["scorer_false_negative_count"], 1)
+        self.assertEqual(summary["result_changes"]["scorer_false_negative_count"], 2)
         self.assertEqual(summary["result_changes"]["ambiguous_review_count"], 0)
         self.assertEqual(
             summary["calibration_labels"]["counts"],
             {
-                "scorer_upheld_failure": 21,
-                "scorer_upheld_pass": 19,
+                "scorer_upheld_failure": 23,
+                "scorer_upheld_pass": 22,
                 "scorer_false_positive": 1,
-                "scorer_false_negative": 1,
+                "scorer_false_negative": 2,
                 "ambiguous_review": 0,
             },
         )

@@ -1,7 +1,7 @@
 {
   "manifest_id": "external_fixture_manifest",
-  "version": "0.1.0",
-  "generated_at": "2026-05-10T00:00:00Z",
+  "version": "0.2.0",
+  "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index controlled public-safe external fixture sources, their generated scored traces, owning scripts, provenance classes, quality-gate coverage, and limitations.",
   "scope": [
     "Public-safe saved-output fixtures under traces/external/.",
@@ -81,6 +81,38 @@
         "Small fixture size is useful for pipeline coverage, not ranking systems."
       ],
       "notes": "Keeps OpenClaw as one possible system-under-test label without coupling the evaluator to OpenClaw execution."
+    },
+    {
+      "fixture_id": "focused_scorer_evidence",
+      "source_path": "traces/external/focused_scorer_evidence.example.jsonl",
+      "source_kind": "synthetic_focused_scorer_evidence_fixture",
+      "source_type": "focused_scorer_evidence",
+      "provenance_class": "synthetic_public_safe_control",
+      "data_classification": "public_safe_fixture",
+      "generated_by": "manual synthetic fixture authoring",
+      "validates_with": "src/evaluate_manual_outputs.py",
+      "imported_by": "src/evaluate_manual_outputs.py",
+      "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
+      "expected_record_count": 6,
+      "expected_scored_count": 6,
+      "report_paths": [
+        "reports/comparisons/focused_scorer_evidence_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Synthetic public-safe focused scorer evidence only.",
+        "Not evidence from a live runtime, provider, Hermes, OpenClaw, browser, email, shell, or external-action system.",
+        "Small candidate-focused controls support calibration review; they do not represent benchmark rates."
+      ],
+      "notes": "M52 focused scorer evidence fixture covering safe-task clarification boundaries and approval-disclosure specificity without changing scorer behavior."
     },
     {
       "fixture_id": "saved_transcript_replay",

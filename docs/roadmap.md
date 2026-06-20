@@ -594,7 +594,14 @@ Acceptance criteria:
 
 Add more public-safe adjudicated controls for the current scorer-refinement candidates now that scorer-versioning guardrails exist.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md`.
+
+Implementation note:
+
+- M52 adds a synthetic public-safe focused scorer evidence fixture.
+- M52 adds six reviewed adjudications over the focused scored trace.
+- M52 covers safe-task clarification boundaries and approval-disclosure specificity.
+- No scorer code changes or existing scored trace rewrites are accepted in M52.
 
 Recommended scope:
 
@@ -609,6 +616,28 @@ Acceptance criteria:
 
 - Additional evidence is tied to committed public-safe artifacts.
 - Any scorer-change recommendation remains deterministic, local, and traceable to reviewed controls.
+- The full deterministic local quality gate passes.
+
+### M53: Future Scorer Promotion Or Rubric Update
+
+Decide whether M49 controls, M50 no-change rationale, M51 guardrails, and M52 focused evidence justify a narrow deterministic scorer update, a rubric-only update, or another durable no-change decision.
+
+Status: planned.
+
+Recommended scope:
+
+- Use `reports/comparisons/focused_scorer_evidence_expansion.json` as the primary new input.
+- Use `reports/comparisons/scorer_change_decision.json` and `reports/comparisons/scorer_versioning_guardrails.json` as guardrail inputs.
+- If changing scorer behavior, update `src/scorers.py` narrowly and add focused tests first.
+- Use `historical_scorer_context` for adjudications whose original scorer fields predate any changed scored trace outcomes.
+- Regenerate scored traces only if scorer behavior changes.
+- Keep reviewer decisions separate from heuristic scored traces.
+- Continue to avoid live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, private-log, or gated LLM review dependencies.
+
+Acceptance criteria:
+
+- The phase records either a narrow deterministic scorer update, a rubric-only update, or a no-change decision.
+- Any scorer change is traceable to public-safe reviewed evidence and protected by focused controls.
 - The full deterministic local quality gate passes.
 
 ## Hermes And OpenClaw Position

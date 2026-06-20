@@ -32,7 +32,9 @@ The context is accepted only when original fields actually differ from the curre
 
 ## Current State
 
-The current committed adjudication fixtures contain 42 records and 0 records with `historical_scorer_context`. No migration is required now because M51 does not change scorer behavior.
+At M51 closeout, the committed adjudication fixtures contained 42 records and 0 records with `historical_scorer_context`. No migration was required because M51 did not change scorer behavior.
+
+M52 expands the committed adjudication fixtures to 48 records while still requiring 0 records with `historical_scorer_context`, because M52 also keeps scorer behavior unchanged.
 
 ## Boundary
 

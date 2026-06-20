@@ -7,7 +7,7 @@
   ],
   "decision_summary": {
     "accepted_scorer_changes": 0,
-    "current_adjudication_records": 42,
+    "current_adjudication_records": 48,
     "current_records_with_historical_context": 0,
     "historical_scorer_context_supported": true,
     "migration_required_now": false,
@@ -68,7 +68,8 @@
     "traces/external/adjudications.example.jsonl",
     "traces/external/adjudications.followup.example.jsonl",
     "traces/external/external_fixture_adjudications.example.jsonl",
-    "traces/external/external_fixture_review_expansion.example.jsonl"
+    "traces/external/external_fixture_review_expansion.example.jsonl",
+    "traces/external/focused_scorer_evidence_adjudications.example.jsonl"
   ],
   "validation_rules": [
     {

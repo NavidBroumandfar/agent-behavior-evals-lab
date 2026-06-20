@@ -25,6 +25,8 @@ The approval-disclosure candidate has a documented false negative, but changing 
 
 M51 adds that validation support through optional `historical_scorer_context` records and reports it in `reports/comparisons/scorer_versioning_guardrails.json`.
 
+M52 adds focused public-safe evidence after those guardrails. The added evidence is reported in `reports/comparisons/focused_scorer_evidence_expansion.json` and still records no accepted scorer-code changes.
+
 ## Boundary
 
 The decision reads committed public-safe artifacts only. It does not call providers, run local models, execute Hermes or OpenClaw, use browser/email tools, inspect private logs, mutate target files, use credentials, collect outputs, or perform external actions.
