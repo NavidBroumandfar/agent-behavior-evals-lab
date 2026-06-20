@@ -93,6 +93,8 @@ Acceptance criteria:
 
 Make the v0 scorer more useful while preserving deterministic behavior.
 
+Status: complete / review-ready. See `docs/milestones/m32-scorer-review-hardening-closeout.md`.
+
 Deliverables:
 
 - More focused scorer edge-case tests.

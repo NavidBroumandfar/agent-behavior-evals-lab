@@ -9,6 +9,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Eval Case Anatomy](concepts/eval_case_anatomy.md)
 - [Policy-To-Eval Traceability](concepts/policy_to_eval_traceability.md)
 - [Failure Taxonomy](concepts/failure_taxonomy.md)
+- [V0 Scorer Limitations](concepts/v0_scorer_limitations.md)
 - [Approval Gates](concepts/approval_gates.md)
 - [Refusal Boundaries](concepts/refusal_boundaries.md)
 - [Uncertainty Handling](concepts/uncertainty_handling.md)
@@ -44,6 +45,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Policy: `policy/agent_behavior_policy.md`
 - Case files: `evals/cases/*.jsonl`
 - Failure taxonomy: `evals/failure_taxonomy.md`
+- V0 scorer limitations: `docs/wiki/concepts/v0_scorer_limitations.md`
 - Target profiles and prompts: `targets/profiles/` and `targets/prompts/`
 - Mock client: `src/model_clients.py`
 - Scorer: `src/scorers.py`
@@ -107,6 +109,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 29 closeout: `docs/milestones/m29-report-manifest-quality-gate-coverage-closeout.md`
 - Milestone 30 closeout: `docs/milestones/m30-project-packaging-ci-closeout.md`
 - Milestone 31 closeout: `docs/milestones/m31-eval-suite-expansion-closeout.md`
+- Milestone 32 closeout: `docs/milestones/m32-scorer-review-hardening-closeout.md`
 
 ## Reading Order
 
