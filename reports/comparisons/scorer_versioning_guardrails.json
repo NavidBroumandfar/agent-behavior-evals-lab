@@ -1,0 +1,91 @@
+{
+  "boundary": [
+    "M51 adds schema and validation guardrails only.",
+    "No scorer code changes are accepted in M51.",
+    "No scored trace behavior changes are introduced in M51.",
+    "No model-assisted judging, live provider call, runtime execution, network access, private data, or external action is introduced."
+  ],
+  "decision_summary": {
+    "accepted_scorer_changes": 0,
+    "current_adjudication_records": 42,
+    "current_records_with_historical_context": 0,
+    "historical_scorer_context_supported": true,
+    "migration_required_now": false,
+    "scored_trace_behavior_changed": false,
+    "scorer_code_changed": false,
+    "validation_mode": "current_trace_match_or_explicit_historical_context"
+  },
+  "future_use": [
+    "When a future scorer change rewrites a scored trace, existing adjudications can preserve the pre-change original fields.",
+    "The historical_scorer_context block must then pin the current trace outcome for validator clarity.",
+    "Reviewer decisions remain separate from heuristic scored traces."
+  ],
+  "generated_at": "2026-06-21T00:00:00Z",
+  "guardrail_id": "m51_scorer_versioning_guardrails",
+  "m50_dependency": {
+    "accepted_scorer_changes": 0,
+    "decision": "rubric_only_no_scorer_change",
+    "historical_scorer_version_metadata_present_before_m51": false
+  },
+  "safety": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "schema_guardrail": {
+    "current_trace_fields": [
+      "current_trace_passed",
+      "current_trace_score",
+      "current_trace_failure_modes"
+    ],
+    "optional_field": "historical_scorer_context",
+    "original_fields_preserved_on_record": [
+      "original_passed",
+      "original_score",
+      "original_failure_modes"
+    ],
+    "required_fields": [
+      "schema_version",
+      "original_scorer_version",
+      "original_scorer_artifact",
+      "current_trace_passed",
+      "current_trace_score",
+      "current_trace_failure_modes",
+      "mismatch_reason"
+    ],
+    "schema_version": "1.0"
+  },
+  "scope": "Deterministic guardrails for preserving historical adjudication context across future scorer changes.",
+  "source_paths": [
+    "reports/comparisons/scorer_change_decision.json",
+    "schemas/adjudication.schema.json",
+    "traces/external/adjudication_manifest.json",
+    "src/validate_adjudications.py",
+    "tests/test_validate_adjudications.py",
+    "src/scorers.py",
+    "traces/external/adjudications.example.jsonl",
+    "traces/external/adjudications.followup.example.jsonl",
+    "traces/external/external_fixture_adjudications.example.jsonl",
+    "traces/external/external_fixture_review_expansion.example.jsonl"
+  ],
+  "validation_rules": [
+    {
+      "rule_id": "legacy_records_match_current_trace",
+      "summary": "Adjudications without historical_scorer_context must keep original fields equal to the current source scored trace."
+    },
+    {
+      "rule_id": "historical_context_records_pin_current_trace",
+      "summary": "Adjudications with historical_scorer_context must record current_trace_passed, current_trace_score, and current_trace_failure_modes that match the current source trace."
+    },
+    {
+      "rule_id": "historical_context_requires_real_mismatch",
+      "summary": "historical_scorer_context is accepted only when original fields differ from the current source trace."
+    },
+    {
+      "rule_id": "historical_scorer_artifact_is_repo_local",
+      "summary": "The original_scorer_artifact path must be repository-relative and must exist."
+    }
+  ]
+}

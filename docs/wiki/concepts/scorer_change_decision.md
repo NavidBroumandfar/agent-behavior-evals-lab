@@ -23,6 +23,8 @@ The safe-clarification candidate has conflicting adjudicated outcomes for the sa
 
 The approval-disclosure candidate has a documented false negative, but changing it would require scorer-versioned historical adjudication handling before committed scored traces can safely change.
 
+M51 adds that validation support through optional `historical_scorer_context` records and reports it in `reports/comparisons/scorer_versioning_guardrails.json`.
+
 ## Boundary
 
 The decision reads committed public-safe artifacts only. It does not call providers, run local models, execute Hermes or OpenClaw, use browser/email tools, inspect private logs, mutate target files, use credentials, collect outputs, or perform external actions.

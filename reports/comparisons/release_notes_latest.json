@@ -78,6 +78,10 @@
     {
       "area": "Scorer Decision",
       "summary": "Recorded a durable no-change scorer decision from M49 controls while preserving historical adjudication context."
+    },
+    {
+      "area": "Scorer Versioning",
+      "summary": "Added optional historical scorer context validation so future scorer changes can preserve pre-change adjudication outcomes."
     }
   ],
   "milestones": [
@@ -192,15 +196,22 @@
       "path": "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 50 - Deterministic Scorer Change Decision"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M51",
+      "path": "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 51 - Scorer Versioning Guardrails"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 10,
+    "json_snapshots": 11,
     "live_execution": false,
-    "markdown_reports": 20,
-    "report_artifacts_indexed": 30
+    "markdown_reports": 21,
+    "report_artifacts_indexed": 32
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -234,7 +245,8 @@
     "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
     "docs/milestones/m48-external-fixture-review-expansion-closeout.md",
     "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
-    "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md"
+    "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
+    "docs/milestones/m51-scorer-versioning-guardrails-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

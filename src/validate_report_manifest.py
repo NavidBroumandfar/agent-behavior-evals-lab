@@ -48,6 +48,8 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/scorer_candidate_controls.md",
     "reports/comparisons/scorer_change_decision.json",
     "reports/comparisons/scorer_change_decision.md",
+    "reports/comparisons/scorer_versioning_guardrails.json",
+    "reports/comparisons/scorer_versioning_guardrails.md",
     "reports/comparisons/baseline_self_comparison_report.md",
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/reporting_product_summary.md",

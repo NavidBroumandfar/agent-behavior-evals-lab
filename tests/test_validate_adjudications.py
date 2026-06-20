@@ -20,6 +20,7 @@ EXTERNAL_FIXTURE_ADJUDICATIONS_PATH = REPO_ROOT / "traces/external/external_fixt
 EXTERNAL_FIXTURE_REVIEW_EXPANSION_PATH = (
     REPO_ROOT / "traces/external/external_fixture_review_expansion.example.jsonl"
 )
+BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 
 
 def load_example_records():
@@ -31,6 +32,31 @@ def write_jsonl(path, records):
         for record in records:
             output_file.write(json.dumps(record, sort_keys=True, separators=(",", ":")))
             output_file.write("\n")
+
+
+def baseline_record_for(record):
+    for line in BASELINE_TRACE_PATH.read_text(encoding="utf-8").splitlines():
+        source = json.loads(line)
+        if (
+            source["run_id"] == record["run_id"]
+            and source["case_id"] == record["case_id"]
+            and source["profile_name"] == record["profile_name"]
+        ):
+            return source
+    raise AssertionError("missing source record")
+
+
+def historical_context_for(record):
+    source = baseline_record_for(record)
+    return {
+        "schema_version": "1.0",
+        "original_scorer_version": "v0-pre-change-test",
+        "original_scorer_artifact": "src/scorers.py",
+        "current_trace_passed": source["passed"],
+        "current_trace_score": source["score"],
+        "current_trace_failure_modes": list(source["failure_modes"]),
+        "mismatch_reason": "unit test simulates a scorer change after this adjudication was reviewed.",
+    }
 
 
 class ValidateAdjudicationsTests(unittest.TestCase):
@@ -87,6 +113,59 @@ class ValidateAdjudicationsTests(unittest.TestCase):
         record["original_failure_modes"] = ["missing_approval_gate"]
 
         self.assert_adjudication_fails([record], "original_failure_modes does not match source trace")
+
+    def test_historical_scorer_context_allows_pre_change_original_fields(self):
+        record = load_example_records()[0]
+        record["original_passed"] = True
+        record["original_score"] = 1.0
+        record["original_failure_modes"] = []
+        record["reviewer_decision"] = "override_fail"
+        record["adjudicated_passed"] = False
+        record["adjudicated_failure_modes"] = ["over_refusal"]
+        record["historical_scorer_context"] = historical_context_for(record)
+
+        self.assert_adjudication_passes([record])
+
+    def test_historical_scorer_context_current_trace_fields_must_match_source_trace(self):
+        record = load_example_records()[0]
+        record["original_passed"] = True
+        record["original_score"] = 1.0
+        record["original_failure_modes"] = []
+        record["reviewer_decision"] = "override_fail"
+        record["adjudicated_passed"] = False
+        record["adjudicated_failure_modes"] = ["over_refusal"]
+        record["historical_scorer_context"] = historical_context_for(record)
+        record["historical_scorer_context"]["current_trace_failure_modes"] = []
+
+        self.assert_adjudication_fails(
+            [record],
+            "historical_scorer_context.current_trace_failure_modes does not match source trace",
+        )
+
+    def test_historical_scorer_context_requires_actual_source_trace_mismatch(self):
+        record = load_example_records()[0]
+        record["historical_scorer_context"] = historical_context_for(record)
+
+        self.assert_adjudication_fails(
+            [record],
+            "historical_scorer_context requires original fields to differ from source trace",
+        )
+
+    def test_historical_scorer_context_artifact_must_be_repo_local(self):
+        record = load_example_records()[0]
+        record["original_passed"] = True
+        record["original_score"] = 1.0
+        record["original_failure_modes"] = []
+        record["reviewer_decision"] = "override_fail"
+        record["adjudicated_passed"] = False
+        record["adjudicated_failure_modes"] = ["over_refusal"]
+        record["historical_scorer_context"] = historical_context_for(record)
+        record["historical_scorer_context"]["original_scorer_artifact"] = "/tmp/scorers.py"
+
+        self.assert_adjudication_fails(
+            [record],
+            "historical_scorer_context.original_scorer_artifact must be a repository-relative path",
+        )
 
     def test_uphold_score_must_preserve_original_result(self):
         record = load_example_records()[0]

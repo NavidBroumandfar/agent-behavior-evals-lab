@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 30 |
+| Indexed report artifacts | 32 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -28,6 +28,7 @@
 - **Review Expansion**: Expanded public-safe adjudication coverage across previously unreviewed external fixture trace families.
 - **Scorer Controls**: Added focused deterministic controls for current scorer-refinement candidates without accepting scorer-code changes.
 - **Scorer Decision**: Recorded a durable no-change scorer decision from M49 controls while preserving historical adjudication context.
+- **Scorer Versioning**: Added optional historical scorer context validation so future scorer changes can preserve pre-change adjudication outcomes.
 
 ## Dashboard Snapshot
 
@@ -60,6 +61,7 @@
 | `M48` | Complete / review-ready | `docs/milestones/m48-external-fixture-review-expansion-closeout.md` |
 | `M49` | Complete / review-ready | `docs/milestones/m49-scorer-candidate-control-tests-closeout.md` |
 | `M50` | Complete / review-ready | `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md` |
+| `M51` | Complete / review-ready | `docs/milestones/m51-scorer-versioning-guardrails-closeout.md` |
 
 ## Boundaries
 
@@ -90,3 +92,4 @@
 - `docs/milestones/m48-external-fixture-review-expansion-closeout.md`
 - `docs/milestones/m49-scorer-candidate-control-tests-closeout.md`
 - `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md`
+- `docs/milestones/m51-scorer-versioning-guardrails-closeout.md`

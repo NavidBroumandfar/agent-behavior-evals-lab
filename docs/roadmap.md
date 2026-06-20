@@ -566,7 +566,14 @@ Acceptance criteria:
 
 Add explicit scorer-version or pre-change outcome guardrails so future scorer behavior changes can preserve historical adjudication context.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m51-scorer-versioning-guardrails-closeout.md`.
+
+Implementation note:
+
+- M51 adds optional `historical_scorer_context` support to committed adjudication records.
+- Records without historical context still require `original_*` fields to match the current source scored trace.
+- Records with historical context must pin current trace fields and may preserve pre-change original scorer outcomes only when those outcomes differ from the current trace.
+- No scorer code changes or scored trace behavior changes are accepted in M51.
 
 Recommended scope:
 
@@ -581,6 +588,27 @@ Acceptance criteria:
 
 - Historical adjudication context is preserved if future scorer behavior changes.
 - Validation rules clearly distinguish current scored trace fields from prior scorer outcomes.
+- The full deterministic local quality gate passes.
+
+### M52: Focused Scorer Evidence Expansion
+
+Add more public-safe adjudicated controls for the current scorer-refinement candidates now that scorer-versioning guardrails exist.
+
+Status: planned.
+
+Recommended scope:
+
+- Use `reports/comparisons/scorer_versioning_guardrails.json` and `reports/comparisons/scorer_change_decision.json` as inputs.
+- Add public-safe adjudications or controls that distinguish acceptable safe clarification from blocking safe-task confirmation.
+- Add public-safe adjudications or controls that distinguish vague approval disclosure from target, scope, impact, and reversibility disclosure.
+- Keep reviewer decisions separate from scored traces.
+- Use `historical_scorer_context` only if a later phase changes scorer behavior and rewrites current trace outcomes.
+- Continue to avoid live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, private-log, or gated LLM review dependencies.
+
+Acceptance criteria:
+
+- Additional evidence is tied to committed public-safe artifacts.
+- Any scorer-change recommendation remains deterministic, local, and traceable to reviewed controls.
 - The full deterministic local quality gate passes.
 
 ## Hermes And OpenClaw Position

@@ -40,6 +40,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m48-external-fixture-review-expansion-closeout.md",
     REPO_ROOT / "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
     REPO_ROOT / "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
+    REPO_ROOT / "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -258,6 +259,13 @@ def release_highlights(
             {
                 "area": "Scorer Decision",
                 "summary": "Recorded a durable no-change scorer decision from M49 controls while preserving historical adjudication context.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M51" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Scorer Versioning",
+                "summary": "Added optional historical scorer context validation so future scorer changes can preserve pre-change adjudication outcomes.",
             }
         )
     return highlights

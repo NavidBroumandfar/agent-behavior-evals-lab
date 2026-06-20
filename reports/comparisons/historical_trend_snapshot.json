@@ -280,11 +280,11 @@
       ]
     },
     "report_manifest_coverage": {
-      "json_snapshots": 10,
-      "markdown_reports": 20,
-      "public_safe_artifacts": 30,
-      "quality_gate_artifacts": 30,
-      "report_artifacts": 30
+      "json_snapshots": 11,
+      "markdown_reports": 21,
+      "public_safe_artifacts": 32,
+      "quality_gate_artifacts": 32,
+      "report_artifacts": 32
     },
     "scorer_candidate_controls": {
       "accepted_scorer_changes": 0,
@@ -307,6 +307,13 @@
       "candidates": 2,
       "deferred_scorer_changes": 2,
       "scorer_change_decision": "no_scorer_change_accepted",
+      "scorer_code_changed": false
+    },
+    "scorer_versioning_guardrails": {
+      "accepted_scorer_changes": 0,
+      "current_records_with_historical_context": 0,
+      "historical_scorer_context_supported": true,
+      "migration_required_now": false,
       "scorer_code_changed": false
     }
   },
@@ -336,6 +343,7 @@
     "reports/comparisons/scorer_candidate_controls.json",
     "reports/comparisons/scorer_change_decision.json",
     "reports/comparisons/scorer_refinement_triage.json",
+    "reports/comparisons/scorer_versioning_guardrails.json",
     "traces/external/adapter_outputs.example.jsonl",
     "traces/external/adjudication_manifest.json",
     "traces/external/dry_run_adapter_outputs.jsonl",
@@ -361,7 +369,8 @@
     "adjudication_outcomes",
     "fixture_counts",
     "report_manifest_coverage",
-    "scorer_change_decision"
+    "scorer_change_decision",
+    "scorer_versioning_guardrails"
   ],
   "versioned_trend_snapshots": [
     {
@@ -434,9 +443,9 @@
       "metrics": {
         "external_fixture_pass_rate": "55.9%",
         "fixture_groups": 7,
-        "json_snapshots": 10,
-        "markdown_reports": 20,
-        "report_artifacts": 30
+        "json_snapshots": 11,
+        "markdown_reports": 21,
+        "report_artifacts": 32
       },
       "phase": "reporting_history",
       "source_paths": [
@@ -536,6 +545,22 @@
         "reports/comparisons/scorer_candidate_controls.json",
         "reports/comparisons/scorer_refinement_triage.json",
         "src/scorers.py"
+      ]
+    },
+    {
+      "checkpoint_id": "m51_scorer_versioning_guardrails",
+      "metrics": {
+        "accepted_scorer_changes": 0,
+        "current_records_with_historical_context": 0,
+        "historical_scorer_context_supported": true,
+        "migration_required_now": false
+      },
+      "phase": "scorer_versioning_guardrails",
+      "source_paths": [
+        "reports/comparisons/scorer_versioning_guardrails.json",
+        "schemas/adjudication.schema.json",
+        "src/validate_adjudications.py",
+        "tests/test_validate_adjudications.py"
       ]
     }
   ]

@@ -155,14 +155,81 @@ def validate_original_fields(
 ) -> None:
     """Validate that original fields match the source trace."""
 
+    source_failure_modes = [str(mode) for mode in source_record.get("failure_modes", [])]
+    historical_context = record.get("historical_scorer_context")
+    if historical_context is not None:
+        validate_historical_scorer_context(
+            record,
+            historical_context,
+            original_failure_modes,
+            source_record,
+            source_failure_modes,
+            context,
+        )
+        return
+
+    validate_original_fields_match_source(record, original_failure_modes, source_record, source_failure_modes, context)
+
+
+def validate_original_fields_match_source(
+    record: dict[str, Any],
+    original_failure_modes: list[str],
+    source_record: dict[str, Any],
+    source_failure_modes: list[str],
+    context: str,
+) -> None:
+    """Validate legacy adjudications whose original fields refer to current source traces."""
+
     if record["original_passed"] is not source_record.get("passed"):
         raise AdjudicationValidationError(f"{context}.original_passed does not match source trace")
     if float(record["original_score"]) != float(source_record.get("score", -1)):
         raise AdjudicationValidationError(f"{context}.original_score does not match source trace")
-
-    source_failure_modes = [str(mode) for mode in source_record.get("failure_modes", [])]
     if original_failure_modes != source_failure_modes:
         raise AdjudicationValidationError(f"{context}.original_failure_modes does not match source trace")
+
+
+def validate_historical_scorer_context(
+    record: dict[str, Any],
+    historical_context: Any,
+    original_failure_modes: list[str],
+    source_record: dict[str, Any],
+    source_failure_modes: list[str],
+    context: str,
+) -> None:
+    """Validate explicit pre-change scorer context for changed source traces."""
+
+    if not isinstance(historical_context, dict):
+        raise AdjudicationValidationError(f"{context}.historical_scorer_context must be an object")
+
+    require_existing_repo_path(
+        historical_context["original_scorer_artifact"],
+        f"{context}.historical_scorer_context.original_scorer_artifact",
+    )
+
+    if historical_context["current_trace_passed"] is not source_record.get("passed"):
+        raise AdjudicationValidationError(
+            f"{context}.historical_scorer_context.current_trace_passed does not match source trace"
+        )
+    if float(historical_context["current_trace_score"]) != float(source_record.get("score", -1)):
+        raise AdjudicationValidationError(
+            f"{context}.historical_scorer_context.current_trace_score does not match source trace"
+        )
+
+    current_trace_failure_modes = [str(mode) for mode in historical_context["current_trace_failure_modes"]]
+    if current_trace_failure_modes != source_failure_modes:
+        raise AdjudicationValidationError(
+            f"{context}.historical_scorer_context.current_trace_failure_modes does not match source trace"
+        )
+
+    original_matches_current_trace = (
+        record["original_passed"] is source_record.get("passed")
+        and float(record["original_score"]) == float(source_record.get("score", -1))
+        and original_failure_modes == source_failure_modes
+    )
+    if original_matches_current_trace:
+        raise AdjudicationValidationError(
+            f"{context}.historical_scorer_context requires original fields to differ from source trace"
+        )
 
 
 def validate_decision_consistency(

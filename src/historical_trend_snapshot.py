@@ -27,6 +27,7 @@ SCORER_CALIBRATION_PATH = REPO_ROOT / "reports/comparisons/scorer_calibration_su
 SCORER_REFINEMENT_TRIAGE_PATH = REPO_ROOT / "reports/comparisons/scorer_refinement_triage.json"
 SCORER_CANDIDATE_CONTROLS_PATH = REPO_ROOT / "reports/comparisons/scorer_candidate_controls.json"
 SCORER_CHANGE_DECISION_PATH = REPO_ROOT / "reports/comparisons/scorer_change_decision.json"
+SCORER_VERSIONING_GUARDRAILS_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.json"
 REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
 EVIDENCE_QUALITY_AUDIT_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.json"
 REPORTING_PRODUCT_SUMMARY_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
@@ -50,6 +51,7 @@ def build_trend_snapshot() -> dict[str, Any]:
     scorer_triage = load_json_object(SCORER_REFINEMENT_TRIAGE_PATH)
     scorer_controls = load_json_object(SCORER_CANDIDATE_CONTROLS_PATH)
     scorer_decision = load_json_object(SCORER_CHANGE_DECISION_PATH)
+    scorer_guardrails = load_json_object(SCORER_VERSIONING_GUARDRAILS_PATH)
     report_manifest = load_json_object(REPORT_MANIFEST_PATH)
     evidence_audit = load_json_object(EVIDENCE_QUALITY_AUDIT_PATH)
     product_summary = load_json_object(REPORTING_PRODUCT_SUMMARY_PATH)
@@ -80,6 +82,7 @@ def build_trend_snapshot() -> dict[str, Any]:
         "scorer_refinement_triage": scorer_refinement_triage_outcomes(scorer_triage),
         "scorer_candidate_controls": scorer_candidate_control_outcomes(scorer_controls),
         "scorer_change_decision": scorer_change_decision_outcomes(scorer_decision),
+        "scorer_versioning_guardrails": scorer_versioning_guardrail_outcomes(scorer_guardrails),
     }
 
     return {
@@ -102,6 +105,7 @@ def build_trend_snapshot() -> dict[str, Any]:
             "fixture_counts",
             "report_manifest_coverage",
             "scorer_change_decision",
+            "scorer_versioning_guardrails",
         ],
         "current_snapshot": current_snapshot,
         "versioned_trend_snapshots": versioned_trend_snapshots(
@@ -111,6 +115,7 @@ def build_trend_snapshot() -> dict[str, Any]:
             scorer_triage,
             scorer_controls,
             scorer_decision,
+            scorer_guardrails,
             manifest_coverage,
             evidence,
             product_summary,
@@ -279,6 +284,23 @@ def scorer_change_decision_outcomes(scorer_decision: dict[str, Any]) -> dict[str
     }
 
 
+def scorer_versioning_guardrail_outcomes(scorer_guardrails: dict[str, Any]) -> dict[str, Any]:
+    """Summarize scorer-versioning guardrail outcomes."""
+
+    decision = scorer_guardrails.get("decision_summary", {})
+    return {
+        "historical_scorer_context_supported": bool(
+            decision.get("historical_scorer_context_supported", False)
+        ),
+        "current_records_with_historical_context": int(
+            decision.get("current_records_with_historical_context", 0)
+        ),
+        "migration_required_now": bool(decision.get("migration_required_now", False)),
+        "accepted_scorer_changes": int(decision.get("accepted_scorer_changes", 0)),
+        "scorer_code_changed": bool(decision.get("scorer_code_changed", False)),
+    }
+
+
 def evidence_quality_trend(evidence_audit: dict[str, Any]) -> dict[str, Any]:
     """Extract gap counts from the current evidence quality audit."""
 
@@ -299,6 +321,7 @@ def versioned_trend_snapshots(
     scorer_triage: dict[str, Any],
     scorer_controls: dict[str, Any],
     scorer_decision: dict[str, Any],
+    scorer_guardrails: dict[str, Any],
     manifest_coverage: dict[str, Any],
     evidence: dict[str, Any],
     product_summary: dict[str, Any],
@@ -317,6 +340,7 @@ def versioned_trend_snapshots(
     triage = scorer_refinement_triage_outcomes(scorer_triage)
     controls = scorer_candidate_control_outcomes(scorer_controls)
     decision = scorer_change_decision_outcomes(scorer_decision)
+    guardrails = scorer_versioning_guardrail_outcomes(scorer_guardrails)
     return [
         {
             "checkpoint_id": "baseline_mock_run",
@@ -472,6 +496,22 @@ def versioned_trend_snapshots(
                 "scorer_code_changed": decision["scorer_code_changed"],
             },
         },
+        {
+            "checkpoint_id": "m51_scorer_versioning_guardrails",
+            "phase": "scorer_versioning_guardrails",
+            "source_paths": [
+                display_path(SCORER_VERSIONING_GUARDRAILS_PATH),
+                "schemas/adjudication.schema.json",
+                "src/validate_adjudications.py",
+                "tests/test_validate_adjudications.py",
+            ],
+            "metrics": {
+                "historical_scorer_context_supported": guardrails["historical_scorer_context_supported"],
+                "current_records_with_historical_context": guardrails["current_records_with_historical_context"],
+                "migration_required_now": guardrails["migration_required_now"],
+                "accepted_scorer_changes": guardrails["accepted_scorer_changes"],
+            },
+        },
     ]
 
 
@@ -503,6 +543,7 @@ def generate_markdown(snapshot: dict[str, Any]) -> str:
     manifest = current["report_manifest_coverage"]
     evidence = current["evidence_quality"]
     scorer_decision = current["scorer_change_decision"]
+    scorer_guardrails = current["scorer_versioning_guardrails"]
     lines = [
         "# Historical Trend Report",
         "",
@@ -520,6 +561,7 @@ def generate_markdown(snapshot: dict[str, Any]) -> str:
         f"| Scorer triage candidates | {current['scorer_refinement_triage']['candidates']} |",
         f"| Scorer candidate controls | {current['scorer_candidate_controls']['controls']} |",
         f"| Scorer change decision | `{scorer_decision['decision']}` |",
+        f"| Scorer versioning guardrails | {str(scorer_guardrails['historical_scorer_context_supported']).lower()} |",
         "",
         "These trends describe evaluator health from committed local artifacts. They are not live model-performance trends, leaderboard results, or production benchmark claims.",
         "",
@@ -671,6 +713,7 @@ def source_paths(fixture_groups: list[dict[str, Any]]) -> list[str]:
         SCORER_REFINEMENT_TRIAGE_PATH,
         SCORER_CANDIDATE_CONTROLS_PATH,
         SCORER_CHANGE_DECISION_PATH,
+        SCORER_VERSIONING_GUARDRAILS_PATH,
         REPORT_MANIFEST_PATH,
         EVIDENCE_QUALITY_AUDIT_PATH,
         REPORTING_PRODUCT_SUMMARY_PATH,

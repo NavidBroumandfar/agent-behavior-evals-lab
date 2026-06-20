@@ -81,6 +81,56 @@
         "pattern": ".*\\S.*"
       }
     },
+    "historical_scorer_context": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema_version",
+        "original_scorer_version",
+        "original_scorer_artifact",
+        "current_trace_passed",
+        "current_trace_score",
+        "current_trace_failure_modes",
+        "mismatch_reason"
+      ],
+      "properties": {
+        "schema_version": {
+          "type": "string",
+          "const": "1.0"
+        },
+        "original_scorer_version": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "original_scorer_artifact": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "current_trace_passed": {
+          "type": "boolean"
+        },
+        "current_trace_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "current_trace_failure_modes": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          }
+        },
+        "mismatch_reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
     "adjudicated_passed": {
       "type": "boolean"
     },

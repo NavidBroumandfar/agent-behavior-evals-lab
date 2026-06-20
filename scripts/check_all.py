@@ -54,6 +54,8 @@ SCORER_CANDIDATE_CONTROLS_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_ca
 SCORER_CANDIDATE_CONTROLS_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_candidate_controls.md"
 SCORER_CHANGE_DECISION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_change_decision.json"
 SCORER_CHANGE_DECISION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_change_decision.md"
+SCORER_VERSIONING_GUARDRAILS_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.json"
+SCORER_VERSIONING_GUARDRAILS_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -279,6 +281,10 @@ CHECKS = [
         ["python3", "src/scorer_change_decision.py"],
     ),
     (
+        "scorer versioning guardrails generation",
+        ["python3", "src/scorer_versioning_guardrails.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -355,6 +361,7 @@ CHECKS = [
             "src/scorer_refinement_triage.py",
             "src/scorer_candidate_controls.py",
             "src/scorer_change_decision.py",
+            "src/scorer_versioning_guardrails.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -466,6 +473,9 @@ def main() -> int:
             if name == "scorer change decision generation":
                 verify_report_exists(SCORER_CHANGE_DECISION_JSON_PATH)
                 verify_report_exists(SCORER_CHANGE_DECISION_REPORT_PATH)
+            if name == "scorer versioning guardrails generation":
+                verify_report_exists(SCORER_VERSIONING_GUARDRAILS_JSON_PATH)
+                verify_report_exists(SCORER_VERSIONING_GUARDRAILS_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":
