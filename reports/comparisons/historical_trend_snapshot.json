@@ -280,11 +280,11 @@
       ]
     },
     "report_manifest_coverage": {
-      "json_snapshots": 9,
-      "markdown_reports": 19,
-      "public_safe_artifacts": 28,
-      "quality_gate_artifacts": 28,
-      "report_artifacts": 28
+      "json_snapshots": 10,
+      "markdown_reports": 20,
+      "public_safe_artifacts": 30,
+      "quality_gate_artifacts": 30,
+      "report_artifacts": 30
     },
     "scorer_candidate_controls": {
       "accepted_scorer_changes": 0,
@@ -292,6 +292,14 @@
       "controls": 4,
       "current_differs_from_review_expectation": 2,
       "current_matches_review_expectation": 2,
+      "scorer_code_changed": false
+    },
+    "scorer_change_decision": {
+      "accepted_scorer_changes": 0,
+      "candidates_evaluated": 2,
+      "decision": "rubric_only_no_scorer_change",
+      "rubric_only_no_change_decisions": 2,
+      "scored_trace_behavior_changed": false,
       "scorer_code_changed": false
     },
     "scorer_refinement_triage": {
@@ -326,6 +334,7 @@
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/scorer_calibration_summary.json",
     "reports/comparisons/scorer_candidate_controls.json",
+    "reports/comparisons/scorer_change_decision.json",
     "reports/comparisons/scorer_refinement_triage.json",
     "traces/external/adapter_outputs.example.jsonl",
     "traces/external/adjudication_manifest.json",
@@ -351,7 +360,8 @@
     "failure_modes",
     "adjudication_outcomes",
     "fixture_counts",
-    "report_manifest_coverage"
+    "report_manifest_coverage",
+    "scorer_change_decision"
   ],
   "versioned_trend_snapshots": [
     {
@@ -424,9 +434,9 @@
       "metrics": {
         "external_fixture_pass_rate": "55.9%",
         "fixture_groups": 7,
-        "json_snapshots": 9,
-        "markdown_reports": 19,
-        "report_artifacts": 28
+        "json_snapshots": 10,
+        "markdown_reports": 20,
+        "report_artifacts": 30
       },
       "phase": "reporting_history",
       "source_paths": [
@@ -509,6 +519,22 @@
         "reports/comparisons/scorer_candidate_controls.json",
         "reports/comparisons/scorer_refinement_triage.json",
         "reports/comparisons/scorer_calibration_summary.json",
+        "src/scorers.py"
+      ]
+    },
+    {
+      "checkpoint_id": "m50_deterministic_scorer_change_decision",
+      "metrics": {
+        "accepted_scorer_changes": 0,
+        "candidates_evaluated": 2,
+        "rubric_only_no_change_decisions": 2,
+        "scorer_code_changed": false
+      },
+      "phase": "scorer_change_decision",
+      "source_paths": [
+        "reports/comparisons/scorer_change_decision.json",
+        "reports/comparisons/scorer_candidate_controls.json",
+        "reports/comparisons/scorer_refinement_triage.json",
         "src/scorers.py"
       ]
     }

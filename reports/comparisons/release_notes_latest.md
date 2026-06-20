@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 28 |
+| Indexed report artifacts | 30 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -27,6 +27,7 @@
 - **Scorer Triage**: Recorded a no-change deterministic scorer decision and deferred refinement candidates until more focused evidence exists.
 - **Review Expansion**: Expanded public-safe adjudication coverage across previously unreviewed external fixture trace families.
 - **Scorer Controls**: Added focused deterministic controls for current scorer-refinement candidates without accepting scorer-code changes.
+- **Scorer Decision**: Recorded a durable no-change scorer decision from M49 controls while preserving historical adjudication context.
 
 ## Dashboard Snapshot
 
@@ -58,6 +59,7 @@
 | `M47` | Complete / review-ready | `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md` |
 | `M48` | Complete / review-ready | `docs/milestones/m48-external-fixture-review-expansion-closeout.md` |
 | `M49` | Complete / review-ready | `docs/milestones/m49-scorer-candidate-control-tests-closeout.md` |
+| `M50` | Complete / review-ready | `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md` |
 
 ## Boundaries
 
@@ -87,3 +89,4 @@
 - `docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md`
 - `docs/milestones/m48-external-fixture-review-expansion-closeout.md`
 - `docs/milestones/m49-scorer-candidate-control-tests-closeout.md`
+- `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md`

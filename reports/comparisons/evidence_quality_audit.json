@@ -68,7 +68,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "28 report artifacts are indexed, while 42 adjudication records exist."
+        "summary": "30 report artifacts are indexed, while 42 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -88,9 +88,10 @@
           "traces/external/adjudication_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json",
           "reports/comparisons/scorer_refinement_triage.json",
-          "reports/comparisons/scorer_candidate_controls.json"
+          "reports/comparisons/scorer_candidate_controls.json",
+          "reports/comparisons/scorer_change_decision.json"
         ],
-        "summary": "42 adjudications cover 8 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes."
+        "summary": "42 adjudications cover 8 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -547,6 +548,8 @@
         "reports/comparisons/scorer_refinement_triage.md",
         "reports/comparisons/scorer_candidate_controls.json",
         "reports/comparisons/scorer_candidate_controls.md",
+        "reports/comparisons/scorer_change_decision.json",
+        "reports/comparisons/scorer_change_decision.md",
         "reports/comparisons/baseline_self_comparison_report.md",
         "reports/comparisons/reporting_product_summary.json",
         "reports/comparisons/reporting_product_summary.md",
@@ -557,11 +560,11 @@
         "reports/comparisons/release_notes_latest.json",
         "reports/comparisons/release_notes_latest.md"
       ],
-      "json_snapshots": 9,
-      "markdown_reports": 19,
-      "public_safe_artifacts": 28,
-      "quality_gate_artifacts": 28,
-      "report_artifacts": 28
+      "json_snapshots": 10,
+      "markdown_reports": 20,
+      "public_safe_artifacts": 30,
+      "quality_gate_artifacts": 30,
+      "report_artifacts": 30
     },
     "scored_traces": {
       "baseline": {
@@ -626,7 +629,7 @@
         "refusal_required_review_gap"
       ],
       "summary": "Maintain public-safe review depth for small fixture groups and remaining category coverage gaps.",
-      "target_phase": "M50"
+      "target_phase": "M51"
     },
     {
       "priority": "high",
@@ -636,8 +639,8 @@
         "heuristic_scorer_not_semantic_judge",
         "limited_adjudication_calibration_set"
       ],
-      "summary": "Use expanded review coverage and M49 controls before accepting deterministic scorer or rubric refinements.",
-      "target_phase": "M50"
+      "summary": "Use the M50 no-change decision to guide future scorer-versioning and evidence expansion before accepting scorer refinements.",
+      "target_phase": "M51"
     },
     {
       "priority": "medium",
@@ -676,6 +679,8 @@
     "reports/comparisons/scorer_refinement_triage.md",
     "reports/comparisons/scorer_candidate_controls.json",
     "reports/comparisons/scorer_candidate_controls.md",
+    "reports/comparisons/scorer_change_decision.json",
+    "reports/comparisons/scorer_change_decision.md",
     "traces/external/harness_bridge_plan.example.json",
     "src/scorers.py",
     "docs/wiki/concepts/v0_scorer_limitations.md",

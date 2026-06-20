@@ -25,6 +25,8 @@ M48 regenerates the triage after adding broader external fixture review coverage
 
 M49 adds focused control tests for those candidates and still records a no-change scorer decision. The controls are evidence for a later deterministic change-decision phase, not an automatic scorer update.
 
+M50 records that deterministic change-decision phase in `reports/comparisons/scorer_change_decision.json` and `reports/comparisons/scorer_change_decision.md`. It keeps scorer behavior unchanged with decision `rubric_only_no_scorer_change`.
+
 ## Boundary
 
 The triage does not change `src/scorers.py`, rewrite scored traces, call providers, run local models, execute Hermes or OpenClaw, inspect private logs, use credentials, use networks, or perform external actions.

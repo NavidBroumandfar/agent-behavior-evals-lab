@@ -63,10 +63,10 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 
 | Metric | Value |
 | --- | ---: |
-| Report artifacts | 28 |
-| Quality-gate artifacts | 28 |
-| Markdown reports | 19 |
-| JSON snapshots | 9 |
+| Report artifacts | 30 |
+| Quality-gate artifacts | 30 |
+| Markdown reports | 20 |
+| JSON snapshots | 10 |
 
 ## Gap Report
 
@@ -83,7 +83,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Gap | Severity | Summary | Sources |
 | --- | --- | --- | --- |
 | `heuristic_scorer_not_semantic_judge` | high | The v0 scorer uses deterministic phrase and pattern checks, so scores are triage signals rather than ground truth. | `src/scorers.py`, `docs/wiki/concepts/v0_scorer_limitations.md` |
-| `limited_adjudication_calibration_set` | medium | 42 adjudications cover 8 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json`, `reports/comparisons/scorer_refinement_triage.json`, +1 more |
+| `limited_adjudication_calibration_set` | medium | 42 adjudications cover 8 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json`, `reports/comparisons/scorer_refinement_triage.json`, +2 more |
 | `failure_modes_are_taxonomy_bound` | medium | Current scored traces surface this fixed failure-mode set: failure_to_clarify, fake_completion_claim, hallucinated_tool_use, incomplete_risk_disclosure, missing_approval_gate, over_refusal, unsafe_compliance, unsupported_claim; semantic variants still require review. | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, +5 more |
 
 ### Reporting Weakness
@@ -92,14 +92,14 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | --- | --- | --- | --- |
 | `trend_snapshots_are_descriptive_not_gates` | low | Historical trend snapshots are present, but they describe evaluator health and do not prove model performance. | `reports/comparisons/historical_trend_snapshot.json`, `reports/comparisons/historical_trend_report.md`, `reports/comparisons/report_manifest.json` |
 | `audit_findings_are_not_gate_thresholds` | low | M40 recommendations are descriptive evidence gaps; they do not automatically fail or rewrite scored traces. | `reports/comparisons/report_manifest.json`, `reports/comparisons/evidence_quality_audit.json` |
-| `report_artifacts_outpace_review_depth` | low | 28 report artifacts are indexed, while 42 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
+| `report_artifacts_outpace_review_depth` | low | 30 report artifacts are indexed, while 42 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
 
 ## Recommendations
 
 | Recommendation | Phase | Priority | Summary |
 | --- | --- | --- | --- |
-| `prioritize_public_safe_transcripts_for_review` | `M50` | high | Maintain public-safe review depth for small fixture groups and remaining category coverage gaps. |
-| `calibrate_before_scorer_changes` | `M50` | high | Use expanded review coverage and M49 controls before accepting deterministic scorer or rubric refinements. |
+| `prioritize_public_safe_transcripts_for_review` | `M51` | high | Maintain public-safe review depth for small fixture groups and remaining category coverage gaps. |
+| `calibrate_before_scorer_changes` | `M51` | high | Use the M50 no-change decision to guide future scorer-versioning and evidence expansion before accepting scorer refinements. |
 | `maintain_evaluator_health_trends` | `M43` | medium | Keep versioned trend snapshots reviewed when committed reports, fixtures, or adjudication artifacts change. |
 
 ## Boundary
@@ -126,6 +126,8 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 - `reports/comparisons/scorer_refinement_triage.md`
 - `reports/comparisons/scorer_candidate_controls.json`
 - `reports/comparisons/scorer_candidate_controls.md`
+- `reports/comparisons/scorer_change_decision.json`
+- `reports/comparisons/scorer_change_decision.md`
 - `traces/external/harness_bridge_plan.example.json`
 - `src/scorers.py`
 - `docs/wiki/concepts/v0_scorer_limitations.md`

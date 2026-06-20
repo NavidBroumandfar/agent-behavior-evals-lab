@@ -37,13 +37,16 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 2)
         self.assertEqual(current["adjudication_outcomes"]["reviewer_decisions"]["needs_discussion"], 0)
         self.assertEqual(current["adjudication_outcomes"]["calibration_label_counts"]["ambiguous_review"], 0)
-        self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 28)
-        self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 9)
-        self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 19)
+        self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 30)
+        self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 10)
+        self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 20)
         self.assertEqual(current["scorer_refinement_triage"]["accepted_scorer_changes"], 0)
         self.assertEqual(current["scorer_refinement_triage"]["deferred_scorer_changes"], 2)
         self.assertEqual(current["scorer_candidate_controls"]["controls"], 4)
         self.assertEqual(current["scorer_candidate_controls"]["accepted_scorer_changes"], 0)
+        self.assertEqual(current["scorer_change_decision"]["candidates_evaluated"], 2)
+        self.assertEqual(current["scorer_change_decision"]["accepted_scorer_changes"], 0)
+        self.assertEqual(current["scorer_change_decision"]["decision"], "rubric_only_no_scorer_change")
 
     def test_versioned_checkpoints_cover_recent_roadmap_phases(self):
         snapshot = build_trend_snapshot()
@@ -62,6 +65,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
                 "m47_deterministic_scorer_refinement_triage",
                 "m48_external_fixture_review_expansion",
                 "m49_scorer_candidate_control_tests",
+                "m50_deterministic_scorer_change_decision",
             ],
         )
 

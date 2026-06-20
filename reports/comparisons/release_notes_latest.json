@@ -74,6 +74,10 @@
     {
       "area": "Scorer Controls",
       "summary": "Added focused deterministic controls for current scorer-refinement candidates without accepting scorer-code changes."
+    },
+    {
+      "area": "Scorer Decision",
+      "summary": "Recorded a durable no-change scorer decision from M49 controls while preserving historical adjudication context."
     }
   ],
   "milestones": [
@@ -181,15 +185,22 @@
       "path": "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 49 - Scorer Candidate Control Tests"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M50",
+      "path": "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 50 - Deterministic Scorer Change Decision"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 9,
+    "json_snapshots": 10,
     "live_execution": false,
-    "markdown_reports": 19,
-    "report_artifacts_indexed": 28
+    "markdown_reports": 20,
+    "report_artifacts_indexed": 30
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -222,7 +233,8 @@
     "docs/milestones/m46-needs-discussion-resolution-closeout.md",
     "docs/milestones/m47-deterministic-scorer-refinement-triage-closeout.md",
     "docs/milestones/m48-external-fixture-review-expansion-closeout.md",
-    "docs/milestones/m49-scorer-candidate-control-tests-closeout.md"
+    "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
+    "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

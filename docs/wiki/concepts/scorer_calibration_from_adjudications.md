@@ -12,6 +12,8 @@ M48 expands calibration inputs across previously unreviewed external fixture tra
 
 M49 adds focused scorer candidate controls around the current false-positive and false-negative evidence. The controls make current scorer/reviewer mismatches executable without changing scorer behavior.
 
+M50 evaluates those controls and records a durable no-change scorer decision. The calibration false positive and false negative remain documented review signals rather than accepted scorer-code changes.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`

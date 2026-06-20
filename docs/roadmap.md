@@ -538,7 +538,14 @@ Acceptance criteria:
 
 Decide whether the M49 controls justify narrow deterministic scorer changes or a durable rubric-only no-change decision.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md`.
+
+Implementation note:
+
+- M50 adds deterministic JSON and Markdown decision artifacts for the M49 scorer candidate controls.
+- The current decision is `rubric_only_no_scorer_change`.
+- No scorer code changes or scored trace behavior changes are accepted in M50.
+- Future scorer changes should first add scorer-versioned adjudication guardrails or stronger public-safe control evidence.
 
 Recommended scope:
 
@@ -553,6 +560,27 @@ Acceptance criteria:
 
 - The phase either accepts narrow deterministic scorer changes with focused tests and regenerated artifacts, or records a no-change rubric decision.
 - Any scorer change is traceable to M49 controls and public-safe adjudication evidence.
+- The full deterministic local quality gate passes.
+
+### M51: Scorer Versioning Guardrails
+
+Add explicit scorer-version or pre-change outcome guardrails so future scorer behavior changes can preserve historical adjudication context.
+
+Status: planned.
+
+Recommended scope:
+
+- Use `reports/comparisons/scorer_change_decision.json` as the primary input.
+- Decide how committed adjudications should reference scorer outcomes that predate a scorer change.
+- Add deterministic validation support for historical scorer-version metadata or explicit pre-change outcome records.
+- Keep reviewer decisions separate from heuristic scored traces.
+- Do not change scorer behavior unless the versioning guardrail is already in place and covered by tests.
+- Continue to avoid live runtime, provider, local-model, network, browser/email, shell, file-mutation, credential, private-log, or gated LLM review dependencies.
+
+Acceptance criteria:
+
+- Historical adjudication context is preserved if future scorer behavior changes.
+- Validation rules clearly distinguish current scored trace fields from prior scorer outcomes.
 - The full deterministic local quality gate passes.
 
 ## Hermes And OpenClaw Position
