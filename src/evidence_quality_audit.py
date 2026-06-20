@@ -31,6 +31,8 @@ ADJUDICATION_MANIFEST_PATH = REPO_ROOT / "traces/external/adjudication_manifest.
 ADJUDICATION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
 REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
 PRODUCT_SUMMARY_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
+HISTORICAL_TREND_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_snapshot.json"
+HISTORICAL_TREND_REPORT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_report.md"
 HARNESS_BRIDGE_PLAN_PATH = REPO_ROOT / "traces/external/harness_bridge_plan.example.json"
 SCORER_PATH = REPO_ROOT / "src/scorers.py"
 SCORER_LIMITATIONS_PATH = REPO_ROOT / "docs/wiki/concepts/v0_scorer_limitations.md"
@@ -377,13 +379,27 @@ def build_gap_report(
         ),
     ]
 
-    reporting_weakness = [
-        gap(
+    if HISTORICAL_TREND_SNAPSHOT_PATH.exists() and HISTORICAL_TREND_REPORT_PATH.exists():
+        trend_gap = gap(
+            "trend_snapshots_are_descriptive_not_gates",
+            "low",
+            "Historical trend snapshots are present, but they describe evaluator health and do not prove model performance.",
+            [
+                display_path(HISTORICAL_TREND_SNAPSHOT_PATH),
+                display_path(HISTORICAL_TREND_REPORT_PATH),
+                display_path(REPORT_MANIFEST_PATH),
+            ],
+        )
+    else:
+        trend_gap = gap(
             "no_historical_trend_snapshots_yet",
             "medium",
             "Reports are point-in-time artifacts; M43 is still needed for versioned evaluator-health trends.",
             [display_path(ROADMAP_PATH), display_path(PRODUCT_SUMMARY_PATH)],
-        ),
+        )
+
+    reporting_weakness = [
+        trend_gap,
         gap(
             "audit_findings_are_not_gate_thresholds",
             "low",
@@ -418,6 +434,22 @@ def build_gap_report(
 def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
     """Return public-safe next-step recommendations tied to gap IDs."""
 
+    reporting_gap_ids = {
+        str(item.get("gap_id"))
+        for item in gaps.get("reporting_weakness", [])
+        if isinstance(item, dict)
+    }
+    trend_gap_id = (
+        "trend_snapshots_are_descriptive_not_gates"
+        if "trend_snapshots_are_descriptive_not_gates" in reporting_gap_ids
+        else "no_historical_trend_snapshots_yet"
+    )
+    trend_recommendation_summary = (
+        "Keep versioned trend snapshots reviewed when committed reports, fixtures, or adjudication artifacts change."
+        if trend_gap_id == "trend_snapshots_are_descriptive_not_gates"
+        else "Create versioned trend snapshots after the evidence inventory and fixture expansion are stable."
+    )
+
     return [
         {
             "recommendation_id": "prioritize_public_safe_transcripts_for_review",
@@ -443,12 +475,12 @@ def recommendations(gaps: dict[str, Any]) -> list[dict[str, Any]]:
             "public_safe_path": "Keep heuristic scores and reviewer decisions separate in committed local artifacts.",
         },
         {
-            "recommendation_id": "add_evaluator_health_trends",
+            "recommendation_id": "maintain_evaluator_health_trends",
             "priority": "medium",
             "target_phase": "M43",
-            "summary": "Create versioned trend snapshots after the evidence inventory and fixture expansion are stable.",
+            "summary": trend_recommendation_summary,
             "source_gap_ids": [
-                "no_historical_trend_snapshots_yet",
+                trend_gap_id,
                 "report_artifacts_outpace_review_depth",
             ],
             "public_safe_path": "Trend evaluator artifact counts, fixture counts, failure modes, and review coverage without benchmark claims.",
@@ -537,6 +569,8 @@ def source_paths() -> list[str]:
         ADJUDICATION_SNAPSHOT_PATH,
         REPORT_MANIFEST_PATH,
         PRODUCT_SUMMARY_PATH,
+        HISTORICAL_TREND_SNAPSHOT_PATH,
+        HISTORICAL_TREND_REPORT_PATH,
         HARNESS_BRIDGE_PLAN_PATH,
         SCORER_PATH,
         SCORER_LIMITATIONS_PATH,

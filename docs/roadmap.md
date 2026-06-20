@@ -361,7 +361,13 @@ Acceptance criteria:
 
 Turn the reporting layer into a simple history of evaluator health over time.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m43-historical-trend-snapshots-closeout.md`.
+
+Implementation note:
+
+- M43 adds deterministic JSON and Markdown trend artifacts generated from committed local reports, manifests, snapshots, scorer calibration, and scored traces.
+- The trend snapshot covers pass rates, failure modes, adjudication outcomes, fixture counts, report-manifest coverage, and versioned checkpoint rows for recent roadmap phases.
+- Trend outputs describe evaluator health and fixture/report coverage only; they are not model-performance trends, leaderboard results, or production benchmark claims.
 
 Deliverables:
 

@@ -57,13 +57,14 @@
     ],
     "reporting_weakness": [
       {
-        "gap_id": "no_historical_trend_snapshots_yet",
-        "severity": "medium",
+        "gap_id": "trend_snapshots_are_descriptive_not_gates",
+        "severity": "low",
         "source_paths": [
-          "docs/roadmap.md",
-          "reports/comparisons/reporting_product_summary.json"
+          "reports/comparisons/historical_trend_snapshot.json",
+          "reports/comparisons/historical_trend_report.md",
+          "reports/comparisons/report_manifest.json"
         ],
-        "summary": "Reports are point-in-time artifacts; M43 is still needed for versioned evaluator-health trends."
+        "summary": "Historical trend snapshots are present, but they describe evaluator health and do not prove model performance."
       },
       {
         "gap_id": "audit_findings_are_not_gate_thresholds",
@@ -81,7 +82,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "22 report artifacts are indexed, while 12 adjudication records exist."
+        "summary": "24 report artifacts are indexed, while 12 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -525,14 +526,16 @@
         "reports/comparisons/reporting_product_summary.md",
         "reports/comparisons/evidence_quality_audit.json",
         "reports/comparisons/evidence_quality_audit.md",
+        "reports/comparisons/historical_trend_snapshot.json",
+        "reports/comparisons/historical_trend_report.md",
         "reports/comparisons/release_notes_latest.json",
         "reports/comparisons/release_notes_latest.md"
       ],
-      "json_snapshots": 6,
-      "markdown_reports": 16,
-      "public_safe_artifacts": 22,
-      "quality_gate_artifacts": 22,
-      "report_artifacts": 22
+      "json_snapshots": 7,
+      "markdown_reports": 17,
+      "public_safe_artifacts": 24,
+      "quality_gate_artifacts": 24,
+      "report_artifacts": 24
     },
     "scored_traces": {
       "baseline": {
@@ -614,12 +617,12 @@
     {
       "priority": "medium",
       "public_safe_path": "Trend evaluator artifact counts, fixture counts, failure modes, and review coverage without benchmark claims.",
-      "recommendation_id": "add_evaluator_health_trends",
+      "recommendation_id": "maintain_evaluator_health_trends",
       "source_gap_ids": [
-        "no_historical_trend_snapshots_yet",
+        "trend_snapshots_are_descriptive_not_gates",
         "report_artifacts_outpace_review_depth"
       ],
-      "summary": "Create versioned trend snapshots after the evidence inventory and fixture expansion are stable.",
+      "summary": "Keep versioned trend snapshots reviewed when committed reports, fixtures, or adjudication artifacts change.",
       "target_phase": "M43"
     }
   ],
@@ -642,6 +645,8 @@
     "reports/comparisons/adjudication_regression_snapshot.json",
     "reports/comparisons/report_manifest.json",
     "reports/comparisons/reporting_product_summary.json",
+    "reports/comparisons/historical_trend_snapshot.json",
+    "reports/comparisons/historical_trend_report.md",
     "traces/external/harness_bridge_plan.example.json",
     "src/scorers.py",
     "docs/wiki/concepts/v0_scorer_limitations.md",

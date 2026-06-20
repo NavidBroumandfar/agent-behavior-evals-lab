@@ -37,6 +37,8 @@ REPORTING_PRODUCT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/reporting
 REPORTING_PRODUCT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.md"
 EVIDENCE_QUALITY_AUDIT_JSON_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.json"
 EVIDENCE_QUALITY_AUDIT_REPORT_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.md"
+HISTORICAL_TREND_JSON_PATH = REPO_ROOT / "reports/comparisons/historical_trend_snapshot.json"
+HISTORICAL_TREND_REPORT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_report.md"
 RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
 RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
@@ -265,6 +267,10 @@ CHECKS = [
         ["python3", "src/evidence_quality_audit.py"],
     ),
     (
+        "historical trend snapshot generation",
+        ["python3", "src/historical_trend_snapshot.py"],
+    ),
+    (
         "release notes summary generation",
         ["python3", "src/release_notes_summary.py"],
     ),
@@ -313,6 +319,7 @@ CHECKS = [
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
+            "src/historical_trend_snapshot.py",
             "src/release_notes_summary.py",
             "scripts/dev.py",
         ],
@@ -419,6 +426,9 @@ def main() -> int:
             if name == "evidence quality audit generation":
                 verify_report_exists(EVIDENCE_QUALITY_AUDIT_JSON_PATH)
                 verify_report_exists(EVIDENCE_QUALITY_AUDIT_REPORT_PATH)
+            if name == "historical trend snapshot generation":
+                verify_report_exists(HISTORICAL_TREND_JSON_PATH)
+                verify_report_exists(HISTORICAL_TREND_REPORT_PATH)
             if name == "release notes summary generation":
                 verify_report_exists(RELEASE_NOTES_JSON_PATH)
                 verify_report_exists(RELEASE_NOTES_REPORT_PATH)

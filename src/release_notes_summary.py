@@ -32,6 +32,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m40-evidence-quality-audit-closeout.md",
     REPO_ROOT / "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
     REPO_ROOT / "docs/milestones/m42-scorer-calibration-closeout.md",
+    REPO_ROOT / "docs/milestones/m43-historical-trend-snapshots-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -194,6 +195,13 @@ def release_highlights(
             {
                 "area": "Scorer Calibration",
                 "summary": "Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M43" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Historical Trends",
+                "summary": "Added versioned evaluator-health trend snapshots for pass rates, failure modes, adjudication outcomes, fixture counts, and report coverage.",
             }
         )
     return highlights

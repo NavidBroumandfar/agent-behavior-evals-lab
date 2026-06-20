@@ -37,6 +37,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
 - [Reporting Product Layer](concepts/reporting_product_layer.md)
+- [Historical Trend Snapshots](concepts/historical_trend_snapshots.md)
 - [Release Notes Reporting](concepts/release_notes_reporting.md)
 - [Evidence Quality Audit](concepts/evidence_quality_audit.md)
 - [Reviewed Fixture Quality-Gate Promotion Checklist](concepts/reviewed_fixture_quality_gate_promotion.md)
@@ -84,6 +85,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Scorer calibration from adjudications: `src/scorer_calibration_summary.py`, `reports/comparisons/scorer_calibration_summary.json`, and `reports/comparisons/scorer_calibration_summary.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
+- Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`
 - Release notes reporting: `src/release_notes_summary.py`, `reports/comparisons/release_notes_latest.json`, and `reports/comparisons/release_notes_latest.md`
 - Evidence quality audit: `src/evidence_quality_audit.py`, `reports/comparisons/evidence_quality_audit.json`, and `reports/comparisons/evidence_quality_audit.md`
 - Shared reporting utilities: `src/reporting_utils.py`
@@ -135,6 +137,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 40 closeout: `docs/milestones/m40-evidence-quality-audit-closeout.md`
 - Milestone 41 closeout: `docs/milestones/m41-public-safe-transcript-expansion-closeout.md`
 - Milestone 42 closeout: `docs/milestones/m42-scorer-calibration-closeout.md`
+- Milestone 43 closeout: `docs/milestones/m43-historical-trend-snapshots-closeout.md`
 
 ## Reading Order
 

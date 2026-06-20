@@ -1,0 +1,418 @@
+{
+  "claim_boundary": [
+    "Trends describe evaluator health and committed fixture coverage.",
+    "Trends do not rank models, agents, Hermes, OpenClaw, hosted systems, or production behavior.",
+    "Pass-rate movement can reflect evaluator fixture changes, scorer changes, or report coverage changes."
+  ],
+  "current_snapshot": {
+    "adjudication_outcomes": {
+      "accepted_scorer_changes": 0,
+      "adjudicated_pass_rate": "33.3%",
+      "adjudication_records": 12,
+      "calibration_label_counts": {
+        "ambiguous_review": 3,
+        "scorer_false_negative": 1,
+        "scorer_false_positive": 1,
+        "scorer_upheld_failure": 5,
+        "scorer_upheld_pass": 2
+      },
+      "changed_result_count": 2,
+      "reviewer_decisions": {
+        "needs_discussion": 3,
+        "override_fail": 1,
+        "override_pass": 1,
+        "uphold_score": 7
+      },
+      "source_trace_count": 1
+    },
+    "evidence_quality": {
+      "gap_count": 10,
+      "missing_fixture_coverage_gaps": 4,
+      "reporting_weakness_gaps": 3,
+      "scorer_weakness_gaps": 3
+    },
+    "failure_modes": {
+      "baseline": {
+        "missing_approval_gate": 7,
+        "over_refusal": 4
+      },
+      "combined": {
+        "failure_to_clarify": 6,
+        "fake_completion_claim": 3,
+        "hallucinated_tool_use": 3,
+        "incomplete_risk_disclosure": 1,
+        "missing_approval_gate": 12,
+        "over_refusal": 5,
+        "unsafe_compliance": 2,
+        "unsupported_claim": 5
+      },
+      "external_fixtures": {
+        "failure_to_clarify": 6,
+        "fake_completion_claim": 3,
+        "hallucinated_tool_use": 3,
+        "incomplete_risk_disclosure": 1,
+        "missing_approval_gate": 5,
+        "over_refusal": 1,
+        "unsafe_compliance": 2,
+        "unsupported_claim": 5
+      }
+    },
+    "fixture_counts": {
+      "data_classification_counts": {
+        "public_safe_fixture": 4,
+        "public_sanitized": 2,
+        "public_synthetic": 1
+      },
+      "fixture_groups": 7,
+      "quality_gate_included_groups": 7,
+      "scored_records": 34,
+      "source_records": 34,
+      "source_type_counts": {
+        "dry_run_adapter_output": 1,
+        "manual_output": 1,
+        "normalized_adapter_output": 1,
+        "openclaw_saved_transcript_pilot": 1,
+        "openclaw_style_manual_output": 1,
+        "public_safe_transcript_expansion": 1,
+        "saved_transcript_replay": 1
+      }
+    },
+    "pass_rates": {
+      "baseline": {
+        "failed": 11,
+        "failure_modes": {
+          "missing_approval_gate": 7,
+          "over_refusal": 4
+        },
+        "pass_rate": "91.3%",
+        "passed": 115,
+        "records": 126,
+        "run_ids": [
+          "baseline_mock_run"
+        ],
+        "timestamps": [
+          "2026-01-01T00:00:00Z"
+        ],
+        "trace_path": "traces/scored/baseline_mock_run.jsonl",
+        "trend_id": "baseline_mock_run"
+      },
+      "external_fixtures": {
+        "failed": 15,
+        "pass_rate": "55.9%",
+        "passed": 19,
+        "records": 34,
+        "trend_id": "external_fixtures_all"
+      },
+      "fixture_groups": [
+        {
+          "data_classification": "public_safe_fixture",
+          "failed": 2,
+          "failure_modes": {
+            "failure_to_clarify": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "50.0%",
+          "passed": 2,
+          "quality_gate_included": true,
+          "records": 4,
+          "run_ids": [
+            "manual_output_eval_example"
+          ],
+          "source_path": "traces/external/manual_outputs.example.jsonl",
+          "source_records": 4,
+          "source_type": "manual_output",
+          "timestamps": [
+            "2026-01-01T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/manual_output_eval.jsonl",
+          "trend_id": "manual_outputs"
+        },
+        {
+          "data_classification": "public_sanitized",
+          "failed": 2,
+          "failure_modes": {
+            "failure_to_clarify": 1,
+            "fake_completion_claim": 1,
+            "hallucinated_tool_use": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "66.7%",
+          "passed": 4,
+          "quality_gate_included": true,
+          "records": 6,
+          "run_ids": [
+            "openclaw_manual_eval_example"
+          ],
+          "source_path": "traces/external/openclaw_manual_samples.example.jsonl",
+          "source_records": 6,
+          "source_type": "openclaw_style_manual_output",
+          "timestamps": [
+            "2026-01-01T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/openclaw_manual_eval.jsonl",
+          "trend_id": "sanitized_openclaw_style_manual_samples"
+        },
+        {
+          "data_classification": "public_safe_fixture",
+          "failed": 2,
+          "failure_modes": {
+            "failure_to_clarify": 1,
+            "fake_completion_claim": 1,
+            "hallucinated_tool_use": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "60.0%",
+          "passed": 3,
+          "quality_gate_included": true,
+          "records": 5,
+          "run_ids": [
+            "saved_transcript_replay_example"
+          ],
+          "source_path": "traces/external/saved_transcripts.example.jsonl",
+          "source_records": 5,
+          "source_type": "saved_transcript_replay",
+          "timestamps": [
+            "2026-01-01T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/saved_transcript_replay_eval.jsonl",
+          "trend_id": "saved_transcript_replay"
+        },
+        {
+          "data_classification": "public_sanitized",
+          "failed": 0,
+          "failure_modes": {},
+          "pass_rate": "100.0%",
+          "passed": 3,
+          "quality_gate_included": true,
+          "records": 3,
+          "run_ids": [
+            "openclaw_saved_transcript_pilot"
+          ],
+          "source_path": "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+          "source_records": 3,
+          "source_type": "openclaw_saved_transcript_pilot",
+          "timestamps": [
+            "2026-01-01T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+          "trend_id": "openclaw_saved_transcript_pilot"
+        },
+        {
+          "data_classification": "public_safe_fixture",
+          "failed": 4,
+          "failure_modes": {
+            "failure_to_clarify": 1,
+            "fake_completion_claim": 1,
+            "hallucinated_tool_use": 1,
+            "missing_approval_gate": 1,
+            "over_refusal": 1,
+            "unsafe_compliance": 1
+          },
+          "pass_rate": "50.0%",
+          "passed": 4,
+          "quality_gate_included": true,
+          "records": 8,
+          "run_ids": [
+            "public_safe_transcript_expansion"
+          ],
+          "source_path": "traces/external/public_safe_transcript_expansion.example.jsonl",
+          "source_records": 8,
+          "source_type": "public_safe_transcript_expansion",
+          "timestamps": [
+            "2026-01-01T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+          "trend_id": "public_safe_transcript_expansion"
+        },
+        {
+          "data_classification": "public_safe_fixture",
+          "failed": 3,
+          "failure_modes": {
+            "failure_to_clarify": 1,
+            "incomplete_risk_disclosure": 1,
+            "unsafe_compliance": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "25.0%",
+          "passed": 1,
+          "quality_gate_included": true,
+          "records": 4,
+          "run_ids": [
+            "m4_adapter_output_fixture_import"
+          ],
+          "source_path": "traces/external/adapter_outputs.example.jsonl",
+          "source_records": 4,
+          "source_type": "normalized_adapter_output",
+          "timestamps": [
+            "2026-05-10T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/adapter_output_fixture_import.jsonl",
+          "trend_id": "normalized_adapter_outputs"
+        },
+        {
+          "data_classification": "public_synthetic",
+          "failed": 2,
+          "failure_modes": {
+            "failure_to_clarify": 1,
+            "missing_approval_gate": 1,
+            "unsupported_claim": 1
+          },
+          "pass_rate": "50.0%",
+          "passed": 2,
+          "quality_gate_included": true,
+          "records": 4,
+          "run_ids": [
+            "m4_adapter_output_fixture_import"
+          ],
+          "source_path": "traces/external/dry_run_adapter_outputs.jsonl",
+          "source_records": 4,
+          "source_type": "dry_run_adapter_output",
+          "timestamps": [
+            "2026-05-10T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/dry_run_adapter_output_import.jsonl",
+          "trend_id": "dry_run_adapter_outputs"
+        }
+      ]
+    },
+    "report_manifest_coverage": {
+      "json_snapshots": 7,
+      "markdown_reports": 17,
+      "public_safe_artifacts": 24,
+      "quality_gate_artifacts": 24,
+      "report_artifacts": 24
+    }
+  },
+  "generated_at": "2026-06-20T00:00:00Z",
+  "regeneration_check": {
+    "deterministic_local_only": true,
+    "quality_gate_command": "python3 scripts/dev.py check",
+    "snapshot_changes_should_be_reviewed": true,
+    "source_behavior_change_expected_for_metric_changes": true
+  },
+  "safety": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "scope": "Versioned evaluator-health trend snapshot derived from committed local artifacts.",
+  "snapshot_id": "m43_historical_trend_snapshot",
+  "snapshot_version": "0.1.0",
+  "source_paths": [
+    "reports/comparisons/adjudication_regression_snapshot.json",
+    "reports/comparisons/evidence_quality_audit.json",
+    "reports/comparisons/report_manifest.json",
+    "reports/comparisons/reporting_product_summary.json",
+    "reports/comparisons/scorer_calibration_summary.json",
+    "traces/external/adapter_outputs.example.jsonl",
+    "traces/external/dry_run_adapter_outputs.jsonl",
+    "traces/external/fixture_manifest.json",
+    "traces/external/manual_outputs.example.jsonl",
+    "traces/external/openclaw_manual_samples.example.jsonl",
+    "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+    "traces/external/public_safe_transcript_expansion.example.jsonl",
+    "traces/external/saved_transcripts.example.jsonl",
+    "traces/scored/adapter_output_fixture_import.jsonl",
+    "traces/scored/baseline_mock_run.jsonl",
+    "traces/scored/dry_run_adapter_output_import.jsonl",
+    "traces/scored/manual_output_eval.jsonl",
+    "traces/scored/openclaw_manual_eval.jsonl",
+    "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+    "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+    "traces/scored/saved_transcript_replay_eval.jsonl"
+  ],
+  "trend_dimensions": [
+    "pass_rates",
+    "failure_modes",
+    "adjudication_outcomes",
+    "fixture_counts",
+    "report_manifest_coverage"
+  ],
+  "versioned_trend_snapshots": [
+    {
+      "checkpoint_id": "baseline_mock_run",
+      "metrics": {
+        "failure_modes": {
+          "missing_approval_gate": 7,
+          "over_refusal": 4
+        },
+        "pass_rate": "91.3%",
+        "records": 126
+      },
+      "phase": "baseline",
+      "source_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ]
+    },
+    {
+      "checkpoint_id": "m40_evidence_quality_audit",
+      "metrics": {
+        "gap_count": 10,
+        "product_kpi_count": 4,
+        "total_scored_records": 160
+      },
+      "phase": "evidence_quality",
+      "source_paths": [
+        "reports/comparisons/evidence_quality_audit.json"
+      ]
+    },
+    {
+      "checkpoint_id": "m41_public_safe_transcript_expansion",
+      "metrics": {
+        "failure_modes": {
+          "failure_to_clarify": 1,
+          "fake_completion_claim": 1,
+          "hallucinated_tool_use": 1,
+          "missing_approval_gate": 1,
+          "over_refusal": 1,
+          "unsafe_compliance": 1
+        },
+        "pass_rate": "50.0%",
+        "records": 8
+      },
+      "phase": "fixture_expansion",
+      "source_paths": [
+        "traces/external/public_safe_transcript_expansion.example.jsonl",
+        "traces/scored/public_safe_transcript_expansion_eval.jsonl"
+      ]
+    },
+    {
+      "checkpoint_id": "m42_scorer_calibration",
+      "metrics": {
+        "adjudication_records": 12,
+        "calibration_label_counts": {
+          "ambiguous_review": 3,
+          "scorer_false_negative": 1,
+          "scorer_false_positive": 1,
+          "scorer_upheld_failure": 5,
+          "scorer_upheld_pass": 2
+        },
+        "changed_result_count": 2
+      },
+      "phase": "scorer_calibration",
+      "source_paths": [
+        "reports/comparisons/scorer_calibration_summary.json"
+      ]
+    },
+    {
+      "checkpoint_id": "m43_historical_trend_snapshot",
+      "metrics": {
+        "external_fixture_pass_rate": "55.9%",
+        "fixture_groups": 7,
+        "json_snapshots": 7,
+        "markdown_reports": 17,
+        "report_artifacts": 24
+      },
+      "phase": "reporting_history",
+      "source_paths": [
+        "reports/comparisons/historical_trend_snapshot.json",
+        "reports/comparisons/historical_trend_report.md"
+      ]
+    }
+  ]
+}

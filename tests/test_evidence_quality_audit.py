@@ -27,7 +27,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
             len(audit["inventory"]["adjudications"]["unadjudicated_external_scored_traces"]),
             7,
         )
-        self.assertEqual(audit["inventory"]["reports"]["report_artifacts"], 22)
+        self.assertEqual(audit["inventory"]["reports"]["report_artifacts"], 24)
 
     def test_gap_report_separates_gap_types_with_source_paths(self):
         audit = build_audit()
@@ -44,7 +44,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
         gap_by_id = {gap["gap_id"]: gap for gap in all_gaps}
         self.assertIn("external_fixture_adjudication_absent", gap_by_id)
         self.assertIn("heuristic_scorer_not_semantic_judge", gap_by_id)
-        self.assertIn("no_historical_trend_snapshots_yet", gap_by_id)
+        self.assertIn("trend_snapshots_are_descriptive_not_gates", gap_by_id)
         for item in all_gaps:
             self.assertTrue(item["source_paths"])
 

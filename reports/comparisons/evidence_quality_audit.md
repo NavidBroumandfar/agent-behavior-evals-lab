@@ -56,10 +56,10 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 
 | Metric | Value |
 | --- | ---: |
-| Report artifacts | 22 |
-| Quality-gate artifacts | 22 |
-| Markdown reports | 16 |
-| JSON snapshots | 6 |
+| Report artifacts | 24 |
+| Quality-gate artifacts | 24 |
+| Markdown reports | 17 |
+| JSON snapshots | 7 |
 
 ## Gap Report
 
@@ -84,9 +84,9 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 
 | Gap | Severity | Summary | Sources |
 | --- | --- | --- | --- |
-| `no_historical_trend_snapshots_yet` | medium | Reports are point-in-time artifacts; M43 is still needed for versioned evaluator-health trends. | `docs/roadmap.md`, `reports/comparisons/reporting_product_summary.json` |
+| `trend_snapshots_are_descriptive_not_gates` | low | Historical trend snapshots are present, but they describe evaluator health and do not prove model performance. | `reports/comparisons/historical_trend_snapshot.json`, `reports/comparisons/historical_trend_report.md`, `reports/comparisons/report_manifest.json` |
 | `audit_findings_are_not_gate_thresholds` | low | M40 recommendations are descriptive evidence gaps; they do not automatically fail or rewrite scored traces. | `reports/comparisons/report_manifest.json`, `reports/comparisons/evidence_quality_audit.json` |
-| `report_artifacts_outpace_review_depth` | low | 22 report artifacts are indexed, while 12 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
+| `report_artifacts_outpace_review_depth` | low | 24 report artifacts are indexed, while 12 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
 
 ## Recommendations
 
@@ -94,7 +94,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | --- | --- | --- | --- |
 | `prioritize_public_safe_transcripts_for_review` | `M42` | high | Use the public-safe transcript expansion as a priority source for external fixture adjudication and calibration. |
 | `calibrate_before_scorer_changes` | `M42` | high | Add adjudications for external fixtures before accepting scorer refinements. |
-| `add_evaluator_health_trends` | `M43` | medium | Create versioned trend snapshots after the evidence inventory and fixture expansion are stable. |
+| `maintain_evaluator_health_trends` | `M43` | medium | Keep versioned trend snapshots reviewed when committed reports, fixtures, or adjudication artifacts change. |
 
 ## Boundary
 
@@ -114,6 +114,8 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 - `reports/comparisons/adjudication_regression_snapshot.json`
 - `reports/comparisons/report_manifest.json`
 - `reports/comparisons/reporting_product_summary.json`
+- `reports/comparisons/historical_trend_snapshot.json`
+- `reports/comparisons/historical_trend_report.md`
 - `traces/external/harness_bridge_plan.example.json`
 - `src/scorers.py`
 - `docs/wiki/concepts/v0_scorer_limitations.md`

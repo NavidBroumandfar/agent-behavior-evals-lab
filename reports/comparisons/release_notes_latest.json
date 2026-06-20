@@ -46,6 +46,10 @@
     {
       "area": "Scorer Calibration",
       "summary": "Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes."
+    },
+    {
+      "area": "Historical Trends",
+      "summary": "Added versioned evaluator-health trend snapshots for pass rates, failure modes, adjudication outcomes, fixture counts, and report coverage."
     }
   ],
   "milestones": [
@@ -104,15 +108,22 @@
       "path": "docs/milestones/m42-scorer-calibration-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 42 - Scorer Calibration From Adjudications"
+    },
+    {
+      "date": "2026-06-20",
+      "milestone_id": "M43",
+      "path": "docs/milestones/m43-historical-trend-snapshots-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 43 - Historical Trend Snapshots"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 6,
+    "json_snapshots": 7,
     "live_execution": false,
-    "markdown_reports": 16,
-    "report_artifacts_indexed": 22
+    "markdown_reports": 17,
+    "report_artifacts_indexed": 24
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -138,7 +149,8 @@
     "docs/milestones/m39-release-notes-reporting-closeout.md",
     "docs/milestones/m40-evidence-quality-audit-closeout.md",
     "docs/milestones/m41-public-safe-transcript-expansion-closeout.md",
-    "docs/milestones/m42-scorer-calibration-closeout.md"
+    "docs/milestones/m42-scorer-calibration-closeout.md",
+    "docs/milestones/m43-historical-trend-snapshots-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }
