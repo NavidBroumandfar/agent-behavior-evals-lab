@@ -50,6 +50,8 @@ redacted, validated, and explicitly promoted into a public-safe fixture.
 
 Reports generated from actual private evidence must be marked
 `private_audit_report` and remain local-only under `reports/private/` by default.
+M68 implements this report contract with
+`schemas/private_audit_report.schema.json` and `src/private_audit_report.py`.
 
 The committed M66 report at
 `reports/comparisons/private_evidence_vault_summary.md` is not a private audit

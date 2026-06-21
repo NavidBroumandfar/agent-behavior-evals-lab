@@ -77,6 +77,7 @@ src/
   production_policy_scenarios.py # M65 public-safe production-policy scenario fixture generator
   private_evidence_vault.py     # M66 public-safe private evidence vault boundary validator
   redaction_promotion_pipeline.py # M67 public-safe redaction/promotion validator
+  private_audit_report.py       # M68 local-only private audit report validator/generator
   validate_adapter_outputs.py   # Normalized adapter-output fixture validator
   import_adapter_outputs.py     # Normalized adapter-output fixture importer
   dry_run_adapter.py            # Deterministic no-network adapter contract fixture producer
@@ -113,6 +114,7 @@ traces/
     redaction_promotion_candidates.example.json # Public-safe promotion candidate manifest
     redaction_notes.example.jsonl # Public-safe diffable redaction notes
     promoted_private_evidence_outputs.example.jsonl # Public-safe promoted derivative fixture
+    private_audit_report_metadata.example.json # Public-safe private audit report metadata request
     adapter_outputs.example.jsonl # Public-safe normalized adapter-output fixture
     dry_run_adapter_outputs.jsonl # Generated dry-run adapter-output fixture
     fixture_manifest.json       # Controlled external fixture source index
@@ -144,6 +146,8 @@ reports/
     private_evidence_vault_summary.json # Generated M66 public-safe vault boundary snapshot
     redaction_promotion_pipeline_summary.md # Generated M67 public-safe promotion summary
     redaction_promotion_pipeline_summary.json # Generated M67 public-safe promotion snapshot
+    private_audit_report_boundary_summary.md # Generated M68 public-safe audit-report boundary summary
+    private_audit_report_boundary_summary.json # Generated M68 public-safe audit-report boundary snapshot
     saved_transcript_replay_report.md # Generated transcript replay report
     external_fixture_comparison_report.md # Generated controlled external fixture comparison
     adjudication_summary_report.md # Generated reviewer decision summary

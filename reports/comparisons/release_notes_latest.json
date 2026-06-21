@@ -146,6 +146,10 @@
     {
       "area": "Redaction Promotion",
       "summary": "Added promotion candidate and redaction-note schemas plus a validator for public-safe promoted derivatives without reading private artifacts."
+    },
+    {
+      "area": "Private Audit Reports",
+      "summary": "Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only."
     }
   ],
   "milestones": [
@@ -379,15 +383,22 @@
       "path": "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
       "status": "Complete / public-safe promotion-pipeline review-ready",
       "title": "Milestone 67 - Redaction And Promotion Pipeline"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M68",
+      "path": "docs/milestones/m68-private-audit-reports-closeout.md",
+      "status": "Complete / public-safe private-report-boundary review-ready",
+      "title": "Milestone 68 - Private Audit Reports"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 17,
+    "json_snapshots": 18,
     "live_execution": false,
-    "markdown_reports": 31,
-    "report_artifacts_indexed": 48
+    "markdown_reports": 32,
+    "report_artifacts_indexed": 50
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -438,7 +449,8 @@
     "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
     "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
     "docs/milestones/m66-private-evidence-vault-closeout.md",
-    "docs/milestones/m67-redaction-promotion-pipeline-closeout.md"
+    "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
+    "docs/milestones/m68-private-audit-reports-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

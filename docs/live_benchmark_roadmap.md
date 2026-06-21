@@ -475,6 +475,15 @@ Acceptance criteria:
 
 Generate reports from private evidence without publishing it.
 
+Status: complete / public-safe private-report-boundary review-ready. See `docs/milestones/m68-private-audit-reports-closeout.md`.
+
+Implementation note:
+
+- M68 adds `schemas/private_audit_report.schema.json`, `traces/external/private_audit_report_metadata.example.json`, and `src/private_audit_report.py`.
+- The committed example uses fake M66 private-vault metadata only.
+- Local private audit JSON and Markdown default to ignored `reports/private/*.local.*` paths and are labeled `private_audit_report`.
+- Committed summaries remain aggregate-only and public-safe under `reports/comparisons/`.
+
 Deliverables:
 
 - Local-only private audit JSON and Markdown.
@@ -485,6 +494,7 @@ Acceptance criteria:
 
 - Private audit reports are ignored by Git unless explicitly exported.
 - Reports can support internal decisions without becoming public leaderboard evidence.
+- The deterministic gate does not read raw private evidence, handle credentials, run live systems, perform external actions, or run gated LLM review.
 
 ### M69: Retention, Consent, And Access Controls
 

@@ -1,0 +1,107 @@
+{
+  "aggregate_counts": {
+    "redaction_statuses": {
+      "not_started": 1,
+      "redaction_notes_stubbed": 1
+    },
+    "retention_classes": {
+      "delete_after_review": 1,
+      "retain_local_until_manually_deleted": 1
+    },
+    "source_kinds": {
+      "runtime_trace": 1,
+      "tool_summary": 1
+    },
+    "source_runtimes": {
+      "hermes": 1,
+      "openclaw": 1
+    }
+  },
+  "aggregate_export_policy": {
+    "aggregate_only": true,
+    "enabled_by_default": false,
+    "output_path": "reports/comparisons/private_audit_report_boundary_summary.json",
+    "per_record_private_details_in_export": false,
+    "public_safe_by_default": true
+  },
+  "boundaries": [
+    "Committed M68 summaries are aggregate-only and public-safe.",
+    "Local private audit JSON/Markdown outputs are generated under the ignored reports/private/ root by default.",
+    "Reports generated from private evidence must be labeled private_audit_report.",
+    "The deterministic gate uses fake metadata only and does not ingest or read raw private evidence.",
+    "No credentials, secrets, private workspace paths, real customer data, live execution, provider calls, browser/email/network/shell actions, external actions, or gated LLM review are introduced.",
+    "Private audit reports do not make public leaderboard, production-safety, third-party reproducibility, or private-audit overclaims."
+  ],
+  "credentials_or_secrets_included": false,
+  "generated_at": "2026-06-21T00:00:00Z",
+  "private_artifacts_read": false,
+  "private_audit_overclaim": false,
+  "private_outputs": {
+    "json_path": "reports/private/m68_private_audit_report.local.json",
+    "local_only_by_default": true,
+    "markdown_path": "reports/private/m68_private_audit_report.local.md",
+    "outputs_written": true,
+    "private_report_root": "reports/private/",
+    "private_reports_committable": false,
+    "private_reports_gitignored": true
+  },
+  "private_workspace_paths_included": false,
+  "production_safety_claim": false,
+  "public_leaderboard_eligible": false,
+  "public_safe_fake_metadata_only": true,
+  "quality_gate": {
+    "browser_email_network_shell_actions_in_quality_gate": false,
+    "credential_handling_in_quality_gate": false,
+    "deterministic_gate_uses_fake_metadata_only": true,
+    "external_actions_in_quality_gate": false,
+    "gated_llm_review_in_quality_gate": false,
+    "live_execution_in_quality_gate": false,
+    "private_evidence_ingestion_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_private_data_read_in_quality_gate": false
+  },
+  "raw_private_evidence_included": false,
+  "real_customer_data_included": false,
+  "record_counts": {
+    "included_private_record_metadata_count": 2,
+    "promotion_candidate_count": 1,
+    "reviewer_signoff_count": 0,
+    "source_vault_private_record_metadata_count": 2
+  },
+  "report_classification": "private_audit_report",
+  "report_controls": {
+    "gated_llm_review_required": false,
+    "local_only_by_default": true,
+    "private_audit_overclaim": false,
+    "private_report_label_required": true,
+    "private_reports_committable": false,
+    "private_reports_gitignored": true,
+    "production_safety_claim": false,
+    "public_leaderboard_eligible": false,
+    "report_contains_credentials_or_secrets": false,
+    "report_contains_private_workspace_paths": false,
+    "report_contains_raw_private_evidence": false,
+    "report_contains_real_customer_data": false,
+    "reports_generated_from_private_evidence_marked_private_audit": true,
+    "third_party_reproducibility_claim": false
+  },
+  "report_label": "private_audit_report",
+  "safety_assertions": {
+    "browser_email_network_shell_external_actions": false,
+    "contains_credentials_or_secrets": false,
+    "contains_private_workspace_paths": false,
+    "contains_raw_private_evidence": false,
+    "contains_real_customer_data": false,
+    "live_provider_model_runtime_execution": false,
+    "private_audit_overclaim": false,
+    "production_safety_claim": false,
+    "public_leaderboard_claim": false,
+    "public_safe_input_metadata": true,
+    "third_party_reproducibility_claim": false
+  },
+  "schema_path": "schemas/private_audit_report.schema.json",
+  "source_metadata_path": "traces/external/private_audit_report_metadata.example.json",
+  "source_vault_manifest_path": "traces/external/private_evidence_vault_manifest.example.json",
+  "summary_id": "m68_private_audit_report_boundary_summary",
+  "third_party_reproducibility_claim": false
+}

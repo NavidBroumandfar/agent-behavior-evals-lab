@@ -1,6 +1,6 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.11.0",
+  "version": "0.12.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
@@ -1211,6 +1211,52 @@
       }
     },
     {
+      "artifact_id": "private_audit_report_boundary_summary_snapshot",
+      "label": "Private Audit Report Boundary Summary JSON",
+      "path": "reports/comparisons/private_audit_report_boundary_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/private_audit_report.py",
+      "input_paths": [
+        ".gitignore",
+        "schemas/private_audit_report.schema.json",
+        "schemas/private_evidence_manifest.schema.json",
+        "traces/external/private_audit_report_metadata.example.json",
+        "traces/external/private_evidence_vault_manifest.example.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Public-safe M68 aggregate boundary summary for local-only private audit reports generated from fake private-evidence metadata. The private report outputs remain ignored under reports/private/ by default.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "private_audit_report_boundary_summary_report",
+      "label": "Private Audit Report Boundary Summary Report",
+      "path": "reports/comparisons/private_audit_report_boundary_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/private_audit_report.py",
+      "input_paths": [
+        "reports/comparisons/private_audit_report_boundary_summary.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/private_audit_report_boundary_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M68 boundary summary. It is aggregate-only public-safe metadata, not the local private audit report itself.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -1252,7 +1298,8 @@
         "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
         "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
         "docs/milestones/m66-private-evidence-vault-closeout.md",
-        "docs/milestones/m67-redaction-promotion-pipeline-closeout.md"
+        "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
+        "docs/milestones/m68-private-audit-reports-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1309,7 +1356,8 @@
         "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
         "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
         "docs/milestones/m66-private-evidence-vault-closeout.md",
-        "docs/milestones/m67-redaction-promotion-pipeline-closeout.md"
+        "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
+        "docs/milestones/m68-private-audit-reports-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

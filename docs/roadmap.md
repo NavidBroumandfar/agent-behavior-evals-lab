@@ -893,7 +893,7 @@ Success signal:
 
 Support private production evidence while keeping it out of public fixtures and public rankings by default.
 
-Status: active; M66-M67 complete / review-ready, M68-M69 planned. See `docs/milestones/m66-private-evidence-vault-closeout.md` and `docs/milestones/m67-redaction-promotion-pipeline-closeout.md`.
+Status: active; M66-M68 complete / review-ready, M69 planned. See `docs/milestones/m66-private-evidence-vault-closeout.md`, `docs/milestones/m67-redaction-promotion-pipeline-closeout.md`, and `docs/milestones/m68-private-audit-reports-closeout.md`.
 
 Implementation note:
 
@@ -901,12 +901,13 @@ Implementation note:
 - `private_evidence/` and `reports/private/` are ignored by Git by default.
 - The committed M66 records are fake public-safe metadata only. The deterministic gate validates ignored-path controls, optional local encryption or OS-keychain storage-plan metadata, redaction-required promotion blocking, and private-audit report labels without ingesting private evidence or reading raw private data.
 - M67 adds schema-backed promotion candidates, diffable redaction notes, and a synthetic public-safe promoted output validated without reading original private artifacts.
+- M68 adds private audit report metadata validation and local-only JSON/Markdown report generation under `reports/private/`, with committed aggregate boundary summaries generated from fake metadata only.
 
 Milestones:
 
 - M66 Private Evidence Vault. Complete / public-safe vault-boundary review-ready.
 - M67 Redaction And Promotion Pipeline. Complete / public-safe promotion-pipeline review-ready.
-- M68 Private Audit Reports.
+- M68 Private Audit Reports. Complete / public-safe private-report-boundary review-ready.
 - M69 Retention, Consent, And Access Controls.
 
 Success signal:

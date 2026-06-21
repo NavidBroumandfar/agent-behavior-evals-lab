@@ -73,6 +73,8 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/private_evidence_vault_summary.md",
     "reports/comparisons/redaction_promotion_pipeline_summary.json",
     "reports/comparisons/redaction_promotion_pipeline_summary.md",
+    "reports/comparisons/private_audit_report_boundary_summary.json",
+    "reports/comparisons/private_audit_report_boundary_summary.md",
     "reports/comparisons/release_notes_latest.json",
     "reports/comparisons/release_notes_latest.md",
 }

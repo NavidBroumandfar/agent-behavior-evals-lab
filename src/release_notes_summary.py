@@ -57,6 +57,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
     REPO_ROOT / "docs/milestones/m66-private-evidence-vault-closeout.md",
     REPO_ROOT / "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
+    REPO_ROOT / "docs/milestones/m68-private-audit-reports-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -394,6 +395,13 @@ def release_highlights(
             {
                 "area": "Redaction Promotion",
                 "summary": "Added promotion candidate and redaction-note schemas plus a validator for public-safe promoted derivatives without reading private artifacts.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M68" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Private Audit Reports",
+                "summary": "Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only.",
             }
         )
     return highlights

@@ -1,0 +1,403 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Private Audit Report Metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "request_id",
+    "version",
+    "created_at",
+    "status",
+    "source_vault_manifest_path",
+    "source_metadata_classification",
+    "report_label",
+    "report_classification",
+    "output_defaults",
+    "aggregate_export_policy",
+    "report_controls",
+    "quality_gate",
+    "safety_assertions",
+    "included_private_record_ids",
+    "report_sections"
+  ],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "const": "m68_private_audit_report_request"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "public_safe_private_audit_report_fixture"
+      ]
+    },
+    "source_vault_manifest_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "source_metadata_classification": {
+      "type": "string",
+      "enum": [
+        "public_safe_fake_private_metadata"
+      ]
+    },
+    "report_label": {
+      "type": "string",
+      "enum": [
+        "private_audit_report"
+      ]
+    },
+    "report_classification": {
+      "type": "string",
+      "enum": [
+        "private_audit_report"
+      ]
+    },
+    "output_defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "private_report_root",
+        "private_report_root_gitignored",
+        "json_path",
+        "markdown_path",
+        "local_only_by_default",
+        "private_reports_committable",
+        "summary_json_path",
+        "summary_markdown_path"
+      ],
+      "properties": {
+        "private_report_root": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "private_report_root_gitignored": {
+          "type": "boolean",
+          "const": true
+        },
+        "json_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "markdown_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "local_only_by_default": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_reports_committable": {
+          "type": "boolean",
+          "const": false
+        },
+        "summary_json_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "summary_markdown_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "aggregate_export_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "enabled_by_default",
+        "public_safe_by_default",
+        "aggregate_only",
+        "per_record_private_details_in_export",
+        "output_path"
+      ],
+      "properties": {
+        "enabled_by_default": {
+          "type": "boolean",
+          "const": false
+        },
+        "public_safe_by_default": {
+          "type": "boolean",
+          "const": true
+        },
+        "aggregate_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "per_record_private_details_in_export": {
+          "type": "boolean",
+          "const": false
+        },
+        "output_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "report_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "private_report_label_required",
+        "reports_generated_from_private_evidence_marked_private_audit",
+        "local_only_by_default",
+        "private_reports_gitignored",
+        "private_reports_committable",
+        "report_contains_raw_private_evidence",
+        "report_contains_credentials_or_secrets",
+        "report_contains_private_workspace_paths",
+        "report_contains_real_customer_data",
+        "gated_llm_review_required",
+        "public_leaderboard_eligible",
+        "production_safety_claim",
+        "third_party_reproducibility_claim",
+        "private_audit_overclaim"
+      ],
+      "properties": {
+        "private_report_label_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "reports_generated_from_private_evidence_marked_private_audit": {
+          "type": "boolean",
+          "const": true
+        },
+        "local_only_by_default": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_reports_gitignored": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_reports_committable": {
+          "type": "boolean",
+          "const": false
+        },
+        "report_contains_raw_private_evidence": {
+          "type": "boolean",
+          "const": false
+        },
+        "report_contains_credentials_or_secrets": {
+          "type": "boolean",
+          "const": false
+        },
+        "report_contains_private_workspace_paths": {
+          "type": "boolean",
+          "const": false
+        },
+        "report_contains_real_customer_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "gated_llm_review_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "public_leaderboard_eligible": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_safety_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "third_party_reproducibility_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_audit_overclaim": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_gate_uses_fake_metadata_only",
+        "private_evidence_ingestion_in_quality_gate",
+        "raw_private_data_read_in_quality_gate",
+        "live_execution_in_quality_gate",
+        "credential_handling_in_quality_gate",
+        "provider_calls_in_quality_gate",
+        "browser_email_network_shell_actions_in_quality_gate",
+        "external_actions_in_quality_gate",
+        "gated_llm_review_in_quality_gate"
+      ],
+      "properties": {
+        "deterministic_gate_uses_fake_metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_evidence_ingestion_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_data_read_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_execution_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "credential_handling_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "provider_calls_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "browser_email_network_shell_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "gated_llm_review_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe_input_metadata",
+        "contains_raw_private_evidence",
+        "contains_credentials_or_secrets",
+        "contains_private_workspace_paths",
+        "contains_real_customer_data",
+        "live_provider_model_runtime_execution",
+        "browser_email_network_shell_external_actions",
+        "public_leaderboard_claim",
+        "production_safety_claim",
+        "third_party_reproducibility_claim",
+        "private_audit_overclaim"
+      ],
+      "properties": {
+        "public_safe_input_metadata": {
+          "type": "boolean",
+          "const": true
+        },
+        "contains_raw_private_evidence": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_credentials_or_secrets": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_workspace_paths": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_real_customer_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_provider_model_runtime_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "browser_email_network_shell_external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "public_leaderboard_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_safety_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "third_party_reproducibility_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_audit_overclaim": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "included_private_record_ids": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "pattern": ".*\\S.*"
+      }
+    },
+    "report_sections": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "section_id",
+          "title",
+          "source",
+          "aggregate_only",
+          "raw_private_evidence_allowed",
+          "private_values_allowed"
+        ],
+        "properties": {
+          "section_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "metadata_only"
+            ]
+          },
+          "aggregate_only": {
+            "type": "boolean",
+            "const": true
+          },
+          "raw_private_evidence_allowed": {
+            "type": "boolean",
+            "const": false
+          },
+          "private_values_allowed": {
+            "type": "boolean",
+            "const": false
+          }
+        }
+      }
+    }
+  }
+}

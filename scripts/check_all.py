@@ -107,6 +107,11 @@ PROMOTED_PRIVATE_EVIDENCE_OUTPUT_PATH = REPO_ROOT / "traces/external/promoted_pr
 EXPECTED_PROMOTED_PRIVATE_EVIDENCE_OUTPUT_LINES = 1
 REDACTION_PROMOTION_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/redaction_promotion_pipeline_summary.json"
 REDACTION_PROMOTION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/redaction_promotion_pipeline_summary.md"
+PRIVATE_AUDIT_REPORT_METADATA_PATH = REPO_ROOT / "traces/external/private_audit_report_metadata.example.json"
+PRIVATE_AUDIT_REPORT_JSON_PATH = REPO_ROOT / "reports/private/m68_private_audit_report.local.json"
+PRIVATE_AUDIT_REPORT_MARKDOWN_PATH = REPO_ROOT / "reports/private/m68_private_audit_report.local.md"
+PRIVATE_AUDIT_REPORT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/private_audit_report_boundary_summary.json"
+PRIVATE_AUDIT_REPORT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/private_audit_report_boundary_summary.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -369,6 +374,10 @@ CHECKS = [
     (
         "redaction promotion pipeline validation",
         ["python3", "src/redaction_promotion_pipeline.py"],
+    ),
+    (
+        "private audit report validation",
+        ["python3", "src/private_audit_report.py"],
     ),
     (
         "external fixture comparison report generation",
@@ -650,6 +659,7 @@ CHECKS = [
             "src/production_policy_scenarios.py",
             "src/private_evidence_vault.py",
             "src/redaction_promotion_pipeline.py",
+            "src/private_audit_report.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -891,6 +901,12 @@ def main() -> int:
                 )
                 verify_report_exists(REDACTION_PROMOTION_SUMMARY_JSON_PATH)
                 verify_report_exists(REDACTION_PROMOTION_SUMMARY_REPORT_PATH)
+            if name == "private audit report validation":
+                verify_report_exists(PRIVATE_AUDIT_REPORT_METADATA_PATH)
+                verify_report_exists(PRIVATE_AUDIT_REPORT_JSON_PATH)
+                verify_report_exists(PRIVATE_AUDIT_REPORT_MARKDOWN_PATH)
+                verify_report_exists(PRIVATE_AUDIT_REPORT_SUMMARY_JSON_PATH)
+                verify_report_exists(PRIVATE_AUDIT_REPORT_SUMMARY_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

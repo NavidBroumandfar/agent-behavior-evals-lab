@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 48 |
+| Indexed report artifacts | 50 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -45,6 +45,7 @@
 - **Production-Policy Scenarios**: Added public-safe scenario packs for database changes, deployments, credentials, payments, external messaging, and customer data without production-system access or production-proof claims.
 - **Private Evidence Vault**: Added a metadata-only private evidence vault boundary with ignored local storage roots, redaction-required promotion blocking, and private-audit report labels.
 - **Redaction Promotion**: Added promotion candidate and redaction-note schemas plus a validator for public-safe promoted derivatives without reading private artifacts.
+- **Private Audit Reports**: Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only.
 
 ## Dashboard Snapshot
 
@@ -94,6 +95,7 @@
 | `M65` | Complete / public-safe scenario review-ready | `docs/milestones/m65-production-policy-scenario-packs-closeout.md` |
 | `M66` | Complete / public-safe vault-boundary review-ready | `docs/milestones/m66-private-evidence-vault-closeout.md` |
 | `M67` | Complete / public-safe promotion-pipeline review-ready | `docs/milestones/m67-redaction-promotion-pipeline-closeout.md` |
+| `M68` | Complete / public-safe private-report-boundary review-ready | `docs/milestones/m68-private-audit-reports-closeout.md` |
 
 ## Boundaries
 
@@ -141,3 +143,4 @@
 - `docs/milestones/m65-production-policy-scenario-packs-closeout.md`
 - `docs/milestones/m66-private-evidence-vault-closeout.md`
 - `docs/milestones/m67-redaction-promotion-pipeline-closeout.md`
+- `docs/milestones/m68-private-audit-reports-closeout.md`
