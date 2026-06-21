@@ -90,6 +90,10 @@
     {
       "area": "Scorer Promotion",
       "summary": "Recorded a rubric-only approval-disclosure update while keeping deterministic scorer behavior and scored traces unchanged."
+    },
+    {
+      "area": "Benchmark Claims",
+      "summary": "Added an evidence-class claim charter that separates local benchmark, cloud benchmark, manual sample, private audit, promoted public evidence, and unsupported claims."
     }
   ],
   "milestones": [
@@ -225,6 +229,13 @@
       "path": "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 53 - Scorer Promotion Or Rubric Update"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M54",
+      "path": "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 54 - Local Benchmark Claim Charter"
     }
   ],
   "quality_gate": {
@@ -270,7 +281,8 @@
     "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
     "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
     "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
-    "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md"
+    "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
+    "docs/milestones/m54-local-benchmark-claim-charter-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

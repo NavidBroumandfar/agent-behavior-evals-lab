@@ -1,0 +1,212 @@
+{
+  "charter_id": "m54_local_benchmark_claim_charter",
+  "claim_boundaries": [
+    "Local/open-weight rankings must be labeled local and must not be described as cloud-model rankings.",
+    "Cloud rankings require actual cloud-provider evidence and cannot be inferred from local model runs.",
+    "Manual public samples can demonstrate workflow function but are excluded from rankings by default.",
+    "Private audit evidence can support private audit findings but cannot support public benchmark rankings unless redacted and promoted.",
+    "No report may claim production-policy proof beyond the actual evidence class, sample size, and run protocol."
+  ],
+  "evidence_classes": [
+    {
+      "allowed_claims": [
+        "The evaluator pipeline is functioning on committed local artifacts.",
+        "Reports and quality gates can be regenerated deterministically."
+      ],
+      "claim_scope": "Repository health and deterministic evaluator plumbing.",
+      "committed_fixture_allowed": true,
+      "credentials_required_allowed": false,
+      "evidence_class_id": "evaluator_health",
+      "label": "Evaluator Health",
+      "live_execution_allowed": false,
+      "private_data_allowed": false,
+      "prohibited_claims": [
+        "Model quality ranking.",
+        "Live runtime safety.",
+        "Production policy compliance."
+      ],
+      "public_ranking_eligible": false,
+      "required_metadata": [
+        "quality_gate_command",
+        "commit_hash",
+        "artifact_paths"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "A local/open-weight model produced these outcomes on benchmark version X.",
+        "A local/open-weight model ranking is valid within the stated public-safe local benchmark scope."
+      ],
+      "claim_scope": "Public-safe local model benchmark evidence from Ollama or another local OpenAI-compatible runtime.",
+      "committed_fixture_allowed": true,
+      "credentials_required_allowed": false,
+      "evidence_class_id": "local_public_benchmark",
+      "label": "Local Public Benchmark",
+      "live_execution_allowed": true,
+      "private_data_allowed": false,
+      "prohibited_claims": [
+        "Cloud model ranking.",
+        "Production policy proof.",
+        "Private runtime behavior."
+      ],
+      "public_ranking_eligible": true,
+      "required_metadata": [
+        "runtime",
+        "model",
+        "case_set_version",
+        "prompt_template_version",
+        "adapter_version",
+        "normalized_output_hash"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "A manually collected public-safe sample exercised the scoring and review workflow.",
+        "The sample can be inspected as evidence of evaluator function."
+      ],
+      "claim_scope": "Public-safe manually collected output that is useful for workflow proof but not ranking by default.",
+      "committed_fixture_allowed": true,
+      "credentials_required_allowed": false,
+      "evidence_class_id": "manual_public_sample",
+      "label": "Manual Public Sample",
+      "live_execution_allowed": false,
+      "private_data_allowed": false,
+      "prohibited_claims": [
+        "Automated benchmark ranking.",
+        "Representative model quality.",
+        "Production policy proof."
+      ],
+      "public_ranking_eligible": false,
+      "required_metadata": [
+        "source_label",
+        "collection_method",
+        "case_set_version",
+        "reviewer"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "A hosted model produced these outcomes on benchmark version X.",
+        "A cloud-model ranking is valid within the stated public-safe benchmark scope."
+      ],
+      "claim_scope": "Public-safe cloud-provider benchmark evidence collected through an opt-in live provider harness.",
+      "committed_fixture_allowed": true,
+      "credentials_required_allowed": true,
+      "evidence_class_id": "cloud_public_benchmark",
+      "label": "Cloud Public Benchmark",
+      "live_execution_allowed": true,
+      "private_data_allowed": false,
+      "prohibited_claims": [
+        "Private runtime behavior.",
+        "Production policy proof without production evidence.",
+        "Claims that hide provider/model/run metadata."
+      ],
+      "public_ranking_eligible": true,
+      "required_metadata": [
+        "provider",
+        "model",
+        "case_set_version",
+        "prompt_template_version",
+        "adapter_version",
+        "run_timestamp",
+        "normalized_output_hash"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "A private runtime showed these scoped audit findings under local private evidence.",
+        "The audit can support internal review and remediation decisions."
+      ],
+      "claim_scope": "Local-only private runtime evidence that is not public benchmark evidence.",
+      "committed_fixture_allowed": false,
+      "credentials_required_allowed": true,
+      "evidence_class_id": "private_audit",
+      "label": "Private Audit",
+      "live_execution_allowed": true,
+      "private_data_allowed": true,
+      "prohibited_claims": [
+        "Public benchmark ranking.",
+        "Third-party reproducibility.",
+        "Publication without redaction and promotion."
+      ],
+      "public_ranking_eligible": false,
+      "required_metadata": [
+        "private_manifest_id",
+        "retention_class",
+        "access_boundary",
+        "consent_or_authorization",
+        "redaction_status"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "A reviewed derivative of private or live evidence is public-safe and eligible for its declared evidence class.",
+        "The promoted fixture can be inspected without exposing the original private artifact."
+      ],
+      "claim_scope": "Reviewed and redacted public-safe derivative evidence promoted from private or live sources.",
+      "committed_fixture_allowed": true,
+      "credentials_required_allowed": false,
+      "evidence_class_id": "promoted_public_evidence",
+      "label": "Promoted Public Evidence",
+      "live_execution_allowed": false,
+      "private_data_allowed": false,
+      "prohibited_claims": [
+        "Claims about unredacted private content.",
+        "Claims not supported by the promoted public-safe derivative.",
+        "Public ranking unless the promoted record also satisfies the benchmark evidence class."
+      ],
+      "public_ranking_eligible": false,
+      "required_metadata": [
+        "source_evidence_class",
+        "redaction_notes",
+        "reviewer",
+        "promotion_decision",
+        "public_safety_assertions"
+      ]
+    },
+    {
+      "allowed_claims": [
+        "The claim is explicitly out of scope or unsupported by the current evidence."
+      ],
+      "claim_scope": "Claims that must be refused or downgraded because the evidence class does not support them.",
+      "committed_fixture_allowed": false,
+      "credentials_required_allowed": false,
+      "evidence_class_id": "unsupported_claim",
+      "label": "Unsupported Claim",
+      "live_execution_allowed": false,
+      "private_data_allowed": false,
+      "prohibited_claims": [
+        "Production safety proof.",
+        "Hidden-evidence public leaderboard claims.",
+        "Cloud ranking from local-only runs."
+      ],
+      "public_ranking_eligible": false,
+      "required_metadata": [
+        "unsupported_reason",
+        "required_evidence_class"
+      ]
+    }
+  ],
+  "generated_at": "2026-06-21T00:00:00Z",
+  "purpose": "Define evidence classes and claim boundaries for the zero-cost local-first benchmark path.",
+  "ranking_rules": {
+    "cloud_rankings_require_cloud_evidence": true,
+    "local_rankings_must_be_labeled_local": true,
+    "manual_samples_excluded_from_rankings_by_default": true,
+    "private_only_evidence_excluded_from_public_rankings": true,
+    "public_rankings_require_public_evidence": true
+  },
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "source_paths": [
+    "docs/roadmap.md",
+    "docs/live_benchmark_roadmap.md",
+    "docs/wiki/concepts/v0_scorer_limitations.md"
+  ],
+  "version": "0.1.0"
+}

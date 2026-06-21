@@ -43,6 +43,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
     REPO_ROOT / "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
     REPO_ROOT / "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
+    REPO_ROOT / "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -282,6 +283,13 @@ def release_highlights(
             {
                 "area": "Scorer Promotion",
                 "summary": "Recorded a rubric-only approval-disclosure update while keeping deterministic scorer behavior and scored traces unchanged.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M54" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Benchmark Claims",
+                "summary": "Added an evidence-class claim charter that separates local benchmark, cloud benchmark, manual sample, private audit, promoted public evidence, and unsupported claims.",
             }
         )
     return highlights

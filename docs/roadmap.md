@@ -650,7 +650,7 @@ Acceptance criteria:
 
 The post-M53 roadmap should move from evaluator scaffolding to real evidence. The detailed execution plan lives in `docs/live_benchmark_roadmap.md`.
 
-The goal is to make the lab a credible benchmark and audit harness for live cloud models, local assistants, Hermes, OpenClaw, and future agent runtimes while preserving evidence boundaries.
+The goal is to make the lab a credible benchmark and audit harness for local models first, then cloud models, local assistants, Hermes, OpenClaw, and future agent runtimes while preserving evidence boundaries.
 
 New direction:
 
@@ -665,27 +665,45 @@ Critical boundary:
 - Live provider and runtime execution must remain opt-in and outside the deterministic local quality gate.
 - Credentials, raw private logs, hidden prompts, private runtime memory, private workspace paths, and unredacted private evidence must remain out of committed fixtures.
 
-### M54: Benchmark Claim Charter And Evidence Classes
+Immediate zero-cost sequence:
 
-Define what the benchmark is allowed to claim.
+1. Ollama or local OpenAI-compatible model, text-only, public-safe cases only.
+2. Manual public-safe saved-output samples from cloud chats the user already has access to.
+3. Disposable local no-tool or mocked-tool agent harness around a local model.
+4. OpenClaw in a disposable workspace with tools disabled, mocked, or sandboxed.
+5. Hermes or memory-capable agents only after private evidence vault, redaction, retention, and promotion controls exist.
 
-Status: planned.
+### M54: Local Benchmark Claim Charter And Evidence Classes
+
+Define what the local-first benchmark is allowed to claim before it has cloud-provider evidence.
+
+Status: complete / review-ready. See `docs/milestones/m54-local-benchmark-claim-charter-closeout.md`.
+
+Implementation note:
+
+- M54 adds `benchmarks/evidence_class_charter.json`, `schemas/benchmark_claim_charter.schema.json`, and `src/validate_benchmark_claim_charter.py`.
+- The charter separates evaluator-health, local/open-weight benchmark, manual public sample, cloud benchmark, private audit, promoted public evidence, and unsupported claims.
+- Local/Ollama evidence must be labeled separately from cloud-provider evidence.
+- M54 does not run providers, local models, Ollama, Hermes, OpenClaw, private evidence collection, or runtime harnesses.
 
 Deliverables:
 
-- Evidence-class schema for public benchmark, private audit, and promoted public evidence.
-- Claim taxonomy for evaluator-health, public benchmark, private audit, production-policy evidence, and unsupported claims.
+- Evidence-class schema for local public benchmark, manual public sample, cloud public benchmark, private audit, and promoted public evidence.
+- Claim taxonomy for evaluator-health, local/open-weight benchmark, manual public sample, cloud benchmark, private audit, production-policy evidence, and unsupported claims.
 - Report language rules that prevent private evidence from contaminating public leaderboard claims.
+- Rules for labeling Ollama/local-model results separately from hosted cloud-model results.
 
 Acceptance criteria:
 
 - Every report declares its evidence class.
-- Public rankings can only use public benchmark evidence.
+- Public local rankings can only use public local benchmark evidence.
+- Cloud rankings are not claimed until actual cloud-provider evidence exists.
 - Private audit reports can use private evidence but must not claim public reproducibility.
+- The local deterministic gate remains credential-free.
 
-### M55: Public Benchmark Case Corpus V1
+### M55: Public Local Benchmark Case Corpus V1
 
-Build a larger public-safe case corpus designed for live model comparison.
+Build a larger public-safe case corpus designed for local model comparison first.
 
 Status: planned.
 
@@ -701,64 +719,64 @@ Acceptance criteria:
 - The benchmark split is immutable for a given version.
 - No private data or provider-specific assumptions are included.
 
-### M56: Live Provider Adapter Registry
+### M56: Ollama And Local OpenAI-Compatible Adapter Registry
 
-Add opt-in provider adapters without making providers part of the local quality gate.
+Add opt-in local model adapters without making live model execution part of the local quality gate.
 
 Status: planned.
 
 Deliverables:
 
-- Provider adapter interface for OpenAI-compatible APIs, Anthropic-compatible APIs, local OpenAI-compatible servers, and manual adapters.
-- Registry metadata for model name, provider, endpoint class, temperature, tool availability, and cost estimate.
-- Environment-variable based credential lookup.
+- Adapter interface for Ollama, local OpenAI-compatible servers, and manual saved-output adapters.
+- Registry metadata for model name, runtime, endpoint class, temperature, context window, tool availability, and estimated local cost.
+- Explicit optional extension points for paid provider adapters later.
 
 Acceptance criteria:
 
-- No credential is committed or printed.
-- Live calls require an explicit live flag and enable environment variable.
+- No credential is required for the local Ollama path.
+- Local model calls require an explicit live-local flag or equivalent enable switch.
 - Unit tests use fakes only.
 
-### M57: Opt-In Live Text-Only Provider Harness
+### M57: Opt-In Local Text-Only Model Harness
 
-Run live cloud models against public-safe prompts with tools disabled.
+Run local models against public-safe prompts with tools disabled.
 
 Status: planned.
 
 Deliverables:
 
-- Opt-in live command for text-only runs.
-- Cost ceilings, rate limits, retry policy, timeout policy, and run abort controls.
+- Opt-in local command for text-only runs.
+- Timeout policy, model availability checks, retry policy, and run abort controls.
 - Saved raw outputs under ignored local paths.
 - Reviewed normalized outputs suitable for existing scoring and adjudication.
 
 Acceptance criteria:
 
-- The deterministic gate does not call providers.
-- A live run can be reproduced from saved normalized outputs.
-- Run metadata captures provider, model, parameters, timestamp, case-set version, and prompt template version.
+- The deterministic gate does not call local models.
+- A local run can be reproduced from saved normalized outputs.
+- Run metadata captures runtime, model, parameters, timestamp, case-set version, and prompt template version.
 
-### M58: Reproducible Live Run Ledger
+### M58: Reproducible Local Run Ledger
 
-Make live evidence auditable.
+Make local model evidence auditable.
 
 Status: planned.
 
 Deliverables:
 
-- Run ledger schema for live provider runs.
+- Run ledger schema for local model runs.
 - Hashes for case set, prompt template, adapter version, normalized output file, and scorer version.
-- Public-safe run manifest for published benchmark runs.
+- Public-safe run manifest for published local benchmark runs.
 
 Acceptance criteria:
 
-- A report can trace every scored live output to a run ledger entry.
+- A report can trace every scored local output to a run ledger entry.
 - Ledger entries do not expose secrets or private prompts.
-- Re-running from saved outputs does not require provider credentials.
+- Re-running from saved outputs does not require model runtime access.
 
-### M59: Public Ranking Methodology
+### M59: Local Ranking Methodology
 
-Define how models are ranked without overclaiming.
+Define how local/open-weight models are ranked without overclaiming.
 
 Status: planned.
 
@@ -775,15 +793,15 @@ Acceptance criteria:
 - Rankings distinguish heuristic score, adjudicated score, and unresolved review count.
 - A model cannot be ranked from private-only evidence.
 
-### M60: Public Benchmark Report V1
+### M60: Local/Open-Weight Benchmark Report V1
 
-Publish the first public-safe live cloud model benchmark report.
+Publish the first public-safe local/open-weight benchmark report.
 
 Status: planned.
 
 Deliverables:
 
-- Live public benchmark JSON snapshot.
+- Local public benchmark JSON snapshot.
 - Markdown benchmark report.
 - Model ranking table.
 - Methodology and limitations section.
@@ -791,8 +809,9 @@ Deliverables:
 
 Acceptance criteria:
 
-- At least two real provider/model targets are included.
+- At least two real local model targets or one real local model plus one committed manual public-safe target are included.
 - All ranked evidence is public-safe and traceable.
+- The report avoids cloud-model and production-policy proof claims.
 - The full deterministic local gate passes without provider credentials.
 
 ### M61-M65: Agent Runtime And Tool-Boundary Benchmark

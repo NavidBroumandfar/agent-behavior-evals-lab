@@ -43,6 +43,7 @@ HISTORICAL_TREND_JSON_PATH = REPO_ROOT / "reports/comparisons/historical_trend_s
 HISTORICAL_TREND_REPORT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_report.md"
 RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
 RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
+BENCHMARK_CLAIM_CHARTER_PATH = REPO_ROOT / "benchmarks/evidence_class_charter.json"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -369,6 +370,10 @@ CHECKS = [
         ["python3", "src/validate_report_manifest.py"],
     ),
     (
+        "benchmark claim charter validation",
+        ["python3", "src/validate_benchmark_claim_charter.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -404,6 +409,7 @@ CHECKS = [
             "src/validate_adjudications.py",
             "src/validate_adjudication_manifest.py",
             "src/validate_report_manifest.py",
+            "src/validate_benchmark_claim_charter.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -553,6 +559,8 @@ def main() -> int:
             if name == "release notes summary generation":
                 verify_report_exists(RELEASE_NOTES_JSON_PATH)
                 verify_report_exists(RELEASE_NOTES_REPORT_PATH)
+            if name == "benchmark claim charter validation":
+                verify_report_exists(BENCHMARK_CLAIM_CHARTER_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
