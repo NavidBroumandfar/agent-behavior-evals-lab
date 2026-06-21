@@ -1,0 +1,76 @@
+{
+  "audit_report_controls": {
+    "aggregate_export_default": false,
+    "local_only_by_default": true,
+    "private_audit_report_root": "reports/private/",
+    "private_audit_reports_gitignored": true,
+    "public_leaderboard_eligible": false,
+    "reports_generated_from_private_evidence_marked_private_audit": true,
+    "required_report_label": "private_audit_report"
+  },
+  "boundaries": [
+    "The deterministic gate validates fake metadata only.",
+    "Raw private evidence and private audit reports stay under ignored local paths by default.",
+    "M66 does not promote private records; promotion is blocked until explicit redaction metadata and a future M67 promotion pipeline exist.",
+    "Private audit evidence is not public benchmark or leaderboard evidence.",
+    "No credentials, private logs, private workspace paths, real customer data, live execution, provider calls, or external actions are introduced."
+  ],
+  "evidence_class": "private_audit_metadata_public_safe",
+  "generated_at": "2026-06-21T00:00:00Z",
+  "manifest_id": "m66_private_evidence_vault",
+  "promotion_controls": {
+    "original_private_artifact_remains_local_only": true,
+    "private_evidence_public_ranking_eligible": false,
+    "promoted_fixture_requires_public_safety_assertions": true,
+    "promotion_command_status": "validation_only_promotions_blocked_until_m67",
+    "redaction_metadata_required": true,
+    "refused_without_redaction_metadata": true,
+    "reviewer_signoff_required": true
+  },
+  "public_safe_fake_metadata_only": true,
+  "quality_gate": {
+    "credential_handling_in_quality_gate": false,
+    "deterministic_gate_validates_fake_metadata_only": true,
+    "external_actions_in_quality_gate": false,
+    "live_execution_in_quality_gate": false,
+    "private_evidence_ingestion_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_private_data_read_in_quality_gate": false,
+    "writes_private_data_to_committed_fixtures": false
+  },
+  "record_counts": {
+    "private_record_metadata_count": 2,
+    "promotion_allowed_count": 0,
+    "promotion_candidate_count": 1,
+    "redaction_metadata_present_count": 2
+  },
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "fake_metadata_only": true,
+    "live_execution": false,
+    "private_workspace_paths": false,
+    "public_safe": true,
+    "raw_private_logs": false,
+    "real_customer_data": false
+  },
+  "schema_path": "schemas/private_evidence_manifest.schema.json",
+  "source_manifest_path": "traces/external/private_evidence_vault_manifest.example.json",
+  "storage_plan": {
+    "encryption_plan": "optional_local_file_encryption_or_os_keychain_wrapped_key",
+    "encryption_required_for_real_private_evidence": true,
+    "key_material_committable": false,
+    "secret_material_in_manifest": false,
+    "storage_mode": "ignored_local_directory"
+  },
+  "summary_id": "m66_private_evidence_vault_summary",
+  "vault": {
+    "private_reports_committable": false,
+    "private_reports_root": "reports/private/",
+    "private_reports_root_gitignored": true,
+    "raw_private_records_committable": false,
+    "vault_root": "private_evidence/",
+    "vault_root_gitignored": true
+  }
+}

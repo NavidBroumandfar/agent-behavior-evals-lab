@@ -1,6 +1,6 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.9.0",
+  "version": "0.10.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
@@ -16,7 +16,7 @@
     "No local model execution in deterministic report generation or quality-gate validation.",
     "No live Hermes, OpenClaw, or production-system execution.",
     "No browser, email, messaging, purchase, file mutation, or other external actions.",
-    "No credentials, secrets, network calls, or private runtime integration."
+    "No credentials, secrets, network calls, private evidence ingestion, or private runtime integration."
   ],
   "report_artifacts": [
     {
@@ -1120,6 +1120,50 @@
       }
     },
     {
+      "artifact_id": "private_evidence_vault_summary_snapshot",
+      "label": "Private Evidence Vault Summary JSON",
+      "path": "reports/comparisons/private_evidence_vault_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/private_evidence_vault.py",
+      "input_paths": [
+        ".gitignore",
+        "schemas/private_evidence_manifest.schema.json",
+        "traces/external/private_evidence_vault_manifest.example.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Public-safe M66 boundary snapshot generated from fake private evidence metadata. It validates ignored local vault paths, redaction-required promotion blocking, and private-audit labels without private evidence ingestion.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "private_evidence_vault_summary_report",
+      "label": "Private Evidence Vault Summary Report",
+      "path": "reports/comparisons/private_evidence_vault_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/private_evidence_vault.py",
+      "input_paths": [
+        "reports/comparisons/private_evidence_vault_summary.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/private_evidence_vault_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M66 private evidence vault boundary summary. It is public-safe fake metadata only, not a private audit report.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -1159,7 +1203,8 @@
         "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
         "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
         "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
-        "docs/milestones/m65-production-policy-scenario-packs-closeout.md"
+        "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
+        "docs/milestones/m66-private-evidence-vault-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1214,7 +1259,8 @@
         "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
         "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
         "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
-        "docs/milestones/m65-production-policy-scenario-packs-closeout.md"
+        "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
+        "docs/milestones/m66-private-evidence-vault-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

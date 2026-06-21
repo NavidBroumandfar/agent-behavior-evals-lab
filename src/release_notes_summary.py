@@ -55,6 +55,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
     REPO_ROOT / "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
     REPO_ROOT / "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
+    REPO_ROOT / "docs/milestones/m66-private-evidence-vault-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -378,6 +379,13 @@ def release_highlights(
             {
                 "area": "Production-Policy Scenarios",
                 "summary": "Added public-safe scenario packs for database changes, deployments, credentials, payments, external messaging, and customer data without production-system access or production-proof claims.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M66" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Private Evidence Vault",
+                "summary": "Added a metadata-only private evidence vault boundary with ignored local storage roots, redaction-required promotion blocking, and private-audit report labels.",
             }
         )
     return highlights

@@ -12,3 +12,5 @@ traces/external/*.private.jsonl
 traces/external/*.reviewed.jsonl
 reports/comparisons/*.local.md
 *.manifest_entry.local.json
+private_evidence/
+reports/private/

@@ -1,0 +1,559 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Private Evidence Vault Manifest",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "manifest_id",
+    "version",
+    "created_at",
+    "status",
+    "evidence_class",
+    "vault_controls",
+    "storage_plan",
+    "promotion_controls",
+    "audit_report_controls",
+    "quality_gate",
+    "safety_assertions",
+    "private_records"
+  ],
+  "properties": {
+    "manifest_id": {
+      "type": "string",
+      "const": "m66_private_evidence_vault"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "public_safe_private_vault_metadata"
+      ]
+    },
+    "evidence_class": {
+      "type": "string",
+      "enum": [
+        "private_audit_metadata_public_safe"
+      ]
+    },
+    "vault_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "vault_root",
+        "private_reports_root",
+        "gitignore_path",
+        "vault_root_gitignored",
+        "private_reports_root_gitignored",
+        "raw_private_records_committable",
+        "private_reports_committable",
+        "public_derivatives_committable_after_redaction"
+      ],
+      "properties": {
+        "vault_root": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "private_reports_root": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "gitignore_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "vault_root_gitignored": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_reports_root_gitignored": {
+          "type": "boolean",
+          "const": true
+        },
+        "raw_private_records_committable": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_reports_committable": {
+          "type": "boolean",
+          "const": false
+        },
+        "public_derivatives_committable_after_redaction": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "storage_plan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "storage_mode",
+        "encryption_plan",
+        "encryption_required_for_real_private_evidence",
+        "key_material_committable",
+        "secret_material_in_manifest",
+        "credentials_required_for_fake_metadata",
+        "live_secret_handling_in_quality_gate",
+        "notes"
+      ],
+      "properties": {
+        "storage_mode": {
+          "type": "string",
+          "enum": [
+            "ignored_local_directory"
+          ]
+        },
+        "encryption_plan": {
+          "type": "string",
+          "enum": [
+            "optional_local_file_encryption_or_os_keychain_wrapped_key"
+          ]
+        },
+        "encryption_required_for_real_private_evidence": {
+          "type": "boolean",
+          "const": true
+        },
+        "key_material_committable": {
+          "type": "boolean",
+          "const": false
+        },
+        "secret_material_in_manifest": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required_for_fake_metadata": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_secret_handling_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "notes": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "promotion_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_command_status",
+        "redaction_metadata_required",
+        "reviewer_signoff_required",
+        "original_private_artifact_remains_local_only",
+        "promoted_fixture_requires_public_safety_assertions",
+        "private_evidence_public_ranking_eligible",
+        "refused_without_redaction_metadata"
+      ],
+      "properties": {
+        "promotion_command_status": {
+          "type": "string",
+          "enum": [
+            "validation_only_promotions_blocked_until_m67"
+          ]
+        },
+        "redaction_metadata_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "reviewer_signoff_required": {
+          "type": "boolean",
+          "const": true
+        },
+        "original_private_artifact_remains_local_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "promoted_fixture_requires_public_safety_assertions": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_evidence_public_ranking_eligible": {
+          "type": "boolean",
+          "const": false
+        },
+        "refused_without_redaction_metadata": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "audit_report_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "private_audit_report_root",
+        "required_report_label",
+        "reports_generated_from_private_evidence_marked_private_audit",
+        "private_audit_reports_gitignored",
+        "public_leaderboard_eligible",
+        "aggregate_export_default",
+        "local_only_by_default"
+      ],
+      "properties": {
+        "private_audit_report_root": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "required_report_label": {
+          "type": "string",
+          "enum": [
+            "private_audit_report"
+          ]
+        },
+        "reports_generated_from_private_evidence_marked_private_audit": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_audit_reports_gitignored": {
+          "type": "boolean",
+          "const": true
+        },
+        "public_leaderboard_eligible": {
+          "type": "boolean",
+          "const": false
+        },
+        "aggregate_export_default": {
+          "type": "boolean",
+          "const": false
+        },
+        "local_only_by_default": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_gate_validates_fake_metadata_only",
+        "private_evidence_ingestion_in_quality_gate",
+        "raw_private_data_read_in_quality_gate",
+        "live_execution_in_quality_gate",
+        "credential_handling_in_quality_gate",
+        "provider_calls_in_quality_gate",
+        "external_actions_in_quality_gate",
+        "writes_private_data_to_committed_fixtures"
+      ],
+      "properties": {
+        "deterministic_gate_validates_fake_metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_evidence_ingestion_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_data_read_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_execution_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "credential_handling_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "provider_calls_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "writes_private_data_to_committed_fixtures": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "fake_metadata_only",
+        "contains_private_data",
+        "credentials_required",
+        "raw_private_logs",
+        "private_workspace_paths",
+        "real_customer_data",
+        "live_execution",
+        "external_actions"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "fake_metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_logs": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_workspace_paths": {
+          "type": "boolean",
+          "const": false
+        },
+        "real_customer_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "private_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id",
+          "source_runtime",
+          "source_kind",
+          "declared_evidence_class",
+          "metadata_classification",
+          "artifact_data_classification",
+          "artifact_path",
+          "artifact_path_gitignored",
+          "artifact_content_in_manifest",
+          "retention_class",
+          "access_boundary",
+          "consent_or_authorization",
+          "promotion_candidate",
+          "promotion_status",
+          "public_ranking_eligible",
+          "private_audit_report_label",
+          "redaction_metadata",
+          "safety_assertions"
+        ],
+        "properties": {
+          "record_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "source_runtime": {
+            "type": "string",
+            "enum": [
+              "hermes",
+              "openclaw",
+              "agent_runtime",
+              "manual_private_sample"
+            ]
+          },
+          "source_kind": {
+            "type": "string",
+            "enum": [
+              "runtime_trace",
+              "tool_summary",
+              "reviewer_notes"
+            ]
+          },
+          "declared_evidence_class": {
+            "type": "string",
+            "enum": [
+              "private_audit"
+            ]
+          },
+          "metadata_classification": {
+            "type": "string",
+            "enum": [
+              "public_safe_fake_private_metadata"
+            ]
+          },
+          "artifact_data_classification": {
+            "type": "string",
+            "enum": [
+              "private_runtime_evidence_local_only"
+            ]
+          },
+          "artifact_path": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "artifact_path_gitignored": {
+            "type": "boolean",
+            "const": true
+          },
+          "artifact_content_in_manifest": {
+            "type": "boolean",
+            "const": false
+          },
+          "retention_class": {
+            "type": "string",
+            "enum": [
+              "delete_after_review",
+              "retain_local_until_manually_deleted"
+            ]
+          },
+          "access_boundary": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "consent_or_authorization": {
+            "type": "string",
+            "enum": [
+              "required_before_ingestion"
+            ]
+          },
+          "promotion_candidate": {
+            "type": "boolean"
+          },
+          "promotion_status": {
+            "type": "string",
+            "enum": [
+              "not_requested",
+              "blocked_until_redacted",
+              "redaction_metadata_recorded_not_promoted"
+            ]
+          },
+          "public_ranking_eligible": {
+            "type": "boolean",
+            "const": false
+          },
+          "private_audit_report_label": {
+            "type": "string",
+            "enum": [
+              "private_audit_report"
+            ]
+          },
+          "redaction_metadata": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "metadata_present",
+              "redaction_status",
+              "redaction_notes_path",
+              "public_safe_derivative_path",
+              "reviewer_signoff",
+              "reviewer_id",
+              "public_safety_assertions_present",
+              "promotion_allowed"
+            ],
+            "properties": {
+              "metadata_present": {
+                "type": "boolean"
+              },
+              "redaction_status": {
+                "type": "string",
+                "enum": [
+                  "not_started",
+                  "redaction_notes_stubbed",
+                  "reviewed_public_safe"
+                ]
+              },
+              "redaction_notes_path": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": ".*\\S.*"
+              },
+              "public_safe_derivative_path": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": ".*\\S.*"
+              },
+              "reviewer_signoff": {
+                "type": "boolean"
+              },
+              "reviewer_id": {
+                "type": "string",
+                "minLength": 1,
+                "pattern": ".*\\S.*"
+              },
+              "public_safety_assertions_present": {
+                "type": "boolean"
+              },
+              "promotion_allowed": {
+                "type": "boolean"
+              }
+            }
+          },
+          "safety_assertions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "public_safe_metadata",
+              "raw_private_content_in_manifest",
+              "credentials_in_manifest",
+              "raw_private_log_in_manifest",
+              "private_workspace_path_in_manifest",
+              "real_customer_data_in_manifest",
+              "external_action_in_manifest"
+            ],
+            "properties": {
+              "public_safe_metadata": {
+                "type": "boolean",
+                "const": true
+              },
+              "raw_private_content_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "credentials_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "raw_private_log_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "private_workspace_path_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "real_customer_data_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "external_action_in_manifest": {
+                "type": "boolean",
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

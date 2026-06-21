@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M65 complete / review-ready
+Status: Active evidence-first roadmap; M54-M66 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -421,7 +421,16 @@ Acceptance criteria:
 
 ### M66: Private Evidence Vault
 
-Support local private evidence ingestion.
+Define local private evidence ingestion boundaries.
+
+Status: complete / public-safe vault-boundary review-ready. See `docs/milestones/m66-private-evidence-vault-closeout.md`.
+
+Implementation note:
+
+- M66 adds `schemas/private_evidence_manifest.schema.json`, `traces/external/private_evidence_vault_manifest.example.json`, `src/private_evidence_vault.py`, and public-safe boundary summaries at `reports/comparisons/private_evidence_vault_summary.json` and `reports/comparisons/private_evidence_vault_summary.md`.
+- The committed manifest uses fake public-safe metadata only. It defines ignored local storage roots, optional local encryption or OS-keychain storage-plan metadata, redaction-required promotion blocking, and private-audit report labels.
+- `private_evidence/` and `reports/private/` are ignored by Git by default.
+- The deterministic gate validates schema, fake metadata, ignored-path controls, promotion blocking, and report labels only. It does not ingest private evidence, read raw private data, handle credentials or encryption keys, execute agents, call providers, use browser/email/network tools, or perform external actions.
 
 Deliverables:
 

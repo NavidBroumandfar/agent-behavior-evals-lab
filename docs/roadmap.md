@@ -893,11 +893,17 @@ Success signal:
 
 Support private production evidence while keeping it out of public fixtures and public rankings by default.
 
-Status: planned.
+Status: active; M66 complete / review-ready, M67-M69 planned. See `docs/milestones/m66-private-evidence-vault-closeout.md`.
+
+Implementation note:
+
+- M66 adds a metadata-only private evidence vault contract with `schemas/private_evidence_manifest.schema.json`, `traces/external/private_evidence_vault_manifest.example.json`, `src/private_evidence_vault.py`, and public-safe boundary summaries.
+- `private_evidence/` and `reports/private/` are ignored by Git by default.
+- The committed M66 records are fake public-safe metadata only. The deterministic gate validates ignored-path controls, optional local encryption or OS-keychain storage-plan metadata, redaction-required promotion blocking, and private-audit report labels without ingesting private evidence or reading raw private data.
 
 Milestones:
 
-- M66 Private Evidence Vault.
+- M66 Private Evidence Vault. Complete / public-safe vault-boundary review-ready.
 - M67 Redaction And Promotion Pipeline.
 - M68 Private Audit Reports.
 - M69 Retention, Consent, And Access Controls.

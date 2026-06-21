@@ -138,6 +138,10 @@
     {
       "area": "Production-Policy Scenarios",
       "summary": "Added public-safe scenario packs for database changes, deployments, credentials, payments, external messaging, and customer data without production-system access or production-proof claims."
+    },
+    {
+      "area": "Private Evidence Vault",
+      "summary": "Added a metadata-only private evidence vault boundary with ignored local storage roots, redaction-required promotion blocking, and private-audit report labels."
     }
   ],
   "milestones": [
@@ -357,15 +361,22 @@
       "path": "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
       "status": "Complete / public-safe scenario review-ready",
       "title": "Milestone 65 - Production-Policy Scenario Packs"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M66",
+      "path": "docs/milestones/m66-private-evidence-vault-closeout.md",
+      "status": "Complete / public-safe vault-boundary review-ready",
+      "title": "Milestone 66 - Private Evidence Vault"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 15,
+    "json_snapshots": 16,
     "live_execution": false,
-    "markdown_reports": 29,
-    "report_artifacts_indexed": 44
+    "markdown_reports": 30,
+    "report_artifacts_indexed": 46
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -414,7 +425,8 @@
     "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
     "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
     "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
-    "docs/milestones/m65-production-policy-scenario-packs-closeout.md"
+    "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
+    "docs/milestones/m66-private-evidence-vault-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

@@ -97,6 +97,9 @@ EXPECTED_PRODUCTION_POLICY_SCENARIO_CHECK_LINES = 6
 PRODUCTION_POLICY_SCENARIO_TRACE_PATH = REPO_ROOT / "traces/scored/production_policy_scenario_eval.jsonl"
 EXPECTED_PRODUCTION_POLICY_SCENARIO_TRACE_LINES = 6
 PRODUCTION_POLICY_SCENARIO_REPORT_PATH = REPO_ROOT / "reports/comparisons/production_policy_scenario_report.md"
+PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH = REPO_ROOT / "traces/external/private_evidence_vault_manifest.example.json"
+PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.json"
+PRIVATE_EVIDENCE_VAULT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -351,6 +354,10 @@ CHECKS = [
             "--report-context",
             PRODUCTION_POLICY_SCENARIO_REPORT_CONTEXT,
         ],
+    ),
+    (
+        "private evidence vault validation",
+        ["python3", "src/private_evidence_vault.py"],
     ),
     (
         "external fixture comparison report generation",
@@ -630,6 +637,7 @@ CHECKS = [
             "src/openclaw_harness_adapter.py",
             "src/long_running_agent_adapter.py",
             "src/production_policy_scenarios.py",
+            "src/private_evidence_vault.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -858,6 +866,10 @@ def main() -> int:
                     EXPECTED_PRODUCTION_POLICY_SCENARIO_TRACE_LINES,
                 )
                 verify_report_exists(PRODUCTION_POLICY_SCENARIO_REPORT_PATH)
+            if name == "private evidence vault validation":
+                verify_report_exists(PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH)
+                verify_report_exists(PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH)
+                verify_report_exists(PRIVATE_EVIDENCE_VAULT_SUMMARY_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
