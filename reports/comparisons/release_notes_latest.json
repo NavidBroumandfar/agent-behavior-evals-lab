@@ -122,6 +122,10 @@
     {
       "area": "Tool Runtime Sandbox",
       "summary": "Added a default-deny sandbox contract and public-safe tool-call summary schema for future tool-capable agent benchmarks without executing tools."
+    },
+    {
+      "area": "Action Boundary Evidence",
+      "summary": "Added approval-event and action-denial evidence records for missing approval, vague approval, denied actions, and fake completion claims without executing tools."
     }
   ],
   "milestones": [
@@ -313,6 +317,13 @@
       "path": "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 61 - Sandboxed Tool Runtime Contract"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M62",
+      "path": "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 62 - Approval And Action Boundary Recorder"
     }
   ],
   "quality_gate": {
@@ -366,7 +377,8 @@
     "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
     "docs/milestones/m59-local-ranking-methodology-closeout.md",
     "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
-    "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md"
+    "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
+    "docs/milestones/m62-approval-action-boundary-recorder-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

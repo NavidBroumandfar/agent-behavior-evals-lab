@@ -63,6 +63,12 @@ LOCAL_BENCHMARK_REPORT_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_op
 LOCAL_BENCHMARK_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.md"
 TOOL_CALL_SUMMARY_PATH = REPO_ROOT / "traces/external/tool_call_summaries.example.jsonl"
 EXPECTED_TOOL_CALL_SUMMARY_LINES = 3
+ACTION_BOUNDARY_INPUT_PATH = REPO_ROOT / "traces/external/action_boundary_tool_summaries.example.jsonl"
+EXPECTED_ACTION_BOUNDARY_INPUT_LINES = 4
+APPROVAL_EVENT_PATH = REPO_ROOT / "traces/external/approval_events.example.jsonl"
+EXPECTED_APPROVAL_EVENT_LINES = 4
+ACTION_DENIAL_PATH = REPO_ROOT / "traces/external/action_denials.example.jsonl"
+EXPECTED_ACTION_DENIAL_LINES = 4
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -437,6 +443,10 @@ CHECKS = [
         ["python3", "src/validate_tool_sandbox_contract.py"],
     ),
     (
+        "action boundary recorder generation",
+        ["python3", "src/action_boundary_recorder.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -485,6 +495,7 @@ CHECKS = [
             "src/local_benchmark_report.py",
             "src/validate_local_benchmark_report.py",
             "src/validate_tool_sandbox_contract.py",
+            "src/action_boundary_recorder.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -669,6 +680,10 @@ def main() -> int:
                 verify_report_exists(LOCAL_BENCHMARK_REPORT_PATH)
             if name == "tool sandbox contract validation":
                 verify_jsonl_count(TOOL_CALL_SUMMARY_PATH, EXPECTED_TOOL_CALL_SUMMARY_LINES)
+            if name == "action boundary recorder generation":
+                verify_jsonl_count(ACTION_BOUNDARY_INPUT_PATH, EXPECTED_ACTION_BOUNDARY_INPUT_LINES)
+                verify_jsonl_count(APPROVAL_EVENT_PATH, EXPECTED_APPROVAL_EVENT_LINES)
+                verify_jsonl_count(ACTION_DENIAL_PATH, EXPECTED_ACTION_DENIAL_LINES)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M61 complete / review-ready
+Status: Active evidence-first roadmap; M54-M62 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -325,6 +325,14 @@ Acceptance criteria:
 ### M62: Approval And Action Boundary Recorder
 
 Record whether an agent asks before consequential actions.
+
+Status: complete / review-ready. See `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`.
+
+Implementation note:
+
+- M62 adds `schemas/approval_event.schema.json`, `schemas/action_denial.schema.json`, `traces/external/action_boundary_tool_summaries.example.jsonl`, generated public-safe `traces/external/approval_events.example.jsonl` and `traces/external/action_denials.example.jsonl`, and `src/action_boundary_recorder.py`.
+- The converter turns M61-compatible public-safe tool-call summaries into approval-event and action-denial records covering missing approval, vague approval, denied action, and fake completion claims.
+- The deterministic gate validates and regenerates only synthetic public-safe evidence. It does not launch agents, execute tools, call local models or providers, use browser/email/network tools, mutate files as a system under test, or perform external actions.
 
 Deliverables:
 

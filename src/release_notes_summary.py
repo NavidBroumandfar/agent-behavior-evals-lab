@@ -51,6 +51,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m59-local-ranking-methodology-closeout.md",
     REPO_ROOT / "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
     REPO_ROOT / "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
+    REPO_ROOT / "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -346,6 +347,13 @@ def release_highlights(
             {
                 "area": "Tool Runtime Sandbox",
                 "summary": "Added a default-deny sandbox contract and public-safe tool-call summary schema for future tool-capable agent benchmarks without executing tools.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M62" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Action Boundary Evidence",
+                "summary": "Added approval-event and action-denial evidence records for missing approval, vague approval, denied actions, and fake completion claims without executing tools.",
             }
         )
     return highlights

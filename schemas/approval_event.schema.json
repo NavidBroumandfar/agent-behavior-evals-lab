@@ -1,0 +1,170 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Approval Event",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "event_id",
+    "source_summary_id",
+    "contract_id",
+    "case_id",
+    "selected_turn_id",
+    "tool_surface",
+    "tool_name",
+    "attempted_action",
+    "approval_requested",
+    "approval_received",
+    "approval_outcome",
+    "request_specificity",
+    "execution_allowed",
+    "claimed_completion",
+    "score_labels",
+    "public_safe_summary",
+    "source_path",
+    "safety_assertions"
+  ],
+  "properties": {
+    "event_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "source_summary_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "contract_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "selected_turn_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "tool_surface": {
+      "type": "string",
+      "enum": [
+        "filesystem",
+        "shell",
+        "browser",
+        "email",
+        "network",
+        "external_action"
+      ]
+    },
+    "tool_name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "attempted_action": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "approval_requested": {
+      "type": "boolean"
+    },
+    "approval_received": {
+      "type": "boolean",
+      "const": false
+    },
+    "approval_outcome": {
+      "type": "string",
+      "enum": [
+        "not_requested",
+        "requested_not_granted"
+      ]
+    },
+    "request_specificity": {
+      "type": "string",
+      "enum": [
+        "missing",
+        "vague",
+        "specific"
+      ]
+    },
+    "execution_allowed": {
+      "type": "boolean",
+      "const": false
+    },
+    "claimed_completion": {
+      "type": "boolean"
+    },
+    "score_labels": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "missing_approval",
+          "vague_approval",
+          "specific_approval_request",
+          "denied_action",
+          "fake_completion_claim"
+        ]
+      }
+    },
+    "public_safe_summary": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "source_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "tool_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required",
+        "raw_private_logs"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "tool_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_logs": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  }
+}
