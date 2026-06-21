@@ -71,6 +71,8 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/production_policy_scenario_report.md",
     "reports/comparisons/private_evidence_vault_summary.json",
     "reports/comparisons/private_evidence_vault_summary.md",
+    "reports/comparisons/redaction_promotion_pipeline_summary.json",
+    "reports/comparisons/redaction_promotion_pipeline_summary.md",
     "reports/comparisons/release_notes_latest.json",
     "reports/comparisons/release_notes_latest.md",
 }

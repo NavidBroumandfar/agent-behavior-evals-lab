@@ -1,0 +1,63 @@
+{
+  "boundaries": [
+    "Original private artifacts remain under ignored local paths and are not read by the deterministic gate.",
+    "Promotion requires reviewer signoff, redaction notes, and public-safety assertions.",
+    "Promoted outputs validate as public-safe adapter-output records.",
+    "Promoted private evidence is not public ranking evidence by default.",
+    "No credentials, account data, private paths, hidden prompts, raw runtime logs, real customer data, live execution, provider calls, or external actions are introduced."
+  ],
+  "candidate_count": 1,
+  "generated_at": "2026-06-21T00:00:00Z",
+  "pipeline_id": "m67_redaction_promotion_pipeline",
+  "private_artifacts_read": false,
+  "private_evidence_ingested": false,
+  "promoted_output_path": "traces/external/promoted_private_evidence_outputs.example.jsonl",
+  "promoted_record_count": 1,
+  "promotion_decisions": [
+    "promote_public_safe_derivative"
+  ],
+  "public_ranking_eligible": false,
+  "quality_gate": {
+    "credential_handling_in_quality_gate": false,
+    "deterministic_gate_validates_public_safe_derivatives_only": true,
+    "external_actions_in_quality_gate": false,
+    "live_execution_in_quality_gate": false,
+    "private_evidence_ingestion_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_private_data_read_in_quality_gate": false,
+    "writes_private_data_to_committed_fixtures": false
+  },
+  "redaction_checklist": {
+    "no_credentials_retained": true,
+    "no_hidden_prompts_retained": true,
+    "no_private_paths_retained": true,
+    "no_raw_private_values_retained": true,
+    "original_artifact_local_only": true,
+    "promoted_output_validates": true,
+    "public_safety_assertions_present": true,
+    "redaction_note_present": true,
+    "reviewer_signoff_present": true,
+    "source_record_in_private_vault": true
+  },
+  "redaction_note_count": 1,
+  "redaction_notes_path": "traces/external/redaction_notes.example.jsonl",
+  "reviewer_signoff_count": 1,
+  "safety_assertions": {
+    "account_data": false,
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "hidden_prompts": false,
+    "live_execution": false,
+    "private_workspace_paths": false,
+    "promoted_derivatives_only": true,
+    "public_safe": true,
+    "raw_private_logs": false,
+    "real_customer_data": false,
+    "source_private_metadata_only": true
+  },
+  "source_candidate_path": "traces/external/redaction_promotion_candidates.example.json",
+  "source_vault_manifest_path": "traces/external/private_evidence_vault_manifest.example.json",
+  "status": "public_safe_promotion_fixture",
+  "summary_id": "m67_redaction_promotion_pipeline_summary"
+}

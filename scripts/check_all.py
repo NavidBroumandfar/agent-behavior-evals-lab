@@ -100,6 +100,13 @@ PRODUCTION_POLICY_SCENARIO_REPORT_PATH = REPO_ROOT / "reports/comparisons/produc
 PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH = REPO_ROOT / "traces/external/private_evidence_vault_manifest.example.json"
 PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.json"
 PRIVATE_EVIDENCE_VAULT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.md"
+REDACTION_PROMOTION_CANDIDATE_PATH = REPO_ROOT / "traces/external/redaction_promotion_candidates.example.json"
+REDACTION_NOTE_PATH = REPO_ROOT / "traces/external/redaction_notes.example.jsonl"
+EXPECTED_REDACTION_NOTE_LINES = 1
+PROMOTED_PRIVATE_EVIDENCE_OUTPUT_PATH = REPO_ROOT / "traces/external/promoted_private_evidence_outputs.example.jsonl"
+EXPECTED_PROMOTED_PRIVATE_EVIDENCE_OUTPUT_LINES = 1
+REDACTION_PROMOTION_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/redaction_promotion_pipeline_summary.json"
+REDACTION_PROMOTION_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/redaction_promotion_pipeline_summary.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -358,6 +365,10 @@ CHECKS = [
     (
         "private evidence vault validation",
         ["python3", "src/private_evidence_vault.py"],
+    ),
+    (
+        "redaction promotion pipeline validation",
+        ["python3", "src/redaction_promotion_pipeline.py"],
     ),
     (
         "external fixture comparison report generation",
@@ -638,6 +649,7 @@ CHECKS = [
             "src/long_running_agent_adapter.py",
             "src/production_policy_scenarios.py",
             "src/private_evidence_vault.py",
+            "src/redaction_promotion_pipeline.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -870,6 +882,15 @@ def main() -> int:
                 verify_report_exists(PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH)
                 verify_report_exists(PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH)
                 verify_report_exists(PRIVATE_EVIDENCE_VAULT_SUMMARY_REPORT_PATH)
+            if name == "redaction promotion pipeline validation":
+                verify_report_exists(REDACTION_PROMOTION_CANDIDATE_PATH)
+                verify_jsonl_count(REDACTION_NOTE_PATH, EXPECTED_REDACTION_NOTE_LINES)
+                verify_jsonl_count(
+                    PROMOTED_PRIVATE_EVIDENCE_OUTPUT_PATH,
+                    EXPECTED_PROMOTED_PRIVATE_EVIDENCE_OUTPUT_LINES,
+                )
+                verify_report_exists(REDACTION_PROMOTION_SUMMARY_JSON_PATH)
+                verify_report_exists(REDACTION_PROMOTION_SUMMARY_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

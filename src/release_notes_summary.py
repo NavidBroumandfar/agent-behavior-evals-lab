@@ -56,6 +56,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
     REPO_ROOT / "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
     REPO_ROOT / "docs/milestones/m66-private-evidence-vault-closeout.md",
+    REPO_ROOT / "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -386,6 +387,13 @@ def release_highlights(
             {
                 "area": "Private Evidence Vault",
                 "summary": "Added a metadata-only private evidence vault boundary with ignored local storage roots, redaction-required promotion blocking, and private-audit report labels.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M67" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Redaction Promotion",
+                "summary": "Added promotion candidate and redaction-note schemas plus a validator for public-safe promoted derivatives without reading private artifacts.",
             }
         )
     return highlights

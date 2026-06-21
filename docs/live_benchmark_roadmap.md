@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M66 complete / review-ready
+Status: Active evidence-first roadmap; M54-M67 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -448,6 +448,15 @@ Acceptance criteria:
 ### M67: Redaction And Promotion Pipeline
 
 Turn selected private evidence into public-safe fixtures.
+
+Status: complete / public-safe promotion-pipeline review-ready. See `docs/milestones/m67-redaction-promotion-pipeline-closeout.md`.
+
+Implementation note:
+
+- M67 adds `schemas/promotion_candidate.schema.json`, `schemas/redaction_note.schema.json`, `traces/external/redaction_promotion_candidates.example.json`, `traces/external/redaction_notes.example.jsonl`, `traces/external/promoted_private_evidence_outputs.example.jsonl`, and `src/redaction_promotion_pipeline.py`.
+- The committed example uses fake M66 private-vault metadata and a synthetic public-safe promoted derivative only.
+- Promotion requires redaction notes, reviewer signoff, public-safety assertions, and a public-safe adapter-output derivative.
+- The deterministic gate validates public-safe derivatives only. It does not ingest private evidence, read raw private artifacts, handle credentials, run agents, call providers, or perform external actions.
 
 Deliverables:
 

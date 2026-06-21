@@ -2,7 +2,7 @@
 
 Agent Behavior Evals Lab is a local evaluation harness for testing AI assistants and agentic systems against policy-defined behavior expectations. The lab is the evaluator: it defines policies, cases, target profiles, scoring rules, traces, and reports that can be reused across mock clients, real model adapters, local models, saved transcripts, and future agent integrations.
 
-OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. Private evidence vault artifacts are metadata-only guardrails, not private audit results. This repository is intentionally not tied to one runtime, and the current deterministic gate does not execute OpenClaw, Hermes, production systems, private memory, private evidence ingestion, or live agent runtimes.
+OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results. This repository is intentionally not tied to one runtime, and the current deterministic gate does not execute OpenClaw, Hermes, production systems, private memory, private evidence ingestion, or live agent runtimes.
 
 ## Milestone 1 Status
 
@@ -76,6 +76,7 @@ src/
   long_running_agent_adapter.py # M64 public-safe Hermes-style session fixture generator
   production_policy_scenarios.py # M65 public-safe production-policy scenario fixture generator
   private_evidence_vault.py     # M66 public-safe private evidence vault boundary validator
+  redaction_promotion_pipeline.py # M67 public-safe redaction/promotion validator
   validate_adapter_outputs.py   # Normalized adapter-output fixture validator
   import_adapter_outputs.py     # Normalized adapter-output fixture importer
   dry_run_adapter.py            # Deterministic no-network adapter contract fixture producer
@@ -109,6 +110,9 @@ traces/
     production_policy_scenario_transcripts.example.jsonl # Generated production-policy scenario transcripts
     production_policy_scenario_checks.example.jsonl # Generated production-policy checks
     private_evidence_vault_manifest.example.json # Fake metadata-only private evidence vault manifest
+    redaction_promotion_candidates.example.json # Public-safe promotion candidate manifest
+    redaction_notes.example.jsonl # Public-safe diffable redaction notes
+    promoted_private_evidence_outputs.example.jsonl # Public-safe promoted derivative fixture
     adapter_outputs.example.jsonl # Public-safe normalized adapter-output fixture
     dry_run_adapter_outputs.jsonl # Generated dry-run adapter-output fixture
     fixture_manifest.json       # Controlled external fixture source index
@@ -138,6 +142,8 @@ reports/
     production_policy_scenario_report.md # Generated production-policy scenario report
     private_evidence_vault_summary.md # Generated M66 public-safe vault boundary summary
     private_evidence_vault_summary.json # Generated M66 public-safe vault boundary snapshot
+    redaction_promotion_pipeline_summary.md # Generated M67 public-safe promotion summary
+    redaction_promotion_pipeline_summary.json # Generated M67 public-safe promotion snapshot
     saved_transcript_replay_report.md # Generated transcript replay report
     external_fixture_comparison_report.md # Generated controlled external fixture comparison
     adjudication_summary_report.md # Generated reviewer decision summary

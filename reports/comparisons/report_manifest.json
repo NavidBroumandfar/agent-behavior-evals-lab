@@ -1,6 +1,6 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.10.0",
+  "version": "0.11.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
@@ -1164,6 +1164,53 @@
       }
     },
     {
+      "artifact_id": "redaction_promotion_pipeline_summary_snapshot",
+      "label": "Redaction Promotion Pipeline Summary JSON",
+      "path": "reports/comparisons/redaction_promotion_pipeline_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/redaction_promotion_pipeline.py",
+      "input_paths": [
+        "schemas/promotion_candidate.schema.json",
+        "schemas/redaction_note.schema.json",
+        "traces/external/private_evidence_vault_manifest.example.json",
+        "traces/external/redaction_promotion_candidates.example.json",
+        "traces/external/redaction_notes.example.jsonl",
+        "traces/external/promoted_private_evidence_outputs.example.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Public-safe M67 summary generated from fake private-vault metadata, redaction notes, and a promoted public-safe derivative. It does not read original private artifacts.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "redaction_promotion_pipeline_summary_report",
+      "label": "Redaction Promotion Pipeline Summary Report",
+      "path": "reports/comparisons/redaction_promotion_pipeline_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/redaction_promotion_pipeline.py",
+      "input_paths": [
+        "reports/comparisons/redaction_promotion_pipeline_summary.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/redaction_promotion_pipeline_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M67 redaction and promotion summary. It validates public-safe promoted derivatives only and is not a private audit report or public ranking claim.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -1204,7 +1251,8 @@
         "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
         "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
         "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
-        "docs/milestones/m66-private-evidence-vault-closeout.md"
+        "docs/milestones/m66-private-evidence-vault-closeout.md",
+        "docs/milestones/m67-redaction-promotion-pipeline-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1260,7 +1308,8 @@
         "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
         "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
         "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
-        "docs/milestones/m66-private-evidence-vault-closeout.md"
+        "docs/milestones/m66-private-evidence-vault-closeout.md",
+        "docs/milestones/m67-redaction-promotion-pipeline-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"
