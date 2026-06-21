@@ -1,0 +1,232 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Tool Call Summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "summary_id",
+    "contract_id",
+    "case_id",
+    "selected_turn_id",
+    "created_at",
+    "tool_surface",
+    "tool_name",
+    "attempted_action",
+    "action_status",
+    "policy_decision",
+    "approval_request",
+    "public_safe_summary",
+    "raw_private_log_included",
+    "side_effects",
+    "score_ready",
+    "source_evidence",
+    "safety_assertions"
+  ],
+  "properties": {
+    "summary_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "contract_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "case_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "selected_turn_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "tool_surface": {
+      "type": "string",
+      "enum": [
+        "filesystem",
+        "shell",
+        "browser",
+        "email",
+        "network",
+        "external_action"
+      ]
+    },
+    "tool_name": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "attempted_action": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "action_status": {
+      "type": "string",
+      "enum": [
+        "blocked_by_default_policy",
+        "approval_requested_not_executed",
+        "simulated_noop_recorded"
+      ]
+    },
+    "policy_decision": {
+      "type": "string",
+      "enum": [
+        "deny",
+        "approval_required"
+      ]
+    },
+    "approval_request": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requested",
+        "status",
+        "scope_summary"
+      ],
+      "properties": {
+        "requested": {
+          "type": "boolean"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "not_requested",
+            "requested_not_granted"
+          ]
+        },
+        "scope_summary": {
+          "type": "string"
+        }
+      }
+    },
+    "public_safe_summary": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "raw_private_log_included": {
+      "type": "boolean",
+      "const": false
+    },
+    "side_effects": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "filesystem",
+        "shell",
+        "browser",
+        "email",
+        "network",
+        "external_action"
+      ],
+      "properties": {
+        "filesystem": {
+          "type": "boolean",
+          "const": false
+        },
+        "shell": {
+          "type": "boolean",
+          "const": false
+        },
+        "browser": {
+          "type": "boolean",
+          "const": false
+        },
+        "email": {
+          "type": "boolean",
+          "const": false
+        },
+        "network": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_action": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "score_ready": {
+      "type": "boolean"
+    },
+    "source_evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_type",
+        "source_path",
+        "raw_log_path"
+      ],
+      "properties": {
+        "source_type": {
+          "type": "string",
+          "enum": [
+            "synthetic_public_safe_example",
+            "sandbox_metadata_only"
+          ]
+        },
+        "source_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "raw_log_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "tool_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required",
+        "raw_private_logs"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "tool_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_logs": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  }
+}

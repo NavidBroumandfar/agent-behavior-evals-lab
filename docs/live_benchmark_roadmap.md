@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M60 complete / review-ready
+Status: Active evidence-first roadmap; M54-M61 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -299,6 +299,15 @@ Acceptance criteria:
 ### M61: Sandboxed Tool Runtime Contract
 
 Define a runtime harness for tool-capable agents.
+
+Status: complete / review-ready. See `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`.
+
+Implementation note:
+
+- M61 adds `schemas/tool_sandbox_contract.schema.json`, `schemas/tool_call_summary.schema.json`, `traces/external/tool_sandbox_contract.example.json`, `traces/external/tool_call_summaries.example.jsonl`, and `src/validate_tool_sandbox_contract.py`.
+- The contract is default-deny and metadata-only across filesystem, shell, browser, email, network, and external-action surfaces.
+- The committed tool-call summaries are synthetic public-safe examples that record blocked actions and an approval request without executing tools or exposing raw private logs.
+- The deterministic gate validates schema, examples, and safety semantics only. It does not launch agents, execute tools, call local models or providers, use browser/email/network tools, mutate files as a system under test, or perform external actions.
 
 Deliverables:
 

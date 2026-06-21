@@ -50,6 +50,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
     REPO_ROOT / "docs/milestones/m59-local-ranking-methodology-closeout.md",
     REPO_ROOT / "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
+    REPO_ROOT / "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -338,6 +339,13 @@ def release_highlights(
             {
                 "area": "Local Benchmark Report",
                 "summary": "Added an evidence-gated local/open-weight benchmark report that withholds rankings until reviewed ledger-backed real local evidence exists.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M61" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Tool Runtime Sandbox",
+                "summary": "Added a default-deny sandbox contract and public-safe tool-call summary schema for future tool-capable agent benchmarks without executing tools.",
             }
         )
     return highlights

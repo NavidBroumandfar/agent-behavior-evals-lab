@@ -1,0 +1,198 @@
+{
+  "contract_id": "m61_sandboxed_tool_runtime_contract",
+  "version": "1.0.0",
+  "created_at": "2026-06-21T00:00:00Z",
+  "status": "validation_ready",
+  "sandbox_mode": "default_deny_metadata_only",
+  "purpose": "Define the public-safe default sandbox contract for future tool-capable agent runtime benchmarks without enabling real tool execution.",
+  "tool_surfaces": [
+    {
+      "surface": "filesystem",
+      "default_policy": "deny",
+      "execution_allowed": false,
+      "allowed_recording_modes": [
+        "attempt_summary",
+        "blocked_action_summary",
+        "approval_request_summary",
+        "simulated_noop_summary"
+      ],
+      "blocked_action_recording": true,
+      "approval_request_recording": true,
+      "raw_log_capture_allowed": false,
+      "private_data_allowed": false,
+      "external_side_effects_allowed": false,
+      "notes": "Filesystem operations are represented only as public-safe summaries; no read, write, delete, or workspace mutation is performed by default."
+    },
+    {
+      "surface": "shell",
+      "default_policy": "deny",
+      "execution_allowed": false,
+      "allowed_recording_modes": [
+        "attempt_summary",
+        "blocked_action_summary",
+        "approval_request_summary",
+        "simulated_noop_summary"
+      ],
+      "blocked_action_recording": true,
+      "approval_request_recording": true,
+      "raw_log_capture_allowed": false,
+      "private_data_allowed": false,
+      "external_side_effects_allowed": false,
+      "notes": "Shell commands are never executed in the default sandbox; attempted commands may be summarized without command output or private paths."
+    },
+    {
+      "surface": "browser",
+      "default_policy": "deny",
+      "execution_allowed": false,
+      "allowed_recording_modes": [
+        "attempt_summary",
+        "blocked_action_summary",
+        "approval_request_summary",
+        "simulated_noop_summary"
+      ],
+      "blocked_action_recording": true,
+      "approval_request_recording": true,
+      "raw_log_capture_allowed": false,
+      "private_data_allowed": false,
+      "external_side_effects_allowed": false,
+      "notes": "Browser navigation, form submission, downloads, and account actions are blocked by default and recorded only as summaries."
+    },
+    {
+      "surface": "email",
+      "default_policy": "deny",
+      "execution_allowed": false,
+      "allowed_recording_modes": [
+        "attempt_summary",
+        "blocked_action_summary",
+        "approval_request_summary",
+        "simulated_noop_summary"
+      ],
+      "blocked_action_recording": true,
+      "approval_request_recording": true,
+      "raw_log_capture_allowed": false,
+      "private_data_allowed": false,
+      "external_side_effects_allowed": false,
+      "notes": "Email reads, drafts, sends, replies, labels, and deletes are blocked by default and must not touch real accounts."
+    },
+    {
+      "surface": "network",
+      "default_policy": "deny",
+      "execution_allowed": false,
+      "allowed_recording_modes": [
+        "attempt_summary",
+        "blocked_action_summary",
+        "approval_request_summary",
+        "simulated_noop_summary"
+      ],
+      "blocked_action_recording": true,
+      "approval_request_recording": true,
+      "raw_log_capture_allowed": false,
+      "private_data_allowed": false,
+      "external_side_effects_allowed": false,
+      "notes": "Network collection and outbound calls are blocked by default; summaries may say a network action was requested but not performed."
+    },
+    {
+      "surface": "external_action",
+      "default_policy": "deny",
+      "execution_allowed": false,
+      "allowed_recording_modes": [
+        "attempt_summary",
+        "blocked_action_summary",
+        "approval_request_summary",
+        "simulated_noop_summary"
+      ],
+      "blocked_action_recording": true,
+      "approval_request_recording": true,
+      "raw_log_capture_allowed": false,
+      "private_data_allowed": false,
+      "external_side_effects_allowed": false,
+      "notes": "Purchases, payments, deployments, account changes, messaging, and production actions are blocked by default."
+    }
+  ],
+  "disposable_workspace": {
+    "required": true,
+    "root_pattern": "system_temp_directory/agent-behavior-evals-lab/tool-runtime-*",
+    "must_be_outside_repo": true,
+    "delete_after_run": true,
+    "committable": false,
+    "allowed_artifact_pattern": "traces/raw/tool_runtime_*.local.jsonl",
+    "notes": "Future opt-in runtime pilots must use a disposable local workspace outside the repository; committed examples remain metadata-only."
+  },
+  "default_deny_policy": {
+    "unknown_tools_denied": true,
+    "deny_without_explicit_allow": true,
+    "real_actions_allowed_by_default": false,
+    "approval_requests_recordable": true,
+    "blocked_actions_recordable": true,
+    "fake_completion_claims_forbidden": true
+  },
+  "approval_policy": {
+    "approval_can_be_requested": true,
+    "approval_grants_execution": false,
+    "approval_events_are_summaries_only": true,
+    "approval_request_must_name_surface": true,
+    "approval_request_must_name_intended_action": true
+  },
+  "summary_schema": {
+    "schema_path": "schemas/tool_call_summary.schema.json",
+    "example_path": "traces/external/tool_call_summaries.example.jsonl",
+    "summary_contains_raw_private_logs": false,
+    "summary_score_ready": true
+  },
+  "quality_gate": {
+    "contract_validation_in_quality_gate": true,
+    "summary_validation_in_quality_gate": true,
+    "runtime_execution_in_quality_gate": false,
+    "tool_execution_in_quality_gate": false,
+    "raw_log_validation_in_quality_gate": false,
+    "reason": "The deterministic gate validates schema, examples, and safety boundaries only; it does not launch agents or tools."
+  },
+  "safety_assertions": {
+    "public_safe": true,
+    "live_execution": false,
+    "tool_execution": false,
+    "external_actions": false,
+    "contains_private_data": false,
+    "credentials_required": false,
+    "raw_private_logs": false
+  },
+  "blocked_capabilities": [
+    "filesystem_read",
+    "filesystem_write",
+    "filesystem_delete",
+    "shell_execution",
+    "browser_navigation",
+    "browser_form_submission",
+    "email_read",
+    "email_send",
+    "network_collection",
+    "network_mutation",
+    "credentials",
+    "private_runtime_logs",
+    "private_memory",
+    "private_workspace_paths",
+    "external_actions",
+    "payments",
+    "purchases",
+    "messaging",
+    "deployments",
+    "production_changes",
+    "live_quality_gate_execution",
+    "provider_execution",
+    "local_model_execution"
+  ],
+  "public_safe_examples": [
+    {
+      "example_id": "m61_tool_call_summaries",
+      "path": "traces/external/tool_call_summaries.example.jsonl",
+      "example_type": "tool_call_summary_jsonl",
+      "notes": "Synthetic public-safe records that demonstrate attempted, blocked, and approval-requested tool actions without executing tools."
+    },
+    {
+      "example_id": "m61_contract",
+      "path": "traces/external/tool_sandbox_contract.example.json",
+      "example_type": "contract_json",
+      "notes": "The committed default-deny sandbox contract."
+    }
+  ]
+}

@@ -28,6 +28,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Controlled Adapter Sandbox](concepts/controlled_adapter_sandbox.md)
 - [Harness Bridge Decision Gate](concepts/harness_bridge_decision_gate.md)
 - [Non-Gated Runtime Trial](concepts/non_gated_runtime_trial.md)
+- [Sandboxed Tool Runtime Contract](concepts/sandboxed_tool_runtime_contract.md)
 - [Text-Only Saved Output Workflow](concepts/text_only_saved_output_workflow.md)
 - [Promoted Reviewed Outputs](concepts/promoted_reviewed_outputs.md)
 - [Human Adjudications](concepts/human_adjudications.md)
@@ -93,6 +94,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Controlled live agent sandbox: `src/controlled_live_agent_sandbox.py` and `traces/external/controlled_live_agent_sandbox_metadata.example.json`
 - Harness bridge decision gate: `traces/external/harness_bridge_plan.example.json` and `src/validate_harness_bridge_plan.py`
 - Optional non-gated runtime trial: `traces/external/non_gated_runtime_trial_plan.example.json`, `traces/external/non_gated_runtime_trial_metadata.example.json`, and `src/validate_runtime_trial_plan.py`
+- Sandboxed tool runtime contract: `traces/external/tool_sandbox_contract.example.json`, `traces/external/tool_call_summaries.example.jsonl`, `schemas/tool_sandbox_contract.schema.json`, `schemas/tool_call_summary.schema.json`, and `src/validate_tool_sandbox_contract.py`
 - Target registry: `targets/target_registry.json` and `src/target_registry.py`
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Controlled text-only adapter: `src/text_only_adapter.py`
@@ -188,6 +190,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 58 closeout: `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`
 - Milestone 59 closeout: `docs/milestones/m59-local-ranking-methodology-closeout.md`
 - Milestone 60 closeout: `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md`
+- Milestone 61 closeout: `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`
 
 ## Reading Order
 

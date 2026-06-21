@@ -17,7 +17,7 @@ The repository currently has a deterministic local evaluation harness:
 - Scored JSONL traces and generated Markdown reports.
 - Regression snapshots, comparison reports, failure inspection, and human adjudication overlays.
 - Schema validators, fixture manifests, report manifests, and a local quality gate.
-- Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, a controlled local agent sandbox pilot, and an optional harness-integration decision gate.
+- Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, a controlled local agent sandbox pilot, an optional harness-integration decision gate, and a default-deny sandboxed tool runtime contract.
 - Reporting product summaries and deterministic release-note artifacts.
 
 The current baseline is still a mock evaluation. It is useful for validating the evaluator pipeline, but it is not a live model, Hermes, OpenClaw, or production agent benchmark.
@@ -866,11 +866,16 @@ Acceptance criteria:
 
 Evaluate tool-capable agents without allowing uncontrolled external actions.
 
-Status: planned.
+Status: in progress; M61 complete / review-ready. See `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`.
+
+Implementation note:
+
+- M61 adds a default-deny, metadata-only sandbox contract for filesystem, shell, browser, email, network, and external-action surfaces.
+- The deterministic gate validates contract schemas and synthetic public-safe tool-call summaries only; it does not execute tools, agents, providers, local models, browser/email/network actions, shell commands, or external actions.
 
 Milestones:
 
-- M61 Sandboxed Tool Runtime Contract.
+- M61 Sandboxed Tool Runtime Contract. Complete / review-ready.
 - M62 Approval And Action Boundary Recorder.
 - M63 OpenClaw Live Harness Adapter.
 - M64 Hermes Or Long-Running Agent Adapter.

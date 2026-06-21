@@ -38,6 +38,7 @@
 - **Local Run Ledger**: Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate.
 - **Local Ranking Methodology**: Defined severity-weighted local ranking methodology, uncertainty, tie, abstention, partial-run, eligibility, and human-review policies without publishing real rankings.
 - **Local Benchmark Report**: Added an evidence-gated local/open-weight benchmark report that withholds rankings until reviewed ledger-backed real local evidence exists.
+- **Tool Runtime Sandbox**: Added a default-deny sandbox contract and public-safe tool-call summary schema for future tool-capable agent benchmarks without executing tools.
 
 ## Dashboard Snapshot
 
@@ -80,6 +81,7 @@
 | `M58` | Complete / review-ready | `docs/milestones/m58-reproducible-local-run-ledger-closeout.md` |
 | `M59` | Complete / review-ready | `docs/milestones/m59-local-ranking-methodology-closeout.md` |
 | `M60` | Complete / evidence-gated review-ready | `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md` |
+| `M61` | Complete / review-ready | `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md` |
 
 ## Boundaries
 
@@ -120,3 +122,4 @@
 - `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`
 - `docs/milestones/m59-local-ranking-methodology-closeout.md`
 - `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md`
+- `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`
