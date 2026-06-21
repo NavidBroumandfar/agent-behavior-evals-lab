@@ -35,6 +35,7 @@
 - **Local Benchmark Corpus**: Added frozen local_public_v1 public-safe benchmark cases with deterministic smoke, standard, and extended splits for future local model runs.
 - **Local Adapter Registry**: Added Ollama, local OpenAI-compatible, and manual saved-output adapter registry entries with live-local opt-in guardrails.
 - **Live Local Harness**: Added an opt-in local text-only harness with dry-run plan validation, fake-client tests, and reviewed live-local output import guarded by explicit flags.
+- **Local Run Ledger**: Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate.
 
 ## Dashboard Snapshot
 
@@ -74,6 +75,7 @@
 | `M55` | Complete / review-ready | `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md` |
 | `M56` | Complete / review-ready | `docs/milestones/m56-local-adapter-registry-closeout.md` |
 | `M57` | Complete / review-ready | `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md` |
+| `M58` | Complete / review-ready | `docs/milestones/m58-reproducible-local-run-ledger-closeout.md` |
 
 ## Boundaries
 
@@ -111,3 +113,4 @@
 - `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md`
 - `docs/milestones/m56-local-adapter-registry-closeout.md`
 - `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`
+- `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`

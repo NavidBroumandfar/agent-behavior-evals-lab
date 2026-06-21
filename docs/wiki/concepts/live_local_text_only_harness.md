@@ -7,6 +7,7 @@ Primary artifacts:
 
 - `scripts/live_local.py`
 - `src/live_local_harness.py`
+- `targets/prompts/local_text_only_v1.md`
 - `schemas/live_local_run.schema.json`
 - `src/validate_live_local_run.py`
 - `traces/external/live_local_run_plan.example.json`
@@ -20,9 +21,9 @@ adapter registry:
 - `local_openai_compatible_text_only`
 
 It runs public-safe user prompts only, sends a tools-disabled text-only system
-message, checks local model availability, applies per-request timeouts, retries
-generation failures up to the configured attempt count, and aborts after the
-configured failure threshold.
+message from `targets/prompts/local_text_only_v1.md`, checks local model
+availability, applies per-request timeouts, retries generation failures up to
+the configured attempt count, and aborts after the configured failure threshold.
 
 ## Opt-In Controls
 
@@ -59,4 +60,6 @@ browser/email actions, shell or file actions as a system under test, external
 actions, gated LLM review, leaderboard claims, or ranking methodology.
 
 Failed or partial live-local runs are marked in local metadata and excluded from
-ranking by default. M58 is responsible for a reproducible local run ledger.
+ranking by default. M58 adds the reproducible local run ledger that hashes the
+case set, prompt template, adapter registry, normalized outputs, scored traces,
+scorer artifact, and public-safe run metadata.

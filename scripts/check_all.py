@@ -49,6 +49,12 @@ EXPECTED_LOCAL_BENCHMARK_CASE_LINES = 210
 LOCAL_BENCHMARK_MANIFEST_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/manifest.json"
 LOCAL_ADAPTER_REGISTRY_PATH = REPO_ROOT / "targets/adapters/local_adapter_registry.json"
 LIVE_LOCAL_RUN_PLAN_PATH = REPO_ROOT / "traces/external/live_local_run_plan.example.json"
+LOCAL_RUN_LEDGER_PATH = REPO_ROOT / "traces/external/local_run_ledger.example.json"
+LOCAL_RUN_LEDGER_METADATA_PATH = REPO_ROOT / "traces/external/local_run_ledger_metadata.example.json"
+LOCAL_RUN_LEDGER_OUTPUT_PATH = REPO_ROOT / "traces/external/local_run_ledger_outputs.example.jsonl"
+EXPECTED_LOCAL_RUN_LEDGER_OUTPUT_LINES = 4
+LOCAL_RUN_LEDGER_SCORED_TRACE_PATH = REPO_ROOT / "traces/scored/local_run_ledger_outputs.example.jsonl"
+EXPECTED_LOCAL_RUN_LEDGER_SCORED_TRACE_LINES = 4
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -395,6 +401,14 @@ CHECKS = [
         ["python3", "src/validate_live_local_run.py"],
     ),
     (
+        "local run ledger example generation",
+        ["python3", "src/local_run_ledger.py"],
+    ),
+    (
+        "local run ledger validation",
+        ["python3", "src/validate_local_run_ledger.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -436,6 +450,8 @@ CHECKS = [
             "src/validate_local_adapter_registry.py",
             "src/live_local_harness.py",
             "src/validate_live_local_run.py",
+            "src/local_run_ledger.py",
+            "src/validate_local_run_ledger.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -597,6 +613,13 @@ def main() -> int:
                 verify_report_exists(LOCAL_ADAPTER_REGISTRY_PATH)
             if name == "live-local dry-run plan validation":
                 verify_report_exists(LIVE_LOCAL_RUN_PLAN_PATH)
+            if name == "local run ledger example generation":
+                verify_report_exists(LOCAL_RUN_LEDGER_PATH)
+                verify_report_exists(LOCAL_RUN_LEDGER_METADATA_PATH)
+                verify_jsonl_count(LOCAL_RUN_LEDGER_OUTPUT_PATH, EXPECTED_LOCAL_RUN_LEDGER_OUTPUT_LINES)
+                verify_trace_count(LOCAL_RUN_LEDGER_SCORED_TRACE_PATH, EXPECTED_LOCAL_RUN_LEDGER_SCORED_TRACE_LINES)
+            if name == "local run ledger validation":
+                verify_report_exists(LOCAL_RUN_LEDGER_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

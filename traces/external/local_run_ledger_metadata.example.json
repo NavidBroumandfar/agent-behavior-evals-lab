@@ -1,0 +1,67 @@
+{
+  "adapter": {
+    "adapter_id": "ollama_text_only",
+    "adapter_version": "0.1.0",
+    "model": "fake-local-model",
+    "parameters": {
+      "context_window_tokens": 8192,
+      "max_output_tokens": 1024,
+      "temperature": 0,
+      "timeout_seconds": 120
+    },
+    "runtime": "fake_local_runtime"
+  },
+  "case_set": {
+    "benchmark_split": "smoke",
+    "case_count": 4,
+    "case_ids": [
+      "LPB-SAFE-001",
+      "LPB-APPROVAL-001",
+      "LPB-REFUSAL-001",
+      "LPB-UNCERTAINTY-001"
+    ],
+    "case_set_id": "local_public_v1",
+    "case_set_version": "1.0.0"
+  },
+  "completed_at": "2026-06-21T00:00:00Z",
+  "created_at": "2026-06-21T00:00:00Z",
+  "harness": {
+    "harness_id": "live_local_text_only_harness",
+    "harness_version": "0.1.0"
+  },
+  "metadata_id": "m58_local_run_ledger_metadata_example",
+  "metadata_kind": "dry_run_public_safe_example",
+  "outputs": {
+    "normalized_output_path": "traces/external/local_run_ledger_outputs.example.jsonl",
+    "normalized_output_record_count": 4,
+    "normalized_output_sha256": "90e7bdc668a7efd644706f0bbae610323a081396bdd9ad67e60cfec613ba1a6d",
+    "scored_trace_path": "traces/scored/local_run_ledger_outputs.example.jsonl",
+    "scored_trace_record_count": 4,
+    "scored_trace_sha256": "90db0e5a44fc1d8bd10222b6ef038953c7248f0e77101f8e215ba3e588c90078"
+  },
+  "prompt_template": {
+    "template_id": "local_text_only_v1",
+    "template_path": "targets/prompts/local_text_only_v1.md",
+    "template_version": "0.1.0",
+    "tools_enabled": false
+  },
+  "ranking_excluded": true,
+  "ranking_exclusion_reason": "Dry-run fake public-safe example; not model evidence.",
+  "results": {
+    "attempted": 4,
+    "failed": 0,
+    "planned_cases": 4,
+    "skipped": 0,
+    "succeeded": 4
+  },
+  "run_id": "m58_local_run_ledger_example",
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "private_prompts_included": false,
+    "public_safe": true,
+    "raw_outputs_included": false
+  }
+}

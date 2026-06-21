@@ -1,0 +1,492 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Reproducible Local Run Ledger",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "ledger_id",
+    "version",
+    "generated_at",
+    "purpose",
+    "ledger_kind",
+    "entries",
+    "source_paths",
+    "safety_assertions"
+  ],
+  "properties": {
+    "ledger_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "ledger_kind": {
+      "type": "string",
+      "enum": [
+        "dry_run_public_safe_example",
+        "published_local_benchmark"
+      ]
+    },
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "entry_id",
+          "run_id",
+          "evidence_class",
+          "run_mode",
+          "created_at",
+          "completed_at",
+          "run_status",
+          "ranking_eligible",
+          "ranking_exclusion_reason",
+          "runtime",
+          "model",
+          "harness",
+          "adapter",
+          "case_set",
+          "prompt_template",
+          "outputs",
+          "scorer",
+          "run_metadata",
+          "execution_controls",
+          "safety_assertions"
+        ],
+        "properties": {
+          "entry_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "run_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_class": {
+            "type": "string",
+            "enum": [
+              "evaluator_health",
+              "local_public_benchmark"
+            ]
+          },
+          "run_mode": {
+            "type": "string",
+            "enum": [
+              "dry_run_public_safe_example",
+              "reviewed_live_local_run"
+            ]
+          },
+          "created_at": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          },
+          "completed_at": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          },
+          "run_status": {
+            "type": "string",
+            "enum": [
+              "succeeded",
+              "partial",
+              "failed"
+            ]
+          },
+          "ranking_eligible": {
+            "type": "boolean"
+          },
+          "ranking_exclusion_reason": {
+            "type": "string"
+          },
+          "runtime": {
+            "type": "string",
+            "minLength": 1
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "harness": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "harness_id",
+              "harness_version"
+            ],
+            "properties": {
+              "harness_id": {
+                "type": "string",
+                "const": "live_local_text_only_harness"
+              },
+              "harness_version": {
+                "type": "string",
+                "minLength": 1
+              }
+            }
+          },
+          "adapter": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "adapter_id",
+              "adapter_version",
+              "registry_path",
+              "registry_sha256"
+            ],
+            "properties": {
+              "adapter_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "adapter_version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "registry_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "registry_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "case_set": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "case_set_id",
+              "case_set_version",
+              "benchmark_split",
+              "case_count",
+              "case_ids",
+              "case_path",
+              "case_file_sha256",
+              "manifest_path",
+              "manifest_sha256"
+            ],
+            "properties": {
+              "case_set_id": {
+                "type": "string",
+                "const": "local_public_v1"
+              },
+              "case_set_version": {
+                "type": "string",
+                "const": "1.0.0"
+              },
+              "benchmark_split": {
+                "type": "string",
+                "enum": [
+                  "smoke",
+                  "standard",
+                  "extended"
+                ]
+              },
+              "case_count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "case_ids": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "case_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "case_file_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "manifest_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "manifest_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "prompt_template": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "template_id",
+              "template_version",
+              "template_path",
+              "template_sha256",
+              "tools_enabled"
+            ],
+            "properties": {
+              "template_id": {
+                "type": "string",
+                "const": "local_text_only_v1"
+              },
+              "template_version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "template_path": {
+                "type": "string",
+                "const": "targets/prompts/local_text_only_v1.md"
+              },
+              "template_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "tools_enabled": {
+                "type": "boolean",
+                "const": false
+              }
+            }
+          },
+          "outputs": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "normalized_output_path",
+              "normalized_output_sha256",
+              "normalized_output_record_count",
+              "scored_trace_path",
+              "scored_trace_sha256",
+              "scored_trace_record_count"
+            ],
+            "properties": {
+              "normalized_output_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "normalized_output_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "normalized_output_record_count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "scored_trace_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scored_trace_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "scored_trace_record_count": {
+                "type": "integer",
+                "minimum": 1
+              }
+            }
+          },
+          "scorer": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "scorer_id",
+              "scorer_version",
+              "scorer_artifact_path",
+              "scorer_artifact_sha256"
+            ],
+            "properties": {
+              "scorer_id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scorer_version": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scorer_artifact_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scorer_artifact_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              }
+            }
+          },
+          "run_metadata": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "metadata_path",
+              "metadata_sha256",
+              "metadata_kind"
+            ],
+            "properties": {
+              "metadata_path": {
+                "type": "string",
+                "minLength": 1
+              },
+              "metadata_sha256": {
+                "type": "string",
+                "pattern": "^[0-9a-f]{64}$"
+              },
+              "metadata_kind": {
+                "type": "string",
+                "enum": [
+                  "dry_run_public_safe_example",
+                  "reviewed_live_local_run"
+                ]
+              }
+            }
+          },
+          "execution_controls": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "live_local_required_flag",
+              "live_local_required_env",
+              "quality_gate_execution_allowed",
+              "tools_enabled",
+              "external_actions_allowed",
+              "credentials_required",
+              "shell_or_file_actions_as_system_under_test"
+            ],
+            "properties": {
+              "live_local_required_flag": {
+                "type": "string",
+                "const": "--live-local"
+              },
+              "live_local_required_env": {
+                "type": "string",
+                "const": "AGENT_EVALS_ENABLE_LIVE_LOCAL"
+              },
+              "quality_gate_execution_allowed": {
+                "type": "boolean",
+                "const": false
+              },
+              "tools_enabled": {
+                "type": "boolean",
+                "const": false
+              },
+              "external_actions_allowed": {
+                "type": "boolean",
+                "const": false
+              },
+              "credentials_required": {
+                "type": "boolean",
+                "const": false
+              },
+              "shell_or_file_actions_as_system_under_test": {
+                "type": "boolean",
+                "const": false
+              }
+            }
+          },
+          "safety_assertions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "public_safe",
+              "live_execution",
+              "external_actions",
+              "contains_private_data",
+              "credentials_required",
+              "private_prompts_included",
+              "raw_outputs_included"
+            ],
+            "properties": {
+              "public_safe": {
+                "type": "boolean",
+                "const": true
+              },
+              "live_execution": {
+                "type": "boolean"
+              },
+              "external_actions": {
+                "type": "boolean",
+                "const": false
+              },
+              "contains_private_data": {
+                "type": "boolean",
+                "const": false
+              },
+              "credentials_required": {
+                "type": "boolean",
+                "const": false
+              },
+              "private_prompts_included": {
+                "type": "boolean",
+                "const": false
+              },
+              "raw_outputs_included": {
+                "type": "boolean",
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    },
+    "source_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required",
+        "private_prompts_included",
+        "raw_outputs_included"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean"
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_prompts_included": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_outputs_included": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  }
+}

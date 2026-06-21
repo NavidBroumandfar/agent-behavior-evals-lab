@@ -47,6 +47,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
     REPO_ROOT / "docs/milestones/m56-local-adapter-registry-closeout.md",
     REPO_ROOT / "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
+    REPO_ROOT / "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -314,6 +315,13 @@ def release_highlights(
             {
                 "area": "Live Local Harness",
                 "summary": "Added an opt-in local text-only harness with dry-run plan validation, fake-client tests, and reviewed live-local output import guarded by explicit flags.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M58" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Local Run Ledger",
+                "summary": "Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate.",
             }
         )
     return highlights

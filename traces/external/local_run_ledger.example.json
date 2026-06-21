@@ -1,0 +1,114 @@
+{
+  "entries": [
+    {
+      "adapter": {
+        "adapter_id": "ollama_text_only",
+        "adapter_version": "0.1.0",
+        "registry_path": "targets/adapters/local_adapter_registry.json",
+        "registry_sha256": "02e58dc1270edcf0e72fed649e12a23051ac5e22e154e4295555f0378443328c"
+      },
+      "case_set": {
+        "benchmark_split": "smoke",
+        "case_count": 4,
+        "case_file_sha256": "366ca2f65991f9fbecffa15104e11b1b0f5c1e3f236eee947e00ed209f5891bb",
+        "case_ids": [
+          "LPB-SAFE-001",
+          "LPB-APPROVAL-001",
+          "LPB-REFUSAL-001",
+          "LPB-UNCERTAINTY-001"
+        ],
+        "case_path": "evals/benchmarks/local_public_v1/cases.jsonl",
+        "case_set_id": "local_public_v1",
+        "case_set_version": "1.0.0",
+        "manifest_path": "evals/benchmarks/local_public_v1/manifest.json",
+        "manifest_sha256": "9dc94414a2fc926a86a8705e540323c524886c3d2c7499f4f4d64c1bfadb8c88"
+      },
+      "completed_at": "2026-06-21T00:00:00Z",
+      "created_at": "2026-06-21T00:00:00Z",
+      "entry_id": "m58_local_run_ledger_example_entry",
+      "evidence_class": "evaluator_health",
+      "execution_controls": {
+        "credentials_required": false,
+        "external_actions_allowed": false,
+        "live_local_required_env": "AGENT_EVALS_ENABLE_LIVE_LOCAL",
+        "live_local_required_flag": "--live-local",
+        "quality_gate_execution_allowed": false,
+        "shell_or_file_actions_as_system_under_test": false,
+        "tools_enabled": false
+      },
+      "harness": {
+        "harness_id": "live_local_text_only_harness",
+        "harness_version": "0.1.0"
+      },
+      "model": "fake-local-model",
+      "outputs": {
+        "normalized_output_path": "traces/external/local_run_ledger_outputs.example.jsonl",
+        "normalized_output_record_count": 4,
+        "normalized_output_sha256": "90e7bdc668a7efd644706f0bbae610323a081396bdd9ad67e60cfec613ba1a6d",
+        "scored_trace_path": "traces/scored/local_run_ledger_outputs.example.jsonl",
+        "scored_trace_record_count": 4,
+        "scored_trace_sha256": "90db0e5a44fc1d8bd10222b6ef038953c7248f0e77101f8e215ba3e588c90078"
+      },
+      "prompt_template": {
+        "template_id": "local_text_only_v1",
+        "template_path": "targets/prompts/local_text_only_v1.md",
+        "template_sha256": "3bd2dd3d13d6de9d1732fbc96629d9c09fee30352df077f20f07524342d193d2",
+        "template_version": "0.1.0",
+        "tools_enabled": false
+      },
+      "ranking_eligible": false,
+      "ranking_exclusion_reason": "Dry-run fake public-safe example; not model evidence.",
+      "run_id": "m58_local_run_ledger_example",
+      "run_metadata": {
+        "metadata_kind": "dry_run_public_safe_example",
+        "metadata_path": "traces/external/local_run_ledger_metadata.example.json",
+        "metadata_sha256": "563a3955fe36b244d68e6007406a5e0388b6fcfd0b97a4e113b650f09d9041f5"
+      },
+      "run_mode": "dry_run_public_safe_example",
+      "run_status": "succeeded",
+      "runtime": "fake_local_runtime",
+      "safety_assertions": {
+        "contains_private_data": false,
+        "credentials_required": false,
+        "external_actions": false,
+        "live_execution": false,
+        "private_prompts_included": false,
+        "public_safe": true,
+        "raw_outputs_included": false
+      },
+      "scorer": {
+        "scorer_artifact_path": "src/scorers.py",
+        "scorer_artifact_sha256": "1dec7cb2520edc346132bb93e64e543f1dc24a6b8349da00c70a3789932753ca",
+        "scorer_id": "deterministic_v0_rule_based_scorer",
+        "scorer_version": "v0-rule-based-heuristic"
+      }
+    }
+  ],
+  "generated_at": "2026-06-21T00:00:00Z",
+  "ledger_id": "m58_reproducible_local_run_ledger_example",
+  "ledger_kind": "dry_run_public_safe_example",
+  "purpose": "Public-safe dry-run example ledger for auditing local model evidence hashes without executing a local model.",
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "private_prompts_included": false,
+    "public_safe": true,
+    "raw_outputs_included": false
+  },
+  "source_paths": [
+    "docs/live_benchmark_roadmap.md",
+    "docs/wiki/concepts/live_local_text_only_harness.md",
+    "docs/wiki/concepts/local_adapter_registry.md",
+    "docs/wiki/concepts/local_public_benchmark_corpus.md",
+    "evals/benchmarks/local_public_v1/manifest.json",
+    "targets/adapters/local_adapter_registry.json",
+    "targets/prompts/local_text_only_v1.md",
+    "src/scorers.py",
+    "src/local_run_ledger.py",
+    "src/validate_local_run_ledger.py",
+    "schemas/local_run_ledger.schema.json"
+  ],
+  "version": "0.1.0"
+}

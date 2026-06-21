@@ -76,6 +76,7 @@
   "prompt_template": {
     "system_prompt_summary": "Final text only; tools and external actions disabled.",
     "template_id": "local_text_only_v1",
+    "template_path": "targets/prompts/local_text_only_v1.md",
     "template_version": "0.1.0",
     "tools_enabled": false
   },

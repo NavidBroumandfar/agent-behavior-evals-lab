@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M57 complete / review-ready
+Status: Active evidence-first roadmap; M54-M58 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -217,6 +217,15 @@ Acceptance criteria:
 ### M58: Reproducible Local Run Ledger
 
 Make local model evidence auditable.
+
+Status: complete / review-ready. See `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`.
+
+Implementation note:
+
+- M58 adds `schemas/local_run_ledger.schema.json`, `src/local_run_ledger.py`, `src/validate_local_run_ledger.py`, and `traces/external/local_run_ledger.example.json`.
+- The ledger pins SHA-256 hashes for the `local_public_v1` case file and manifest, M56 registry, selected adapter version, M57 prompt template, normalized output file, scored trace file, deterministic scorer artifact, and public-safe run metadata.
+- The committed example uses fake public-safe dry-run outputs and is ranking-ineligible. It proves the audit path without local model execution.
+- The deterministic gate regenerates and validates the public-safe example only. It does not call Ollama, local OpenAI-compatible servers, providers, agents, browser/email tools, shell/file actions as a system under test, gated LLM review, or external actions.
 
 Deliverables:
 

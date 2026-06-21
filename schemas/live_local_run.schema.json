@@ -182,6 +182,7 @@
       "required": [
         "template_id",
         "template_version",
+        "template_path",
         "tools_enabled",
         "system_prompt_summary"
       ],
@@ -193,6 +194,10 @@
         "template_version": {
           "type": "string",
           "minLength": 1
+        },
+        "template_path": {
+          "type": "string",
+          "const": "targets/prompts/local_text_only_v1.md"
         },
         "tools_enabled": {
           "type": "boolean",

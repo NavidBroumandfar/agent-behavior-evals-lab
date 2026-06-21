@@ -19,6 +19,7 @@ from live_local_harness import (
     LIVE_LOCAL_REQUIRED_FLAG,
     LiveLocalHarnessError,
     PROMPT_TEMPLATE_ID,
+    PROMPT_TEMPLATE_PATH,
     REPO_ROOT,
     SUPPORTED_LIVE_ADAPTER_IDS,
     load_jsonl,
@@ -136,6 +137,11 @@ def validate_prompt_template(prompt_template: dict[str, Any], context: str) -> N
     prompt_context = f"{context}.prompt_template"
     if prompt_template["template_id"] != PROMPT_TEMPLATE_ID:
         raise LiveLocalRunValidationError(f"{prompt_context}.template_id must equal {PROMPT_TEMPLATE_ID}")
+    template_path = require_existing_repo_path(prompt_template["template_path"], f"{prompt_context}.template_path", REPO_ROOT)
+    if template_path != PROMPT_TEMPLATE_PATH:
+        raise LiveLocalRunValidationError(
+            f"{prompt_context}.template_path must equal {display_path(PROMPT_TEMPLATE_PATH)}"
+        )
     if prompt_template["tools_enabled"] is not False:
         raise LiveLocalRunValidationError(f"{prompt_context}.tools_enabled must be false")
 

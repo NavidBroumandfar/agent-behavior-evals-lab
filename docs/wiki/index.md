@@ -47,6 +47,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Local Public Benchmark Corpus](concepts/local_public_benchmark_corpus.md)
 - [Local Adapter Registry](concepts/local_adapter_registry.md)
 - [Live Local Text-Only Harness](concepts/live_local_text_only_harness.md)
+- [Reproducible Local Run Ledger](concepts/local_run_ledger.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -109,6 +110,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Local public benchmark corpus: `evals/benchmarks/local_public_v1/cases.jsonl`, `evals/benchmarks/local_public_v1/manifest.json`, and `src/validate_local_benchmark_corpus.py`
 - Local adapter registry: `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`
 - Live local text-only harness: `scripts/live_local.py`, `src/live_local_harness.py`, `schemas/live_local_run.schema.json`, `src/validate_live_local_run.py`, and `traces/external/live_local_run_plan.example.json`
+- Reproducible local run ledger: `traces/external/local_run_ledger.example.json`, `schemas/local_run_ledger.schema.json`, `src/local_run_ledger.py`, and `src/validate_local_run_ledger.py`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`

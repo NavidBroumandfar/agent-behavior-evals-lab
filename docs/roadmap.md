@@ -784,13 +784,21 @@ Acceptance criteria:
 
 Make local model evidence auditable.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`.
+
+Implementation note:
+
+- M58 adds `schemas/local_run_ledger.schema.json`, `src/local_run_ledger.py`, `src/validate_local_run_ledger.py`, and `traces/external/local_run_ledger.example.json`.
+- The committed example is a dry-run public-safe fake-output ledger marked ranking-ineligible. It validates hashes, saved-output replay, run metadata, and provenance without executing a local model.
+- M58 also promotes the M57 prompt template into `targets/prompts/local_text_only_v1.md` so ledger entries can hash the exact tools-disabled prompt.
+- The deterministic gate validates generated public-safe fake outputs, scored traces, hashes, and metadata only; it does not call Ollama, local OpenAI-compatible servers, providers, agents, browser/email tools, shell/file actions as a system under test, gated LLM review, or external actions.
 
 Deliverables:
 
 - Run ledger schema for local model runs.
 - Hashes for case set, prompt template, adapter version, normalized output file, and scorer version.
 - Public-safe run manifest for published local benchmark runs.
+- Validation command for run ledgers.
 
 Acceptance criteria:
 

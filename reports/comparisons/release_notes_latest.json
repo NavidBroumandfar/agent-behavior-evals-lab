@@ -106,6 +106,10 @@
     {
       "area": "Live Local Harness",
       "summary": "Added an opt-in local text-only harness with dry-run plan validation, fake-client tests, and reviewed live-local output import guarded by explicit flags."
+    },
+    {
+      "area": "Local Run Ledger",
+      "summary": "Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate."
     }
   ],
   "milestones": [
@@ -269,6 +273,13 @@
       "path": "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 57 - Opt-In Local Text-Only Model Harness"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M58",
+      "path": "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 58 - Reproducible Local Run Ledger"
     }
   ],
   "quality_gate": {
@@ -318,7 +329,8 @@
     "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
     "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
     "docs/milestones/m56-local-adapter-registry-closeout.md",
-    "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md"
+    "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
+    "docs/milestones/m58-reproducible-local-run-ledger-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }
