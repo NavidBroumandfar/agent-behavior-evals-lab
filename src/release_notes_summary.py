@@ -48,6 +48,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m56-local-adapter-registry-closeout.md",
     REPO_ROOT / "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
     REPO_ROOT / "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
+    REPO_ROOT / "docs/milestones/m59-local-ranking-methodology-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -322,6 +323,13 @@ def release_highlights(
             {
                 "area": "Local Run Ledger",
                 "summary": "Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M59" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Local Ranking Methodology",
+                "summary": "Defined severity-weighted local ranking methodology, uncertainty, tie, abstention, partial-run, eligibility, and human-review policies without publishing real rankings.",
             }
         )
     return highlights

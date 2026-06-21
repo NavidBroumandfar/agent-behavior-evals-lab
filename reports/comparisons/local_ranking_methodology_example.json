@@ -1,0 +1,130 @@
+{
+  "boundaries": [
+    "This artifact demonstrates ranking calculations only.",
+    "The inputs are synthetic and do not represent local model quality.",
+    "M59 does not publish a leaderboard or support production-policy proof claims.",
+    "Real local rankings require M58 ledger-backed public-safe local_public_benchmark evidence."
+  ],
+  "case_set": {
+    "benchmark_split": "smoke",
+    "case_count": 21,
+    "case_file_sha256": "366ca2f65991f9fbecffa15104e11b1b0f5c1e3f236eee947e00ed209f5891bb",
+    "case_path": "evals/benchmarks/local_public_v1/cases.jsonl",
+    "case_set_id": "local_public_v1",
+    "case_set_version": "1.0.0",
+    "manifest_path": "evals/benchmarks/local_public_v1/manifest.json",
+    "manifest_sha256": "9dc94414a2fc926a86a8705e540323c524886c3d2c7499f4f4d64c1bfadb8c88"
+  },
+  "example_results": [
+    {
+      "abstention_count": 0,
+      "benchmark_split": "smoke",
+      "bootstrap_ci_95": {
+        "high": 1.0,
+        "low": 0.74,
+        "resample_count": 500,
+        "seed": "m59-local-ranking-methodology-bootstrap-v1"
+      },
+      "comparison_label": "ordered_for_example",
+      "completed_case_count": 21,
+      "evidence_class": "local_public_benchmark",
+      "example_rank": 1,
+      "excluded_case_count": 0,
+      "exclusion_reasons": [
+        "Synthetic methodology example; not real model evidence.",
+        "Benchmark split is not publishable for local rankings.",
+        "Sample size is below the publication minimum."
+      ],
+      "failed_high_risk_case_count": 2,
+      "failed_high_risk_reviewed_count": 2,
+      "high_risk_case_count": 15,
+      "high_risk_review_rate": 1.0,
+      "high_risk_reviewed_count": 15,
+      "ledger_entry_id": "m59_fake_local_alpha_synthetic_ledger_entry",
+      "methodology_requirements_satisfied": false,
+      "model": "fake-local-model-alpha",
+      "public_ranking_eligible": false,
+      "run_id": "m59_fake_local_alpha",
+      "sample_size": 21,
+      "severity_weighted_effective_pass_rate": 0.8925,
+      "severity_weighted_heuristic_pass_rate": 0.8925,
+      "unresolved_review_count": 0,
+      "unweighted_effective_pass_rate": 0.9048,
+      "unweighted_heuristic_pass_rate": 0.9048
+    },
+    {
+      "abstention_count": 1,
+      "benchmark_split": "smoke",
+      "bootstrap_ci_95": {
+        "high": 0.6042,
+        "low": 0.1443,
+        "resample_count": 500,
+        "seed": "m59-local-ranking-methodology-bootstrap-v1"
+      },
+      "comparison_label": "ordered_for_example",
+      "completed_case_count": 21,
+      "evidence_class": "local_public_benchmark",
+      "example_rank": 2,
+      "excluded_case_count": 0,
+      "exclusion_reasons": [
+        "Synthetic methodology example; not real model evidence.",
+        "Benchmark split is not publishable for local rankings.",
+        "Sample size is below the publication minimum."
+      ],
+      "failed_high_risk_case_count": 11,
+      "failed_high_risk_reviewed_count": 11,
+      "high_risk_case_count": 15,
+      "high_risk_review_rate": 1.0,
+      "high_risk_reviewed_count": 15,
+      "ledger_entry_id": "m59_fake_local_beta_synthetic_ledger_entry",
+      "methodology_requirements_satisfied": false,
+      "model": "fake-local-model-beta",
+      "public_ranking_eligible": false,
+      "run_id": "m59_fake_local_beta",
+      "sample_size": 21,
+      "severity_weighted_effective_pass_rate": 0.3656,
+      "severity_weighted_heuristic_pass_rate": 0.4086,
+      "unresolved_review_count": 0,
+      "unweighted_effective_pass_rate": 0.4286,
+      "unweighted_heuristic_pass_rate": 0.4762
+    }
+  ],
+  "generated_at": "2026-06-21T00:00:00Z",
+  "input": {
+    "input_id": "m59_local_ranking_methodology_fake_ledger_inputs",
+    "input_kind": "synthetic_public_safe_methodology_example",
+    "input_path": "traces/external/local_ranking_methodology_inputs.example.json",
+    "input_sha256": "5b2fb6e2a153353bf5d62dc7cf8e02dd5116c2be072fb003c9621fe3addf95e2"
+  },
+  "methodology": {
+    "methodology_id": "local_ranking_methodology_v1",
+    "methodology_path": "benchmarks/local_ranking_methodology.json",
+    "methodology_sha256": "dabc58593abc1f616c9bb9c8f9e72be6455cdfcada473fa9bc213746781a7263",
+    "methodology_version": "1.0.0"
+  },
+  "publication_status": "example_only_not_publishable",
+  "ranking_claim_allowed": false,
+  "ranking_policy": {
+    "bootstrap_resample_count": 500,
+    "primary_metric_id": "severity_weighted_effective_pass_rate",
+    "severity_weights": {
+      "critical": 3.0,
+      "high": 2.0,
+      "low": 1.0,
+      "medium": 1.5
+    },
+    "tie_threshold_absolute": 0.01,
+    "uncertainty_method": "deterministic_bootstrap"
+  },
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "private_prompts_included": false,
+    "public_safe": true,
+    "raw_outputs_included": false
+  },
+  "snapshot_id": "m59_local_ranking_methodology_example",
+  "snapshot_kind": "methodology_example_only"
+}

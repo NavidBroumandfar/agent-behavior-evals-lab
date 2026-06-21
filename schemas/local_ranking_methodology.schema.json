@@ -1,0 +1,546 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local Ranking Methodology",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "methodology_id",
+    "version",
+    "generated_at",
+    "purpose",
+    "benchmark_scope",
+    "evidence_requirements",
+    "eligibility_requirements",
+    "severity_weights",
+    "metric_definitions",
+    "uncertainty_policy",
+    "tie_policy",
+    "abstention_policy",
+    "partial_run_policy",
+    "human_review_policy",
+    "publication_policy",
+    "claim_boundaries",
+    "quality_gate_boundary",
+    "source_paths",
+    "safety_assertions"
+  ],
+  "properties": {
+    "methodology_id": {
+      "type": "string",
+      "const": "local_ranking_methodology_v1"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "benchmark_scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_set_id",
+        "case_set_version",
+        "publishable_splits",
+        "minimum_publishable_split",
+        "prompt_template_id",
+        "harness_id"
+      ],
+      "properties": {
+        "case_set_id": {
+          "type": "string",
+          "const": "local_public_v1"
+        },
+        "case_set_version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "publishable_splits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "extended"
+            ]
+          }
+        },
+        "minimum_publishable_split": {
+          "type": "string",
+          "const": "standard"
+        },
+        "prompt_template_id": {
+          "type": "string",
+          "const": "local_text_only_v1"
+        },
+        "harness_id": {
+          "type": "string",
+          "const": "live_local_text_only_harness"
+        }
+      }
+    },
+    "evidence_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "ranking_evidence_class",
+        "excluded_evidence_classes",
+        "private_only_evidence_excluded",
+        "manual_public_samples_excluded_by_default",
+        "cloud_evidence_separate",
+        "run_ledger_required"
+      ],
+      "properties": {
+        "ranking_evidence_class": {
+          "type": "string",
+          "const": "local_public_benchmark"
+        },
+        "excluded_evidence_classes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "private_only_evidence_excluded": {
+          "type": "boolean",
+          "const": true
+        },
+        "manual_public_samples_excluded_by_default": {
+          "type": "boolean",
+          "const": true
+        },
+        "cloud_evidence_separate": {
+          "type": "boolean",
+          "const": true
+        },
+        "run_ledger_required": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "eligibility_requirements": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "required_run_status",
+        "require_ledger_ranking_eligible",
+        "require_complete_case_set",
+        "require_public_safe_outputs",
+        "require_no_unresolved_review",
+        "minimum_completion_rate",
+        "excluded_run_modes"
+      ],
+      "properties": {
+        "required_run_status": {
+          "type": "string",
+          "const": "succeeded"
+        },
+        "require_ledger_ranking_eligible": {
+          "type": "boolean",
+          "const": true
+        },
+        "require_complete_case_set": {
+          "type": "boolean",
+          "const": true
+        },
+        "require_public_safe_outputs": {
+          "type": "boolean",
+          "const": true
+        },
+        "require_no_unresolved_review": {
+          "type": "boolean",
+          "const": true
+        },
+        "minimum_completion_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "excluded_run_modes": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "severity_weights": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ],
+      "properties": {
+        "low": {
+          "type": "number",
+          "minimum": 0
+        },
+        "medium": {
+          "type": "number",
+          "minimum": 0
+        },
+        "high": {
+          "type": "number",
+          "minimum": 0
+        },
+        "critical": {
+          "type": "number",
+          "minimum": 0
+        }
+      }
+    },
+    "metric_definitions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "metric_id",
+          "label",
+          "metric_type",
+          "formula",
+          "uses_human_review",
+          "publication_required"
+        ],
+        "properties": {
+          "metric_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "label": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metric_type": {
+            "type": "string",
+            "enum": [
+              "primary",
+              "supporting",
+              "diagnostic"
+            ]
+          },
+          "formula": {
+            "type": "string",
+            "minLength": 1
+          },
+          "uses_human_review": {
+            "type": "boolean"
+          },
+          "publication_required": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "uncertainty_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "method",
+        "confidence_level",
+        "resample_count",
+        "random_seed",
+        "applied_to_metric",
+        "minimum_sample_size_for_publication"
+      ],
+      "properties": {
+        "method": {
+          "type": "string",
+          "const": "deterministic_bootstrap"
+        },
+        "confidence_level": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "resample_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "random_seed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "applied_to_metric": {
+          "type": "string",
+          "const": "severity_weighted_effective_pass_rate"
+        },
+        "minimum_sample_size_for_publication": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "tie_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tie_threshold_absolute",
+        "use_uncertainty_overlap",
+        "unresolved_review_counts_must_match",
+        "display_label"
+      ],
+      "properties": {
+        "tie_threshold_absolute": {
+          "type": "number",
+          "minimum": 0
+        },
+        "use_uncertainty_overlap": {
+          "type": "boolean"
+        },
+        "unresolved_review_counts_must_match": {
+          "type": "boolean",
+          "const": true
+        },
+        "display_label": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "abstention_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "abstention_counts_as_failure",
+        "tracked_separately",
+        "allowed_claim_language"
+      ],
+      "properties": {
+        "abstention_counts_as_failure": {
+          "type": "boolean",
+          "const": true
+        },
+        "tracked_separately": {
+          "type": "boolean",
+          "const": true
+        },
+        "allowed_claim_language": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "partial_run_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "rank_partial_runs",
+        "report_partial_runs_as_exclusions",
+        "minimum_completion_rate",
+        "required_exclusion_reason"
+      ],
+      "properties": {
+        "rank_partial_runs": {
+          "type": "boolean",
+          "const": false
+        },
+        "report_partial_runs_as_exclusions": {
+          "type": "boolean",
+          "const": true
+        },
+        "minimum_completion_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "required_exclusion_reason": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "human_review_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "high_risk_severities",
+        "minimum_high_risk_review_rate",
+        "required_failed_high_risk_review_rate",
+        "unresolved_needs_discussion_allowed",
+        "deterministic_sampling_seed",
+        "sampling_rule"
+      ],
+      "properties": {
+        "high_risk_severities": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "high",
+              "critical"
+            ]
+          }
+        },
+        "minimum_high_risk_review_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "required_failed_high_risk_review_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "unresolved_needs_discussion_allowed": {
+          "type": "boolean",
+          "const": false
+        },
+        "deterministic_sampling_seed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sampling_rule": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "publication_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "allow_example_rank_order",
+        "allow_real_rankings_before_m60",
+        "example_artifacts_must_be_non_publishable",
+        "required_report_fields"
+      ],
+      "properties": {
+        "allow_example_rank_order": {
+          "type": "boolean",
+          "const": true
+        },
+        "allow_real_rankings_before_m60": {
+          "type": "boolean",
+          "const": false
+        },
+        "example_artifacts_must_be_non_publishable": {
+          "type": "boolean",
+          "const": true
+        },
+        "required_report_fields": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "claim_boundaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "quality_gate_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "validates_methodology_only",
+        "live_local_execution",
+        "provider_execution",
+        "external_actions",
+        "gated_llm_review",
+        "publishes_real_rankings"
+      ],
+      "properties": {
+        "validates_methodology_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_local_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "provider_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "gated_llm_review": {
+          "type": "boolean",
+          "const": false
+        },
+        "publishes_real_rankings": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "source_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required",
+        "private_prompts_included",
+        "raw_outputs_included"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_prompts_included": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_outputs_included": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  }
+}

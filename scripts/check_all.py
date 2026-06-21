@@ -55,6 +55,10 @@ LOCAL_RUN_LEDGER_OUTPUT_PATH = REPO_ROOT / "traces/external/local_run_ledger_out
 EXPECTED_LOCAL_RUN_LEDGER_OUTPUT_LINES = 4
 LOCAL_RUN_LEDGER_SCORED_TRACE_PATH = REPO_ROOT / "traces/scored/local_run_ledger_outputs.example.jsonl"
 EXPECTED_LOCAL_RUN_LEDGER_SCORED_TRACE_LINES = 4
+LOCAL_RANKING_METHODOLOGY_PATH = REPO_ROOT / "benchmarks/local_ranking_methodology.json"
+LOCAL_RANKING_METHODOLOGY_INPUT_PATH = REPO_ROOT / "traces/external/local_ranking_methodology_inputs.example.json"
+LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_ranking_methodology_example.json"
+LOCAL_RANKING_METHODOLOGY_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_ranking_methodology_example.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -409,6 +413,14 @@ CHECKS = [
         ["python3", "src/validate_local_run_ledger.py"],
     ),
     (
+        "local ranking methodology generation",
+        ["python3", "src/local_ranking_methodology.py"],
+    ),
+    (
+        "local ranking methodology validation",
+        ["python3", "src/validate_local_ranking_methodology.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -452,6 +464,8 @@ CHECKS = [
             "src/validate_live_local_run.py",
             "src/local_run_ledger.py",
             "src/validate_local_run_ledger.py",
+            "src/local_ranking_methodology.py",
+            "src/validate_local_ranking_methodology.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -620,6 +634,14 @@ def main() -> int:
                 verify_trace_count(LOCAL_RUN_LEDGER_SCORED_TRACE_PATH, EXPECTED_LOCAL_RUN_LEDGER_SCORED_TRACE_LINES)
             if name == "local run ledger validation":
                 verify_report_exists(LOCAL_RUN_LEDGER_PATH)
+            if name == "local ranking methodology generation":
+                verify_report_exists(LOCAL_RANKING_METHODOLOGY_PATH)
+                verify_report_exists(LOCAL_RANKING_METHODOLOGY_INPUT_PATH)
+                verify_report_exists(LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH)
+                verify_report_exists(LOCAL_RANKING_METHODOLOGY_REPORT_PATH)
+            if name == "local ranking methodology validation":
+                verify_report_exists(LOCAL_RANKING_METHODOLOGY_PATH)
+                verify_report_exists(LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

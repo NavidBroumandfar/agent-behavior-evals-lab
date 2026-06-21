@@ -110,6 +110,10 @@
     {
       "area": "Local Run Ledger",
       "summary": "Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate."
+    },
+    {
+      "area": "Local Ranking Methodology",
+      "summary": "Defined severity-weighted local ranking methodology, uncertainty, tie, abstention, partial-run, eligibility, and human-review policies without publishing real rankings."
     }
   ],
   "milestones": [
@@ -280,15 +284,22 @@
       "path": "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 58 - Reproducible Local Run Ledger"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M59",
+      "path": "docs/milestones/m59-local-ranking-methodology-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 59 - Local Ranking Methodology"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 13,
+    "json_snapshots": 14,
     "live_execution": false,
-    "markdown_reports": 24,
-    "report_artifacts_indexed": 37
+    "markdown_reports": 25,
+    "report_artifacts_indexed": 39
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -330,7 +341,8 @@
     "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
     "docs/milestones/m56-local-adapter-registry-closeout.md",
     "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
-    "docs/milestones/m58-reproducible-local-run-ledger-closeout.md"
+    "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
+    "docs/milestones/m59-local-ranking-methodology-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

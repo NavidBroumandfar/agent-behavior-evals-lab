@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 37 |
+| Indexed report artifacts | 39 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -36,6 +36,7 @@
 - **Local Adapter Registry**: Added Ollama, local OpenAI-compatible, and manual saved-output adapter registry entries with live-local opt-in guardrails.
 - **Live Local Harness**: Added an opt-in local text-only harness with dry-run plan validation, fake-client tests, and reviewed live-local output import guarded by explicit flags.
 - **Local Run Ledger**: Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate.
+- **Local Ranking Methodology**: Defined severity-weighted local ranking methodology, uncertainty, tie, abstention, partial-run, eligibility, and human-review policies without publishing real rankings.
 
 ## Dashboard Snapshot
 
@@ -76,6 +77,7 @@
 | `M56` | Complete / review-ready | `docs/milestones/m56-local-adapter-registry-closeout.md` |
 | `M57` | Complete / review-ready | `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md` |
 | `M58` | Complete / review-ready | `docs/milestones/m58-reproducible-local-run-ledger-closeout.md` |
+| `M59` | Complete / review-ready | `docs/milestones/m59-local-ranking-methodology-closeout.md` |
 
 ## Boundaries
 
@@ -114,3 +116,4 @@
 - `docs/milestones/m56-local-adapter-registry-closeout.md`
 - `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`
 - `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`
+- `docs/milestones/m59-local-ranking-methodology-closeout.md`

@@ -48,6 +48,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Local Adapter Registry](concepts/local_adapter_registry.md)
 - [Live Local Text-Only Harness](concepts/live_local_text_only_harness.md)
 - [Reproducible Local Run Ledger](concepts/local_run_ledger.md)
+- [Local Ranking Methodology](concepts/local_ranking_methodology.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -111,6 +112,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Local adapter registry: `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`
 - Live local text-only harness: `scripts/live_local.py`, `src/live_local_harness.py`, `schemas/live_local_run.schema.json`, `src/validate_live_local_run.py`, and `traces/external/live_local_run_plan.example.json`
 - Reproducible local run ledger: `traces/external/local_run_ledger.example.json`, `schemas/local_run_ledger.schema.json`, `src/local_run_ledger.py`, and `src/validate_local_run_ledger.py`
+- Local ranking methodology: `benchmarks/local_ranking_methodology.json`, `schemas/local_ranking_methodology.schema.json`, `src/local_ranking_methodology.py`, and `src/validate_local_ranking_methodology.py`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`
@@ -180,6 +182,9 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 54 closeout: `docs/milestones/m54-local-benchmark-claim-charter-closeout.md`
 - Milestone 55 closeout: `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md`
 - Milestone 56 closeout: `docs/milestones/m56-local-adapter-registry-closeout.md`
+- Milestone 57 closeout: `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`
+- Milestone 58 closeout: `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`
+- Milestone 59 closeout: `docs/milestones/m59-local-ranking-methodology-closeout.md`
 
 ## Reading Order
 

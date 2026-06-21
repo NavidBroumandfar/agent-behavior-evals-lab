@@ -810,7 +810,14 @@ Acceptance criteria:
 
 Define how local/open-weight models are ranked without overclaiming.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m59-local-ranking-methodology-closeout.md`.
+
+Implementation note:
+
+- M59 adds `benchmarks/local_ranking_methodology.json`, `schemas/local_ranking_methodology.schema.json`, `src/local_ranking_methodology.py`, `src/validate_local_ranking_methodology.py`, and non-publishable synthetic example artifacts.
+- The methodology defines severity-weighted effective pass rate, heuristic pass rate, bootstrap uncertainty, tie policy, abstention policy, partial-run exclusion, eligibility requirements, and high-risk human-review sampling.
+- The committed example uses fake public-safe ledger-like inputs over the smoke split and is marked `ranking_claim_allowed: false`.
+- The deterministic gate validates methodology schema, fake inputs, deterministic calculations, and example-only artifacts. It does not publish real rankings or call local models.
 
 Deliverables:
 
@@ -824,6 +831,7 @@ Acceptance criteria:
 - Rankings include sample size, uncertainty, exclusions, and benchmark version.
 - Rankings distinguish heuristic score, adjudicated score, and unresolved review count.
 - A model cannot be ranked from private-only evidence.
+- Smoke-split and synthetic examples remain non-publishable; public rankings require ledger-backed `local_public_benchmark` evidence over standard or extended splits.
 
 ### M60: Local/Open-Weight Benchmark Report V1
 

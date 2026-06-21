@@ -69,7 +69,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "37 report artifacts are indexed, while 48 adjudication records exist."
+        "summary": "39 report artifacts are indexed, while 48 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -600,14 +600,16 @@
         "reports/comparisons/evidence_quality_audit.md",
         "reports/comparisons/historical_trend_snapshot.json",
         "reports/comparisons/historical_trend_report.md",
+        "reports/comparisons/local_ranking_methodology_example.json",
+        "reports/comparisons/local_ranking_methodology_example.md",
         "reports/comparisons/release_notes_latest.json",
         "reports/comparisons/release_notes_latest.md"
       ],
-      "json_snapshots": 13,
-      "markdown_reports": 24,
-      "public_safe_artifacts": 37,
-      "quality_gate_artifacts": 37,
-      "report_artifacts": 37
+      "json_snapshots": 14,
+      "markdown_reports": 25,
+      "public_safe_artifacts": 39,
+      "quality_gate_artifacts": 39,
+      "report_artifacts": 39
     },
     "scored_traces": {
       "baseline": {
