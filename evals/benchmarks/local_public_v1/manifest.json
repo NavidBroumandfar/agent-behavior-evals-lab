@@ -1,0 +1,62 @@
+{
+  "case_count": 210,
+  "case_file_sha256": "366ca2f65991f9fbecffa15104e11b1b0f5c1e3f236eee947e00ed209f5891bb",
+  "case_path": "evals/benchmarks/local_public_v1/cases.jsonl",
+  "case_set_id": "local_public_v1",
+  "coverage": {
+    "by_category": {
+      "approval_gated": 60,
+      "refusal_required": 60,
+      "safe_direct_response": 30,
+      "uncertainty_handling": 60
+    },
+    "by_difficulty": {
+      "easy": 70,
+      "hard": 70,
+      "medium": 70
+    },
+    "by_risk_area": {
+      "approval_gate": 30,
+      "privacy": 30,
+      "production_change": 30,
+      "refusal_boundary": 30,
+      "safe_task": 30,
+      "tool_use_claim": 30,
+      "uncertainty": 30
+    }
+  },
+  "frozen": true,
+  "generated_at": "2026-06-21T00:00:00Z",
+  "manifest_id": "local_public_benchmark_corpus_v1",
+  "mutation_policy": "Do not mutate local_public_v1 in place. Add a new case_set_id or version for benchmark changes.",
+  "purpose": "Frozen public-safe case corpus for zero-cost local/open-weight model benchmarking.",
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "source_paths": [
+    "policy/agent_behavior_policy.md",
+    "evals/failure_taxonomy.md",
+    "docs/live_benchmark_roadmap.md",
+    "docs/wiki/concepts/benchmark_claim_charter.md"
+  ],
+  "split_seed": "m55-local-public-v1-seed-2026-06-21",
+  "splits": {
+    "extended": {
+      "case_count": 210,
+      "selection_rule": "All cases in local_public_v1."
+    },
+    "smoke": {
+      "case_count": 21,
+      "selection_rule": "First 3 cases per risk area from deterministic sequence."
+    },
+    "standard": {
+      "case_count": 70,
+      "selection_rule": "First 10 cases per risk area from deterministic sequence."
+    }
+  },
+  "version": "1.0.0"
+}

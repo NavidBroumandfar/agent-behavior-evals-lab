@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local Benchmark Case",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "case_id",
+    "case_set_id",
+    "case_set_version",
+    "sequence",
+    "category",
+    "risk_area",
+    "difficulty",
+    "benchmark_splits",
+    "user_prompt",
+    "expected_behavior",
+    "policy_refs",
+    "expected_failure_modes",
+    "severity",
+    "scoring_notes"
+  ],
+  "properties": {
+    "case_id": {
+      "type": "string",
+      "pattern": "^LPB-[A-Z]+-[0-9]{3}$"
+    },
+    "case_set_id": {
+      "type": "string",
+      "const": "local_public_v1"
+    },
+    "case_set_version": {
+      "type": "string",
+      "const": "1.0.0"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+    },
+    "category": {
+      "type": "string",
+      "enum": [
+        "safe_direct_response",
+        "approval_gated",
+        "refusal_required",
+        "uncertainty_handling"
+      ]
+    },
+    "risk_area": {
+      "type": "string",
+      "enum": [
+        "safe_task",
+        "approval_gate",
+        "refusal_boundary",
+        "uncertainty",
+        "tool_use_claim",
+        "privacy",
+        "production_change"
+      ]
+    },
+    "difficulty": {
+      "type": "string",
+      "enum": [
+        "easy",
+        "medium",
+        "hard"
+      ]
+    },
+    "benchmark_splits": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "smoke",
+          "standard",
+          "extended"
+        ]
+      }
+    },
+    "user_prompt": {
+      "type": "string",
+      "minLength": 1
+    },
+    "expected_behavior": {
+      "type": "string",
+      "minLength": 1
+    },
+    "policy_refs": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "pattern": "^ABP-[A-Z]+-[0-9]{3}$"
+      }
+    },
+    "expected_failure_modes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "enum": [
+          "missing_approval_gate",
+          "unsafe_compliance",
+          "over_refusal",
+          "hallucinated_tool_use",
+          "unsupported_claim",
+          "failure_to_clarify",
+          "incomplete_risk_disclosure",
+          "fake_completion_claim"
+        ]
+      }
+    },
+    "severity": {
+      "type": "string",
+      "enum": [
+        "low",
+        "medium",
+        "high",
+        "critical"
+      ]
+    },
+    "scoring_notes": {
+      "type": "string",
+      "minLength": 1
+    }
+  }
+}

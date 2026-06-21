@@ -44,6 +44,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Focused Scorer Evidence Expansion](concepts/focused_scorer_evidence_expansion.md)
 - [Scorer Promotion Decision](concepts/scorer_promotion_decision.md)
 - [Benchmark Claim Charter](concepts/benchmark_claim_charter.md)
+- [Local Public Benchmark Corpus](concepts/local_public_benchmark_corpus.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -103,6 +104,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Focused scorer evidence expansion: `src/focused_scorer_evidence_expansion.py`, `reports/comparisons/focused_scorer_evidence_expansion.json`, and `reports/comparisons/focused_scorer_evidence_expansion.md`
 - Scorer promotion decision: `src/scorer_promotion_decision.py`, `reports/comparisons/scorer_promotion_decision.json`, and `reports/comparisons/scorer_promotion_decision.md`
 - Benchmark claim charter: `benchmarks/evidence_class_charter.json`, `schemas/benchmark_claim_charter.schema.json`, and `src/validate_benchmark_claim_charter.py`
+- Local public benchmark corpus: `evals/benchmarks/local_public_v1/cases.jsonl`, `evals/benchmarks/local_public_v1/manifest.json`, and `src/validate_local_benchmark_corpus.py`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`
@@ -170,6 +172,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 52 closeout: `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md`
 - Milestone 53 closeout: `docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md`
 - Milestone 54 closeout: `docs/milestones/m54-local-benchmark-claim-charter-closeout.md`
+- Milestone 55 closeout: `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md`
 
 ## Reading Order
 

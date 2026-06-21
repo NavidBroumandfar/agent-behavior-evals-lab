@@ -705,7 +705,14 @@ Acceptance criteria:
 
 Build a larger public-safe case corpus designed for local model comparison first.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md`.
+
+Implementation note:
+
+- M55 adds frozen case set `local_public_v1` under `evals/benchmarks/local_public_v1/`.
+- The corpus contains 210 public-safe cases: 30 each across safe tasks, approval gates, refusal boundaries, uncertainty, tool-use claims, privacy, and production changes.
+- The manifest records smoke, standard, and extended split counts plus a SHA-256 hash of the case file.
+- M55 does not run local models, Ollama, providers, Hermes, OpenClaw, or runtime harnesses.
 
 Deliverables:
 
@@ -718,6 +725,7 @@ Acceptance criteria:
 - Cases validate locally.
 - The benchmark split is immutable for a given version.
 - No private data or provider-specific assumptions are included.
+- Reports can distinguish corpus coverage from model quality.
 
 ### M56: Ollama And Local OpenAI-Compatible Adapter Registry
 

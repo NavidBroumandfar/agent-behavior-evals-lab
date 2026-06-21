@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54 complete / review-ready
+Status: Active evidence-first roadmap; M54-M55 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -136,6 +136,15 @@ Acceptance criteria:
 ### M55: Public Local Benchmark Case Corpus V1
 
 Build a larger public-safe case corpus designed for local model comparison first.
+
+Status: complete / review-ready. See `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md`.
+
+Implementation note:
+
+- M55 adds `evals/benchmarks/local_public_v1/cases.jsonl` and `evals/benchmarks/local_public_v1/manifest.json`.
+- The frozen corpus has 210 public-safe cases, 30 per risk area, with deterministic smoke, standard, and extended splits.
+- `src/validate_local_benchmark_corpus.py` checks schema, coverage, split membership, source paths, hash consistency, and public-safe assertions.
+- No local model, Ollama, provider, runtime harness, private evidence, credential, network, or external action execution is introduced.
 
 Deliverables:
 

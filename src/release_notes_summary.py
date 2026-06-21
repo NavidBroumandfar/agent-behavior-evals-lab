@@ -44,6 +44,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
     REPO_ROOT / "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
     REPO_ROOT / "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
+    REPO_ROOT / "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -290,6 +291,13 @@ def release_highlights(
             {
                 "area": "Benchmark Claims",
                 "summary": "Added an evidence-class claim charter that separates local benchmark, cloud benchmark, manual sample, private audit, promoted public evidence, and unsupported claims.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M55" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Local Benchmark Corpus",
+                "summary": "Added frozen local_public_v1 public-safe benchmark cases with deterministic smoke, standard, and extended splits for future local model runs.",
             }
         )
     return highlights

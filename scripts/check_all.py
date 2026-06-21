@@ -44,6 +44,9 @@ HISTORICAL_TREND_REPORT_PATH = REPO_ROOT / "reports/comparisons/historical_trend
 RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
 RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
 BENCHMARK_CLAIM_CHARTER_PATH = REPO_ROOT / "benchmarks/evidence_class_charter.json"
+LOCAL_BENCHMARK_CASE_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/cases.jsonl"
+EXPECTED_LOCAL_BENCHMARK_CASE_LINES = 210
+LOCAL_BENCHMARK_MANIFEST_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/manifest.json"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -374,6 +377,14 @@ CHECKS = [
         ["python3", "src/validate_benchmark_claim_charter.py"],
     ),
     (
+        "local benchmark corpus generation",
+        ["python3", "src/local_benchmark_corpus.py"],
+    ),
+    (
+        "local benchmark corpus validation",
+        ["python3", "src/validate_local_benchmark_corpus.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -410,6 +421,8 @@ CHECKS = [
             "src/validate_adjudication_manifest.py",
             "src/validate_report_manifest.py",
             "src/validate_benchmark_claim_charter.py",
+            "src/local_benchmark_corpus.py",
+            "src/validate_local_benchmark_corpus.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -561,6 +574,11 @@ def main() -> int:
                 verify_report_exists(RELEASE_NOTES_REPORT_PATH)
             if name == "benchmark claim charter validation":
                 verify_report_exists(BENCHMARK_CLAIM_CHARTER_PATH)
+            if name == "local benchmark corpus generation":
+                verify_jsonl_count(LOCAL_BENCHMARK_CASE_PATH, EXPECTED_LOCAL_BENCHMARK_CASE_LINES)
+                verify_report_exists(LOCAL_BENCHMARK_MANIFEST_PATH)
+            if name == "local benchmark corpus validation":
+                verify_report_exists(LOCAL_BENCHMARK_MANIFEST_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

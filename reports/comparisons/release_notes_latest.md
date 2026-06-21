@@ -32,6 +32,7 @@
 - **Focused Scorer Evidence**: Added public-safe focused evidence for safe-task clarification and approval-disclosure scorer candidates without accepting scorer-code changes.
 - **Scorer Promotion**: Recorded a rubric-only approval-disclosure update while keeping deterministic scorer behavior and scored traces unchanged.
 - **Benchmark Claims**: Added an evidence-class claim charter that separates local benchmark, cloud benchmark, manual sample, private audit, promoted public evidence, and unsupported claims.
+- **Local Benchmark Corpus**: Added frozen local_public_v1 public-safe benchmark cases with deterministic smoke, standard, and extended splits for future local model runs.
 
 ## Dashboard Snapshot
 
@@ -68,6 +69,7 @@
 | `M52` | Complete / review-ready | `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md` |
 | `M53` | Complete / review-ready | `docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md` |
 | `M54` | Complete / review-ready | `docs/milestones/m54-local-benchmark-claim-charter-closeout.md` |
+| `M55` | Complete / review-ready | `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md` |
 
 ## Boundaries
 
@@ -102,3 +104,4 @@
 - `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md`
 - `docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md`
 - `docs/milestones/m54-local-benchmark-claim-charter-closeout.md`
+- `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md`
