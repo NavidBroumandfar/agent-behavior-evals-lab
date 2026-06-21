@@ -1,0 +1,142 @@
+{
+  "adapters": [
+    {
+      "adapter_class": "ollama",
+      "adapter_id": "ollama_text_only",
+      "adapter_version": "0.1.0",
+      "credential_policy": "none_required",
+      "credentials_required": false,
+      "default_parameters": {
+        "context_window_tokens": 8192,
+        "max_output_tokens": 1024,
+        "temperature": 0,
+        "timeout_seconds": 120
+      },
+      "dry_run_validation_allowed": true,
+      "endpoint_class": "local_ollama_http",
+      "endpoint_template": "http://127.0.0.1:11434/api/chat",
+      "label": "Ollama Text-Only Local Adapter",
+      "live_local_required": true,
+      "notes": "Future M57 adapter for local Ollama text-only generation. Registry validation is gated; model execution is opt-in only.",
+      "output_contract": "normalized_adapter_output",
+      "quality_gate_execution_allowed": false,
+      "runtime": "ollama",
+      "supported_splits": [
+        "smoke",
+        "standard",
+        "extended"
+      ],
+      "target_profile": "text_only_adapter_candidate",
+      "tool_availability": "text_only_no_tools"
+    },
+    {
+      "adapter_class": "local_openai_compatible",
+      "adapter_id": "local_openai_compatible_text_only",
+      "adapter_version": "0.1.0",
+      "credential_policy": "none_required",
+      "credentials_required": false,
+      "default_parameters": {
+        "context_window_tokens": 8192,
+        "max_output_tokens": 1024,
+        "temperature": 0,
+        "timeout_seconds": 120
+      },
+      "dry_run_validation_allowed": true,
+      "endpoint_class": "local_openai_compatible_http",
+      "endpoint_template": "http://127.0.0.1:8000/v1/chat/completions",
+      "label": "Local OpenAI-Compatible Text-Only Adapter",
+      "live_local_required": true,
+      "notes": "Future M57 adapter for local OpenAI-compatible servers such as llama.cpp, vLLM, or LM Studio configured locally. No credential is required by this registry.",
+      "output_contract": "normalized_adapter_output",
+      "quality_gate_execution_allowed": false,
+      "runtime": "local_openai_compatible",
+      "supported_splits": [
+        "smoke",
+        "standard",
+        "extended"
+      ],
+      "target_profile": "text_only_adapter_candidate",
+      "tool_availability": "text_only_no_tools"
+    },
+    {
+      "adapter_class": "manual_saved_output",
+      "adapter_id": "manual_saved_output",
+      "adapter_version": "0.1.0",
+      "credential_policy": "not_applicable",
+      "credentials_required": false,
+      "default_parameters": {
+        "context_window_tokens": 0,
+        "max_output_tokens": 0,
+        "temperature": 0,
+        "timeout_seconds": 0
+      },
+      "dry_run_validation_allowed": true,
+      "endpoint_class": "not_applicable",
+      "endpoint_template": "not_applicable",
+      "label": "Manual Saved-Output Adapter",
+      "live_local_required": false,
+      "notes": "Saved-output-only path for public-safe manually collected final text. It does not call models and remains useful as a workflow bridge.",
+      "output_contract": "normalized_adapter_output",
+      "quality_gate_execution_allowed": false,
+      "runtime": "manual_saved_output",
+      "supported_splits": [
+        "smoke",
+        "standard",
+        "extended"
+      ],
+      "target_profile": "text_only_adapter_candidate",
+      "tool_availability": "none"
+    }
+  ],
+  "case_set": {
+    "case_path": "evals/benchmarks/local_public_v1/cases.jsonl",
+    "case_set_id": "local_public_v1",
+    "manifest_path": "evals/benchmarks/local_public_v1/manifest.json",
+    "supported_splits": [
+      "smoke",
+      "standard",
+      "extended"
+    ],
+    "version": "1.0.0"
+  },
+  "future_extension_points": [
+    {
+      "extension_id": "hosted_provider_adapter",
+      "notes": "Reserved for a later paid or donated cloud-provider path. It is not active and is not needed for the zero-cost local benchmark sequence.",
+      "status": "reserved_not_active"
+    },
+    {
+      "extension_id": "tool_capable_agent_adapter",
+      "notes": "Reserved for later sandboxed agent-runtime work after tool-boundary contracts and action recorders exist.",
+      "status": "reserved_not_active"
+    }
+  ],
+  "generated_at": "2026-06-21T00:00:00Z",
+  "live_execution_policy": {
+    "dry_run_in_quality_gate": true,
+    "external_actions_allowed": false,
+    "live_local_in_quality_gate": false,
+    "live_local_required_env": "AGENT_EVALS_ENABLE_LIVE_LOCAL",
+    "live_local_required_flag": "--live-local",
+    "normalized_outputs_require_review": true,
+    "raw_outputs_committable": false,
+    "tools_enabled": false
+  },
+  "purpose": "Declare zero-cost local and manual text-only adapter classes for future local_public_v1 benchmark runs without executing models in the quality gate.",
+  "registry_id": "local_adapter_registry",
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "source_paths": [
+    "docs/live_benchmark_roadmap.md",
+    "docs/wiki/concepts/benchmark_claim_charter.md",
+    "docs/wiki/concepts/local_public_benchmark_corpus.md",
+    "targets/adapters/provider_agnostic_adapter_interface.md",
+    "targets/adapters/real_model_adapter_design.md"
+  ],
+  "version": "0.1.0"
+}

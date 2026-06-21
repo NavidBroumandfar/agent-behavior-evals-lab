@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M55 complete / review-ready
+Status: Active evidence-first roadmap; M54-M56 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -163,6 +163,15 @@ Acceptance criteria:
 ### M56: Ollama And Local OpenAI-Compatible Adapter Registry
 
 Add opt-in local model adapters without making live model execution part of the local quality gate.
+
+Status: complete / review-ready. See `docs/milestones/m56-local-adapter-registry-closeout.md`.
+
+Implementation note:
+
+- M56 adds `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`.
+- The registry declares Ollama, local OpenAI-compatible, and manual saved-output adapter classes for future `local_public_v1` runs.
+- Future live-local model calls require `--live-local` plus `AGENT_EVALS_ENABLE_LIVE_LOCAL`.
+- No local model, Ollama, provider, runtime harness, private evidence, credential, network, or external action execution is introduced.
 
 Deliverables:
 

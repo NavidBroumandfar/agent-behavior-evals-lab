@@ -98,6 +98,10 @@
     {
       "area": "Local Benchmark Corpus",
       "summary": "Added frozen local_public_v1 public-safe benchmark cases with deterministic smoke, standard, and extended splits for future local model runs."
+    },
+    {
+      "area": "Local Adapter Registry",
+      "summary": "Added Ollama, local OpenAI-compatible, and manual saved-output adapter registry entries with live-local opt-in guardrails."
     }
   ],
   "milestones": [
@@ -247,6 +251,13 @@
       "path": "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 55 - Public Local Benchmark Case Corpus V1"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M56",
+      "path": "docs/milestones/m56-local-adapter-registry-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 56 - Ollama And Local OpenAI-Compatible Adapter Registry"
     }
   ],
   "quality_gate": {
@@ -294,7 +305,8 @@
     "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
     "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
     "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
-    "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md"
+    "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
+    "docs/milestones/m56-local-adapter-registry-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

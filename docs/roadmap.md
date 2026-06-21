@@ -731,7 +731,14 @@ Acceptance criteria:
 
 Add opt-in local model adapters without making live model execution part of the local quality gate.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m56-local-adapter-registry-closeout.md`.
+
+Implementation note:
+
+- M56 adds `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`.
+- The registry defines `ollama_text_only`, `local_openai_compatible_text_only`, and `manual_saved_output` adapter classes for future `local_public_v1` runs.
+- Future local model calls must require `--live-local` and `AGENT_EVALS_ENABLE_LIVE_LOCAL`.
+- M56 does not run local models, Ollama, providers, Hermes, OpenClaw, or runtime harnesses.
 
 Deliverables:
 
@@ -743,6 +750,7 @@ Acceptance criteria:
 
 - No credential is required for the local Ollama path.
 - Local model calls require an explicit live-local flag or equivalent enable switch.
+- Local adapters produce normalized saved-output records.
 - Unit tests use fakes only.
 
 ### M57: Opt-In Local Text-Only Model Harness

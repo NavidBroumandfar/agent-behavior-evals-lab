@@ -30,8 +30,8 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 40)
         self.assertEqual(release_notes["dashboard_snapshot"]["harness_bridge_decision"], "defer_harness_integration")
         self.assertEqual(release_notes["dashboard_snapshot"]["review_needs_discussion"], 0)
-        self.assertEqual(len(release_notes["milestones"]), 21)
-        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M55")
+        self.assertEqual(len(release_notes["milestones"]), 22)
+        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M56")
         self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 37)
 
     def test_generate_markdown_contains_release_sections(self):
@@ -57,6 +57,7 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertIn("Scorer Promotion", markdown)
         self.assertIn("Benchmark Claims", markdown)
         self.assertIn("Local Benchmark Corpus", markdown)
+        self.assertIn("Local Adapter Registry", markdown)
         self.assertIn("No live provider APIs", markdown)
 
     def test_milestone_summary_extracts_title_status_and_date(self):

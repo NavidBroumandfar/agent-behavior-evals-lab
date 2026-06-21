@@ -47,6 +47,7 @@ BENCHMARK_CLAIM_CHARTER_PATH = REPO_ROOT / "benchmarks/evidence_class_charter.js
 LOCAL_BENCHMARK_CASE_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/cases.jsonl"
 EXPECTED_LOCAL_BENCHMARK_CASE_LINES = 210
 LOCAL_BENCHMARK_MANIFEST_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/manifest.json"
+LOCAL_ADAPTER_REGISTRY_PATH = REPO_ROOT / "targets/adapters/local_adapter_registry.json"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -385,6 +386,10 @@ CHECKS = [
         ["python3", "src/validate_local_benchmark_corpus.py"],
     ),
     (
+        "local adapter registry validation",
+        ["python3", "src/validate_local_adapter_registry.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -423,6 +428,7 @@ CHECKS = [
             "src/validate_benchmark_claim_charter.py",
             "src/local_benchmark_corpus.py",
             "src/validate_local_benchmark_corpus.py",
+            "src/validate_local_adapter_registry.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -579,6 +585,8 @@ def main() -> int:
                 verify_report_exists(LOCAL_BENCHMARK_MANIFEST_PATH)
             if name == "local benchmark corpus validation":
                 verify_report_exists(LOCAL_BENCHMARK_MANIFEST_PATH)
+            if name == "local adapter registry validation":
+                verify_report_exists(LOCAL_ADAPTER_REGISTRY_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1
