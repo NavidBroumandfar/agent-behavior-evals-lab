@@ -1005,6 +1005,52 @@
       }
     },
     {
+      "artifact_id": "local_open_weight_benchmark_v1_snapshot",
+      "label": "Local Open-Weight Benchmark V1 JSON",
+      "path": "reports/comparisons/local_open_weight_benchmark_v1.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/local_benchmark_report.py",
+      "input_paths": [
+        "benchmarks/evidence_class_charter.json",
+        "benchmarks/local_ranking_methodology.json",
+        "evals/benchmarks/local_public_v1/manifest.json",
+        "traces/external/local_run_ledger.example.json",
+        "schemas/local_benchmark_report.schema.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Evidence-gated M60 local/open-weight benchmark report snapshot; publishes no ranking when eligible real local evidence is absent.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "local_open_weight_benchmark_v1_report",
+      "label": "Local Open-Weight Benchmark V1 Report",
+      "path": "reports/comparisons/local_open_weight_benchmark_v1.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/local_benchmark_report.py",
+      "input_paths": [
+        "reports/comparisons/local_open_weight_benchmark_v1.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/local_open_weight_benchmark_v1.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M60 benchmark report. It is public-safe and explicitly withholds rankings until M59 evidence requirements are met.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -1038,7 +1084,8 @@
         "docs/milestones/m56-local-adapter-registry-closeout.md",
         "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
         "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
-        "docs/milestones/m59-local-ranking-methodology-closeout.md"
+        "docs/milestones/m59-local-ranking-methodology-closeout.md",
+        "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1087,7 +1134,8 @@
         "docs/milestones/m56-local-adapter-registry-closeout.md",
         "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
         "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
-        "docs/milestones/m59-local-ranking-methodology-closeout.md"
+        "docs/milestones/m59-local-ranking-methodology-closeout.md",
+        "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

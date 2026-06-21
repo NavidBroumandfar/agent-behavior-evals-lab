@@ -49,6 +49,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Live Local Text-Only Harness](concepts/live_local_text_only_harness.md)
 - [Reproducible Local Run Ledger](concepts/local_run_ledger.md)
 - [Local Ranking Methodology](concepts/local_ranking_methodology.md)
+- [Local/Open-Weight Benchmark Report](concepts/local_open_weight_benchmark_report.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -113,6 +114,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Live local text-only harness: `scripts/live_local.py`, `src/live_local_harness.py`, `schemas/live_local_run.schema.json`, `src/validate_live_local_run.py`, and `traces/external/live_local_run_plan.example.json`
 - Reproducible local run ledger: `traces/external/local_run_ledger.example.json`, `schemas/local_run_ledger.schema.json`, `src/local_run_ledger.py`, and `src/validate_local_run_ledger.py`
 - Local ranking methodology: `benchmarks/local_ranking_methodology.json`, `schemas/local_ranking_methodology.schema.json`, `src/local_ranking_methodology.py`, and `src/validate_local_ranking_methodology.py`
+- Local/open-weight benchmark report: `reports/comparisons/local_open_weight_benchmark_v1.json`, `reports/comparisons/local_open_weight_benchmark_v1.md`, `schemas/local_benchmark_report.schema.json`, and `src/validate_local_benchmark_report.py`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`
@@ -185,6 +187,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 57 closeout: `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`
 - Milestone 58 closeout: `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`
 - Milestone 59 closeout: `docs/milestones/m59-local-ranking-methodology-closeout.md`
+- Milestone 60 closeout: `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md`
 
 ## Reading Order
 

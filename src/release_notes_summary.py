@@ -49,6 +49,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
     REPO_ROOT / "docs/milestones/m58-reproducible-local-run-ledger-closeout.md",
     REPO_ROOT / "docs/milestones/m59-local-ranking-methodology-closeout.md",
+    REPO_ROOT / "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -330,6 +331,13 @@ def release_highlights(
             {
                 "area": "Local Ranking Methodology",
                 "summary": "Defined severity-weighted local ranking methodology, uncertainty, tie, abstention, partial-run, eligibility, and human-review policies without publishing real rankings.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M60" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Local Benchmark Report",
+                "summary": "Added an evidence-gated local/open-weight benchmark report that withholds rankings until reviewed ledger-backed real local evidence exists.",
             }
         )
     return highlights

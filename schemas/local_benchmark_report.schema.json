@@ -1,0 +1,445 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Local Open-Weight Benchmark Report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "snapshot_id",
+    "version",
+    "generated_at",
+    "title",
+    "report_status",
+    "ranking_claim_allowed",
+    "methodology",
+    "case_set",
+    "eligibility_summary",
+    "evidence_sources",
+    "rankings",
+    "excluded_evidence",
+    "limitations",
+    "reproduction_instructions",
+    "source_paths",
+    "safety_assertions"
+  ],
+  "properties": {
+    "snapshot_id": {
+      "type": "string",
+      "const": "local_open_weight_benchmark_report_v1"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "report_status": {
+      "type": "string",
+      "enum": [
+        "no_rankings_published",
+        "published_local_ranking"
+      ]
+    },
+    "ranking_claim_allowed": {
+      "type": "boolean"
+    },
+    "methodology": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "methodology_id",
+        "methodology_version",
+        "methodology_path",
+        "methodology_sha256",
+        "primary_metric_id"
+      ],
+      "properties": {
+        "methodology_id": {
+          "type": "string",
+          "const": "local_ranking_methodology_v1"
+        },
+        "methodology_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "methodology_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "methodology_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "primary_metric_id": {
+          "type": "string",
+          "const": "severity_weighted_effective_pass_rate"
+        }
+      }
+    },
+    "case_set": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_set_id",
+        "case_set_version",
+        "minimum_publishable_split",
+        "publishable_splits",
+        "case_path",
+        "case_file_sha256",
+        "manifest_path",
+        "manifest_sha256"
+      ],
+      "properties": {
+        "case_set_id": {
+          "type": "string",
+          "const": "local_public_v1"
+        },
+        "case_set_version": {
+          "type": "string",
+          "const": "1.0.0"
+        },
+        "minimum_publishable_split": {
+          "type": "string",
+          "const": "standard"
+        },
+        "publishable_splits": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "extended"
+            ]
+          }
+        },
+        "case_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "case_file_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "manifest_path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "eligibility_summary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "minimum_real_local_targets_required",
+        "eligible_real_local_targets",
+        "eligible_manual_public_targets",
+        "eligible_ranked_targets",
+        "excluded_targets",
+        "acceptance_criteria_met",
+        "ranking_publication_blocked_reason"
+      ],
+      "properties": {
+        "minimum_real_local_targets_required": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "eligible_real_local_targets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible_manual_public_targets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "eligible_ranked_targets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "excluded_targets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "acceptance_criteria_met": {
+          "type": "boolean"
+        },
+        "ranking_publication_blocked_reason": {
+          "type": "string"
+        }
+      }
+    },
+    "evidence_sources": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "source_kind",
+          "path",
+          "sha256",
+          "entry_count",
+          "eligible_entry_count",
+          "excluded_entry_count"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "source_kind": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "entry_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "eligible_entry_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "excluded_entry_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "rankings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "rank",
+          "model",
+          "runtime",
+          "ledger_entry_id",
+          "sample_size",
+          "benchmark_split",
+          "severity_weighted_effective_pass_rate",
+          "severity_weighted_heuristic_pass_rate",
+          "bootstrap_ci_95",
+          "unresolved_review_count",
+          "abstention_count"
+        ],
+        "properties": {
+          "rank": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "runtime": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ledger_entry_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sample_size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "benchmark_split": {
+            "type": "string",
+            "enum": [
+              "standard",
+              "extended"
+            ]
+          },
+          "severity_weighted_effective_pass_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "severity_weighted_heuristic_pass_rate": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+          "bootstrap_ci_95": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "low",
+              "high"
+            ],
+            "properties": {
+              "low": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              },
+              "high": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
+          },
+          "unresolved_review_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "abstention_count": {
+            "type": "integer",
+            "minimum": 0
+          }
+        }
+      }
+    },
+    "excluded_evidence": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "run_id",
+          "model",
+          "runtime",
+          "evidence_class",
+          "run_mode",
+          "benchmark_split",
+          "case_count",
+          "ranking_eligible",
+          "exclusion_reasons"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "run_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "runtime": {
+            "type": "string",
+            "minLength": 1
+          },
+          "evidence_class": {
+            "type": "string",
+            "minLength": 1
+          },
+          "run_mode": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmark_split": {
+            "type": "string",
+            "minLength": 1
+          },
+          "case_count": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "ranking_eligible": {
+            "type": "boolean"
+          },
+          "exclusion_reasons": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "limitations": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "reproduction_instructions": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "source_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required",
+        "private_prompts_included",
+        "raw_outputs_included"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_prompts_included": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_outputs_included": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  }
+}

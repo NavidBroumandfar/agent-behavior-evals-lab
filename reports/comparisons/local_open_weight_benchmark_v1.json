@@ -1,0 +1,98 @@
+{
+  "case_set": {
+    "case_file_sha256": "366ca2f65991f9fbecffa15104e11b1b0f5c1e3f236eee947e00ed209f5891bb",
+    "case_path": "evals/benchmarks/local_public_v1/cases.jsonl",
+    "case_set_id": "local_public_v1",
+    "case_set_version": "1.0.0",
+    "manifest_path": "evals/benchmarks/local_public_v1/manifest.json",
+    "manifest_sha256": "9dc94414a2fc926a86a8705e540323c524886c3d2c7499f4f4d64c1bfadb8c88",
+    "minimum_publishable_split": "standard",
+    "publishable_splits": [
+      "standard",
+      "extended"
+    ]
+  },
+  "eligibility_summary": {
+    "acceptance_criteria_met": false,
+    "eligible_manual_public_targets": 0,
+    "eligible_ranked_targets": 0,
+    "eligible_real_local_targets": 0,
+    "excluded_targets": 1,
+    "minimum_real_local_targets_required": 2,
+    "ranking_publication_blocked_reason": "No committed reviewed live-local, ledger-backed standard-or-extended split evidence meets M59 ranking requirements."
+  },
+  "evidence_sources": [
+    {
+      "eligible_entry_count": 0,
+      "entry_count": 1,
+      "excluded_entry_count": 1,
+      "path": "traces/external/local_run_ledger.example.json",
+      "sha256": "6b4b003e149421cd9cf718f00193e15b566f872275eb3c8ce9a739cda548aaf8",
+      "source_id": "m58_reproducible_local_run_ledger_example",
+      "source_kind": "dry_run_public_safe_example"
+    }
+  ],
+  "excluded_evidence": [
+    {
+      "benchmark_split": "smoke",
+      "case_count": 4,
+      "evidence_class": "evaluator_health",
+      "exclusion_reasons": [
+        "Evidence class is not local_public_benchmark.",
+        "Run mode is not reviewed_live_local_run.",
+        "Ledger marks entry ranking-ineligible: Dry-run fake public-safe example; not model evidence.",
+        "Benchmark split is not publishable for local rankings.",
+        "Sample size is below the publication minimum."
+      ],
+      "model": "fake-local-model",
+      "ranking_eligible": false,
+      "run_id": "m58_local_run_ledger_example",
+      "run_mode": "dry_run_public_safe_example",
+      "runtime": "fake_local_runtime",
+      "source_id": "m58_reproducible_local_run_ledger_example"
+    }
+  ],
+  "generated_at": "2026-06-21T00:00:00Z",
+  "limitations": [
+    "No real local/open-weight model ranking is published unless at least two eligible real local targets are present.",
+    "Dry-run, synthetic, smoke-split, private-only, and manual-public-sample evidence cannot support this public local ranking.",
+    "The report does not claim cloud-model ranking, production-policy proof, private runtime behavior, or provider benchmark results.",
+    "Live local execution remains opt-in only and outside the deterministic quality gate."
+  ],
+  "methodology": {
+    "methodology_id": "local_ranking_methodology_v1",
+    "methodology_path": "benchmarks/local_ranking_methodology.json",
+    "methodology_sha256": "dabc58593abc1f616c9bb9c8f9e72be6455cdfcada473fa9bc213746781a7263",
+    "methodology_version": "1.0.0",
+    "primary_metric_id": "severity_weighted_effective_pass_rate"
+  },
+  "ranking_claim_allowed": false,
+  "rankings": [],
+  "report_status": "no_rankings_published",
+  "reproduction_instructions": [
+    "Run `python3 scripts/dev.py check` to regenerate and validate the public-safe report artifacts.",
+    "For future real evidence, run the M57 harness manually with `--live-local` and `AGENT_EVALS_ENABLE_LIVE_LOCAL`, then review and normalize saved outputs.",
+    "Validate reviewed live-local outputs with `--allow-live-local` and import them against `evals/benchmarks/local_public_v1/cases.jsonl`.",
+    "Create an M58-compatible run ledger for the reviewed outputs, then rerun this report generator."
+  ],
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "private_prompts_included": false,
+    "public_safe": true,
+    "raw_outputs_included": false
+  },
+  "snapshot_id": "local_open_weight_benchmark_report_v1",
+  "source_paths": [
+    "benchmarks/evidence_class_charter.json",
+    "benchmarks/local_ranking_methodology.json",
+    "evals/benchmarks/local_public_v1/manifest.json",
+    "traces/external/local_run_ledger.example.json",
+    "docs/live_benchmark_roadmap.md",
+    "docs/wiki/concepts/local_ranking_methodology.md"
+  ],
+  "title": "Local/Open-Weight Benchmark Report V1",
+  "version": "1.0.0"
+}

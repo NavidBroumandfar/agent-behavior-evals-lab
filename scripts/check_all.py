@@ -59,6 +59,8 @@ LOCAL_RANKING_METHODOLOGY_PATH = REPO_ROOT / "benchmarks/local_ranking_methodolo
 LOCAL_RANKING_METHODOLOGY_INPUT_PATH = REPO_ROOT / "traces/external/local_ranking_methodology_inputs.example.json"
 LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_ranking_methodology_example.json"
 LOCAL_RANKING_METHODOLOGY_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_ranking_methodology_example.md"
+LOCAL_BENCHMARK_REPORT_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.json"
+LOCAL_BENCHMARK_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -421,6 +423,14 @@ CHECKS = [
         ["python3", "src/validate_local_ranking_methodology.py"],
     ),
     (
+        "local benchmark report generation",
+        ["python3", "src/local_benchmark_report.py"],
+    ),
+    (
+        "local benchmark report validation",
+        ["python3", "src/validate_local_benchmark_report.py"],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -466,6 +476,8 @@ CHECKS = [
             "src/validate_local_run_ledger.py",
             "src/local_ranking_methodology.py",
             "src/validate_local_ranking_methodology.py",
+            "src/local_benchmark_report.py",
+            "src/validate_local_benchmark_report.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -642,6 +654,12 @@ def main() -> int:
             if name == "local ranking methodology validation":
                 verify_report_exists(LOCAL_RANKING_METHODOLOGY_PATH)
                 verify_report_exists(LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH)
+            if name == "local benchmark report generation":
+                verify_report_exists(LOCAL_BENCHMARK_REPORT_SNAPSHOT_PATH)
+                verify_report_exists(LOCAL_BENCHMARK_REPORT_PATH)
+            if name == "local benchmark report validation":
+                verify_report_exists(LOCAL_BENCHMARK_REPORT_SNAPSHOT_PATH)
+                verify_report_exists(LOCAL_BENCHMARK_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

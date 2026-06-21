@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M59 complete / review-ready
+Status: Active evidence-first roadmap; M54-M60 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -271,6 +271,15 @@ Acceptance criteria:
 
 Publish the first public-safe local/open-weight benchmark report.
 
+Status: complete / evidence-gated review-ready. See `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md`.
+
+Implementation note:
+
+- M60 adds `reports/comparisons/local_open_weight_benchmark_v1.json`, `reports/comparisons/local_open_weight_benchmark_v1.md`, `schemas/local_benchmark_report.schema.json`, `src/local_benchmark_report.py`, and `src/validate_local_benchmark_report.py`.
+- The committed report is public-safe and evidence-gated with `report_status: no_rankings_published` and `ranking_claim_allowed: false`.
+- No leaderboard is published because no reviewed live-local, ledger-backed standard-or-extended split evidence is committed yet.
+- The deterministic gate validates the report schema, source hashes, evidence exclusions, and no-ranking boundary only. It does not call local models.
+
 Deliverables:
 
 - Local public benchmark JSON snapshot.
@@ -285,6 +294,7 @@ Acceptance criteria:
 - All ranked evidence is public-safe and traceable.
 - The report avoids cloud-model and production-policy proof claims.
 - The full deterministic local gate passes without provider credentials.
+- With current committed evidence, the report must withhold rankings rather than claim the real-evidence publication criterion is met.
 
 ### M61: Sandboxed Tool Runtime Contract
 

@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 39 |
+| Indexed report artifacts | 41 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -37,6 +37,7 @@
 - **Live Local Harness**: Added an opt-in local text-only harness with dry-run plan validation, fake-client tests, and reviewed live-local output import guarded by explicit flags.
 - **Local Run Ledger**: Added a reproducible local run ledger that pins case, prompt, adapter, output, scorer, and metadata hashes while validating public-safe fake examples only in the deterministic gate.
 - **Local Ranking Methodology**: Defined severity-weighted local ranking methodology, uncertainty, tie, abstention, partial-run, eligibility, and human-review policies without publishing real rankings.
+- **Local Benchmark Report**: Added an evidence-gated local/open-weight benchmark report that withholds rankings until reviewed ledger-backed real local evidence exists.
 
 ## Dashboard Snapshot
 
@@ -78,6 +79,7 @@
 | `M57` | Complete / review-ready | `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md` |
 | `M58` | Complete / review-ready | `docs/milestones/m58-reproducible-local-run-ledger-closeout.md` |
 | `M59` | Complete / review-ready | `docs/milestones/m59-local-ranking-methodology-closeout.md` |
+| `M60` | Complete / evidence-gated review-ready | `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md` |
 
 ## Boundaries
 
@@ -117,3 +119,4 @@
 - `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`
 - `docs/milestones/m58-reproducible-local-run-ledger-closeout.md`
 - `docs/milestones/m59-local-ranking-methodology-closeout.md`
+- `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md`
