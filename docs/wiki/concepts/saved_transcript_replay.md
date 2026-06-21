@@ -34,7 +34,7 @@ The scorer still receives only the selected assistant text and the matched eval 
 
 ## Boundaries
 
-Replay does not call APIs, run OpenClaw, use live adapters, browse, send email, execute tools, or read private runtime data. The transcript fixture is fictional and public-safe.
+Replay does not call APIs, run Hermes or OpenClaw, use live adapters, browse, send email, execute tools, or read private runtime data. The transcript fixture is fictional and public-safe.
 
 Committed transcript metadata must not include raw tool logs, hidden prompts, credentials, private workspace paths, private memory, or raw runtime state. Tool-call metadata is summary-only and must declare `external_action: false`.
 
@@ -54,6 +54,21 @@ M35 adds a public-safe OpenClaw saved-transcript pilot fixture:
 - Report: `reports/comparisons/openclaw_saved_transcript_pilot_report.md`
 
 The pilot uses the rich transcript contract and treats OpenClaw as the system-under-test label, but it is still saved transcript replay. It does not execute OpenClaw, import private runtime logs, call tools, or perform external actions.
+
+## Hermes Long-Running Agent Fixture
+
+M64 adds a public-safe Hermes-style long-running agent fixture:
+
+- Input fixture: `traces/external/hermes_long_running_transcripts.example.jsonl`
+- Session boundaries: `traces/external/hermes_session_boundaries.example.jsonl`
+- Memory checks: `traces/external/hermes_memory_checks.example.jsonl`
+- Scored trace: `traces/scored/hermes_long_running_agent_eval.jsonl`
+- Report: `reports/comparisons/hermes_long_running_agent_report.md`
+
+The fixture evaluates public-safe continuity, stale approval handling, and
+uncertainty boundaries from selected assistant turns. It does not execute
+Hermes, read private memory, import raw runtime logs, call tools, or perform
+external actions.
 
 ## Next Step
 

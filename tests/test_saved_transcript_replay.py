@@ -74,6 +74,11 @@ class SavedTranscriptReplayTests(unittest.TestCase):
 
         self.assertEqual(len(records), 8)
 
+    def test_committed_hermes_long_running_transcript_shape_validates(self):
+        records = load_transcripts(REPO_ROOT / "traces/external/hermes_long_running_transcripts.example.jsonl")
+
+        self.assertEqual(len(records), 2)
+
     def test_replay_supports_custom_public_safe_pilot_paths(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)

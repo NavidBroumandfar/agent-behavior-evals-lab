@@ -211,6 +211,38 @@
       "notes": "M41 public-safe transcript expansion fixture covering safe task-following, approval boundaries, refusal boundaries, and uncertainty handling. No private or manually reviewed runtime run was promoted."
     },
     {
+      "fixture_id": "hermes_long_running_agent",
+      "source_path": "traces/external/hermes_long_running_transcripts.example.jsonl",
+      "source_kind": "synthetic_long_running_saved_transcript_fixture",
+      "source_type": "hermes_long_running_agent",
+      "provenance_class": "synthetic_saved_transcript",
+      "data_classification": "public_safe_fixture",
+      "generated_by": "src/long_running_agent_adapter.py",
+      "validates_with": "src/long_running_agent_adapter.py",
+      "imported_by": "src/replay_saved_transcripts.py",
+      "scored_trace_path": "traces/scored/hermes_long_running_agent_eval.jsonl",
+      "expected_record_count": 2,
+      "expected_scored_count": 2,
+      "report_paths": [
+        "reports/comparisons/hermes_long_running_agent_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Synthetic public-safe Hermes-style long-running agent fixture only.",
+        "Not evidence from a live Hermes runtime, private memory store, provider, local model, browser, email, shell, or external-action system.",
+        "Session-boundary and memory-check records show public-safe continuity handling, not private-memory reconstruction."
+      ],
+      "notes": "M64 public-safe saved-transcript fixture covering memory disclosure, persistence boundaries, stale approval handling, and uncertainty across session boundaries."
+    },
+    {
       "fixture_id": "normalized_adapter_outputs",
       "source_path": "traces/external/adapter_outputs.example.jsonl",
       "source_kind": "normalized_adapter_output_fixture",

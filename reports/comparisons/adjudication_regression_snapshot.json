@@ -1,7 +1,7 @@
 {
-  "adjudication_fixture_count": 5,
+  "adjudication_fixture_count": 6,
   "adjudication_fixture_statuses": {
-    "reviewed": 5
+    "reviewed": 6
   },
   "adjudication_fixtures": {
     "baseline_followup_review_queue": {
@@ -83,10 +83,26 @@
         "uphold_score": 5
       },
       "status_notes": "M52 adds focused public-safe adjudications for scorer-refinement candidates while keeping scorer behavior unchanged."
+    },
+    "hermes_long_running_agent_review": {
+      "label": "Hermes Long-Running Agent Review",
+      "last_reviewed_at": "2026-06-21T00:00:00Z",
+      "owner": "public_reviewer_fixture",
+      "path": "traces/external/hermes_long_running_adjudications.example.jsonl",
+      "quality_gate_included": true,
+      "records": 2,
+      "review_status": "reviewed",
+      "reviewer_decisions": {
+        "needs_discussion": 0,
+        "override_fail": 0,
+        "override_pass": 0,
+        "uphold_score": 2
+      },
+      "status_notes": "M64 adds public-safe adjudications for memory disclosure, persistence boundaries, stale approval handling, and uncertainty without live Hermes execution or private memory."
     }
   },
   "adjudication_input": "traces/external/adjudication_manifest.json",
-  "adjudication_records": 48,
+  "adjudication_records": 50,
   "failure_mode_distribution": {
     "adjudicated": {
       "failure_to_clarify": 6,
@@ -111,13 +127,13 @@
   },
   "result_summary": {
     "adjudicated_failed": 25,
-    "adjudicated_pass_rate": "47.9%",
-    "adjudicated_passed": 23,
+    "adjudicated_pass_rate": "50.0%",
+    "adjudicated_passed": 25,
     "changed_failure_modes_count": 3,
     "changed_result_count": 3,
     "original_failed": 24,
-    "original_pass_rate": "50.0%",
-    "original_passed": 24
+    "original_pass_rate": "52.0%",
+    "original_passed": 26
   },
   "review_coverage_by_category": {
     "approval_gated": {
@@ -139,9 +155,9 @@
       "unreviewed_records": 32
     },
     "uncertainty_handling": {
-      "review_coverage": "30.3%",
-      "reviewed_records": 10,
-      "source_records": 33,
+      "review_coverage": "34.3%",
+      "reviewed_records": 12,
+      "source_records": 35,
       "unreviewed_records": 23
     }
   },
@@ -151,6 +167,12 @@
       "reviewed_records": 21,
       "source_records": 58,
       "unreviewed_records": 37
+    },
+    "hermes_long_running_agent": {
+      "review_coverage": "100.0%",
+      "reviewed_records": 2,
+      "source_records": 2,
+      "unreviewed_records": 0
     },
     "openclaw_reference_agent": {
       "review_coverage": "24.6%",
@@ -188,6 +210,12 @@
       "review_coverage": "100.0%",
       "reviewed_records": 6,
       "source_records": 6,
+      "unreviewed_records": 0
+    },
+    "traces/scored/hermes_long_running_agent_eval.jsonl": {
+      "review_coverage": "100.0%",
+      "reviewed_records": 2,
+      "source_records": 2,
       "unreviewed_records": 0
     },
     "traces/scored/manual_output_eval.jsonl": {
@@ -248,7 +276,7 @@
       "needs_discussion": 0,
       "original_failed": 6,
       "overrides": 0,
-      "reviewed": 10
+      "reviewed": 12
     }
   },
   "reviewed_by_profile": {
@@ -258,6 +286,13 @@
       "original_failed": 12,
       "overrides": 2,
       "reviewed": 21
+    },
+    "hermes_long_running_agent": {
+      "adjudicated_failed": 0,
+      "needs_discussion": 0,
+      "original_failed": 0,
+      "overrides": 0,
+      "reviewed": 2
     },
     "openclaw_reference_agent": {
       "adjudicated_failed": 4,
@@ -279,8 +314,8 @@
     "needs_discussion": 0,
     "override_fail": 2,
     "override_pass": 1,
-    "uphold_score": 45
+    "uphold_score": 47
   },
-  "source_trace_count": 9,
-  "source_trace_records": 166
+  "source_trace_count": 10,
+  "source_trace_records": 168
 }

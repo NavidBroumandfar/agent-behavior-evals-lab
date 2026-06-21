@@ -1,0 +1,425 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Long-Running Agent Adapter Plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "adapter_id",
+    "version",
+    "created_at",
+    "status",
+    "target_runtime",
+    "target_profile",
+    "sandbox_contract_path",
+    "mode",
+    "case_selection",
+    "runtime_controls",
+    "outputs",
+    "memory_controls",
+    "promotion_path",
+    "quality_gate",
+    "safety_assertions",
+    "smoke_transcripts",
+    "session_boundaries",
+    "memory_checks"
+  ],
+  "properties": {
+    "adapter_id": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "public_safe_session_fixture",
+        "manual_opt_in_ready"
+      ]
+    },
+    "target_runtime": {
+      "type": "string",
+      "enum": [
+        "hermes"
+      ]
+    },
+    "target_profile": {
+      "type": "string",
+      "enum": [
+        "hermes_long_running_agent"
+      ]
+    },
+    "sandbox_contract_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "mode": {
+      "type": "string",
+      "enum": [
+        "metadata_only_public_safe_cross_session"
+      ]
+    },
+    "case_selection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "case_source_paths",
+        "case_ids",
+        "case_count"
+      ],
+      "properties": {
+        "case_source_paths": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          }
+        },
+        "case_ids": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          }
+        },
+        "case_count": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "runtime_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "opt_in_required",
+        "opt_in_flag",
+        "environment_variable",
+        "live_execution_allowed",
+        "tools_disabled_or_sandboxed",
+        "network_access",
+        "credentials_required",
+        "external_actions",
+        "raw_output_local_only",
+        "disposable_workspace_required",
+        "private_memory_read_allowed",
+        "public_safe_memory_summary_allowed"
+      ],
+      "properties": {
+        "opt_in_required": {
+          "type": "boolean"
+        },
+        "opt_in_flag": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "environment_variable": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "live_execution_allowed": {
+          "type": "boolean"
+        },
+        "tools_disabled_or_sandboxed": {
+          "type": "boolean"
+        },
+        "network_access": {
+          "type": "boolean"
+        },
+        "credentials_required": {
+          "type": "boolean"
+        },
+        "external_actions": {
+          "type": "boolean"
+        },
+        "raw_output_local_only": {
+          "type": "boolean"
+        },
+        "disposable_workspace_required": {
+          "type": "boolean"
+        },
+        "private_memory_read_allowed": {
+          "type": "boolean"
+        },
+        "public_safe_memory_summary_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw_output_path",
+        "raw_memory_path",
+        "normalized_transcript_path",
+        "session_boundary_path",
+        "memory_check_path",
+        "scored_trace_path",
+        "report_path",
+        "raw_outputs_committable",
+        "private_memory_committable",
+        "public_derivatives_committable"
+      ],
+      "properties": {
+        "raw_output_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "raw_memory_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "normalized_transcript_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "session_boundary_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "memory_check_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "scored_trace_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "report_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "raw_outputs_committable": {
+          "type": "boolean"
+        },
+        "private_memory_committable": {
+          "type": "boolean"
+        },
+        "public_derivatives_committable": {
+          "type": "boolean"
+        }
+      }
+    },
+    "memory_controls": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "private_memory_committable",
+        "raw_memory_local_only",
+        "public_safe_derivatives_only",
+        "discloses_memory_scope",
+        "uncertainty_when_boundary_missing",
+        "previous_approval_requires_current_confirmation",
+        "prohibits_private_memory_reconstruction"
+      ],
+      "properties": {
+        "private_memory_committable": {
+          "type": "boolean"
+        },
+        "raw_memory_local_only": {
+          "type": "boolean"
+        },
+        "public_safe_derivatives_only": {
+          "type": "boolean"
+        },
+        "discloses_memory_scope": {
+          "type": "boolean"
+        },
+        "uncertainty_when_boundary_missing": {
+          "type": "boolean"
+        },
+        "previous_approval_requires_current_confirmation": {
+          "type": "boolean"
+        },
+        "prohibits_private_memory_reconstruction": {
+          "type": "boolean"
+        }
+      }
+    },
+    "promotion_path": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "promotion_format",
+        "validator",
+        "replay_command",
+        "review_notes_required",
+        "private_raw_output_retained",
+        "private_memory_retained"
+      ],
+      "properties": {
+        "promotion_format": {
+          "type": "string",
+          "enum": [
+            "saved_transcript_jsonl_with_session_metadata"
+          ]
+        },
+        "validator": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "replay_command": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "review_notes_required": {
+          "type": "boolean"
+        },
+        "private_raw_output_retained": {
+          "type": "boolean"
+        },
+        "private_memory_retained": {
+          "type": "boolean"
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "adapter_plan_validation_in_quality_gate",
+        "public_safe_fixture_generation_in_quality_gate",
+        "session_boundary_metadata_validation_in_quality_gate",
+        "memory_check_validation_in_quality_gate",
+        "saved_transcript_replay_in_quality_gate",
+        "live_hermes_execution_in_quality_gate",
+        "local_model_execution_in_quality_gate",
+        "private_memory_read_in_quality_gate",
+        "tool_execution_in_quality_gate",
+        "raw_output_validation_in_quality_gate",
+        "reason"
+      ],
+      "properties": {
+        "adapter_plan_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "public_safe_fixture_generation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "session_boundary_metadata_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "memory_check_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "saved_transcript_replay_in_quality_gate": {
+          "type": "boolean"
+        },
+        "live_hermes_execution_in_quality_gate": {
+          "type": "boolean"
+        },
+        "local_model_execution_in_quality_gate": {
+          "type": "boolean"
+        },
+        "private_memory_read_in_quality_gate": {
+          "type": "boolean"
+        },
+        "tool_execution_in_quality_gate": {
+          "type": "boolean"
+        },
+        "raw_output_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "tool_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required",
+        "raw_private_logs",
+        "private_memory"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "tool_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_logs": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_memory": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "smoke_transcripts": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "session_boundaries": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    },
+    "memory_checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object"
+      }
+    }
+  }
+}

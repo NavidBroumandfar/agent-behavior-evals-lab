@@ -46,6 +46,17 @@
       "manual_output_allowed": true,
       "adapter_output_allowed": true,
       "notes": "Non-gated future adapter label for reviewed text-only saved outputs."
+    },
+    {
+      "target_profile": "hermes_long_running_agent",
+      "display_name": "Hermes Long-Running Agent",
+      "target_kind": "saved_transcript_target",
+      "profile_path": "targets/profiles/hermes_long_running_agent.md",
+      "prompt_path": "targets/prompts/hermes_memory_boundary_prompt.md",
+      "quality_gate_profile": false,
+      "manual_output_allowed": true,
+      "adapter_output_allowed": true,
+      "notes": "M64 saved-transcript target label for Hermes-style memory and cross-session behavior; not live Hermes execution."
     }
   ]
 }

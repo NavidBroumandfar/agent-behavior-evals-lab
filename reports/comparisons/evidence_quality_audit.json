@@ -27,10 +27,11 @@
           "traces/external/saved_transcripts.example.jsonl",
           "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
           "traces/external/public_safe_transcript_expansion.example.jsonl",
+          "traces/external/hermes_long_running_transcripts.example.jsonl",
           "traces/external/adapter_outputs.example.jsonl",
           "traces/external/dry_run_adapter_outputs.jsonl"
         ],
-        "summary": "External fixture groups contain 3-8 scored records each (40 total), so they validate paths but are not representative samples."
+        "summary": "External fixture groups contain 2-8 scored records each (42 total), so they validate paths but are not representative samples."
       },
       {
         "gap_id": "refusal_required_review_gap",
@@ -69,7 +70,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "42 report artifacts are indexed, while 48 adjudication records exist."
+        "summary": "43 report artifacts are indexed, while 50 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -95,7 +96,7 @@
           "reports/comparisons/focused_scorer_evidence_expansion.json",
           "reports/comparisons/scorer_promotion_decision.json"
         ],
-        "summary": "48 adjudications cover 9 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. M53 records decision `rubric_only_update_no_scorer_change` with 1 accepted rubric updates and 0 accepted scorer promotions."
+        "summary": "50 adjudications cover 10 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. M53 records decision `rubric_only_update_no_scorer_change` with 1 accepted rubric updates and 0 accepted scorer promotions."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -108,6 +109,7 @@
           "traces/scored/saved_transcript_replay_eval.jsonl",
           "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
           "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+          "traces/scored/hermes_long_running_agent_eval.jsonl",
           "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ],
@@ -115,18 +117,18 @@
       }
     ],
     "summary": {
-      "adjudication_records": 48,
+      "adjudication_records": 50,
       "case_count": 42,
-      "external_fixture_records": 40,
+      "external_fixture_records": 42,
       "gap_count": 9,
-      "total_scored_records": 166
+      "total_scored_records": 168
     }
   },
   "generated_at": "2026-06-21T00:00:00Z",
   "inventory": {
     "adjudications": {
-      "adjudication_fixture_count": 5,
-      "adjudication_records": 48,
+      "adjudication_fixture_count": 6,
+      "adjudication_records": 50,
       "category_coverage": {
         "approval_gated": {
           "review_coverage": "30.9%",
@@ -147,9 +149,9 @@
           "unreviewed_records": 32
         },
         "uncertainty_handling": {
-          "review_coverage": "30.3%",
-          "reviewed_records": 10,
-          "source_records": 33,
+          "review_coverage": "34.3%",
+          "reviewed_records": 12,
+          "source_records": 35,
           "unreviewed_records": 23
         }
       },
@@ -162,6 +164,12 @@
           "reviewed_records": 21,
           "source_records": 58,
           "unreviewed_records": 37
+        },
+        "hermes_long_running_agent": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 2,
+          "source_records": 2,
+          "unreviewed_records": 0
         },
         "openclaw_reference_agent": {
           "review_coverage": "24.6%",
@@ -177,7 +185,7 @@
         }
       },
       "reviewer_count": 1,
-      "source_trace_count": 9,
+      "source_trace_count": 10,
       "source_trace_coverage": {
         "traces/scored/adapter_output_fixture_import.jsonl": {
           "review_coverage": "100.0%",
@@ -201,6 +209,12 @@
           "review_coverage": "100.0%",
           "reviewed_records": 6,
           "source_records": 6,
+          "unreviewed_records": 0
+        },
+        "traces/scored/hermes_long_running_agent_eval.jsonl": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 2,
+          "source_records": 2,
           "unreviewed_records": 0
         },
         "traces/scored/manual_output_eval.jsonl": {
@@ -336,12 +350,12 @@
     },
     "external_fixtures": {
       "data_classification_counts": {
-        "public_safe_fixture": 5,
+        "public_safe_fixture": 6,
         "public_sanitized": 2,
         "public_synthetic": 1
       },
       "failed_records": 17,
-      "fixture_groups": 8,
+      "fixture_groups": 9,
       "groups": [
         {
           "data_classification": "public_safe_fixture",
@@ -491,6 +505,26 @@
         },
         {
           "data_classification": "public_safe_fixture",
+          "failed": 0,
+          "fixture_id": "hermes_long_running_agent",
+          "limitations": [
+            "Synthetic public-safe Hermes-style long-running agent fixture only.",
+            "Not evidence from a live Hermes runtime, private memory store, provider, local model, browser, email, shell, or external-action system.",
+            "Session-boundary and memory-check records show public-safe continuity handling, not private-memory reconstruction."
+          ],
+          "observed_failure_modes": {},
+          "pass_rate": "100.0%",
+          "passed": 2,
+          "provenance_class": "synthetic_saved_transcript",
+          "quality_gate_included": true,
+          "scored_records": 2,
+          "scored_trace_path": "traces/scored/hermes_long_running_agent_eval.jsonl",
+          "source_path": "traces/external/hermes_long_running_transcripts.example.jsonl",
+          "source_records": 2,
+          "source_type": "hermes_long_running_agent"
+        },
+        {
+          "data_classification": "public_safe_fixture",
           "failed": 3,
           "fixture_id": "normalized_adapter_outputs",
           "limitations": [
@@ -539,7 +573,7 @@
           "source_type": "dry_run_adapter_output"
         }
       ],
-      "pass_rate": "57.5%",
+      "pass_rate": "59.5%",
       "provenance_class_counts": {
         "dry_run_contract": 1,
         "manual_saved_output": 1,
@@ -547,12 +581,13 @@
         "sanitized_external_sample": 2,
         "saved_transcript": 1,
         "synthetic_public_safe_control": 1,
-        "synthetic_saved_transcript": 1
+        "synthetic_saved_transcript": 2
       },
-      "quality_gate_included_groups": 8,
+      "quality_gate_included_groups": 9,
       "source_type_counts": {
         "dry_run_adapter_output": 1,
         "focused_scorer_evidence": 1,
+        "hermes_long_running_agent": 1,
         "manual_output": 1,
         "normalized_adapter_output": 1,
         "openclaw_saved_transcript_pilot": 1,
@@ -560,8 +595,8 @@
         "public_safe_transcript_expansion": 1,
         "saved_transcript_replay": 1
       },
-      "total_scored_records": 40,
-      "total_source_records": 40
+      "total_scored_records": 42,
+      "total_source_records": 42
     },
     "reports": {
       "artifact_paths": [
@@ -605,14 +640,15 @@
         "reports/comparisons/local_open_weight_benchmark_v1.json",
         "reports/comparisons/local_open_weight_benchmark_v1.md",
         "reports/comparisons/openclaw_harness_smoke_report.md",
+        "reports/comparisons/hermes_long_running_agent_report.md",
         "reports/comparisons/release_notes_latest.json",
         "reports/comparisons/release_notes_latest.md"
       ],
       "json_snapshots": 15,
-      "markdown_reports": 27,
-      "public_safe_artifacts": 42,
-      "quality_gate_artifacts": 42,
-      "report_artifacts": 42
+      "markdown_reports": 28,
+      "public_safe_artifacts": 43,
+      "quality_gate_artifacts": 43,
+      "report_artifacts": 43
     },
     "scored_traces": {
       "baseline": {
@@ -640,10 +676,10 @@
       },
       "external_fixture_traces": {
         "failed": 17,
-        "pass_rate": "57.5%",
-        "passed": 23,
-        "total_records": 40,
-        "trace_groups": 8,
+        "pass_rate": "59.5%",
+        "passed": 25,
+        "total_records": 42,
+        "trace_groups": 9,
         "trace_paths": [
           "traces/scored/manual_output_eval.jsonl",
           "traces/scored/openclaw_manual_eval.jsonl",
@@ -651,6 +687,7 @@
           "traces/scored/saved_transcript_replay_eval.jsonl",
           "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
           "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+          "traces/scored/hermes_long_running_agent_eval.jsonl",
           "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ]
@@ -665,7 +702,7 @@
         "unsafe_compliance": 2,
         "unsupported_claim": 5
       },
-      "total_scored_records": 166
+      "total_scored_records": 168
     }
   },
   "recommendations": [

@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M63 complete / review-ready
+Status: Active evidence-first roadmap; M54-M64 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -374,6 +374,14 @@ Acceptance criteria:
 ### M64: Hermes Or Long-Running Agent Adapter
 
 Evaluate memory and cross-session behavior.
+
+Status: complete / public-safe session review-ready. See `docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md`.
+
+Implementation note:
+
+- M64 adds `schemas/long_running_agent_adapter.schema.json`, `schemas/session_boundary_metadata.schema.json`, `schemas/memory_persistence_check.schema.json`, `traces/external/long_running_agent_adapter_plan.example.json`, and `src/long_running_agent_adapter.py`.
+- The adapter emits public-safe saved transcripts, session-boundary metadata, memory disclosure and persistence checks, a scored trace, and a reader-facing report for a Hermes-style long-running agent target.
+- The deterministic gate validates generated public-safe derivatives only. It does not launch Hermes, read private memory, execute tools, call local models or providers, use browser/email/network tools, mutate files as a system under test, or perform external actions.
 
 Deliverables:
 

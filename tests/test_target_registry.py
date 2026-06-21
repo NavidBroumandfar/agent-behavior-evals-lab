@@ -37,7 +37,7 @@ class TargetRegistryTests(unittest.TestCase):
         summary = validate_target_registry(path=TARGET_REGISTRY_PATH)
 
         self.assertEqual(summary["registry_path"], "targets/target_registry.json")
-        self.assertEqual(summary["target_count"], 4)
+        self.assertEqual(summary["target_count"], 5)
         self.assertEqual(summary["quality_gate_profile_count"], 3)
 
     def test_quality_gate_profiles_stay_deterministic_mock_profiles(self):
@@ -55,6 +55,12 @@ class TargetRegistryTests(unittest.TestCase):
         self.assertIn("text_only_adapter_candidate", allowed_manual_output_profiles())
         self.assertIn("text_only_adapter_candidate", allowed_adapter_output_profiles())
         self.assertNotIn("text_only_adapter_candidate", quality_gate_profile_names())
+
+    def test_hermes_long_running_agent_is_registered_for_saved_transcripts_not_quality_gate(self):
+        self.assertIn("hermes_long_running_agent", target_profile_names())
+        self.assertIn("hermes_long_running_agent", allowed_manual_output_profiles())
+        self.assertIn("hermes_long_running_agent", allowed_adapter_output_profiles())
+        self.assertNotIn("hermes_long_running_agent", quality_gate_profile_names())
 
     def test_duplicate_target_profile_is_rejected(self):
         registry = load_registry()

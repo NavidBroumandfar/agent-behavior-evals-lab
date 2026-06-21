@@ -77,6 +77,16 @@ EXPECTED_OPENCLAW_HARNESS_TOOL_SUMMARY_LINES = 1
 OPENCLAW_HARNESS_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_harness_smoke_eval.jsonl"
 EXPECTED_OPENCLAW_HARNESS_TRACE_LINES = 1
 OPENCLAW_HARNESS_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_harness_smoke_report.md"
+LONG_RUNNING_AGENT_PLAN_PATH = REPO_ROOT / "traces/external/long_running_agent_adapter_plan.example.json"
+LONG_RUNNING_AGENT_TRANSCRIPT_PATH = REPO_ROOT / "traces/external/hermes_long_running_transcripts.example.jsonl"
+EXPECTED_LONG_RUNNING_AGENT_TRANSCRIPT_LINES = 2
+LONG_RUNNING_AGENT_SESSION_BOUNDARY_PATH = REPO_ROOT / "traces/external/hermes_session_boundaries.example.jsonl"
+EXPECTED_LONG_RUNNING_AGENT_SESSION_BOUNDARY_LINES = 2
+LONG_RUNNING_AGENT_MEMORY_CHECK_PATH = REPO_ROOT / "traces/external/hermes_memory_checks.example.jsonl"
+EXPECTED_LONG_RUNNING_AGENT_MEMORY_CHECK_LINES = 4
+LONG_RUNNING_AGENT_TRACE_PATH = REPO_ROOT / "traces/scored/hermes_long_running_agent_eval.jsonl"
+EXPECTED_LONG_RUNNING_AGENT_TRACE_LINES = 2
+LONG_RUNNING_AGENT_REPORT_PATH = REPO_ROOT / "reports/comparisons/hermes_long_running_agent_report.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -125,6 +135,12 @@ OPENCLAW_HARNESS_SMOKE_REPORT_CONTEXT = (
     "The adapter emits normalized saved-transcript evidence and tool-boundary summaries only; no live OpenClaw "
     "runtime, raw private log, credential, tool execution, network access, shell command, browser/email action, "
     "or external action is used."
+)
+LONG_RUNNING_AGENT_REPORT_CONTEXT = (
+    "M64 treats Hermes or a long-running memory-capable agent as the system under test through public-safe saved "
+    "transcripts, session-boundary metadata, and memory checks. The fixture evaluates continuity, stale approval "
+    "handling, and uncertainty boundaries from selected assistant turns only; no live Hermes execution, private "
+    "memory, raw runtime logs, credentials, tools, or external actions are used."
 )
 
 CHECKS = [
@@ -275,6 +291,29 @@ CHECKS = [
         ],
     ),
     (
+        "long-running agent session fixture generation",
+        ["python3", "src/long_running_agent_adapter.py"],
+    ),
+    (
+        "long-running agent session replay generation",
+        [
+            "python3",
+            "src/replay_saved_transcripts.py",
+            "--input",
+            "traces/external/hermes_long_running_transcripts.example.jsonl",
+            "--output",
+            "traces/scored/hermes_long_running_agent_eval.jsonl",
+            "--report",
+            "reports/comparisons/hermes_long_running_agent_report.md",
+            "--run-id",
+            "hermes_long_running_agent",
+            "--report-title",
+            "Hermes Long-Running Agent Report",
+            "--report-context",
+            LONG_RUNNING_AGENT_REPORT_CONTEXT,
+        ],
+    ),
+    (
         "external fixture comparison report generation",
         ["python3", "src/compare_external_fixtures.py"],
     ),
@@ -326,6 +365,14 @@ CHECKS = [
             "python3",
             "src/validate_adjudications.py",
             "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
+        ],
+    ),
+    (
+        "hermes long-running adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/hermes_long_running_adjudications.example.jsonl",
         ],
     ),
     (
@@ -534,6 +581,7 @@ CHECKS = [
             "src/validate_tool_sandbox_contract.py",
             "src/action_boundary_recorder.py",
             "src/openclaw_harness_adapter.py",
+            "src/long_running_agent_adapter.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -729,6 +777,23 @@ def main() -> int:
             if name == "openclaw harness smoke replay generation":
                 verify_trace_count(OPENCLAW_HARNESS_TRACE_PATH, EXPECTED_OPENCLAW_HARNESS_TRACE_LINES)
                 verify_report_exists(OPENCLAW_HARNESS_REPORT_PATH)
+            if name == "long-running agent session fixture generation":
+                verify_report_exists(LONG_RUNNING_AGENT_PLAN_PATH)
+                verify_jsonl_count(
+                    LONG_RUNNING_AGENT_TRANSCRIPT_PATH,
+                    EXPECTED_LONG_RUNNING_AGENT_TRANSCRIPT_LINES,
+                )
+                verify_jsonl_count(
+                    LONG_RUNNING_AGENT_SESSION_BOUNDARY_PATH,
+                    EXPECTED_LONG_RUNNING_AGENT_SESSION_BOUNDARY_LINES,
+                )
+                verify_jsonl_count(
+                    LONG_RUNNING_AGENT_MEMORY_CHECK_PATH,
+                    EXPECTED_LONG_RUNNING_AGENT_MEMORY_CHECK_LINES,
+                )
+            if name == "long-running agent session replay generation":
+                verify_trace_count(LONG_RUNNING_AGENT_TRACE_PATH, EXPECTED_LONG_RUNNING_AGENT_TRACE_LINES)
+                verify_report_exists(LONG_RUNNING_AGENT_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

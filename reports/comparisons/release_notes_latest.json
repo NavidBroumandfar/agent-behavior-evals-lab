@@ -7,12 +7,12 @@
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 48,
+    "adjudication_records": 50,
     "baseline_failed": 11,
     "baseline_pass_rate": "91.3%",
     "baseline_records": 126,
-    "external_fixture_groups": 8,
-    "external_fixture_records": 40,
+    "external_fixture_groups": 9,
+    "external_fixture_records": 42,
     "harness_bridge_decision": "defer_harness_integration",
     "review_needs_discussion": 0,
     "runtime_native_state_required": false
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "48 adjudication records are tracked; 0 still need discussion."
+      "summary": "50 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",
@@ -130,6 +130,10 @@
     {
       "area": "OpenClaw Harness Adapter",
       "summary": "Added a public-safe OpenClaw harness smoke adapter that emits normalized transcript evidence and a smoke report without live runtime execution."
+    },
+    {
+      "area": "Long-Running Agent Adapter",
+      "summary": "Added a public-safe Hermes-style long-running agent adapter with session-boundary metadata and memory checks without live Hermes execution or private memory."
     }
   ],
   "milestones": [
@@ -335,6 +339,13 @@
       "path": "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
       "status": "Complete / public-safe smoke review-ready",
       "title": "Milestone 63 - OpenClaw Live Harness Adapter"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M64",
+      "path": "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
+      "status": "Complete / public-safe session review-ready",
+      "title": "Milestone 64 - Hermes Or Long-Running Agent Adapter"
     }
   ],
   "quality_gate": {
@@ -342,8 +353,8 @@
     "deterministic_local_only": true,
     "json_snapshots": 15,
     "live_execution": false,
-    "markdown_reports": 27,
-    "report_artifacts_indexed": 42
+    "markdown_reports": 28,
+    "report_artifacts_indexed": 43
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -390,7 +401,8 @@
     "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
     "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
     "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
-    "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md"
+    "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
+    "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

@@ -866,21 +866,22 @@ Acceptance criteria:
 
 Evaluate tool-capable agents without allowing uncontrolled external actions.
 
-Status: in progress; M61-M63 complete / review-ready. See `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`, `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`, and `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`.
+Status: in progress; M61-M64 complete / review-ready. See `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`, `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`, `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`, and `docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md`.
 
 Implementation note:
 
 - M61 adds a default-deny, metadata-only sandbox contract for filesystem, shell, browser, email, network, and external-action surfaces.
 - M62 adds deterministic approval-event and action-denial evidence derived from public-safe tool-call summaries.
 - M63 adds a public-safe OpenClaw harness adapter smoke fixture that emits normalized transcript evidence without live runtime execution.
-- The deterministic gate validates schemas, synthetic public-safe tool-call summaries, and the OpenClaw smoke fixture only; it does not execute tools, agents, providers, local models, browser/email/network actions, shell commands, or external actions.
+- M64 adds a public-safe Hermes-style long-running agent adapter fixture with saved transcripts, session-boundary metadata, and memory checks without live Hermes execution or private memory.
+- The deterministic gate validates schemas, synthetic public-safe tool-call summaries, public-safe OpenClaw and Hermes-style fixtures, and saved-transcript replay only; it does not execute tools, agents, providers, local models, browser/email/network actions, shell commands, private memory reads, or external actions.
 
 Milestones:
 
 - M61 Sandboxed Tool Runtime Contract. Complete / review-ready.
 - M62 Approval And Action Boundary Recorder. Complete / review-ready.
 - M63 OpenClaw Live Harness Adapter. Complete / public-safe smoke review-ready.
-- M64 Hermes Or Long-Running Agent Adapter.
+- M64 Hermes Or Long-Running Agent Adapter. Complete / public-safe session review-ready.
 - M65 Production-Policy Scenario Packs.
 
 Success signal:

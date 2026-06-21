@@ -28,9 +28,9 @@ class ReportingProductSummaryTests(unittest.TestCase):
         self.assertEqual(summary["baseline"]["total_records"], 126)
         self.assertEqual(summary["baseline"]["passed"], 115)
         self.assertEqual(summary["baseline"]["failed"], 11)
-        self.assertEqual(summary["external_fixtures"]["fixture_groups"], 8)
-        self.assertEqual(summary["external_fixtures"]["total_scored_records"], 40)
-        self.assertEqual(summary["adjudication"]["adjudication_records"], 48)
+        self.assertEqual(summary["external_fixtures"]["fixture_groups"], 9)
+        self.assertEqual(summary["external_fixtures"]["total_scored_records"], 42)
+        self.assertEqual(summary["adjudication"]["adjudication_records"], 50)
         self.assertEqual(summary["harness_bridge"]["decision"], "defer_harness_integration")
         self.assertFalse(summary["harness_bridge"]["harness_execution_in_quality_gate"])
 

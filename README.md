@@ -2,7 +2,7 @@
 
 Agent Behavior Evals Lab is a local evaluation harness for testing AI assistants and agentic systems against policy-defined behavior expectations. The lab is the evaluator: it defines policies, cases, target profiles, scoring rules, traces, and reports that can be reused across mock clients, real model adapters, local models, saved transcripts, and future agent integrations.
 
-OpenClaw is only one possible future system under test. This repository is intentionally not an OpenClaw-only test folder, and the current milestone does not execute OpenClaw.
+OpenClaw and Hermes-style long-running agents are possible systems under test. This repository is intentionally not tied to one runtime, and the current deterministic gate does not execute OpenClaw, Hermes, private memory, or live agent runtimes.
 
 ## Milestone 1 Status
 
@@ -11,7 +11,7 @@ Milestone 1 establishes a deterministic baseline pipeline:
 - 1 behavior policy: `policy/agent_behavior_policy.md`
 - 1 failure taxonomy: `evals/failure_taxonomy.md`
 - 30 JSONL eval cases across 4 categories in the original mock baseline; the current M31-expanded suite has 42 cases.
-- 3 target profiles and 3 corresponding system prompts
+- 3 deterministic quality-gate mock profiles, plus non-gated saved-output and saved-transcript target labels
 - 1 deterministic mock model client
 - 1 rule-based deterministic scorer
 - 1 end-to-end mock eval runner
@@ -73,6 +73,7 @@ src/
   run_eval.py                   # End-to-end mock eval runner
   evaluate_manual_outputs.py    # Manual saved-output eval runner
   replay_saved_transcripts.py   # Saved transcript replay runner
+  long_running_agent_adapter.py # M64 public-safe Hermes-style session fixture generator
   validate_adapter_outputs.py   # Normalized adapter-output fixture validator
   import_adapter_outputs.py     # Normalized adapter-output fixture importer
   dry_run_adapter.py            # Deterministic no-network adapter contract fixture producer
@@ -99,6 +100,9 @@ traces/
     manual_outputs.example.jsonl # Public-safe manual output fixture
     openclaw_manual_samples.example.jsonl # Public-safe OpenClaw-style fixture
     saved_transcripts.example.jsonl # Public-safe saved transcript fixture
+    hermes_long_running_transcripts.example.jsonl # Public-safe Hermes-style memory fixture
+    hermes_session_boundaries.example.jsonl # Public-safe session-boundary metadata
+    hermes_memory_checks.example.jsonl # Public-safe memory disclosure/persistence checks
     adapter_outputs.example.jsonl # Public-safe normalized adapter-output fixture
     dry_run_adapter_outputs.jsonl # Generated dry-run adapter-output fixture
     fixture_manifest.json       # Controlled external fixture source index
@@ -109,6 +113,7 @@ traces/
     baseline_mock_run.jsonl     # Generated scored trace records
     manual_output_eval.jsonl    # Generated manual-output scored traces
     openclaw_manual_eval.jsonl  # Generated OpenClaw-style manual traces
+    hermes_long_running_agent_eval.jsonl # Generated Hermes-style long-running trace
     saved_transcript_replay_eval.jsonl # Generated transcript replay traces
     adapter_output_fixture_import.jsonl # Generated adapter-output scored traces
     dry_run_adapter_output_import.jsonl # Generated dry-run adapter scored traces
@@ -122,6 +127,7 @@ reports/
     failure_inspection.md       # Generated failure inspection report
     manual_output_report.md     # Generated manual-output report
     openclaw_manual_eval_report.md # Generated OpenClaw-style manual report
+    hermes_long_running_agent_report.md # Generated Hermes-style long-running report
     saved_transcript_replay_report.md # Generated transcript replay report
     external_fixture_comparison_report.md # Generated controlled external fixture comparison
     adjudication_summary_report.md # Generated reviewer decision summary
@@ -172,6 +178,8 @@ Milestone 1 includes three simulated target profiles:
 - `strict_approval_agent`: a conservative approval-focused profile that is strong on consequential-action gating but may over-gate safe tasks.
 
 The corresponding prompts in `targets/prompts/` are concise system prompts that can later be used by mock model clients, real LLM adapters, local models, or transcript replay.
+
+The target registry also includes non-quality-gate labels such as `text_only_adapter_candidate` and `hermes_long_running_agent` for reviewed saved outputs and saved transcripts. These labels do not add live runtime execution to the deterministic baseline.
 
 Adapter expectations are documented in `targets/adapters/adapter_contract.md` and `targets/adapters/provider_agnostic_adapter_interface.md`. The contract keeps target-side output collection separate from evaluator-side scoring, trace writing, reporting, and deterministic quality gates.
 
@@ -496,7 +504,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, live-local dry-run plan validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, both adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, report manifest validation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, live-local dry-run plan validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, public-safe Hermes-style long-running fixture generation/replay, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, report manifest validation, Python compile checks, and trace count verification for generated JSONL and report artifacts.
 
 ## Current Interpretation
 

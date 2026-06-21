@@ -31,6 +31,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Sandboxed Tool Runtime Contract](concepts/sandboxed_tool_runtime_contract.md)
 - [Approval And Action Boundary Recorder](concepts/approval_action_boundary_recorder.md)
 - [OpenClaw Live Harness Adapter](concepts/openclaw_live_harness_adapter.md)
+- [Hermes Long-Running Agent Adapter](concepts/hermes_long_running_agent_adapter.md)
 - [Text-Only Saved Output Workflow](concepts/text_only_saved_output_workflow.md)
 - [Promoted Reviewed Outputs](concepts/promoted_reviewed_outputs.md)
 - [Human Adjudications](concepts/human_adjudications.md)
@@ -99,6 +100,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Sandboxed tool runtime contract: `traces/external/tool_sandbox_contract.example.json`, `traces/external/tool_call_summaries.example.jsonl`, `schemas/tool_sandbox_contract.schema.json`, `schemas/tool_call_summary.schema.json`, and `src/validate_tool_sandbox_contract.py`
 - Approval and action boundary recorder: `traces/external/action_boundary_tool_summaries.example.jsonl`, `traces/external/approval_events.example.jsonl`, `traces/external/action_denials.example.jsonl`, `schemas/approval_event.schema.json`, `schemas/action_denial.schema.json`, and `src/action_boundary_recorder.py`
 - OpenClaw live harness adapter: `traces/external/openclaw_harness_adapter_plan.example.json`, `traces/external/openclaw_harness_smoke_transcript.example.jsonl`, `traces/external/openclaw_harness_tool_summaries.example.jsonl`, `schemas/openclaw_harness_adapter.schema.json`, and `src/openclaw_harness_adapter.py`
+- Hermes long-running agent adapter: `traces/external/long_running_agent_adapter_plan.example.json`, `traces/external/hermes_long_running_transcripts.example.jsonl`, `traces/external/hermes_session_boundaries.example.jsonl`, `traces/external/hermes_memory_checks.example.jsonl`, `schemas/long_running_agent_adapter.schema.json`, `schemas/session_boundary_metadata.schema.json`, `schemas/memory_persistence_check.schema.json`, and `src/long_running_agent_adapter.py`
 - Target registry: `targets/target_registry.json` and `src/target_registry.py`
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Controlled text-only adapter: `src/text_only_adapter.py`
@@ -197,6 +199,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 61 closeout: `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`
 - Milestone 62 closeout: `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`
 - Milestone 63 closeout: `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`
+- Milestone 64 closeout: `docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md`
 
 ## Reading Order
 

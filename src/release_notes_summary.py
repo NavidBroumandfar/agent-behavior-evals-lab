@@ -53,6 +53,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
     REPO_ROOT / "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
     REPO_ROOT / "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
+    REPO_ROOT / "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -362,6 +363,13 @@ def release_highlights(
             {
                 "area": "OpenClaw Harness Adapter",
                 "summary": "Added a public-safe OpenClaw harness smoke adapter that emits normalized transcript evidence and a smoke report without live runtime execution.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M64" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Long-Running Agent Adapter",
+                "summary": "Added a public-safe Hermes-style long-running agent adapter with session-boundary metadata and memory checks without live Hermes execution or private memory.",
             }
         )
     return highlights

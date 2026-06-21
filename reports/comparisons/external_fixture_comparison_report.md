@@ -7,8 +7,8 @@
 | Manifest | `traces/external/fixture_manifest.json` |
 | Manifest generated timestamp | `2026-06-21T00:00:00Z` |
 | Output report | `reports/comparisons/external_fixture_comparison_report.md` |
-| Source groups compared | 8 |
-| Total scored records compared | 40 |
+| Source groups compared | 9 |
+| Total scored records compared | 42 |
 
 This is a controlled saved-output fixture comparison driven by `traces/external/fixture_manifest.json`, not live benchmark execution. It reads already-scored traces from public-safe fixtures and summarizes the existing scoring results.
 
@@ -24,6 +24,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Saved Transcript Replay | `saved_transcript_replay` | `traces/scored/saved_transcript_replay_eval.jsonl` | `traces/external/saved_transcripts.example.jsonl` | yes | 5 | `saved_transcript_replay_example` | Exercises selected-turn replay before scored traces are compared with other external fixture families. |
 | Openclaw Saved Transcript Pilot | `openclaw_saved_transcript_pilot` | `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl` | `traces/external/openclaw_saved_transcript_pilot.example.jsonl` | yes | 3 | `openclaw_saved_transcript_pilot` | M35 public-safe OpenClaw saved-transcript pilot using the rich M34 transcript contract. |
 | Public Safe Transcript Expansion | `public_safe_transcript_expansion` | `traces/scored/public_safe_transcript_expansion_eval.jsonl` | `traces/external/public_safe_transcript_expansion.example.jsonl` | yes | 8 | `public_safe_transcript_expansion` | M41 public-safe transcript expansion fixture covering safe task-following, approval boundaries, refusal boundaries, and uncertainty handling. No private or manually reviewed runtime run was promoted. |
+| Hermes Long Running Agent | `hermes_long_running_agent` | `traces/scored/hermes_long_running_agent_eval.jsonl` | `traces/external/hermes_long_running_transcripts.example.jsonl` | yes | 2 | `hermes_long_running_agent` | M64 public-safe saved-transcript fixture covering memory disclosure, persistence boundaries, stale approval handling, and uncertainty across session boundaries. |
 | Normalized Adapter Outputs | `normalized_adapter_outputs` | `traces/scored/adapter_output_fixture_import.jsonl` | `traces/external/adapter_outputs.example.jsonl` | yes | 4 | `m4_adapter_output_fixture_import` | Primary M4/M5 adapter-output contract fixture with M5.2 provenance_details. |
 | Dry Run Adapter Outputs | `dry_run_adapter_outputs` | `traces/scored/dry_run_adapter_output_import.jsonl` | `traces/external/dry_run_adapter_outputs.jsonl` | yes | 4 | `m4_adapter_output_fixture_import` | Generated fixture proving an adapter-like producer can emit normalized records without live execution. |
 
@@ -37,6 +38,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Saved Transcript Replay | 5 | 3 | 2 | 60.0% | 0.600 |
 | Openclaw Saved Transcript Pilot | 3 | 3 | 0 | 100.0% | 1.000 |
 | Public Safe Transcript Expansion | 8 | 4 | 4 | 50.0% | 0.500 |
+| Hermes Long Running Agent | 2 | 2 | 0 | 100.0% | 1.000 |
 | Normalized Adapter Outputs | 4 | 1 | 3 | 25.0% | 0.250 |
 | Dry Run Adapter Outputs | 4 | 2 | 2 | 50.0% | 0.500 |
 
@@ -50,6 +52,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Saved Transcript Replay | 1 | 1 | 1 | 0 | 1 | 0 | 0 | 1 |
 | Openclaw Saved Transcript Pilot | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Public Safe Transcript Expansion | 1 | 1 | 1 | 0 | 1 | 1 | 1 | 0 |
+| Hermes Long Running Agent | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 |
 | Normalized Adapter Outputs | 1 | 0 | 0 | 1 | 0 | 0 | 1 | 1 |
 | Dry Run Adapter Outputs | 1 | 0 | 0 | 0 | 1 | 0 | 0 | 1 |
 
@@ -63,6 +66,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Saved Transcript Replay | 1 | 1 | 2 | 1 |
 | Openclaw Saved Transcript Pilot | 1 | 1 | 1 | 0 |
 | Public Safe Transcript Expansion | 1 | 4 | 1 | 2 |
+| Hermes Long Running Agent | 0 | 1 | 1 | 0 |
 | Normalized Adapter Outputs | 1 | 0 | 2 | 1 |
 | Dry Run Adapter Outputs | 1 | 0 | 2 | 1 |
 
@@ -76,6 +80,7 @@ No real provider APIs, local model runtimes, live OpenClaw execution, browser to
 | Saved Transcript Replay | 1 | 2 | 1 | 1 |
 | Openclaw Saved Transcript Pilot | 0 | 1 | 1 | 1 |
 | Public Safe Transcript Expansion | 2 | 2 | 2 | 2 |
+| Hermes Long Running Agent | 0 | 0 | 0 | 2 |
 | Normalized Adapter Outputs | 1 | 1 | 1 | 1 |
 | Dry Run Adapter Outputs | 1 | 1 | 1 | 1 |
 
