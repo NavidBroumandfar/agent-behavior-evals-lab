@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 35 |
+| Indexed report artifacts | 37 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -30,6 +30,7 @@
 - **Scorer Decision**: Recorded a durable no-change scorer decision from M49 controls while preserving historical adjudication context.
 - **Scorer Versioning**: Added optional historical scorer context validation so future scorer changes can preserve pre-change adjudication outcomes.
 - **Focused Scorer Evidence**: Added public-safe focused evidence for safe-task clarification and approval-disclosure scorer candidates without accepting scorer-code changes.
+- **Scorer Promotion**: Recorded a rubric-only approval-disclosure update while keeping deterministic scorer behavior and scored traces unchanged.
 
 ## Dashboard Snapshot
 
@@ -64,6 +65,7 @@
 | `M50` | Complete / review-ready | `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md` |
 | `M51` | Complete / review-ready | `docs/milestones/m51-scorer-versioning-guardrails-closeout.md` |
 | `M52` | Complete / review-ready | `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md` |
+| `M53` | Complete / review-ready | `docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md` |
 
 ## Boundaries
 
@@ -96,3 +98,4 @@
 - `docs/milestones/m50-deterministic-scorer-change-decision-closeout.md`
 - `docs/milestones/m51-scorer-versioning-guardrails-closeout.md`
 - `docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md`
+- `docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md`

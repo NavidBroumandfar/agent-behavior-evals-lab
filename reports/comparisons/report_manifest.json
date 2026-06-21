@@ -634,6 +634,61 @@
       }
     },
     {
+      "artifact_id": "scorer_promotion_decision_snapshot",
+      "label": "Scorer Promotion Decision JSON",
+      "path": "reports/comparisons/scorer_promotion_decision.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/scorer_promotion_decision.py",
+      "input_paths": [
+        "reports/comparisons/focused_scorer_evidence_expansion.json",
+        "reports/comparisons/scorer_change_decision.json",
+        "reports/comparisons/scorer_versioning_guardrails.json",
+        "reports/comparisons/scorer_candidate_controls.json",
+        "reports/comparisons/scorer_calibration_summary.json",
+        "docs/wiki/concepts/v0_scorer_limitations.md",
+        "src/scorers.py",
+        "tests/test_scorers.py"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/focused_scorer_evidence_expansion.json",
+        "reports/comparisons/scorer_change_decision.json",
+        "reports/comparisons/scorer_versioning_guardrails.json",
+        "reports/comparisons/scorer_candidate_controls.json",
+        "reports/comparisons/scorer_calibration_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Deterministic M53 scorer promotion or rubric-update decision with no scorer-code changes.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "scorer_promotion_decision_report",
+      "label": "Scorer Promotion Decision Report",
+      "path": "reports/comparisons/scorer_promotion_decision.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/scorer_promotion_decision.py",
+      "input_paths": [
+        "reports/comparisons/scorer_promotion_decision.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/scorer_promotion_decision.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M53 scorer promotion or rubric-update report.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "baseline_self_comparison_report",
       "label": "Baseline Self Comparison Report",
       "path": "reports/comparisons/baseline_self_comparison_report.md",
@@ -745,6 +800,8 @@
         "reports/comparisons/scorer_versioning_guardrails.md",
         "reports/comparisons/focused_scorer_evidence_expansion.json",
         "reports/comparisons/focused_scorer_evidence_expansion.md",
+        "reports/comparisons/scorer_promotion_decision.json",
+        "reports/comparisons/scorer_promotion_decision.md",
         "traces/external/harness_bridge_plan.example.json",
         "src/scorers.py",
         "docs/wiki/concepts/v0_scorer_limitations.md",
@@ -795,6 +852,8 @@
         "reports/comparisons/scorer_versioning_guardrails.md",
         "reports/comparisons/focused_scorer_evidence_expansion.json",
         "reports/comparisons/focused_scorer_evidence_expansion.md",
+        "reports/comparisons/scorer_promotion_decision.json",
+        "reports/comparisons/scorer_promotion_decision.md",
         "traces/external/harness_bridge_plan.example.json",
         "src/scorers.py",
         "docs/wiki/concepts/v0_scorer_limitations.md",
@@ -848,6 +907,7 @@
         "reports/comparisons/scorer_change_decision.json",
         "reports/comparisons/scorer_versioning_guardrails.json",
         "reports/comparisons/focused_scorer_evidence_expansion.json",
+        "reports/comparisons/scorer_promotion_decision.json",
         "reports/comparisons/report_manifest.json",
         "reports/comparisons/evidence_quality_audit.json",
         "reports/comparisons/reporting_product_summary.json"
@@ -860,6 +920,7 @@
         "reports/comparisons/scorer_change_decision.json",
         "reports/comparisons/scorer_versioning_guardrails.json",
         "reports/comparisons/focused_scorer_evidence_expansion.json",
+        "reports/comparisons/scorer_promotion_decision.json",
         "reports/comparisons/reporting_product_summary.json",
         "reports/comparisons/evidence_quality_audit.json"
       ],
@@ -922,7 +983,8 @@
         "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
         "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
         "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
-        "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md"
+        "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
+        "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -964,7 +1026,8 @@
         "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
         "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
         "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
-        "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md"
+        "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
+        "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

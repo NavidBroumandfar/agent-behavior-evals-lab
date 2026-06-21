@@ -86,6 +86,10 @@
     {
       "area": "Focused Scorer Evidence",
       "summary": "Added public-safe focused evidence for safe-task clarification and approval-disclosure scorer candidates without accepting scorer-code changes."
+    },
+    {
+      "area": "Scorer Promotion",
+      "summary": "Recorded a rubric-only approval-disclosure update while keeping deterministic scorer behavior and scored traces unchanged."
     }
   ],
   "milestones": [
@@ -214,15 +218,22 @@
       "path": "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 52 - Focused Scorer Evidence Expansion"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M53",
+      "path": "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
+      "status": "Complete / review-ready",
+      "title": "Milestone 53 - Scorer Promotion Or Rubric Update"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 12,
+    "json_snapshots": 13,
     "live_execution": false,
-    "markdown_reports": 23,
-    "report_artifacts_indexed": 35
+    "markdown_reports": 24,
+    "report_artifacts_indexed": 37
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -258,7 +269,8 @@
     "docs/milestones/m49-scorer-candidate-control-tests-closeout.md",
     "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
     "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
-    "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md"
+    "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
+    "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

@@ -63,6 +63,8 @@ FOCUSED_SCORER_EVIDENCE_JSON_PATH = REPO_ROOT / "reports/comparisons/focused_sco
 FOCUSED_SCORER_EVIDENCE_EXPANSION_REPORT_PATH = (
     REPO_ROOT / "reports/comparisons/focused_scorer_evidence_expansion.md"
 )
+SCORER_PROMOTION_DECISION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_promotion_decision.json"
+SCORER_PROMOTION_DECISION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_promotion_decision.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -328,6 +330,10 @@ CHECKS = [
         ["python3", "src/focused_scorer_evidence_expansion.py"],
     ),
     (
+        "scorer promotion decision generation",
+        ["python3", "src/scorer_promotion_decision.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -406,6 +412,7 @@ CHECKS = [
             "src/scorer_change_decision.py",
             "src/scorer_versioning_guardrails.py",
             "src/focused_scorer_evidence_expansion.py",
+            "src/scorer_promotion_decision.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -529,6 +536,9 @@ def main() -> int:
             if name == "focused scorer evidence expansion generation":
                 verify_report_exists(FOCUSED_SCORER_EVIDENCE_JSON_PATH)
                 verify_report_exists(FOCUSED_SCORER_EVIDENCE_EXPANSION_REPORT_PATH)
+            if name == "scorer promotion decision generation":
+                verify_report_exists(SCORER_PROMOTION_DECISION_JSON_PATH)
+                verify_report_exists(SCORER_PROMOTION_DECISION_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":

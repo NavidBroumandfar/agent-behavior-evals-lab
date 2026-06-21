@@ -69,7 +69,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "35 report artifacts are indexed, while 48 adjudication records exist."
+        "summary": "37 report artifacts are indexed, while 48 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -92,9 +92,10 @@
           "reports/comparisons/scorer_candidate_controls.json",
           "reports/comparisons/scorer_change_decision.json",
           "reports/comparisons/scorer_versioning_guardrails.json",
-          "reports/comparisons/focused_scorer_evidence_expansion.json"
+          "reports/comparisons/focused_scorer_evidence_expansion.json",
+          "reports/comparisons/scorer_promotion_decision.json"
         ],
-        "summary": "48 adjudications cover 9 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`."
+        "summary": "48 adjudications cover 9 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. M53 records decision `rubric_only_update_no_scorer_change` with 1 accepted rubric updates and 0 accepted scorer promotions."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -590,6 +591,8 @@
         "reports/comparisons/scorer_versioning_guardrails.md",
         "reports/comparisons/focused_scorer_evidence_expansion.json",
         "reports/comparisons/focused_scorer_evidence_expansion.md",
+        "reports/comparisons/scorer_promotion_decision.json",
+        "reports/comparisons/scorer_promotion_decision.md",
         "reports/comparisons/baseline_self_comparison_report.md",
         "reports/comparisons/reporting_product_summary.json",
         "reports/comparisons/reporting_product_summary.md",
@@ -600,11 +603,11 @@
         "reports/comparisons/release_notes_latest.json",
         "reports/comparisons/release_notes_latest.md"
       ],
-      "json_snapshots": 12,
-      "markdown_reports": 23,
-      "public_safe_artifacts": 35,
-      "quality_gate_artifacts": 35,
-      "report_artifacts": 35
+      "json_snapshots": 13,
+      "markdown_reports": 24,
+      "public_safe_artifacts": 37,
+      "quality_gate_artifacts": 37,
+      "report_artifacts": 37
     },
     "scored_traces": {
       "baseline": {
@@ -670,7 +673,7 @@
         "refusal_required_review_gap"
       ],
       "summary": "Continue public-safe review depth for small fixture groups and remaining category coverage gaps.",
-      "target_phase": "M53"
+      "target_phase": "Post-M53 maintenance"
     },
     {
       "priority": "high",
@@ -680,8 +683,8 @@
         "heuristic_scorer_not_semantic_judge",
         "limited_adjudication_calibration_set"
       ],
-      "summary": "Use the M51 guardrails and M52 focused evidence before accepting scorer or rubric refinements.",
-      "target_phase": "M53"
+      "summary": "Keep M53 rubric-only guidance separate from scorer behavior until more focused evidence supports a narrow deterministic scorer change.",
+      "target_phase": "Post-M53 maintenance"
     },
     {
       "priority": "medium",
@@ -726,6 +729,8 @@
     "reports/comparisons/scorer_versioning_guardrails.md",
     "reports/comparisons/focused_scorer_evidence_expansion.json",
     "reports/comparisons/focused_scorer_evidence_expansion.md",
+    "reports/comparisons/scorer_promotion_decision.json",
+    "reports/comparisons/scorer_promotion_decision.md",
     "traces/external/harness_bridge_plan.example.json",
     "src/scorers.py",
     "docs/wiki/concepts/v0_scorer_limitations.md",

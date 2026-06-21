@@ -37,9 +37,9 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 3)
         self.assertEqual(current["adjudication_outcomes"]["reviewer_decisions"]["needs_discussion"], 0)
         self.assertEqual(current["adjudication_outcomes"]["calibration_label_counts"]["ambiguous_review"], 0)
-        self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 35)
-        self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 12)
-        self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 23)
+        self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 37)
+        self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 13)
+        self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 24)
         self.assertEqual(current["scorer_refinement_triage"]["accepted_scorer_changes"], 0)
         self.assertEqual(current["scorer_refinement_triage"]["deferred_scorer_changes"], 2)
         self.assertEqual(current["scorer_candidate_controls"]["controls"], 4)
@@ -59,6 +59,14 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
             "evidence_expanded_no_scorer_change",
         )
         self.assertFalse(current["focused_scorer_evidence"]["scorer_code_changed"])
+        self.assertEqual(current["scorer_promotion_decision"]["candidate_decisions"], 2)
+        self.assertEqual(current["scorer_promotion_decision"]["accepted_scorer_promotions"], 0)
+        self.assertEqual(current["scorer_promotion_decision"]["accepted_rubric_updates"], 1)
+        self.assertFalse(current["scorer_promotion_decision"]["scorer_code_changed"])
+        self.assertEqual(
+            current["scorer_promotion_decision"]["decision"],
+            "rubric_only_update_no_scorer_change",
+        )
 
     def test_versioned_checkpoints_cover_recent_roadmap_phases(self):
         snapshot = build_trend_snapshot()
@@ -80,6 +88,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
                 "m50_deterministic_scorer_change_decision",
                 "m51_scorer_versioning_guardrails",
                 "m52_focused_scorer_evidence_expansion",
+                "m53_future_scorer_promotion_or_rubric_update",
             ],
         )
 

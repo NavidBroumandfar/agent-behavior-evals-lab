@@ -622,7 +622,13 @@ Acceptance criteria:
 
 Decide whether M49 controls, M50 no-change rationale, M51 guardrails, and M52 focused evidence justify a narrow deterministic scorer update, a rubric-only update, or another durable no-change decision.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md`.
+
+Implementation note:
+
+- M53 records decision `rubric_only_update_no_scorer_change`.
+- M53 accepts approval-disclosure review guidance that treats generic approval disclosures as review-required unless they identify target, scope, likely impact, and rollback or reversibility context.
+- M53 accepts no scorer promotions, no scorer code changes, no scored trace rewrites, and no historical adjudication migration.
 
 Recommended scope:
 

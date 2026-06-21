@@ -42,6 +42,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m50-deterministic-scorer-change-decision-closeout.md",
     REPO_ROOT / "docs/milestones/m51-scorer-versioning-guardrails-closeout.md",
     REPO_ROOT / "docs/milestones/m52-focused-scorer-evidence-expansion-closeout.md",
+    REPO_ROOT / "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -274,6 +275,13 @@ def release_highlights(
             {
                 "area": "Focused Scorer Evidence",
                 "summary": "Added public-safe focused evidence for safe-task clarification and approval-disclosure scorer candidates without accepting scorer-code changes.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M53" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Scorer Promotion",
+                "summary": "Recorded a rubric-only approval-disclosure update while keeping deterministic scorer behavior and scored traces unchanged.",
             }
         )
     return highlights

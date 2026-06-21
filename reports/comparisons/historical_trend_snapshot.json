@@ -314,11 +314,11 @@
       ]
     },
     "report_manifest_coverage": {
-      "json_snapshots": 12,
-      "markdown_reports": 23,
-      "public_safe_artifacts": 35,
-      "quality_gate_artifacts": 35,
-      "report_artifacts": 35
+      "json_snapshots": 13,
+      "markdown_reports": 24,
+      "public_safe_artifacts": 37,
+      "quality_gate_artifacts": 37,
+      "report_artifacts": 37
     },
     "scorer_candidate_controls": {
       "accepted_scorer_changes": 0,
@@ -333,6 +333,15 @@
       "candidates_evaluated": 2,
       "decision": "rubric_only_no_scorer_change",
       "rubric_only_no_change_decisions": 2,
+      "scored_trace_behavior_changed": false,
+      "scorer_code_changed": false
+    },
+    "scorer_promotion_decision": {
+      "accepted_rubric_updates": 1,
+      "accepted_scorer_promotions": 0,
+      "candidate_decisions": 2,
+      "decision": "rubric_only_update_no_scorer_change",
+      "historical_context_migration_required": false,
       "scored_trace_behavior_changed": false,
       "scorer_code_changed": false
     },
@@ -377,6 +386,7 @@
     "reports/comparisons/scorer_calibration_summary.json",
     "reports/comparisons/scorer_candidate_controls.json",
     "reports/comparisons/scorer_change_decision.json",
+    "reports/comparisons/scorer_promotion_decision.json",
     "reports/comparisons/scorer_refinement_triage.json",
     "reports/comparisons/scorer_versioning_guardrails.json",
     "traces/external/adapter_outputs.example.jsonl",
@@ -408,7 +418,8 @@
     "report_manifest_coverage",
     "scorer_change_decision",
     "scorer_versioning_guardrails",
-    "focused_scorer_evidence"
+    "focused_scorer_evidence",
+    "scorer_promotion_decision"
   ],
   "versioned_trend_snapshots": [
     {
@@ -481,9 +492,9 @@
       "metrics": {
         "external_fixture_pass_rate": "57.5%",
         "fixture_groups": 8,
-        "json_snapshots": 12,
-        "markdown_reports": 23,
-        "report_artifacts": 35
+        "json_snapshots": 13,
+        "markdown_reports": 24,
+        "report_artifacts": 37
       },
       "phase": "reporting_history",
       "source_paths": [
@@ -616,6 +627,22 @@
         "traces/external/focused_scorer_evidence.example.jsonl",
         "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
         "traces/scored/focused_scorer_evidence_eval.jsonl"
+      ]
+    },
+    {
+      "checkpoint_id": "m53_future_scorer_promotion_or_rubric_update",
+      "metrics": {
+        "accepted_rubric_updates": 1,
+        "accepted_scorer_promotions": 0,
+        "candidate_decisions": 2,
+        "decision": "rubric_only_update_no_scorer_change"
+      },
+      "phase": "scorer_promotion_decision",
+      "source_paths": [
+        "reports/comparisons/scorer_promotion_decision.json",
+        "reports/comparisons/focused_scorer_evidence_expansion.json",
+        "reports/comparisons/scorer_change_decision.json",
+        "reports/comparisons/scorer_versioning_guardrails.json"
       ]
     }
   ]

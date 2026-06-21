@@ -29,6 +29,7 @@ SCORER_CANDIDATE_CONTROLS_PATH = REPO_ROOT / "reports/comparisons/scorer_candida
 SCORER_CHANGE_DECISION_PATH = REPO_ROOT / "reports/comparisons/scorer_change_decision.json"
 SCORER_VERSIONING_GUARDRAILS_PATH = REPO_ROOT / "reports/comparisons/scorer_versioning_guardrails.json"
 FOCUSED_SCORER_EVIDENCE_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_expansion.json"
+SCORER_PROMOTION_DECISION_PATH = REPO_ROOT / "reports/comparisons/scorer_promotion_decision.json"
 REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
 EVIDENCE_QUALITY_AUDIT_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.json"
 REPORTING_PRODUCT_SUMMARY_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
@@ -54,6 +55,7 @@ def build_trend_snapshot() -> dict[str, Any]:
     scorer_decision = load_json_object(SCORER_CHANGE_DECISION_PATH)
     scorer_guardrails = load_json_object(SCORER_VERSIONING_GUARDRAILS_PATH)
     focused_evidence = load_json_object(FOCUSED_SCORER_EVIDENCE_PATH)
+    promotion_decision = load_json_object(SCORER_PROMOTION_DECISION_PATH)
     report_manifest = load_json_object(REPORT_MANIFEST_PATH)
     evidence_audit = load_json_object(EVIDENCE_QUALITY_AUDIT_PATH)
     product_summary = load_json_object(REPORTING_PRODUCT_SUMMARY_PATH)
@@ -86,6 +88,7 @@ def build_trend_snapshot() -> dict[str, Any]:
         "scorer_change_decision": scorer_change_decision_outcomes(scorer_decision),
         "scorer_versioning_guardrails": scorer_versioning_guardrail_outcomes(scorer_guardrails),
         "focused_scorer_evidence": focused_scorer_evidence_outcomes(focused_evidence),
+        "scorer_promotion_decision": scorer_promotion_decision_outcomes(promotion_decision),
     }
 
     return {
@@ -110,6 +113,7 @@ def build_trend_snapshot() -> dict[str, Any]:
             "scorer_change_decision",
             "scorer_versioning_guardrails",
             "focused_scorer_evidence",
+            "scorer_promotion_decision",
         ],
         "current_snapshot": current_snapshot,
         "versioned_trend_snapshots": versioned_trend_snapshots(
@@ -121,6 +125,7 @@ def build_trend_snapshot() -> dict[str, Any]:
             scorer_decision,
             scorer_guardrails,
             focused_evidence,
+            promotion_decision,
             manifest_coverage,
             evidence,
             product_summary,
@@ -323,6 +328,23 @@ def focused_scorer_evidence_outcomes(focused_evidence: dict[str, Any]) -> dict[s
     }
 
 
+def scorer_promotion_decision_outcomes(promotion_decision: dict[str, Any]) -> dict[str, Any]:
+    """Summarize future scorer promotion or rubric-update outcomes."""
+
+    decision = promotion_decision.get("decision_summary", {})
+    return {
+        "candidate_decisions": int(decision.get("candidate_decisions", 0)),
+        "accepted_scorer_promotions": int(decision.get("accepted_scorer_promotions", 0)),
+        "accepted_rubric_updates": int(decision.get("accepted_rubric_updates", 0)),
+        "scorer_code_changed": bool(decision.get("scorer_code_changed", False)),
+        "scored_trace_behavior_changed": bool(decision.get("scored_trace_behavior_changed", False)),
+        "historical_context_migration_required": bool(
+            decision.get("historical_context_migration_required", False)
+        ),
+        "decision": str(decision.get("decision", "unknown")),
+    }
+
+
 def evidence_quality_trend(evidence_audit: dict[str, Any]) -> dict[str, Any]:
     """Extract gap counts from the current evidence quality audit."""
 
@@ -345,6 +367,7 @@ def versioned_trend_snapshots(
     scorer_decision: dict[str, Any],
     scorer_guardrails: dict[str, Any],
     focused_evidence: dict[str, Any],
+    promotion_decision: dict[str, Any],
     manifest_coverage: dict[str, Any],
     evidence: dict[str, Any],
     product_summary: dict[str, Any],
@@ -365,6 +388,7 @@ def versioned_trend_snapshots(
     decision = scorer_change_decision_outcomes(scorer_decision)
     guardrails = scorer_versioning_guardrail_outcomes(scorer_guardrails)
     focused = focused_scorer_evidence_outcomes(focused_evidence)
+    promotion = scorer_promotion_decision_outcomes(promotion_decision)
     return [
         {
             "checkpoint_id": "baseline_mock_run",
@@ -553,6 +577,22 @@ def versioned_trend_snapshots(
                 "decision": focused["decision"],
             },
         },
+        {
+            "checkpoint_id": "m53_future_scorer_promotion_or_rubric_update",
+            "phase": "scorer_promotion_decision",
+            "source_paths": [
+                display_path(SCORER_PROMOTION_DECISION_PATH),
+                display_path(FOCUSED_SCORER_EVIDENCE_PATH),
+                display_path(SCORER_CHANGE_DECISION_PATH),
+                display_path(SCORER_VERSIONING_GUARDRAILS_PATH),
+            ],
+            "metrics": {
+                "candidate_decisions": promotion["candidate_decisions"],
+                "accepted_scorer_promotions": promotion["accepted_scorer_promotions"],
+                "accepted_rubric_updates": promotion["accepted_rubric_updates"],
+                "decision": promotion["decision"],
+            },
+        },
     ]
 
 
@@ -586,6 +626,7 @@ def generate_markdown(snapshot: dict[str, Any]) -> str:
     scorer_decision = current["scorer_change_decision"]
     scorer_guardrails = current["scorer_versioning_guardrails"]
     focused_evidence = current["focused_scorer_evidence"]
+    promotion_decision = current["scorer_promotion_decision"]
     lines = [
         "# Historical Trend Report",
         "",
@@ -605,6 +646,7 @@ def generate_markdown(snapshot: dict[str, Any]) -> str:
         f"| Scorer change decision | `{scorer_decision['decision']}` |",
         f"| Scorer versioning guardrails | {str(scorer_guardrails['historical_scorer_context_supported']).lower()} |",
         f"| Focused scorer evidence | `{focused_evidence['decision']}` |",
+        f"| Scorer promotion decision | `{promotion_decision['decision']}` |",
         "",
         "These trends describe evaluator health from committed local artifacts. They are not live model-performance trends, leaderboard results, or production benchmark claims.",
         "",
@@ -758,6 +800,7 @@ def source_paths(fixture_groups: list[dict[str, Any]]) -> list[str]:
         SCORER_CHANGE_DECISION_PATH,
         SCORER_VERSIONING_GUARDRAILS_PATH,
         FOCUSED_SCORER_EVIDENCE_PATH,
+        SCORER_PROMOTION_DECISION_PATH,
         REPORT_MANIFEST_PATH,
         EVIDENCE_QUALITY_AUDIT_PATH,
         REPORTING_PRODUCT_SUMMARY_PATH,

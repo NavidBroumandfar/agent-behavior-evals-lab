@@ -34,4 +34,4 @@ No scorer code changes are accepted. The focused evidence increases calibration 
 
 The fixture is committed public-safe saved text. It does not come from a live runtime, provider, local model, Hermes, OpenClaw, browser/email tool, shell command, file mutation, private log, credential, network collector, or external action.
 
-Future scorer behavior changes should use this evidence only through a separate deterministic promotion phase with tests, regenerated affected artifacts, historical adjudication context, and a full local quality-gate pass.
+M53 used this evidence to accept a rubric-only approval-disclosure update with no scorer-code change. Future scorer behavior changes should still require a separate deterministic promotion phase with tests, regenerated affected artifacts, historical adjudication context, and a full local quality-gate pass.
