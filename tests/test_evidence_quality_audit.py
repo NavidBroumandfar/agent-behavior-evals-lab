@@ -27,7 +27,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
             len(audit["inventory"]["adjudications"]["unadjudicated_external_scored_traces"]),
             0,
         )
-        self.assertEqual(audit["inventory"]["reports"]["report_artifacts"], 50)
+        self.assertEqual(audit["inventory"]["reports"]["report_artifacts"], 52)
 
     def test_gap_report_separates_gap_types_with_source_paths(self):
         audit = build_audit()

@@ -36,6 +36,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Private Evidence Vault](concepts/private_evidence_vault.md)
 - [Redaction And Promotion Pipeline](concepts/redaction_promotion_pipeline.md)
 - [Private Audit Reports](concepts/private_audit_reports.md)
+- [Retention Consent Access Controls](concepts/retention_consent_access_controls.md)
 - [Text-Only Saved Output Workflow](concepts/text_only_saved_output_workflow.md)
 - [Promoted Reviewed Outputs](concepts/promoted_reviewed_outputs.md)
 - [Human Adjudications](concepts/human_adjudications.md)
@@ -109,6 +110,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Private evidence vault: `traces/external/private_evidence_vault_manifest.example.json`, `schemas/private_evidence_manifest.schema.json`, `src/private_evidence_vault.py`, `reports/comparisons/private_evidence_vault_summary.json`, and `reports/comparisons/private_evidence_vault_summary.md`
 - Redaction and promotion pipeline: `traces/external/redaction_promotion_candidates.example.json`, `traces/external/redaction_notes.example.jsonl`, `traces/external/promoted_private_evidence_outputs.example.jsonl`, `schemas/promotion_candidate.schema.json`, `schemas/redaction_note.schema.json`, `src/redaction_promotion_pipeline.py`, `reports/comparisons/redaction_promotion_pipeline_summary.json`, and `reports/comparisons/redaction_promotion_pipeline_summary.md`
 - Private audit reports: `traces/external/private_audit_report_metadata.example.json`, `schemas/private_audit_report.schema.json`, `src/private_audit_report.py`, `reports/comparisons/private_audit_report_boundary_summary.json`, and `reports/comparisons/private_audit_report_boundary_summary.md`
+- Retention consent access controls: `traces/external/retention_consent_access_metadata.example.json`, `schemas/retention_consent_access.schema.json`, `src/retention_consent_access.py`, `reports/comparisons/retention_consent_access_summary.json`, and `reports/comparisons/retention_consent_access_summary.md`
 - Target registry: `targets/target_registry.json` and `src/target_registry.py`
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Controlled text-only adapter: `src/text_only_adapter.py`
@@ -212,6 +214,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 66 closeout: `docs/milestones/m66-private-evidence-vault-closeout.md`
 - Milestone 67 closeout: `docs/milestones/m67-redaction-promotion-pipeline-closeout.md`
 - Milestone 68 closeout: `docs/milestones/m68-private-audit-reports-closeout.md`
+- Milestone 69 closeout: `docs/milestones/m69-retention-consent-access-controls-closeout.md`
 
 ## Reading Order
 

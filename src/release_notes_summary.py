@@ -17,7 +17,7 @@ from reporting_utils import load_json_object, write_json_object, write_text
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-GENERATED_AT = "2026-06-21T00:00:00Z"
+GENERATED_AT = "2026-06-22T00:00:00Z"
 
 PRODUCT_SUMMARY_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
 REPORT_MANIFEST_PATH = REPO_ROOT / "reports/comparisons/report_manifest.json"
@@ -58,6 +58,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m66-private-evidence-vault-closeout.md",
     REPO_ROOT / "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
     REPO_ROOT / "docs/milestones/m68-private-audit-reports-closeout.md",
+    REPO_ROOT / "docs/milestones/m69-retention-consent-access-controls-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -402,6 +403,13 @@ def release_highlights(
             {
                 "area": "Private Audit Reports",
                 "summary": "Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M69" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Retention Consent Access",
+                "summary": "Added metadata-only retention, consent, access-control, deletion/export, and evidence-age boundary validation for private runtime evidence.",
             }
         )
     return highlights

@@ -1,0 +1,120 @@
+{
+  "aggregate_counts": {
+    "access_boundaries": {
+      "local maintainer workstation only": 2
+    },
+    "authorization_statuses": {
+      "authorization_required_not_embedded": 2
+    },
+    "retention_actions": {
+      "delete_after_review_window": 1,
+      "manual_delete_review_required": 1
+    },
+    "retention_classes": {
+      "delete_after_review": 1,
+      "retain_local_until_manually_deleted": 1
+    }
+  },
+  "boundaries": [
+    "Committed M69 summaries are aggregate-only and public-safe.",
+    "The deterministic gate validates fake metadata only and does not read raw private evidence.",
+    "Deletion and private artifact export boundaries are validated as metadata; no deletion or export action is executed.",
+    "Private evidence and private audit report roots remain ignored by Git and local-only by default.",
+    "Consent or authorization proof is not embedded in committed fixtures.",
+    "Evidence age and access-boundary reporting uses fake collected-at metadata and aggregate counts only.",
+    "M69 does not create public leaderboard evidence, production-safety proof, third-party reproducibility evidence, or private-audit overclaims."
+  ],
+  "deletion_actions_executed": false,
+  "deletion_export_boundaries": {
+    "aggregate_export_contains_per_record_private_details": false,
+    "aggregate_export_path": "reports/comparisons/retention_consent_access_summary.json",
+    "boundary_id": "m69_deletion_export_boundary",
+    "delete_targets_limited_to_ignored_private_roots": true,
+    "deletion_command_in_quality_gate": false,
+    "export_requires_redaction_or_aggregate": true,
+    "private_artifact_export_enabled_by_default": false,
+    "public_safe_aggregate_export_enabled": true,
+    "raw_private_evidence_export_allowed": false
+  },
+  "evidence_age_report": {
+    "age_source": "fake_collected_at_metadata",
+    "as_of": "2026-06-22T00:00:00Z",
+    "average_evidence_age_days": 31.0,
+    "newest_evidence_age_days": 21,
+    "oldest_evidence_age_days": 41
+  },
+  "generated_at": "2026-06-22T00:00:00Z",
+  "output_defaults": {
+    "aggregate_only": true,
+    "private_record_values_included": false,
+    "public_safe": true,
+    "summary_json_path": "reports/comparisons/retention_consent_access_summary.json",
+    "summary_markdown_path": "reports/comparisons/retention_consent_access_summary.md"
+  },
+  "private_artifact_exports_executed": false,
+  "private_artifacts_read": false,
+  "private_audit_overclaim": false,
+  "private_store_boundaries": {
+    "local_store_access": "local_maintainer_workstation_only",
+    "private_audit_report_label": "private_audit_report",
+    "private_report_root": "reports/private/",
+    "private_report_root_gitignored": true,
+    "private_reports_committable": false,
+    "raw_private_records_committable": false,
+    "role_required": "authorized_local_auditor",
+    "shared_storage_allowed": false,
+    "vault_root": "private_evidence/",
+    "vault_root_gitignored": true
+  },
+  "production_safety_claim": false,
+  "public_leaderboard_eligible": false,
+  "public_safe_fake_metadata_only": true,
+  "quality_gate": {
+    "browser_email_network_shell_actions_in_quality_gate": false,
+    "credential_handling_in_quality_gate": false,
+    "deletion_actions_in_quality_gate": false,
+    "deterministic_gate_uses_fake_metadata_only": true,
+    "export_actions_in_quality_gate": false,
+    "external_actions_in_quality_gate": false,
+    "gated_llm_review_in_quality_gate": false,
+    "live_execution_in_quality_gate": false,
+    "private_evidence_ingestion_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_private_data_read_in_quality_gate": false
+  },
+  "record_counts": {
+    "authorization_recorded_count": 0,
+    "authorization_required_count": 2,
+    "included_private_audit_record_metadata_count": 2,
+    "retention_control_record_metadata_count": 2,
+    "source_vault_private_record_metadata_count": 2
+  },
+  "retention_policy": {
+    "default_retention_class": "delete_after_review",
+    "delete_after_review_max_age_days": 30,
+    "evidence_age_as_of": "2026-06-22T00:00:00Z",
+    "manual_retention_requires_owner_review": true,
+    "policy_id": "m69_private_runtime_evidence_retention_policy"
+  },
+  "safety_assertions": {
+    "browser_email_network_shell_external_actions": false,
+    "contains_credentials_or_secrets": false,
+    "contains_private_workspace_paths": false,
+    "contains_raw_private_evidence": false,
+    "contains_raw_private_logs": false,
+    "contains_real_customer_data": false,
+    "fake_metadata_only": true,
+    "live_provider_model_runtime_execution": false,
+    "private_audit_overclaim": false,
+    "production_safety_claim": false,
+    "public_leaderboard_claim": false,
+    "public_safe_input_metadata": true,
+    "third_party_reproducibility_claim": false
+  },
+  "schema_path": "schemas/retention_consent_access.schema.json",
+  "source_metadata_path": "traces/external/retention_consent_access_metadata.example.json",
+  "source_private_audit_metadata_path": "traces/external/private_audit_report_metadata.example.json",
+  "source_vault_manifest_path": "traces/external/private_evidence_vault_manifest.example.json",
+  "summary_id": "m69_retention_consent_access_summary",
+  "third_party_reproducibility_claim": false
+}

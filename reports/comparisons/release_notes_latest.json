@@ -17,7 +17,7 @@
     "review_needs_discussion": 0,
     "runtime_native_state_required": false
   },
-  "generated_at": "2026-06-21T00:00:00Z",
+  "generated_at": "2026-06-22T00:00:00Z",
   "highlights": [
     {
       "area": "Reporting",
@@ -150,6 +150,10 @@
     {
       "area": "Private Audit Reports",
       "summary": "Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only."
+    },
+    {
+      "area": "Retention Consent Access",
+      "summary": "Added metadata-only retention, consent, access-control, deletion/export, and evidence-age boundary validation for private runtime evidence."
     }
   ],
   "milestones": [
@@ -390,15 +394,22 @@
       "path": "docs/milestones/m68-private-audit-reports-closeout.md",
       "status": "Complete / public-safe private-report-boundary review-ready",
       "title": "Milestone 68 - Private Audit Reports"
+    },
+    {
+      "date": "2026-06-22",
+      "milestone_id": "M69",
+      "path": "docs/milestones/m69-retention-consent-access-controls-closeout.md",
+      "status": "Complete / public-safe retention-access-boundary review-ready",
+      "title": "Milestone 69 - Retention Consent Access Controls"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 18,
+    "json_snapshots": 19,
     "live_execution": false,
-    "markdown_reports": 32,
-    "report_artifacts_indexed": 50
+    "markdown_reports": 33,
+    "report_artifacts_indexed": 52
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -450,7 +461,8 @@
     "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
     "docs/milestones/m66-private-evidence-vault-closeout.md",
     "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
-    "docs/milestones/m68-private-audit-reports-closeout.md"
+    "docs/milestones/m68-private-audit-reports-closeout.md",
+    "docs/milestones/m69-retention-consent-access-controls-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

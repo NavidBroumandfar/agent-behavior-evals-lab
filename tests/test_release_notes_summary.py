@@ -23,16 +23,16 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         release_notes = build_release_notes()
 
         self.assertEqual(release_notes["release_id"], "release_notes_latest")
-        self.assertEqual(release_notes["generated_at"], "2026-06-21T00:00:00Z")
+        self.assertEqual(release_notes["generated_at"], "2026-06-22T00:00:00Z")
         self.assertTrue(release_notes["safety"]["public_safe"])
         self.assertFalse(release_notes["safety"]["live_execution"])
         self.assertEqual(release_notes["dashboard_snapshot"]["baseline_records"], 126)
         self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 48)
         self.assertEqual(release_notes["dashboard_snapshot"]["harness_bridge_decision"], "defer_harness_integration")
         self.assertEqual(release_notes["dashboard_snapshot"]["review_needs_discussion"], 0)
-        self.assertEqual(len(release_notes["milestones"]), 34)
-        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M68")
-        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 50)
+        self.assertEqual(len(release_notes["milestones"]), 35)
+        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M69")
+        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 52)
 
     def test_generate_markdown_contains_release_sections(self):
         markdown = generate_markdown(build_release_notes())
@@ -70,6 +70,7 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertIn("Private Evidence Vault", markdown)
         self.assertIn("Redaction Promotion", markdown)
         self.assertIn("Private Audit Reports", markdown)
+        self.assertIn("Retention Consent Access", markdown)
         self.assertIn("No live provider APIs", markdown)
 
     def test_milestone_summary_extracts_title_status_and_date(self):

@@ -1,0 +1,649 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Retention Consent And Access Controls",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "contract_id",
+    "version",
+    "created_at",
+    "status",
+    "source_vault_manifest_path",
+    "source_private_audit_metadata_path",
+    "metadata_classification",
+    "retention_policy",
+    "consent_authorization_checklist",
+    "access_control_notes",
+    "deletion_export_boundaries",
+    "output_defaults",
+    "quality_gate",
+    "safety_assertions",
+    "record_controls"
+  ],
+  "properties": {
+    "contract_id": {
+      "type": "string",
+      "const": "m69_retention_consent_access_controls"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "created_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "public_safe_retention_consent_access_fixture"
+      ]
+    },
+    "source_vault_manifest_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "source_private_audit_metadata_path": {
+      "type": "string",
+      "minLength": 1,
+      "pattern": ".*\\S.*"
+    },
+    "metadata_classification": {
+      "type": "string",
+      "enum": [
+        "public_safe_fake_private_metadata"
+      ]
+    },
+    "retention_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "default_retention_class",
+        "allowed_retention_classes",
+        "delete_after_review_max_age_days",
+        "retain_local_until_manually_deleted_requires_owner_review",
+        "raw_private_evidence_auto_export",
+        "public_safe_aggregate_export_after_redaction_only",
+        "retention_clock_source",
+        "evidence_age_as_of"
+      ],
+      "properties": {
+        "policy_id": {
+          "type": "string",
+          "const": "m69_private_runtime_evidence_retention_policy"
+        },
+        "default_retention_class": {
+          "type": "string",
+          "enum": [
+            "delete_after_review"
+          ]
+        },
+        "allowed_retention_classes": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "enum": [
+              "delete_after_review",
+              "retain_local_until_manually_deleted"
+            ]
+          }
+        },
+        "delete_after_review_max_age_days": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "retain_local_until_manually_deleted_requires_owner_review": {
+          "type": "boolean",
+          "const": true
+        },
+        "raw_private_evidence_auto_export": {
+          "type": "boolean",
+          "const": false
+        },
+        "public_safe_aggregate_export_after_redaction_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "retention_clock_source": {
+          "type": "string",
+          "enum": [
+            "fake_collected_at_metadata"
+          ]
+        },
+        "evidence_age_as_of": {
+          "type": "string",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+        }
+      }
+    },
+    "consent_authorization_checklist": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checklist_id",
+        "authorization_required_before_ingestion",
+        "consent_or_authorization_recorded_per_artifact",
+        "no_real_subject_or_customer_data_in_fixture",
+        "revocation_boundary_documented",
+        "missing_authorization_blocks_ingestion",
+        "authorization_values_allowed"
+      ],
+      "properties": {
+        "checklist_id": {
+          "type": "string",
+          "const": "m69_consent_authorization_checklist"
+        },
+        "authorization_required_before_ingestion": {
+          "type": "boolean",
+          "const": true
+        },
+        "consent_or_authorization_recorded_per_artifact": {
+          "type": "boolean",
+          "const": true
+        },
+        "no_real_subject_or_customer_data_in_fixture": {
+          "type": "boolean",
+          "const": true
+        },
+        "revocation_boundary_documented": {
+          "type": "boolean",
+          "const": true
+        },
+        "missing_authorization_blocks_ingestion": {
+          "type": "boolean",
+          "const": true
+        },
+        "authorization_values_allowed": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "string",
+            "enum": [
+              "authorized_for_internal_private_audit",
+              "required_before_ingestion"
+            ]
+          }
+        }
+      }
+    },
+    "access_control_notes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "store_id",
+        "vault_root",
+        "private_report_root",
+        "gitignore_path",
+        "vault_root_gitignored",
+        "private_report_root_gitignored",
+        "local_store_access",
+        "role_required",
+        "shared_storage_allowed",
+        "credential_material_committable",
+        "raw_private_logs_committable",
+        "private_workspace_paths_committable"
+      ],
+      "properties": {
+        "store_id": {
+          "type": "string",
+          "const": "m69_local_private_store_access_notes"
+        },
+        "vault_root": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "private_report_root": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "gitignore_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "vault_root_gitignored": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_report_root_gitignored": {
+          "type": "boolean",
+          "const": true
+        },
+        "local_store_access": {
+          "type": "string",
+          "enum": [
+            "local_maintainer_workstation_only"
+          ]
+        },
+        "role_required": {
+          "type": "string",
+          "enum": [
+            "authorized_local_auditor"
+          ]
+        },
+        "shared_storage_allowed": {
+          "type": "boolean",
+          "const": false
+        },
+        "credential_material_committable": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_logs_committable": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_workspace_paths_committable": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "deletion_export_boundaries": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "boundary_id",
+        "delete_targets_limited_to_ignored_private_roots",
+        "deletion_command_in_quality_gate",
+        "private_artifact_export_enabled_by_default",
+        "public_safe_aggregate_export_enabled",
+        "aggregate_export_path",
+        "aggregate_export_contains_per_record_private_details",
+        "export_requires_redaction_or_aggregate",
+        "raw_private_evidence_export_allowed"
+      ],
+      "properties": {
+        "boundary_id": {
+          "type": "string",
+          "const": "m69_deletion_export_boundary"
+        },
+        "delete_targets_limited_to_ignored_private_roots": {
+          "type": "boolean",
+          "const": true
+        },
+        "deletion_command_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_artifact_export_enabled_by_default": {
+          "type": "boolean",
+          "const": false
+        },
+        "public_safe_aggregate_export_enabled": {
+          "type": "boolean",
+          "const": true
+        },
+        "aggregate_export_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "aggregate_export_contains_per_record_private_details": {
+          "type": "boolean",
+          "const": false
+        },
+        "export_requires_redaction_or_aggregate": {
+          "type": "boolean",
+          "const": true
+        },
+        "raw_private_evidence_export_allowed": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "output_defaults": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "summary_json_path",
+        "summary_markdown_path",
+        "public_safe",
+        "aggregate_only",
+        "private_record_values_included"
+      ],
+      "properties": {
+        "summary_json_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "summary_markdown_path": {
+          "type": "string",
+          "minLength": 1,
+          "pattern": ".*\\S.*"
+        },
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "aggregate_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_record_values_included": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_gate_uses_fake_metadata_only",
+        "private_evidence_ingestion_in_quality_gate",
+        "raw_private_data_read_in_quality_gate",
+        "live_execution_in_quality_gate",
+        "credential_handling_in_quality_gate",
+        "provider_calls_in_quality_gate",
+        "browser_email_network_shell_actions_in_quality_gate",
+        "external_actions_in_quality_gate",
+        "deletion_actions_in_quality_gate",
+        "export_actions_in_quality_gate",
+        "gated_llm_review_in_quality_gate"
+      ],
+      "properties": {
+        "deterministic_gate_uses_fake_metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "private_evidence_ingestion_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_private_data_read_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_execution_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "credential_handling_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "provider_calls_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "browser_email_network_shell_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "deletion_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "export_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "gated_llm_review_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe_input_metadata",
+        "fake_metadata_only",
+        "contains_raw_private_evidence",
+        "contains_credentials_or_secrets",
+        "contains_private_workspace_paths",
+        "contains_real_customer_data",
+        "contains_raw_private_logs",
+        "live_provider_model_runtime_execution",
+        "browser_email_network_shell_external_actions",
+        "public_leaderboard_claim",
+        "production_safety_claim",
+        "third_party_reproducibility_claim",
+        "private_audit_overclaim"
+      ],
+      "properties": {
+        "public_safe_input_metadata": {
+          "type": "boolean",
+          "const": true
+        },
+        "fake_metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "contains_raw_private_evidence": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_credentials_or_secrets": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_workspace_paths": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_real_customer_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_raw_private_logs": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_provider_model_runtime_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "browser_email_network_shell_external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "public_leaderboard_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_safety_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "third_party_reproducibility_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_audit_overclaim": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "record_controls": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id",
+          "included_in_private_audit_request",
+          "retention_class",
+          "collected_at",
+          "review_due_at",
+          "delete_due_at",
+          "age_days_at_boundary_report",
+          "retention_action",
+          "consent_or_authorization",
+          "authorization_check_status",
+          "access_boundary",
+          "access_scope",
+          "private_store_root",
+          "private_audit_report_root",
+          "deletion_boundary",
+          "export_boundary",
+          "raw_private_evidence_read",
+          "private_artifact_path_in_report",
+          "public_ranking_eligible",
+          "safety_assertions"
+        ],
+        "properties": {
+          "record_id": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "included_in_private_audit_request": {
+            "type": "boolean",
+            "const": true
+          },
+          "retention_class": {
+            "type": "string",
+            "enum": [
+              "delete_after_review",
+              "retain_local_until_manually_deleted"
+            ]
+          },
+          "collected_at": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          },
+          "review_due_at": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+          },
+          "delete_due_at": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "age_days_at_boundary_report": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "retention_action": {
+            "type": "string",
+            "enum": [
+              "delete_after_review_window",
+              "manual_delete_review_required"
+            ]
+          },
+          "consent_or_authorization": {
+            "type": "string",
+            "enum": [
+              "authorized_for_internal_private_audit",
+              "required_before_ingestion"
+            ]
+          },
+          "authorization_check_status": {
+            "type": "string",
+            "enum": [
+              "authorization_recorded_public_safe_metadata_only",
+              "authorization_required_not_embedded"
+            ]
+          },
+          "access_boundary": {
+            "type": "string",
+            "enum": [
+              "local maintainer workstation only"
+            ]
+          },
+          "access_scope": {
+            "type": "string",
+            "enum": [
+              "authorized_local_auditor_only"
+            ]
+          },
+          "private_store_root": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "private_audit_report_root": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "deletion_boundary": {
+            "type": "string",
+            "enum": [
+              "local_only_delete_under_ignored_private_roots"
+            ]
+          },
+          "export_boundary": {
+            "type": "string",
+            "enum": [
+              "aggregate_public_safe_summary_only"
+            ]
+          },
+          "raw_private_evidence_read": {
+            "type": "boolean",
+            "const": false
+          },
+          "private_artifact_path_in_report": {
+            "type": "boolean",
+            "const": false
+          },
+          "public_ranking_eligible": {
+            "type": "boolean",
+            "const": false
+          },
+          "safety_assertions": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "public_safe_metadata",
+              "raw_private_content_in_manifest",
+              "credentials_in_manifest",
+              "raw_private_log_in_manifest",
+              "private_workspace_path_in_manifest",
+              "real_customer_data_in_manifest",
+              "external_action_in_manifest"
+            ],
+            "properties": {
+              "public_safe_metadata": {
+                "type": "boolean",
+                "const": true
+              },
+              "raw_private_content_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "credentials_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "raw_private_log_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "private_workspace_path_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "real_customer_data_in_manifest": {
+                "type": "boolean",
+                "const": false
+              },
+              "external_action_in_manifest": {
+                "type": "boolean",
+                "const": false
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,7 +1,7 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.12.0",
-  "generated_at": "2026-06-21T00:00:00Z",
+  "version": "0.13.0",
+  "generated_at": "2026-06-22T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
     "Committed generated Markdown reports under reports/.",
@@ -1257,6 +1257,54 @@
       }
     },
     {
+      "artifact_id": "retention_consent_access_summary_snapshot",
+      "label": "Retention Consent Access Summary JSON",
+      "path": "reports/comparisons/retention_consent_access_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/retention_consent_access.py",
+      "input_paths": [
+        ".gitignore",
+        "schemas/retention_consent_access.schema.json",
+        "schemas/private_evidence_manifest.schema.json",
+        "schemas/private_audit_report.schema.json",
+        "traces/external/retention_consent_access_metadata.example.json",
+        "traces/external/private_evidence_vault_manifest.example.json",
+        "traces/external/private_audit_report_metadata.example.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Public-safe M69 aggregate summary for retention policy, consent or authorization checklist, access-control notes, deletion/export boundaries, and fake evidence-age reporting.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "retention_consent_access_summary_report",
+      "label": "Retention Consent Access Summary Report",
+      "path": "reports/comparisons/retention_consent_access_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/retention_consent_access.py",
+      "input_paths": [
+        "reports/comparisons/retention_consent_access_summary.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/retention_consent_access_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M69 summary. It is aggregate-only public-safe metadata and does not perform deletion, export, or private evidence inspection.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -1299,7 +1347,8 @@
         "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
         "docs/milestones/m66-private-evidence-vault-closeout.md",
         "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
-        "docs/milestones/m68-private-audit-reports-closeout.md"
+        "docs/milestones/m68-private-audit-reports-closeout.md",
+        "docs/milestones/m69-retention-consent-access-controls-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1357,7 +1406,8 @@
         "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
         "docs/milestones/m66-private-evidence-vault-closeout.md",
         "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
-        "docs/milestones/m68-private-audit-reports-closeout.md"
+        "docs/milestones/m68-private-audit-reports-closeout.md",
+        "docs/milestones/m69-retention-consent-access-controls-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

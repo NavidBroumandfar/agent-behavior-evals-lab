@@ -40,8 +40,9 @@ metadata records only.
 
 M66 does not promote private records. It validates that promotion would require
 explicit redaction metadata, reviewer signoff, and public-safety assertions. The
-current promotion preflight refuses M66 records because the redaction and
-promotion pipeline is planned for M67.
+current M66 promotion preflight refuses vault records unless the M67 redaction
+and promotion pipeline records explicit redaction metadata and reviewer
+signoff.
 
 Private evidence cannot support public rankings unless a reviewed derivative is
 redacted, validated, and explicitly promoted into a public-safe fixture.

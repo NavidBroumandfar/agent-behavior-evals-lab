@@ -52,6 +52,13 @@ paths, real customer data, or private artifact paths.
 Aggregate export is not enabled by default for real private evidence. It must
 remain public-safe and avoid per-record private details.
 
+## Retention And Access Controls
+
+M69 adds retention, consent, authorization, access-control, deletion/export, and
+fake evidence-age metadata validation for private runtime evidence and private
+audit mode. The committed M69 summary is aggregate-only and public-safe; it does
+not perform deletion or export private artifacts.
+
 ## Quality-Gate Boundary
 
 `python3 scripts/dev.py check` validates M68 using fake metadata only. It does

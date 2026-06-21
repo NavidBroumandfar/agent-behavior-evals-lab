@@ -4,10 +4,10 @@
 
 | Field | Value |
 | --- | --- |
-| Generated at | `2026-06-21T00:00:00Z` |
+| Generated at | `2026-06-22T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 50 |
+| Indexed report artifacts | 52 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -46,6 +46,7 @@
 - **Private Evidence Vault**: Added a metadata-only private evidence vault boundary with ignored local storage roots, redaction-required promotion blocking, and private-audit report labels.
 - **Redaction Promotion**: Added promotion candidate and redaction-note schemas plus a validator for public-safe promoted derivatives without reading private artifacts.
 - **Private Audit Reports**: Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only.
+- **Retention Consent Access**: Added metadata-only retention, consent, access-control, deletion/export, and evidence-age boundary validation for private runtime evidence.
 
 ## Dashboard Snapshot
 
@@ -96,6 +97,7 @@
 | `M66` | Complete / public-safe vault-boundary review-ready | `docs/milestones/m66-private-evidence-vault-closeout.md` |
 | `M67` | Complete / public-safe promotion-pipeline review-ready | `docs/milestones/m67-redaction-promotion-pipeline-closeout.md` |
 | `M68` | Complete / public-safe private-report-boundary review-ready | `docs/milestones/m68-private-audit-reports-closeout.md` |
+| `M69` | Complete / public-safe retention-access-boundary review-ready | `docs/milestones/m69-retention-consent-access-controls-closeout.md` |
 
 ## Boundaries
 
@@ -144,3 +146,4 @@
 - `docs/milestones/m66-private-evidence-vault-closeout.md`
 - `docs/milestones/m67-redaction-promotion-pipeline-closeout.md`
 - `docs/milestones/m68-private-audit-reports-closeout.md`
+- `docs/milestones/m69-retention-consent-access-controls-closeout.md`

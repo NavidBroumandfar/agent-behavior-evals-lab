@@ -500,17 +500,26 @@ Acceptance criteria:
 
 Make private evidence handling operationally safe.
 
+Status: complete / public-safe retention-access-boundary review-ready. See `docs/milestones/m69-retention-consent-access-controls-closeout.md`.
+
+Implementation note:
+
+- M69 adds `schemas/retention_consent_access.schema.json`, `traces/external/retention_consent_access_metadata.example.json`, and `src/retention_consent_access.py`.
+- The committed example links to the M66 private evidence vault and M68 private audit report metadata using fake public-safe metadata only.
+- Public summaries at `reports/comparisons/retention_consent_access_summary.json` and `reports/comparisons/retention_consent_access_summary.md` report aggregate retention class, consent/authorization status, access boundary, deletion/export boundary, and fake evidence-age signals.
+- The deterministic gate validates deletion/export boundaries as metadata only; it does not execute deletion, export private artifacts, ingest private evidence, or read raw private logs.
+
 Deliverables:
 
 - Retention policy.
 - Consent and authorization checklist.
 - Access-control notes for local private stores.
-- Deletion and export commands.
+- Deletion and export boundaries.
 
 Acceptance criteria:
 
-- Private evidence can be deleted cleanly.
-- Reports can identify evidence age, retention class, and access boundary.
+- Private evidence deletion is bounded to ignored local private roots and is not executed by the deterministic gate.
+- Reports identify fake evidence age, retention class, and access boundary using aggregate public-safe metadata only.
 
 ### M70: Reviewer Protocol And Inter-Rater Checks
 
