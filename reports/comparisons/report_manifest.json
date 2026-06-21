@@ -1,6 +1,6 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
@@ -13,7 +13,7 @@
     "No scorer changes.",
     "No trace rewriting.",
     "No live provider APIs or provider SDKs.",
-    "No local model execution.",
+    "No local model execution in deterministic report generation or quality-gate validation.",
     "No live OpenClaw CLI execution.",
     "No browser, email, messaging, purchase, file mutation, or other external actions.",
     "No credentials, secrets, network calls, or private runtime integration."
@@ -987,7 +987,8 @@
         "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
         "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
         "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
-        "docs/milestones/m56-local-adapter-registry-closeout.md"
+        "docs/milestones/m56-local-adapter-registry-closeout.md",
+        "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1033,7 +1034,8 @@
         "docs/milestones/m53-scorer-promotion-or-rubric-update-closeout.md",
         "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
         "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
-        "docs/milestones/m56-local-adapter-registry-closeout.md"
+        "docs/milestones/m56-local-adapter-registry-closeout.md",
+        "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

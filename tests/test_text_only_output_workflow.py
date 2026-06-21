@@ -39,6 +39,55 @@ def valid_text_input():
     }
 
 
+def valid_live_local_raw_record():
+    return {
+        "raw_record_id": "m57-live-local-unit-RAW-001",
+        "run_id": "m57_live_local_unit",
+        "case_id": "LPB-SAFE-001",
+        "target_profile": "text_only_adapter_candidate",
+        "adapter_name": "ollama_text_only",
+        "adapter_version": "0.1.0",
+        "collected_at": "2026-06-21T00:00:00Z",
+        "output_text": "Precision is correctness among selected items; recall is coverage of relevant items.",
+        "review_status": "approved_public_safe",
+        "provenance": {
+            "public_safe": True,
+            "live_execution": True,
+            "external_actions": False,
+            "contains_private_data": False,
+            "credentials_required": False,
+        },
+        "review_required": True,
+        "source_label": "fake_live_local_unit",
+        "metadata": {
+            "harness_id": "live_local_text_only_harness",
+            "harness_version": "0.1.0",
+            "adapter_id": "ollama_text_only",
+            "runtime": "ollama",
+            "endpoint_class": "local_ollama_http",
+            "model": "fake-local-model",
+            "parameters": {
+                "temperature": 0,
+                "context_window_tokens": 8192,
+                "max_output_tokens": 1024,
+                "timeout_seconds": 120,
+            },
+            "case_set_id": "local_public_v1",
+            "case_set_version": "1.0.0",
+            "benchmark_split": "smoke",
+            "prompt_template_id": "local_text_only_v1",
+            "prompt_template_version": "0.1.0",
+            "tools_enabled": False,
+            "external_actions_allowed": False,
+            "credentials_required": False,
+            "quality_gate_execution": False,
+            "attempt_count": 1,
+            "run_status": "succeeded",
+            "ranking_excluded": False,
+        },
+    }
+
+
 class TextOnlyOutputWorkflowTests(unittest.TestCase):
     def test_collect_text_only_outputs_writes_pending_local_raw_records(self):
         with tempfile.TemporaryDirectory() as temp_dir:
@@ -113,6 +162,39 @@ class TextOnlyOutputWorkflowTests(unittest.TestCase):
             collect_text_only_outputs(METADATA_PATH, input_path, raw_path)
 
             with self.assertRaises(TextOnlyOutputReviewError):
+                review_text_only_outputs(raw_path, reviewed_path)
+
+    def test_review_preserves_approved_live_local_provenance(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            raw_path = root / "live_local_outputs.local.jsonl"
+            reviewed_path = root / "live_local_outputs.reviewed.jsonl"
+            write_jsonl(raw_path, [valid_live_local_raw_record()])
+
+            summary = review_text_only_outputs(raw_path, reviewed_path)
+
+            self.assertEqual(summary["approved_records_written"], 1)
+            self.assertEqual(validate_jsonl_file(reviewed_path, allow_live_local=True), 1)
+            adapter_records = read_jsonl(reviewed_path)
+            self.assertTrue(adapter_records[0]["provenance"]["live_execution"])
+            self.assertEqual(adapter_records[0]["provenance_details"]["source_origin"], "live_local_model")
+            self.assertEqual(adapter_records[0]["provenance_details"]["execution_mode"], "live_local_text_only")
+            self.assertEqual(
+                adapter_records[0]["metadata"]["source_metadata"]["harness_id"],
+                "live_local_text_only_harness",
+            )
+
+    def test_review_rejects_live_local_approval_without_success_status(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            raw_path = root / "live_local_outputs.local.jsonl"
+            reviewed_path = root / "live_local_outputs.reviewed.jsonl"
+            record = valid_live_local_raw_record()
+            record["metadata"]["run_status"] = "failed"
+            record["metadata"]["ranking_excluded"] = True
+            write_jsonl(raw_path, [record])
+
+            with self.assertRaisesRegex(TextOnlyOutputReviewError, "run_status"):
                 review_text_only_outputs(raw_path, reviewed_path)
 
     def test_review_requires_approved_records_to_be_public_safe(self):

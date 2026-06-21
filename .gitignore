@@ -5,6 +5,7 @@ __pycache__/
 .env
 .DS_Store
 traces/raw/*.local.jsonl
+traces/raw/*.local.json
 traces/scored/*.local.jsonl
 traces/external/*.local.jsonl
 traces/external/*.private.jsonl

@@ -41,11 +41,14 @@ class AdapterOutputImportError(Exception):
 def import_adapter_outputs(
     input_path: Path = DEFAULT_INPUT_PATH,
     output_path: Path = DEFAULT_OUTPUT_PATH,
+    *,
+    allow_live_local: bool = False,
+    case_paths: list[Path] | None = None,
 ) -> dict[str, Any]:
     """Import normalized adapter outputs into deterministic scored traces."""
 
-    records = load_adapter_output_records(input_path)
-    cases = load_cases(CASE_PATHS)
+    records = load_adapter_output_records(input_path, allow_live_local=allow_live_local)
+    cases = load_cases(case_paths or CASE_PATHS)
     cases_by_id = {str(case["case_id"]): case for case in cases}
 
     validate_adapter_output_references(records, cases_by_id, input_path)
@@ -193,6 +196,18 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=DEFAULT_OUTPUT_PATH,
         help="Scored trace JSONL path to write.",
     )
+    parser.add_argument(
+        "--allow-live-local",
+        action="store_true",
+        help="Allow reviewed live-local text-only adapter outputs outside the deterministic quality gate.",
+    )
+    parser.add_argument(
+        "--case-path",
+        action="append",
+        type=Path,
+        dest="case_paths",
+        help="Case JSONL path to use for scoring. Repeat to include multiple case files.",
+    )
     return parser.parse_args(argv)
 
 
@@ -209,7 +224,12 @@ def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
 
     try:
-        summary = import_adapter_outputs(args.input, args.output)
+        summary = import_adapter_outputs(
+            args.input,
+            args.output,
+            allow_live_local=args.allow_live_local,
+            case_paths=args.case_paths,
+        )
     except (AdapterOutputValidationError, AdapterOutputImportError, OSError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1

@@ -34,6 +34,7 @@
 - **Benchmark Claims**: Added an evidence-class claim charter that separates local benchmark, cloud benchmark, manual sample, private audit, promoted public evidence, and unsupported claims.
 - **Local Benchmark Corpus**: Added frozen local_public_v1 public-safe benchmark cases with deterministic smoke, standard, and extended splits for future local model runs.
 - **Local Adapter Registry**: Added Ollama, local OpenAI-compatible, and manual saved-output adapter registry entries with live-local opt-in guardrails.
+- **Live Local Harness**: Added an opt-in local text-only harness with dry-run plan validation, fake-client tests, and reviewed live-local output import guarded by explicit flags.
 
 ## Dashboard Snapshot
 
@@ -72,11 +73,12 @@
 | `M54` | Complete / review-ready | `docs/milestones/m54-local-benchmark-claim-charter-closeout.md` |
 | `M55` | Complete / review-ready | `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md` |
 | `M56` | Complete / review-ready | `docs/milestones/m56-local-adapter-registry-closeout.md` |
+| `M57` | Complete / review-ready | `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md` |
 
 ## Boundaries
 
 - No live provider APIs or provider SDKs.
-- No local model execution.
+- No local model execution in the deterministic quality gate or release-note generation.
 - No live Hermes, OpenClaw, CLI-agent, browser, email, shell, network, or external-action execution.
 - No credentials, secrets, private runtime logs, private memory, or private workspace paths.
 - No leaderboard or production benchmark claims.
@@ -108,3 +110,4 @@
 - `docs/milestones/m54-local-benchmark-claim-charter-closeout.md`
 - `docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md`
 - `docs/milestones/m56-local-adapter-registry-closeout.md`
+- `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`

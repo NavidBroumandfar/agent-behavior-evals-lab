@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M56 complete / review-ready
+Status: Active evidence-first roadmap; M54-M57 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -190,6 +190,15 @@ Acceptance criteria:
 ### M57: Opt-In Local Text-Only Model Harness
 
 Run local models against public-safe prompts with tools disabled.
+
+Status: complete / review-ready. See `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`.
+
+Implementation note:
+
+- M57 adds `scripts/live_local.py`, `src/live_local_harness.py`, `schemas/live_local_run.schema.json`, `src/validate_live_local_run.py`, and `traces/external/live_local_run_plan.example.json`.
+- The harness supports Ollama and local OpenAI-compatible text-only endpoints declared in the M56 registry.
+- Live execution is opt-in only and requires `--live-local` plus `AGENT_EVALS_ENABLE_LIVE_LOCAL`.
+- The deterministic quality gate validates the dry-run plan, schema, fake-client tests, and reviewed-output provenance path only. It does not call local models or put live execution into `scripts/dev.py check`.
 
 Deliverables:
 

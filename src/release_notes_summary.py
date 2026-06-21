@@ -46,6 +46,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m54-local-benchmark-claim-charter-closeout.md",
     REPO_ROOT / "docs/milestones/m55-public-local-benchmark-case-corpus-closeout.md",
     REPO_ROOT / "docs/milestones/m56-local-adapter-registry-closeout.md",
+    REPO_ROOT / "docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -102,7 +103,7 @@ def build_release_notes() -> dict[str, Any]:
         },
         "boundaries": [
             "No live provider APIs or provider SDKs.",
-            "No local model execution.",
+            "No local model execution in the deterministic quality gate or release-note generation.",
             "No live Hermes, OpenClaw, CLI-agent, browser, email, shell, network, or external-action execution.",
             "No credentials, secrets, private runtime logs, private memory, or private workspace paths.",
             "No leaderboard or production benchmark claims.",
@@ -306,6 +307,13 @@ def release_highlights(
             {
                 "area": "Local Adapter Registry",
                 "summary": "Added Ollama, local OpenAI-compatible, and manual saved-output adapter registry entries with live-local opt-in guardrails.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M57" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Live Local Harness",
+                "summary": "Added an opt-in local text-only harness with dry-run plan validation, fake-client tests, and reviewed live-local output import guarded by explicit flags.",
             }
         )
     return highlights

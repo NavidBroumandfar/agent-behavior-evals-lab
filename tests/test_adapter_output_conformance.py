@@ -18,6 +18,7 @@ from validate_adapter_outputs import AdapterOutputValidationError, validate_json
 
 ADAPTER_OUTPUT_FIXTURE_PATH = REPO_ROOT / "traces/external/adapter_outputs.example.jsonl"
 DRY_RUN_ADAPTER_OUTPUT_PATH = REPO_ROOT / "traces/external/dry_run_adapter_outputs.jsonl"
+LOCAL_PUBLIC_CASE_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/cases.jsonl"
 
 
 def valid_adapter_output_record():
@@ -48,6 +49,34 @@ def valid_adapter_output_record():
             "test_case": "adapter_output_conformance",
         },
     }
+
+
+def valid_live_local_adapter_output_record():
+    record = valid_adapter_output_record()
+    record["record_id"] = "TEST-LIVE-LOCAL-ADAPTER-OUTPUT-001"
+    record["case_id"] = "LPB-SAFE-001"
+    record["target_profile"] = "text_only_adapter_candidate"
+    record["adapter_name"] = "ollama_text_only"
+    record["output_text"] = "Precision is about correctness among selected items; recall is about coverage."
+    record["provenance"]["live_execution"] = True
+    record["provenance_details"] = {
+        "source_origin": "live_local_model",
+        "execution_mode": "live_local_text_only",
+        "data_classification": "public_safe_fixture",
+        "action_evidence": "output_text_only",
+        "notes": "Reviewed live-local unit-test fixture generated with a fake client.",
+    }
+    record["metadata"] = {
+        "source_metadata": {
+            "harness_id": "live_local_text_only_harness",
+            "tools_enabled": False,
+            "external_actions_allowed": False,
+            "credentials_required": False,
+            "quality_gate_execution": False,
+            "run_status": "succeeded",
+        }
+    }
+    return record
 
 
 def write_jsonl(path, records):
@@ -190,6 +219,41 @@ class AdapterOutputConformanceTests(unittest.TestCase):
                 record["provenance"][field_name] = field_value
 
                 self.assert_validation_fails(record)
+
+    def test_live_local_adapter_output_requires_explicit_validation_opt_in(self):
+        record = valid_live_local_adapter_output_record()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            input_path = Path(temp_dir) / "live_local_adapter_output.jsonl"
+            write_jsonl(input_path, [record])
+
+            with self.assertRaisesRegex(AdapterOutputValidationError, "allow-live-local"):
+                validate_jsonl_file(input_path)
+            self.assertEqual(validate_jsonl_file(input_path, allow_live_local=True), 1)
+
+    def test_live_local_adapter_output_imports_with_explicit_case_path(self):
+        record = valid_live_local_adapter_output_record()
+
+        with tempfile.TemporaryDirectory() as temp_dir:
+            input_path = Path(temp_dir) / "live_local_adapter_output.jsonl"
+            output_path = Path(temp_dir) / "live_local_scored_trace.jsonl"
+            write_jsonl(input_path, [record])
+
+            with self.assertRaises(AdapterOutputValidationError):
+                import_adapter_outputs(input_path, output_path)
+
+            summary = import_adapter_outputs(
+                input_path,
+                output_path,
+                allow_live_local=True,
+                case_paths=[LOCAL_PUBLIC_CASE_PATH],
+            )
+
+            self.assertEqual(summary["total_adapter_output_records"], 1)
+            traces = [json.loads(line) for line in output_path.read_text(encoding="utf-8").splitlines()]
+            self.assertEqual(traces[0]["case_id"], "LPB-SAFE-001")
+            self.assertEqual(traces[0]["adapter_provenance"]["live_execution"], True)
+            self.assertTrue(traces[0]["passed"])
 
     def test_provenance_details_must_be_an_object(self):
         record = valid_adapter_output_record()

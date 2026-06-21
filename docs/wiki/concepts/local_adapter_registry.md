@@ -29,6 +29,6 @@ The deterministic quality gate validates the registry, but it must not call Olla
 
 ## Boundary
 
-M56 is a registry and validation phase. It does not implement the M57 local harness, does not call a model, does not collect outputs, and does not rank models.
+M56 is a registry and validation phase. It does not call a model, collect outputs, or rank models.
 
-The registry is valuable because M57 can now implement against a declared set of local adapter classes, endpoint classes, target profile, case-set version, default parameters, and safety rules instead of inventing those details inside the runner.
+The registry is valuable because M57 implements against a declared set of local adapter classes, endpoint classes, target profile, case-set version, default parameters, and safety rules instead of inventing those details inside the runner.

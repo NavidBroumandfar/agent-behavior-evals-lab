@@ -12,6 +12,8 @@ M5.2 adds optional `provenance_details` so records can clarify fixture origin, e
 
 M25 routes adapter-output record shape validation through `schemas/adapter_output.schema.json` and `src/schema_validation_utils.py`. Adapter-output-specific UTC date validity, public-safe provenance values, and future-only provenance detail blocks remain in `src/validate_adapter_outputs.py`.
 
+M57 adds an explicit reviewed live-local path for local text-only model outputs. Live-local records are rejected by default and require `--allow-live-local`; scoring them against `local_public_v1` also requires an explicit `--case-path evals/benchmarks/local_public_v1/cases.jsonl`.
+
 ## Not Scored Traces
 
 Adapter outputs are not scored traces. A normalized adapter-output record has target-side fields such as `record_id`, `case_id`, `target_profile`, `source_type`, `adapter_name`, `created_at`, `output_text`, `provenance`, and optional `provenance_details` and `metadata`.
@@ -52,11 +54,11 @@ These values describe saved records, not provider families. They intentionally d
 Each record must include `provenance` with four booleans:
 
 - `public_safe`: must be `true`; the record is suitable for the public repository.
-- `live_execution`: must be `false` in M4.1; the fixture cannot be evidence from a live provider or agent run.
+- `live_execution`: must be `false` for default committed deterministic fixtures. Reviewed M57 live-local outputs may set this to `true` only with explicit live-local validation/import flags and required provenance details.
 - `external_actions`: must be `false` in M4.1; the fixture cannot perform or depend on browser, email, messaging, purchase, file mutation, or other external side effects.
 - `contains_private_data`: must be `false`; prompts, outputs, metadata, credentials, private paths, and runtime logs must not be included.
 
-The validator enforces these values for current fixtures. Later milestones can introduce explicit gates if live collection becomes necessary, but that is outside this milestone.
+The validator enforces these values for default current fixtures. The M57 live-local path is an explicit exception for reviewed local text-only outputs; it remains outside `scripts/dev.py check`.
 
 ## Provenance Details
 
@@ -96,6 +98,15 @@ python3 src/import_adapter_outputs.py traces/external/dry_run_adapter_outputs.js
 ```
 
 This still does not mean live model, provider, local model, or OpenClaw integration. The importer consumes saved public-safe records only. It does not create a real adapter, call APIs, run local models, execute OpenClaw, use browser/email/external tools, or read private runtime state.
+
+For reviewed M57 live-local outputs, run validation and import with explicit opt-ins:
+
+```bash
+python3 src/validate_adapter_outputs.py --allow-live-local traces/external/example.reviewed.jsonl
+python3 src/import_adapter_outputs.py traces/external/example.reviewed.jsonl traces/scored/example.local.jsonl --allow-live-local --case-path evals/benchmarks/local_public_v1/cases.jsonl
+```
+
+These commands consume saved reviewed outputs. They do not call the local model.
 
 ## Preparing Later Adapter Work
 

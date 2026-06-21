@@ -757,7 +757,14 @@ Acceptance criteria:
 
 Run local models against public-safe prompts with tools disabled.
 
-Status: planned.
+Status: complete / review-ready. See `docs/milestones/m57-opt-in-local-text-only-model-harness-closeout.md`.
+
+Implementation note:
+
+- M57 adds `scripts/live_local.py`, `src/live_local_harness.py`, `schemas/live_local_run.schema.json`, `src/validate_live_local_run.py`, and `traces/external/live_local_run_plan.example.json`.
+- Live local execution requires both `--live-local` and `AGENT_EVALS_ENABLE_LIVE_LOCAL`.
+- The deterministic gate validates the dry-run plan, schema, fake-client behavior, and reviewed-output provenance only; it does not call Ollama, local OpenAI-compatible servers, providers, agents, browser/email tools, shell/file actions as a system under test, gated LLM review, or external actions.
+- Reviewed live-local normalized outputs require explicit `--allow-live-local` validation/import and an explicit `--case-path evals/benchmarks/local_public_v1/cases.jsonl` scoring input.
 
 Deliverables:
 
@@ -771,6 +778,7 @@ Acceptance criteria:
 - The deterministic gate does not call local models.
 - A local run can be reproduced from saved normalized outputs.
 - Run metadata captures runtime, model, parameters, timestamp, case-set version, and prompt template version.
+- Failed or partial local runs are clearly marked and excluded from rankings unless a future ledger/ranking policy allows them.
 
 ### M58: Reproducible Local Run Ledger
 

@@ -23,9 +23,14 @@ DEFAULT_SCHEMA_PATH = REPO_ROOT / "schemas/adapter_output.schema.json"
 
 EXPECTED_PROVENANCE_VALUES = {
     "public_safe": True,
-    "live_execution": False,
     "external_actions": False,
     "contains_private_data": False,
+}
+LIVE_LOCAL_PROVENANCE_VALUES = {
+    "source_origin": "live_local_model",
+    "execution_mode": "live_local_text_only",
+    "data_classification": "public_safe_fixture",
+    "action_evidence": "output_text_only",
 }
 
 BLOCKED_CURRENT_EXECUTION_MODES = {
@@ -55,7 +60,7 @@ def display_path(path: Path) -> str:
         return str(path)
 
 
-def load_adapter_output_records(path: Path) -> list[dict[str, Any]]:
+def load_adapter_output_records(path: Path, *, allow_live_local: bool = False) -> list[dict[str, Any]]:
     """Load and validate normalized adapter-output records."""
 
     if not path.exists():
@@ -79,7 +84,7 @@ def load_adapter_output_records(path: Path) -> list[dict[str, Any]]:
             except json.JSONDecodeError as exc:
                 raise AdapterOutputValidationError(path, line_number, f"invalid JSON: {exc.msg}") from exc
 
-            validate_adapter_output_record(record, path, line_number, schema)
+            validate_adapter_output_record(record, path, line_number, schema, allow_live_local=allow_live_local)
             records.append(record)
 
     if not records:
@@ -88,10 +93,10 @@ def load_adapter_output_records(path: Path) -> list[dict[str, Any]]:
     return records
 
 
-def validate_jsonl_file(path: Path) -> int:
+def validate_jsonl_file(path: Path, *, allow_live_local: bool = False) -> int:
     """Validate every normalized adapter-output record and return the count."""
 
-    return len(load_adapter_output_records(path))
+    return len(load_adapter_output_records(path, allow_live_local=allow_live_local))
 
 
 def validate_adapter_output_record(
@@ -99,6 +104,8 @@ def validate_adapter_output_record(
     path: Path,
     line_number: int,
     schema: dict[str, Any] | None = None,
+    *,
+    allow_live_local: bool = False,
 ) -> None:
     """Validate one normalized adapter-output record."""
 
@@ -110,9 +117,10 @@ def validate_adapter_output_record(
     )
     validate_schema_value(record, schema, "", path, REPO_ROOT, validation_error_for_line(path, line_number))
     validate_created_at(record["created_at"], path, line_number)
-    validate_provenance_safety(record["provenance"], path, line_number)
+    validate_provenance_safety(record["provenance"], path, line_number, allow_live_local=allow_live_local)
     if "provenance_details" in record:
         validate_provenance_detail_safety(record["provenance_details"], path, line_number)
+    validate_live_local_detail_safety(record, path, line_number, allow_live_local=allow_live_local)
 
 
 def validate_created_at(value: str, path: Path, line_number: int) -> None:
@@ -124,7 +132,13 @@ def validate_created_at(value: str, path: Path, line_number: int) -> None:
         raise AdapterOutputValidationError(path, line_number, "created_at must be a valid UTC timestamp") from exc
 
 
-def validate_provenance_safety(value: dict[str, Any], path: Path, line_number: int) -> None:
+def validate_provenance_safety(
+    value: dict[str, Any],
+    path: Path,
+    line_number: int,
+    *,
+    allow_live_local: bool,
+) -> None:
     """Keep public-safe, non-live provenance explicit in the adapter-output validator."""
 
     for field_name in sorted(EXPECTED_PROVENANCE_VALUES):
@@ -136,6 +150,14 @@ def validate_provenance_safety(value: dict[str, Any], path: Path, line_number: i
                 line_number,
                 f"provenance.{field_name} must be {expected_text} for current gated fixtures",
             )
+    if value["live_execution"] is True and not allow_live_local:
+        raise AdapterOutputValidationError(
+            path,
+            line_number,
+            "provenance.live_execution=true requires explicit --allow-live-local validation",
+        )
+    if value["live_execution"] is not True and value["live_execution"] is not False:
+        raise AdapterOutputValidationError(path, line_number, "provenance.live_execution must be a boolean")
 
 
 def validate_provenance_detail_safety(value: dict[str, Any], path: Path, line_number: int) -> None:
@@ -156,6 +178,55 @@ def validate_provenance_detail_safety(value: dict[str, Any], path: Path, line_nu
             "provenance_details.data_classification=private_or_sensitive_blocked "
             "is future-only and rejected for current gated fixture validation",
         )
+
+
+def validate_live_local_detail_safety(
+    record: dict[str, Any],
+    path: Path,
+    line_number: int,
+    *,
+    allow_live_local: bool,
+) -> None:
+    """Require exact live-local provenance details when live execution is opted in."""
+
+    if record["provenance"]["live_execution"] is not True:
+        return
+    if not allow_live_local:
+        return
+    if "provenance_details" not in record:
+        raise AdapterOutputValidationError(path, line_number, "live-local adapter outputs must include provenance_details")
+
+    details = record["provenance_details"]
+    for field_name, expected_value in LIVE_LOCAL_PROVENANCE_VALUES.items():
+        if details[field_name] != expected_value:
+            raise AdapterOutputValidationError(
+                path,
+                line_number,
+                f"provenance_details.{field_name} must be {expected_value} for live-local adapter outputs",
+            )
+
+    metadata = record.get("metadata", {})
+    if not isinstance(metadata, dict):
+        raise AdapterOutputValidationError(path, line_number, "metadata must be an object")
+    source_metadata = metadata.get("source_metadata", {})
+    if not isinstance(source_metadata, dict):
+        raise AdapterOutputValidationError(path, line_number, "metadata.source_metadata must be an object")
+
+    expected_metadata = {
+        "harness_id": "live_local_text_only_harness",
+        "tools_enabled": False,
+        "external_actions_allowed": False,
+        "credentials_required": False,
+        "quality_gate_execution": False,
+        "run_status": "succeeded",
+    }
+    for field_name, expected_value in expected_metadata.items():
+        if source_metadata.get(field_name) != expected_value:
+            raise AdapterOutputValidationError(
+                path,
+                line_number,
+                f"metadata.source_metadata.{field_name} must be {expected_value!r} for live-local adapter outputs",
+            )
 
 
 def validation_error_for_line(path: Path, line_number: int) -> Callable[[str], AdapterOutputValidationError]:
@@ -185,6 +256,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         default=[DEFAULT_INPUT_PATH],
         help="Adapter-output JSONL files to validate.",
     )
+    parser.add_argument(
+        "--allow-live-local",
+        action="store_true",
+        help="Allow reviewed live-local text-only outputs outside the deterministic quality gate.",
+    )
     return parser.parse_args(argv)
 
 
@@ -194,7 +270,7 @@ def main(argv: list[str] | None = None) -> int:
     total_count = 0
     try:
         for path in args.paths:
-            total_count += validate_jsonl_file(path)
+            total_count += validate_jsonl_file(path, allow_live_local=args.allow_live_local)
     except AdapterOutputValidationError as exc:
         print(f"ERROR: {exc}", file=sys.stderr)
         return 1

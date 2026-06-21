@@ -63,8 +63,9 @@ def review_text_only_outputs(input_path: Path, output_path: Path) -> dict[str, A
     adapter_records = [adapter_output_from_raw(record) for record in approved_records]
     write_jsonl(adapter_records, output_path)
 
+    allow_live_local = any(record["provenance"]["live_execution"] is True for record in adapter_records)
     try:
-        validate_jsonl_file(output_path)
+        validate_jsonl_file(output_path, allow_live_local=allow_live_local)
     except AdapterOutputValidationError as exc:
         raise TextOnlyOutputReviewError(f"reviewed adapter output failed validation: {exc}") from exc
 
@@ -170,12 +171,7 @@ def validate_raw_provenance(value: Any, context: str) -> None:
 
 def validate_approved_public_safe_record(record: dict[str, Any], context: str) -> None:
     provenance = record["provenance"]
-    expected_false_fields = [
-        "live_execution",
-        "external_actions",
-        "contains_private_data",
-        "credentials_required",
-    ]
+    expected_false_fields = ["external_actions", "contains_private_data", "credentials_required"]
 
     if provenance["public_safe"] is not True:
         raise TextOnlyOutputReviewError(f"{context}.provenance.public_safe must be true when approved")
@@ -184,10 +180,37 @@ def validate_approved_public_safe_record(record: dict[str, Any], context: str) -
         if provenance[field_name] is not False:
             raise TextOnlyOutputReviewError(f"{context}.provenance.{field_name} must be false when approved")
 
+    if provenance["live_execution"] is True:
+        validate_approved_live_local_record(record, context)
+    elif provenance["live_execution"] is not False:
+        raise TextOnlyOutputReviewError(f"{context}.provenance.live_execution must be a boolean")
+
+
+def validate_approved_live_local_record(record: dict[str, Any], context: str) -> None:
+    metadata = record.get("metadata", {})
+    if not isinstance(metadata, dict):
+        raise TextOnlyOutputReviewError(f"{context}.metadata must be an object for approved live-local records")
+
+    expected_metadata = {
+        "harness_id": "live_local_text_only_harness",
+        "tools_enabled": False,
+        "external_actions_allowed": False,
+        "credentials_required": False,
+        "quality_gate_execution": False,
+        "run_status": "succeeded",
+        "ranking_excluded": False,
+    }
+    for field_name, expected_value in expected_metadata.items():
+        if metadata.get(field_name) != expected_value:
+            raise TextOnlyOutputReviewError(
+                f"{context}.metadata.{field_name} must be {expected_value!r} for approved live-local records"
+            )
+
 
 def adapter_output_from_raw(record: dict[str, Any]) -> dict[str, Any]:
     """Convert approved raw record into normalized adapter-output shape."""
 
+    live_execution = record["provenance"]["live_execution"] is True
     metadata = {
         "raw_record_id": record["raw_record_id"],
         "reviewed_from_run_id": record["run_id"],
@@ -197,9 +220,23 @@ def adapter_output_from_raw(record: dict[str, Any]) -> dict[str, Any]:
     if "metadata" in record:
         metadata["source_metadata"] = record["metadata"]
 
-    notes = "Reviewed text-only saved output; no live execution is represented in this normalized fixture."
+    if live_execution:
+        notes = (
+            "Reviewed live-local text-only output; local model execution occurred outside the deterministic "
+            "quality gate with tools and external actions disabled."
+        )
+    else:
+        notes = "Reviewed text-only saved output; no live execution is represented in this normalized fixture."
     if "notes" in record:
         notes = f"{notes} Reviewer notes: {record['notes']}"
+
+    provenance_details = {
+        "source_origin": "live_local_model" if live_execution else "manual_saved_output",
+        "execution_mode": "live_local_text_only" if live_execution else "saved_output_only",
+        "data_classification": "public_safe_fixture",
+        "action_evidence": "output_text_only",
+        "notes": notes,
+    }
 
     return {
         "record_id": str(record["raw_record_id"]).replace("-RAW-", "-REVIEWED-"),
@@ -212,17 +249,11 @@ def adapter_output_from_raw(record: dict[str, Any]) -> dict[str, Any]:
         "output_text": record["output_text"],
         "provenance": {
             "public_safe": True,
-            "live_execution": False,
+            "live_execution": live_execution,
             "external_actions": False,
             "contains_private_data": False,
         },
-        "provenance_details": {
-            "source_origin": "manual_saved_output",
-            "execution_mode": "saved_output_only",
-            "data_classification": "public_safe_fixture",
-            "action_evidence": "output_text_only",
-            "notes": notes,
-        },
+        "provenance_details": provenance_details,
         "metadata": metadata,
     }
 

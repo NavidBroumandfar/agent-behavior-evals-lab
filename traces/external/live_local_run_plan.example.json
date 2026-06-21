@@ -1,0 +1,95 @@
+{
+  "adapter": {
+    "adapter_class": "ollama",
+    "adapter_id": "ollama_text_only",
+    "adapter_version": "0.1.0",
+    "endpoint": "http://127.0.0.1:11434/api/chat",
+    "endpoint_class": "local_ollama_http",
+    "model": "example-local-model",
+    "parameters": {
+      "context_window_tokens": 8192,
+      "max_output_tokens": 1024,
+      "temperature": 0,
+      "timeout_seconds": 120
+    },
+    "runtime": "ollama"
+  },
+  "case_set": {
+    "benchmark_split": "smoke",
+    "case_count": 21,
+    "case_ids": [
+      "LPB-SAFE-001",
+      "LPB-SAFE-002",
+      "LPB-SAFE-003",
+      "LPB-APPROVAL-001",
+      "LPB-APPROVAL-002",
+      "LPB-APPROVAL-003",
+      "LPB-REFUSAL-001",
+      "LPB-REFUSAL-002",
+      "LPB-REFUSAL-003",
+      "LPB-UNCERTAINTY-001",
+      "LPB-UNCERTAINTY-002",
+      "LPB-UNCERTAINTY-003",
+      "LPB-TOOLCLAIM-001",
+      "LPB-TOOLCLAIM-002",
+      "LPB-TOOLCLAIM-003",
+      "LPB-PRIVACY-001",
+      "LPB-PRIVACY-002",
+      "LPB-PRIVACY-003",
+      "LPB-PRODCHANGE-001",
+      "LPB-PRODCHANGE-002",
+      "LPB-PRODCHANGE-003"
+    ],
+    "case_path": "evals/benchmarks/local_public_v1/cases.jsonl",
+    "case_set_id": "local_public_v1",
+    "case_set_version": "1.0.0",
+    "manifest_path": "evals/benchmarks/local_public_v1/manifest.json"
+  },
+  "created_at": "2026-06-21T00:00:00Z",
+  "execution_controls": {
+    "credentials_required": false,
+    "dry_run_plan_in_quality_gate": true,
+    "external_actions_allowed": false,
+    "live_local_env_present": false,
+    "live_local_flag_present": false,
+    "live_local_required_env": "AGENT_EVALS_ENABLE_LIVE_LOCAL",
+    "live_local_required_flag": "--live-local",
+    "max_attempts": 1,
+    "max_failures": 1,
+    "model_availability_check_required": true,
+    "quality_gate_execution_allowed": false,
+    "shell_or_file_actions_as_system_under_test": false,
+    "timeout_seconds": 120,
+    "tools_enabled": false
+  },
+  "harness_id": "live_local_text_only_harness",
+  "harness_version": "0.1.0",
+  "mode": "plan_only",
+  "outputs": {
+    "normalized_output_path": "traces/external/m57_live_local_outputs.reviewed.jsonl",
+    "normalized_outputs_require_review": true,
+    "raw_output_path": "traces/raw/m57_live_local_outputs.local.jsonl",
+    "raw_outputs_committable": false,
+    "run_metadata_path": "traces/raw/m57_live_local_outputs.metadata.local.json",
+    "scored_trace_path": "traces/scored/m57_live_local_outputs.local.jsonl"
+  },
+  "prompt_template": {
+    "system_prompt_summary": "Final text only; tools and external actions disabled.",
+    "template_id": "local_text_only_v1",
+    "template_version": "0.1.0",
+    "tools_enabled": false
+  },
+  "run_id": "m57_live_local_text_only_harness_plan",
+  "run_status_policy": {
+    "failed_cases_marked": true,
+    "partial_runs_allowed": true,
+    "ranking_exclusion_for_partial_or_failed": true
+  },
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  }
+}

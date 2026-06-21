@@ -253,6 +253,29 @@ python3 src/import_adapter_outputs.py traces/external/adapter_outputs.example.js
 
 Validation writes nothing. Import writes deterministic scored traces to `traces/scored/adapter_output_fixture_import.jsonl` using the existing cases and scorer. Neither command calls real APIs, runs local models, executes OpenClaw, uses browser/email/external tools, creates a real adapter, or reads private runtime state.
 
+## Opt-In Local Text-Only Harness
+
+M57 adds an opt-in local harness for running Ollama or local OpenAI-compatible text-only models against `local_public_v1`. Dry-run planning is non-live:
+
+```bash
+python3 scripts/live_local.py --plan-only --adapter ollama_text_only --model example-local-model --split smoke
+```
+
+Live execution requires both controls and writes ignored local raw outputs:
+
+```bash
+AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --live-local --adapter ollama_text_only --model <local-model> --split smoke
+```
+
+Reviewed live-local outputs must be validated/imported explicitly:
+
+```bash
+python3 src/validate_adapter_outputs.py --allow-live-local traces/external/example.reviewed.jsonl
+python3 src/import_adapter_outputs.py traces/external/example.reviewed.jsonl traces/scored/example.local.jsonl --allow-live-local --case-path evals/benchmarks/local_public_v1/cases.jsonl
+```
+
+The deterministic quality gate validates only the dry-run plan, schemas, and fake-client tests. It does not call local models.
+
 ## Adapter Dry-Run Contract Test
 
 The dry-run adapter is a deterministic no-network contract test for future adapter-like producers. It emits normalized adapter-output records, then the existing validator and importer process them.
@@ -473,7 +496,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, both adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, report manifest validation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
+This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, live-local dry-run plan validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, both adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, report manifest validation, Python compile checks, and trace count verification for `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, and `traces/scored/saved_transcript_replay_eval.jsonl`.
 
 ## Current Interpretation
 

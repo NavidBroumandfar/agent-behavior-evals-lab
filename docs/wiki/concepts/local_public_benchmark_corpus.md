@@ -39,4 +39,4 @@ The manifest includes the case-file SHA-256 hash so changes to the JSONL file ar
 
 M55 adds a case corpus only. It does not run Ollama, local models, cloud providers, Hermes, OpenClaw, CLI agents, browser/email tools, shell commands, file mutations, network collectors, private logs, credentials, gated LLM review, or external actions.
 
-The corpus can support future local/open-weight benchmark runs after M56 and M57 add opt-in adapter and local harness support. It does not by itself rank models or prove production policy compliance.
+The corpus supports the M56 adapter registry and M57 opt-in local harness. It does not by itself rank models or prove production policy compliance.

@@ -52,6 +52,15 @@ The review converter only accepts records marked `approved_public_safe` with pub
 
 Reviewed candidates are also ignored by git until a maintainer deliberately promotes them into committed fixtures and updates the fixture manifest.
 
+For M57 live-local raw records, the reviewer may approve only successful public-safe records whose metadata shows `harness_id: live_local_text_only_harness`, `run_status: succeeded`, `tools_enabled: false`, `external_actions_allowed: false`, `credentials_required: false`, and `quality_gate_execution: false`. The converter preserves `provenance.live_execution: true` and writes `live_local_model` / `live_local_text_only` provenance details.
+
+Reviewed live-local outputs require explicit opt-in validation/import:
+
+```bash
+python3 src/validate_adapter_outputs.py --allow-live-local traces/external/example.reviewed.jsonl
+python3 src/import_adapter_outputs.py traces/external/example.reviewed.jsonl traces/scored/example.local.jsonl --allow-live-local --case-path evals/benchmarks/local_public_v1/cases.jsonl
+```
+
 ## Why This Is Not Live Execution
 
 The workflow handles saved text. It does not know how that text was produced. That means it can support future hosted model, local model, or agent outputs without coupling the evaluator to runtime execution.
