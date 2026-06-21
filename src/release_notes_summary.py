@@ -52,6 +52,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
     REPO_ROOT / "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
     REPO_ROOT / "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
+    REPO_ROOT / "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -354,6 +355,13 @@ def release_highlights(
             {
                 "area": "Action Boundary Evidence",
                 "summary": "Added approval-event and action-denial evidence records for missing approval, vague approval, denied actions, and fake completion claims without executing tools.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M63" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "OpenClaw Harness Adapter",
+                "summary": "Added a public-safe OpenClaw harness smoke adapter that emits normalized transcript evidence and a smoke report without live runtime execution.",
             }
         )
     return highlights

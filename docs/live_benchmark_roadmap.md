@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M62 complete / review-ready
+Status: Active evidence-first roadmap; M54-M63 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -349,6 +349,14 @@ Acceptance criteria:
 ### M63: OpenClaw Live Harness Adapter
 
 Evaluate OpenClaw as a system under test through the sandbox contract.
+
+Status: complete / public-safe smoke review-ready. See `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`.
+
+Implementation note:
+
+- M63 adds `schemas/openclaw_harness_adapter.schema.json`, `traces/external/openclaw_harness_adapter_plan.example.json`, and `src/openclaw_harness_adapter.py`.
+- The adapter emits a public-safe smoke saved-transcript fixture and M61-compatible tool summary, then scores the transcript through the existing saved-transcript replay path.
+- The deterministic gate validates the adapter plan, generates public-safe smoke artifacts, and replays the saved transcript. It does not launch OpenClaw, execute tools, call local models or providers, use browser/email/network tools, mutate files as a system under test, or perform external actions.
 
 Deliverables:
 

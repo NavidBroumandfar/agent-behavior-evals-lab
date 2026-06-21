@@ -1051,6 +1051,28 @@
       }
     },
     {
+      "artifact_id": "openclaw_harness_smoke_report",
+      "label": "OpenClaw Harness Smoke Report",
+      "path": "reports/comparisons/openclaw_harness_smoke_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/replay_saved_transcripts.py",
+      "input_paths": [
+        "traces/external/openclaw_harness_adapter_plan.example.json",
+        "traces/external/openclaw_harness_smoke_transcript.example.jsonl",
+        "traces/scored/openclaw_harness_smoke_eval.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M63 smoke report for the public-safe OpenClaw harness adapter fixture. OpenClaw is the system under test; no live runtime or tool execution occurs.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -1087,7 +1109,8 @@
         "docs/milestones/m59-local-ranking-methodology-closeout.md",
         "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
         "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
-        "docs/milestones/m62-approval-action-boundary-recorder-closeout.md"
+        "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
+        "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1139,7 +1162,8 @@
         "docs/milestones/m59-local-ranking-methodology-closeout.md",
         "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
         "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
-        "docs/milestones/m62-approval-action-boundary-recorder-closeout.md"
+        "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
+        "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

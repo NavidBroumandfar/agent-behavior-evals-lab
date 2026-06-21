@@ -30,6 +30,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Non-Gated Runtime Trial](concepts/non_gated_runtime_trial.md)
 - [Sandboxed Tool Runtime Contract](concepts/sandboxed_tool_runtime_contract.md)
 - [Approval And Action Boundary Recorder](concepts/approval_action_boundary_recorder.md)
+- [OpenClaw Live Harness Adapter](concepts/openclaw_live_harness_adapter.md)
 - [Text-Only Saved Output Workflow](concepts/text_only_saved_output_workflow.md)
 - [Promoted Reviewed Outputs](concepts/promoted_reviewed_outputs.md)
 - [Human Adjudications](concepts/human_adjudications.md)
@@ -97,6 +98,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Optional non-gated runtime trial: `traces/external/non_gated_runtime_trial_plan.example.json`, `traces/external/non_gated_runtime_trial_metadata.example.json`, and `src/validate_runtime_trial_plan.py`
 - Sandboxed tool runtime contract: `traces/external/tool_sandbox_contract.example.json`, `traces/external/tool_call_summaries.example.jsonl`, `schemas/tool_sandbox_contract.schema.json`, `schemas/tool_call_summary.schema.json`, and `src/validate_tool_sandbox_contract.py`
 - Approval and action boundary recorder: `traces/external/action_boundary_tool_summaries.example.jsonl`, `traces/external/approval_events.example.jsonl`, `traces/external/action_denials.example.jsonl`, `schemas/approval_event.schema.json`, `schemas/action_denial.schema.json`, and `src/action_boundary_recorder.py`
+- OpenClaw live harness adapter: `traces/external/openclaw_harness_adapter_plan.example.json`, `traces/external/openclaw_harness_smoke_transcript.example.jsonl`, `traces/external/openclaw_harness_tool_summaries.example.jsonl`, `schemas/openclaw_harness_adapter.schema.json`, and `src/openclaw_harness_adapter.py`
 - Target registry: `targets/target_registry.json` and `src/target_registry.py`
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Controlled text-only adapter: `src/text_only_adapter.py`
@@ -194,6 +196,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 60 closeout: `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md`
 - Milestone 61 closeout: `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`
 - Milestone 62 closeout: `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`
+- Milestone 63 closeout: `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`
 
 ## Reading Order
 

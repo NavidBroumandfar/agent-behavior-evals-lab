@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 41 |
+| Indexed report artifacts | 42 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -40,6 +40,7 @@
 - **Local Benchmark Report**: Added an evidence-gated local/open-weight benchmark report that withholds rankings until reviewed ledger-backed real local evidence exists.
 - **Tool Runtime Sandbox**: Added a default-deny sandbox contract and public-safe tool-call summary schema for future tool-capable agent benchmarks without executing tools.
 - **Action Boundary Evidence**: Added approval-event and action-denial evidence records for missing approval, vague approval, denied actions, and fake completion claims without executing tools.
+- **OpenClaw Harness Adapter**: Added a public-safe OpenClaw harness smoke adapter that emits normalized transcript evidence and a smoke report without live runtime execution.
 
 ## Dashboard Snapshot
 
@@ -84,6 +85,7 @@
 | `M60` | Complete / evidence-gated review-ready | `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md` |
 | `M61` | Complete / review-ready | `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md` |
 | `M62` | Complete / review-ready | `docs/milestones/m62-approval-action-boundary-recorder-closeout.md` |
+| `M63` | Complete / public-safe smoke review-ready | `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md` |
 
 ## Boundaries
 
@@ -126,3 +128,4 @@
 - `docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md`
 - `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`
 - `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`
+- `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`

@@ -69,6 +69,14 @@ APPROVAL_EVENT_PATH = REPO_ROOT / "traces/external/approval_events.example.jsonl
 EXPECTED_APPROVAL_EVENT_LINES = 4
 ACTION_DENIAL_PATH = REPO_ROOT / "traces/external/action_denials.example.jsonl"
 EXPECTED_ACTION_DENIAL_LINES = 4
+OPENCLAW_HARNESS_PLAN_PATH = REPO_ROOT / "traces/external/openclaw_harness_adapter_plan.example.json"
+OPENCLAW_HARNESS_TRANSCRIPT_PATH = REPO_ROOT / "traces/external/openclaw_harness_smoke_transcript.example.jsonl"
+EXPECTED_OPENCLAW_HARNESS_TRANSCRIPT_LINES = 1
+OPENCLAW_HARNESS_TOOL_SUMMARY_PATH = REPO_ROOT / "traces/external/openclaw_harness_tool_summaries.example.jsonl"
+EXPECTED_OPENCLAW_HARNESS_TOOL_SUMMARY_LINES = 1
+OPENCLAW_HARNESS_TRACE_PATH = REPO_ROOT / "traces/scored/openclaw_harness_smoke_eval.jsonl"
+EXPECTED_OPENCLAW_HARNESS_TRACE_LINES = 1
+OPENCLAW_HARNESS_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_harness_smoke_report.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -111,6 +119,12 @@ FOCUSED_SCORER_EVIDENCE_REPORT_CONTEXT = (
     "M52 adds synthetic public-safe focused scorer evidence for safe-task clarification and approval-disclosure "
     "controls. The fixture is local saved text only; no live runtime, provider, network, browser/email, shell, "
     "file mutation, credentials, private logs, or external actions are used."
+)
+OPENCLAW_HARNESS_SMOKE_REPORT_CONTEXT = (
+    "M63 treats OpenClaw as the system under test through a public-safe harness adapter smoke fixture. "
+    "The adapter emits normalized saved-transcript evidence and tool-boundary summaries only; no live OpenClaw "
+    "runtime, raw private log, credential, tool execution, network access, shell command, browser/email action, "
+    "or external action is used."
 )
 
 CHECKS = [
@@ -447,6 +461,29 @@ CHECKS = [
         ["python3", "src/action_boundary_recorder.py"],
     ),
     (
+        "openclaw harness smoke fixture generation",
+        ["python3", "src/openclaw_harness_adapter.py"],
+    ),
+    (
+        "openclaw harness smoke replay generation",
+        [
+            "python3",
+            "src/replay_saved_transcripts.py",
+            "--input",
+            "traces/external/openclaw_harness_smoke_transcript.example.jsonl",
+            "--output",
+            "traces/scored/openclaw_harness_smoke_eval.jsonl",
+            "--report",
+            "reports/comparisons/openclaw_harness_smoke_report.md",
+            "--run-id",
+            "openclaw_harness_smoke",
+            "--report-title",
+            "OpenClaw Harness Smoke Report",
+            "--report-context",
+            OPENCLAW_HARNESS_SMOKE_REPORT_CONTEXT,
+        ],
+    ),
+    (
         "py_compile",
         [
             "python3",
@@ -496,6 +533,7 @@ CHECKS = [
             "src/validate_local_benchmark_report.py",
             "src/validate_tool_sandbox_contract.py",
             "src/action_boundary_recorder.py",
+            "src/openclaw_harness_adapter.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -684,6 +722,13 @@ def main() -> int:
                 verify_jsonl_count(ACTION_BOUNDARY_INPUT_PATH, EXPECTED_ACTION_BOUNDARY_INPUT_LINES)
                 verify_jsonl_count(APPROVAL_EVENT_PATH, EXPECTED_APPROVAL_EVENT_LINES)
                 verify_jsonl_count(ACTION_DENIAL_PATH, EXPECTED_ACTION_DENIAL_LINES)
+            if name == "openclaw harness smoke fixture generation":
+                verify_report_exists(OPENCLAW_HARNESS_PLAN_PATH)
+                verify_jsonl_count(OPENCLAW_HARNESS_TRANSCRIPT_PATH, EXPECTED_OPENCLAW_HARNESS_TRANSCRIPT_LINES)
+                verify_jsonl_count(OPENCLAW_HARNESS_TOOL_SUMMARY_PATH, EXPECTED_OPENCLAW_HARNESS_TOOL_SUMMARY_LINES)
+            if name == "openclaw harness smoke replay generation":
+                verify_trace_count(OPENCLAW_HARNESS_TRACE_PATH, EXPECTED_OPENCLAW_HARNESS_TRACE_LINES)
+                verify_report_exists(OPENCLAW_HARNESS_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

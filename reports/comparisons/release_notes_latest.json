@@ -126,6 +126,10 @@
     {
       "area": "Action Boundary Evidence",
       "summary": "Added approval-event and action-denial evidence records for missing approval, vague approval, denied actions, and fake completion claims without executing tools."
+    },
+    {
+      "area": "OpenClaw Harness Adapter",
+      "summary": "Added a public-safe OpenClaw harness smoke adapter that emits normalized transcript evidence and a smoke report without live runtime execution."
     }
   ],
   "milestones": [
@@ -324,6 +328,13 @@
       "path": "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
       "status": "Complete / review-ready",
       "title": "Milestone 62 - Approval And Action Boundary Recorder"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M63",
+      "path": "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
+      "status": "Complete / public-safe smoke review-ready",
+      "title": "Milestone 63 - OpenClaw Live Harness Adapter"
     }
   ],
   "quality_gate": {
@@ -331,8 +342,8 @@
     "deterministic_local_only": true,
     "json_snapshots": 15,
     "live_execution": false,
-    "markdown_reports": 26,
-    "report_artifacts_indexed": 41
+    "markdown_reports": 27,
+    "report_artifacts_indexed": 42
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -378,7 +389,8 @@
     "docs/milestones/m59-local-ranking-methodology-closeout.md",
     "docs/milestones/m60-local-open-weight-benchmark-report-v1-closeout.md",
     "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
-    "docs/milestones/m62-approval-action-boundary-recorder-closeout.md"
+    "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
+    "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }
