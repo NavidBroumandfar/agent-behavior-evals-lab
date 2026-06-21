@@ -646,6 +646,207 @@ Acceptance criteria:
 - Any scorer change is traceable to public-safe reviewed evidence and protected by focused controls.
 - The full deterministic local quality gate passes.
 
+## Next Roadmap Section: Evidence-First Live Benchmark Track
+
+The post-M53 roadmap should move from evaluator scaffolding to real evidence. The detailed execution plan lives in `docs/live_benchmark_roadmap.md`.
+
+The goal is to make the lab a credible benchmark and audit harness for live cloud models, local assistants, Hermes, OpenClaw, and future agent runtimes while preserving evidence boundaries.
+
+New direction:
+
+- Public benchmark evidence is public-safe, reproducible, and eligible for model rankings.
+- Private production evidence is local-only, access-controlled, and eligible for private audit reports.
+- Promoted public evidence starts as private or live evidence, then becomes public-safe only after redaction, review, validation, and explicit promotion.
+
+Critical boundary:
+
+- Public rankings must not depend on private evidence that outside readers cannot inspect.
+- Private audit reports can use private runtime evidence but must not claim public benchmark reproducibility.
+- Live provider and runtime execution must remain opt-in and outside the deterministic local quality gate.
+- Credentials, raw private logs, hidden prompts, private runtime memory, private workspace paths, and unredacted private evidence must remain out of committed fixtures.
+
+### M54: Benchmark Claim Charter And Evidence Classes
+
+Define what the benchmark is allowed to claim.
+
+Status: planned.
+
+Deliverables:
+
+- Evidence-class schema for public benchmark, private audit, and promoted public evidence.
+- Claim taxonomy for evaluator-health, public benchmark, private audit, production-policy evidence, and unsupported claims.
+- Report language rules that prevent private evidence from contaminating public leaderboard claims.
+
+Acceptance criteria:
+
+- Every report declares its evidence class.
+- Public rankings can only use public benchmark evidence.
+- Private audit reports can use private evidence but must not claim public reproducibility.
+
+### M55: Public Benchmark Case Corpus V1
+
+Build a larger public-safe case corpus designed for live model comparison.
+
+Status: planned.
+
+Deliverables:
+
+- At least 200 public-safe cases across safe tasks, approval-gated tasks, refusal-required tasks, uncertainty, tool-use claims, privacy, and production-change requests.
+- Case-set versioning with frozen benchmark splits.
+- Difficulty tags, policy references, and expected behavior notes.
+
+Acceptance criteria:
+
+- Cases validate locally.
+- The benchmark split is immutable for a given version.
+- No private data or provider-specific assumptions are included.
+
+### M56: Live Provider Adapter Registry
+
+Add opt-in provider adapters without making providers part of the local quality gate.
+
+Status: planned.
+
+Deliverables:
+
+- Provider adapter interface for OpenAI-compatible APIs, Anthropic-compatible APIs, local OpenAI-compatible servers, and manual adapters.
+- Registry metadata for model name, provider, endpoint class, temperature, tool availability, and cost estimate.
+- Environment-variable based credential lookup.
+
+Acceptance criteria:
+
+- No credential is committed or printed.
+- Live calls require an explicit live flag and enable environment variable.
+- Unit tests use fakes only.
+
+### M57: Opt-In Live Text-Only Provider Harness
+
+Run live cloud models against public-safe prompts with tools disabled.
+
+Status: planned.
+
+Deliverables:
+
+- Opt-in live command for text-only runs.
+- Cost ceilings, rate limits, retry policy, timeout policy, and run abort controls.
+- Saved raw outputs under ignored local paths.
+- Reviewed normalized outputs suitable for existing scoring and adjudication.
+
+Acceptance criteria:
+
+- The deterministic gate does not call providers.
+- A live run can be reproduced from saved normalized outputs.
+- Run metadata captures provider, model, parameters, timestamp, case-set version, and prompt template version.
+
+### M58: Reproducible Live Run Ledger
+
+Make live evidence auditable.
+
+Status: planned.
+
+Deliverables:
+
+- Run ledger schema for live provider runs.
+- Hashes for case set, prompt template, adapter version, normalized output file, and scorer version.
+- Public-safe run manifest for published benchmark runs.
+
+Acceptance criteria:
+
+- A report can trace every scored live output to a run ledger entry.
+- Ledger entries do not expose secrets or private prompts.
+- Re-running from saved outputs does not require provider credentials.
+
+### M59: Public Ranking Methodology
+
+Define how models are ranked without overclaiming.
+
+Status: planned.
+
+Deliverables:
+
+- Ranking metric definitions.
+- Confidence intervals or bootstrap estimates.
+- Tie policy, abstention policy, partial-run policy, and severity weighting.
+- Required human-review sampling for high-risk cases.
+
+Acceptance criteria:
+
+- Rankings include sample size, uncertainty, exclusions, and benchmark version.
+- Rankings distinguish heuristic score, adjudicated score, and unresolved review count.
+- A model cannot be ranked from private-only evidence.
+
+### M60: Public Benchmark Report V1
+
+Publish the first public-safe live cloud model benchmark report.
+
+Status: planned.
+
+Deliverables:
+
+- Live public benchmark JSON snapshot.
+- Markdown benchmark report.
+- Model ranking table.
+- Methodology and limitations section.
+- Reproduction instructions from saved public-safe outputs.
+
+Acceptance criteria:
+
+- At least two real provider/model targets are included.
+- All ranked evidence is public-safe and traceable.
+- The full deterministic local gate passes without provider credentials.
+
+### M61-M65: Agent Runtime And Tool-Boundary Benchmark
+
+Evaluate tool-capable agents without allowing uncontrolled external actions.
+
+Status: planned.
+
+Milestones:
+
+- M61 Sandboxed Tool Runtime Contract.
+- M62 Approval And Action Boundary Recorder.
+- M63 OpenClaw Live Harness Adapter.
+- M64 Hermes Or Long-Running Agent Adapter.
+- M65 Production-Policy Scenario Packs.
+
+Success signal:
+
+- The lab can run tool-capable agents in a disposable sandbox, record approvals and blocked actions, score selected assistant turns, and report policy behavior without touching real accounts or production systems.
+
+### M66-M69: Private Runtime Evidence And Audit Mode
+
+Support private production evidence while keeping it out of public fixtures and public rankings by default.
+
+Status: planned.
+
+Milestones:
+
+- M66 Private Evidence Vault.
+- M67 Redaction And Promotion Pipeline.
+- M68 Private Audit Reports.
+- M69 Retention, Consent, And Access Controls.
+
+Success signal:
+
+- A user can ingest private runtime evidence locally, keep it encrypted or ignored by Git, generate local audit reports, and promote only reviewed public-safe derivatives into committed fixtures.
+
+### M70-M73: Benchmark Governance And Statistical Confidence
+
+Make rankings harder to game and easier to trust.
+
+Status: planned.
+
+Milestones:
+
+- M70 Reviewer Protocol And Inter-Rater Checks.
+- M71 Statistical Power And Rerun Policy.
+- M72 Benchmark Versioning And Model Disclosure.
+- M73 External Reproducibility Pack.
+
+Success signal:
+
+- Benchmark reports state sample sizes, uncertainty intervals, versioned case sets, model/provider metadata, rerun policy, reviewer agreement, and exact exclusions.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.
@@ -662,31 +863,34 @@ For both, the recommended order is:
 4. Controlled live sandbox.
 5. Optional harness integration.
 
-## Target End State
+## Revised Target End State
 
 ```text
-Model / Local Assistant / Hermes / OpenClaw / Future Agent
+Public cases / Private scenarios / Production-like scenario packs
         |
         v
-Saved output, saved transcript, or controlled adapter
+Live provider adapter / Agent runtime sandbox / Private evidence ingest
         |
         v
-Agent Behavior Evals Lab
+Raw outputs or traces stored outside Git by default
         |
         v
-Validated scored traces
+Normalization, redaction, review, and promotion
         |
         v
-Reports, comparisons, regression checks, and reviewer decisions
+Public benchmark evidence or private audit evidence
+        |
+        v
+Scoring, adjudication, calibration, ranking, and reports
 ```
 
-The repository remains the measuring instrument. The agents are what it measures.
+The repository remains the measuring instrument. The agents and models are what it measures.
 
-## Not In Scope Yet
+## Still Not In Scope
 
-- Live provider APIs inside the deterministic quality gate.
-- OpenClaw-specific assumptions in core evaluator code.
-- Hermes-specific assumptions in core evaluator code.
-- Autonomous browser, email, messaging, purchase, or file-mutation actions.
-- Credentials, tokens, private account data, or private runtime memory in committed fixtures.
-- Leaderboard or production benchmark claims before real controlled fixtures exist.
+- Live provider APIs inside the deterministic local quality gate.
+- Public rankings from private-only evidence.
+- Production-policy proof claims that exceed the actual evidence.
+- Uncontrolled browser, email, messaging, purchase, shell, network, or file-mutation actions.
+- Credentials, tokens, private account data, private runtime memory, raw private logs, or unredacted private evidence in committed fixtures.
+- OpenClaw-specific or Hermes-specific assumptions in core evaluator code unless isolated behind target adapters.
