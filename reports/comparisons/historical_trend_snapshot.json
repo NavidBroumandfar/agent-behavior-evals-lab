@@ -7,24 +7,24 @@
   "current_snapshot": {
     "adjudication_outcomes": {
       "accepted_scorer_changes": 0,
-      "adjudicated_pass_rate": "50.0%",
-      "adjudication_records": 50,
+      "adjudicated_pass_rate": "55.4%",
+      "adjudication_records": 56,
       "calibration_label_counts": {
         "ambiguous_review": 0,
         "scorer_false_negative": 2,
         "scorer_false_positive": 1,
         "scorer_upheld_failure": 23,
-        "scorer_upheld_pass": 24
+        "scorer_upheld_pass": 30
       },
       "changed_result_count": 3,
-      "reviewed_external_source_trace_count": 9,
+      "reviewed_external_source_trace_count": 10,
       "reviewer_decisions": {
         "needs_discussion": 0,
         "override_fail": 2,
         "override_pass": 1,
-        "uphold_score": 47
+        "uphold_score": 53
       },
-      "source_trace_count": 10
+      "source_trace_count": 11
     },
     "evidence_quality": {
       "gap_count": 9,
@@ -60,14 +60,14 @@
     },
     "fixture_counts": {
       "data_classification_counts": {
-        "public_safe_fixture": 6,
+        "public_safe_fixture": 7,
         "public_sanitized": 2,
         "public_synthetic": 1
       },
-      "fixture_groups": 9,
-      "quality_gate_included_groups": 9,
-      "scored_records": 42,
-      "source_records": 42,
+      "fixture_groups": 10,
+      "quality_gate_included_groups": 10,
+      "scored_records": 48,
+      "source_records": 48,
       "source_type_counts": {
         "dry_run_adapter_output": 1,
         "focused_scorer_evidence": 1,
@@ -76,6 +76,7 @@
         "normalized_adapter_output": 1,
         "openclaw_saved_transcript_pilot": 1,
         "openclaw_style_manual_output": 1,
+        "production_policy_scenario": 1,
         "public_safe_transcript_expansion": 1,
         "saved_transcript_replay": 1
       }
@@ -111,9 +112,9 @@
       },
       "external_fixtures": {
         "failed": 17,
-        "pass_rate": "59.5%",
-        "passed": 25,
-        "records": 42,
+        "pass_rate": "64.6%",
+        "passed": 31,
+        "records": 48,
         "trend_id": "external_fixtures_all"
       },
       "fixture_groups": [
@@ -285,6 +286,26 @@
         },
         {
           "data_classification": "public_safe_fixture",
+          "failed": 0,
+          "failure_modes": {},
+          "pass_rate": "100.0%",
+          "passed": 6,
+          "quality_gate_included": true,
+          "records": 6,
+          "run_ids": [
+            "production_policy_scenario"
+          ],
+          "source_path": "traces/external/production_policy_scenario_transcripts.example.jsonl",
+          "source_records": 6,
+          "source_type": "production_policy_scenario",
+          "timestamps": [
+            "2026-01-01T00:00:00Z"
+          ],
+          "trace_path": "traces/scored/production_policy_scenario_eval.jsonl",
+          "trend_id": "production_policy_scenarios"
+        },
+        {
+          "data_classification": "public_safe_fixture",
           "failed": 3,
           "failure_modes": {
             "failure_to_clarify": 1,
@@ -336,10 +357,10 @@
     },
     "report_manifest_coverage": {
       "json_snapshots": 15,
-      "markdown_reports": 28,
-      "public_safe_artifacts": 43,
-      "quality_gate_artifacts": 43,
-      "report_artifacts": 43
+      "markdown_reports": 29,
+      "public_safe_artifacts": 44,
+      "quality_gate_artifacts": 44,
+      "report_artifacts": 44
     },
     "scorer_candidate_controls": {
       "accepted_scorer_changes": 0,
@@ -420,6 +441,7 @@
     "traces/external/manual_outputs.example.jsonl",
     "traces/external/openclaw_manual_samples.example.jsonl",
     "traces/external/openclaw_saved_transcript_pilot.example.jsonl",
+    "traces/external/production_policy_scenario_transcripts.example.jsonl",
     "traces/external/public_safe_transcript_expansion.example.jsonl",
     "traces/external/saved_transcripts.example.jsonl",
     "traces/scored/adapter_output_fixture_import.jsonl",
@@ -430,6 +452,7 @@
     "traces/scored/manual_output_eval.jsonl",
     "traces/scored/openclaw_manual_eval.jsonl",
     "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+    "traces/scored/production_policy_scenario_eval.jsonl",
     "traces/scored/public_safe_transcript_expansion_eval.jsonl",
     "traces/scored/saved_transcript_replay_eval.jsonl"
   ],
@@ -465,7 +488,7 @@
       "metrics": {
         "gap_count": 9,
         "product_kpi_count": 4,
-        "total_scored_records": 168
+        "total_scored_records": 174
       },
       "phase": "evidence_quality",
       "source_paths": [
@@ -495,13 +518,13 @@
     {
       "checkpoint_id": "m42_scorer_calibration",
       "metrics": {
-        "adjudication_records": 50,
+        "adjudication_records": 56,
         "calibration_label_counts": {
           "ambiguous_review": 0,
           "scorer_false_negative": 2,
           "scorer_false_positive": 1,
           "scorer_upheld_failure": 23,
-          "scorer_upheld_pass": 24
+          "scorer_upheld_pass": 30
         },
         "changed_result_count": 3
       },
@@ -513,11 +536,11 @@
     {
       "checkpoint_id": "m43_historical_trend_snapshot",
       "metrics": {
-        "external_fixture_pass_rate": "59.5%",
-        "fixture_groups": 9,
+        "external_fixture_pass_rate": "64.6%",
+        "fixture_groups": 10,
         "json_snapshots": 15,
-        "markdown_reports": 28,
-        "report_artifacts": 43
+        "markdown_reports": 29,
+        "report_artifacts": 44
       },
       "phase": "reporting_history",
       "source_paths": [
@@ -528,10 +551,10 @@
     {
       "checkpoint_id": "m45_external_fixture_adjudication_coverage",
       "metrics": {
-        "adjudication_records": 50,
+        "adjudication_records": 56,
         "ambiguous_reviews": 0,
-        "external_source_trace_count": 9,
-        "source_trace_count": 10
+        "external_source_trace_count": 10,
+        "source_trace_count": 11
       },
       "phase": "review_coverage",
       "source_paths": [
@@ -543,7 +566,7 @@
     {
       "checkpoint_id": "m46_needs_discussion_resolution",
       "metrics": {
-        "adjudication_records": 50,
+        "adjudication_records": 56,
         "ambiguous_reviews": 0,
         "changed_result_count": 3,
         "needs_discussion": 0
@@ -574,9 +597,9 @@
       "checkpoint_id": "m48_external_fixture_review_expansion",
       "metrics": {
         "accepted_scorer_changes": 0,
-        "adjudication_records": 50,
-        "external_source_trace_count": 9,
-        "source_trace_count": 10
+        "adjudication_records": 56,
+        "external_source_trace_count": 10,
+        "source_trace_count": 11
       },
       "phase": "review_expansion",
       "source_paths": [

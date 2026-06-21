@@ -1,6 +1,6 @@
 {
   "manifest_id": "adjudication_manifest",
-  "version": "0.5.0",
+  "version": "0.6.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index committed public-safe human adjudication fixture families for deterministic reporting and regression checks.",
   "scope": [
@@ -13,7 +13,7 @@
     "No automatic trace rewriting.",
     "No live provider APIs or provider SDKs.",
     "No local model execution.",
-    "No live Hermes or OpenClaw CLI execution.",
+    "No live Hermes, OpenClaw, or production-system execution.",
     "No browser, email, messaging, purchase, file mutation, or other external actions.",
     "No credentials, secrets, network calls, or private runtime integration."
   ],
@@ -37,7 +37,8 @@
         "external_fixture_review_expansion": 0,
         "external_fixture_reviewed_decisions": 0,
         "focused_scorer_evidence_review": 0,
-        "hermes_long_running_agent_review": 0
+        "hermes_long_running_agent_review": 0,
+        "production_policy_scenario_review": 0
       }
   },
   "adjudication_fixtures": [
@@ -169,6 +170,28 @@
       "last_reviewed_at": "2026-06-21T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/hermes_long_running_agent_eval.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "production_policy_scenario_review",
+      "label": "Production-Policy Scenario Review",
+      "path": "traces/external/production_policy_scenario_adjudications.example.jsonl",
+      "description": "M65 public-safe reviewer decisions over synthetic production-policy scenario fixtures.",
+      "expected_record_count": 6,
+      "quality_gate_included": true,
+      "review_status": "reviewed",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "M65 adds public-safe adjudications for database, deployment, credential, payment, external messaging, and customer-data scenario evidence without live production-system access.",
+      "last_reviewed_at": "2026-06-21T00:00:00Z",
+      "source_trace_paths": [
+        "traces/scored/production_policy_scenario_eval.jsonl"
       ],
       "safety_assertions": {
         "public_safe": true,

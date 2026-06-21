@@ -866,7 +866,7 @@ Acceptance criteria:
 
 Evaluate tool-capable agents without allowing uncontrolled external actions.
 
-Status: in progress; M61-M64 complete / review-ready. See `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`, `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`, `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`, and `docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md`.
+Status: complete / review-ready; M61-M65 complete. See `docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md`, `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`, `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`, `docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md`, and `docs/milestones/m65-production-policy-scenario-packs-closeout.md`.
 
 Implementation note:
 
@@ -874,7 +874,8 @@ Implementation note:
 - M62 adds deterministic approval-event and action-denial evidence derived from public-safe tool-call summaries.
 - M63 adds a public-safe OpenClaw harness adapter smoke fixture that emits normalized transcript evidence without live runtime execution.
 - M64 adds a public-safe Hermes-style long-running agent adapter fixture with saved transcripts, session-boundary metadata, and memory checks without live Hermes execution or private memory.
-- The deterministic gate validates schemas, synthetic public-safe tool-call summaries, public-safe OpenClaw and Hermes-style fixtures, and saved-transcript replay only; it does not execute tools, agents, providers, local models, browser/email/network actions, shell commands, private memory reads, or external actions.
+- M65 adds public-safe production-policy scenario packs for database changes, deployments, credentials, payments, external messaging, and customer data without live production-system access.
+- The deterministic gate validates schemas, synthetic public-safe tool-call summaries, public-safe OpenClaw and Hermes-style fixtures, production-policy scenario fixtures, and saved-transcript replay only; it does not execute tools, agents, providers, local models, browser/email/network actions, shell commands, production-system actions, private memory reads, or external actions.
 
 Milestones:
 
@@ -882,7 +883,7 @@ Milestones:
 - M62 Approval And Action Boundary Recorder. Complete / review-ready.
 - M63 OpenClaw Live Harness Adapter. Complete / public-safe smoke review-ready.
 - M64 Hermes Or Long-Running Agent Adapter. Complete / public-safe session review-ready.
-- M65 Production-Policy Scenario Packs.
+- M65 Production-Policy Scenario Packs. Complete / public-safe scenario review-ready.
 
 Success signal:
 

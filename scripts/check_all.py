@@ -87,6 +87,16 @@ EXPECTED_LONG_RUNNING_AGENT_MEMORY_CHECK_LINES = 4
 LONG_RUNNING_AGENT_TRACE_PATH = REPO_ROOT / "traces/scored/hermes_long_running_agent_eval.jsonl"
 EXPECTED_LONG_RUNNING_AGENT_TRACE_LINES = 2
 LONG_RUNNING_AGENT_REPORT_PATH = REPO_ROOT / "reports/comparisons/hermes_long_running_agent_report.md"
+PRODUCTION_POLICY_SCENARIO_PACK_PATH = REPO_ROOT / "traces/external/production_policy_scenario_pack.example.json"
+PRODUCTION_POLICY_SCENARIO_TRANSCRIPT_PATH = (
+    REPO_ROOT / "traces/external/production_policy_scenario_transcripts.example.jsonl"
+)
+EXPECTED_PRODUCTION_POLICY_SCENARIO_TRANSCRIPT_LINES = 6
+PRODUCTION_POLICY_SCENARIO_CHECK_PATH = REPO_ROOT / "traces/external/production_policy_scenario_checks.example.jsonl"
+EXPECTED_PRODUCTION_POLICY_SCENARIO_CHECK_LINES = 6
+PRODUCTION_POLICY_SCENARIO_TRACE_PATH = REPO_ROOT / "traces/scored/production_policy_scenario_eval.jsonl"
+EXPECTED_PRODUCTION_POLICY_SCENARIO_TRACE_LINES = 6
+PRODUCTION_POLICY_SCENARIO_REPORT_PATH = REPO_ROOT / "reports/comparisons/production_policy_scenario_report.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -141,6 +151,12 @@ LONG_RUNNING_AGENT_REPORT_CONTEXT = (
     "transcripts, session-boundary metadata, and memory checks. The fixture evaluates continuity, stale approval "
     "handling, and uncertainty boundaries from selected assistant turns only; no live Hermes execution, private "
     "memory, raw runtime logs, credentials, tools, or external actions are used."
+)
+PRODUCTION_POLICY_SCENARIO_REPORT_CONTEXT = (
+    "M65 evaluates production-policy scenario packs from synthetic public-safe metadata and saved transcripts only. "
+    "The report covers database changes, deployments, credentials, payments, external messaging, and customer data "
+    "prompts as scenario evidence; it is not production proof and uses no live production systems, credentials, "
+    "private data, tools, network calls, browser/email actions, or external actions."
 )
 
 CHECKS = [
@@ -314,6 +330,29 @@ CHECKS = [
         ],
     ),
     (
+        "production-policy scenario fixture generation",
+        ["python3", "src/production_policy_scenarios.py"],
+    ),
+    (
+        "production-policy scenario replay generation",
+        [
+            "python3",
+            "src/replay_saved_transcripts.py",
+            "--input",
+            "traces/external/production_policy_scenario_transcripts.example.jsonl",
+            "--output",
+            "traces/scored/production_policy_scenario_eval.jsonl",
+            "--report",
+            "reports/comparisons/production_policy_scenario_report.md",
+            "--run-id",
+            "production_policy_scenario",
+            "--report-title",
+            "Production-Policy Scenario Report",
+            "--report-context",
+            PRODUCTION_POLICY_SCENARIO_REPORT_CONTEXT,
+        ],
+    ),
+    (
         "external fixture comparison report generation",
         ["python3", "src/compare_external_fixtures.py"],
     ),
@@ -373,6 +412,14 @@ CHECKS = [
             "python3",
             "src/validate_adjudications.py",
             "traces/external/hermes_long_running_adjudications.example.jsonl",
+        ],
+    ),
+    (
+        "production-policy scenario adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/production_policy_scenario_adjudications.example.jsonl",
         ],
     ),
     (
@@ -582,6 +629,7 @@ CHECKS = [
             "src/action_boundary_recorder.py",
             "src/openclaw_harness_adapter.py",
             "src/long_running_agent_adapter.py",
+            "src/production_policy_scenarios.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -794,6 +842,22 @@ def main() -> int:
             if name == "long-running agent session replay generation":
                 verify_trace_count(LONG_RUNNING_AGENT_TRACE_PATH, EXPECTED_LONG_RUNNING_AGENT_TRACE_LINES)
                 verify_report_exists(LONG_RUNNING_AGENT_REPORT_PATH)
+            if name == "production-policy scenario fixture generation":
+                verify_report_exists(PRODUCTION_POLICY_SCENARIO_PACK_PATH)
+                verify_jsonl_count(
+                    PRODUCTION_POLICY_SCENARIO_TRANSCRIPT_PATH,
+                    EXPECTED_PRODUCTION_POLICY_SCENARIO_TRANSCRIPT_LINES,
+                )
+                verify_jsonl_count(
+                    PRODUCTION_POLICY_SCENARIO_CHECK_PATH,
+                    EXPECTED_PRODUCTION_POLICY_SCENARIO_CHECK_LINES,
+                )
+            if name == "production-policy scenario replay generation":
+                verify_trace_count(
+                    PRODUCTION_POLICY_SCENARIO_TRACE_PATH,
+                    EXPECTED_PRODUCTION_POLICY_SCENARIO_TRACE_LINES,
+                )
+                verify_report_exists(PRODUCTION_POLICY_SCENARIO_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

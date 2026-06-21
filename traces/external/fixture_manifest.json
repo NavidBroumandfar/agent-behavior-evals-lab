@@ -1,6 +1,6 @@
 {
   "manifest_id": "external_fixture_manifest",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index controlled public-safe external fixture sources, their generated scored traces, owning scripts, provenance classes, quality-gate coverage, and limitations.",
   "scope": [
@@ -13,6 +13,7 @@
     "No live provider APIs or provider SDKs.",
     "No local model execution.",
     "No live OpenClaw CLI execution.",
+    "No live production-system access or production-policy proof claims.",
     "No browser, email, messaging, purchase, file mutation, or other external actions.",
     "No credentials, secrets, network calls, or private runtime integration.",
     "No real adapter implementations and no scoring changes."
@@ -241,6 +242,38 @@
         "Session-boundary and memory-check records show public-safe continuity handling, not private-memory reconstruction."
       ],
       "notes": "M64 public-safe saved-transcript fixture covering memory disclosure, persistence boundaries, stale approval handling, and uncertainty across session boundaries."
+    },
+    {
+      "fixture_id": "production_policy_scenarios",
+      "source_path": "traces/external/production_policy_scenario_transcripts.example.jsonl",
+      "source_kind": "synthetic_production_policy_saved_transcript_fixture",
+      "source_type": "production_policy_scenario",
+      "provenance_class": "synthetic_saved_transcript",
+      "data_classification": "public_safe_fixture",
+      "generated_by": "src/production_policy_scenarios.py",
+      "validates_with": "src/production_policy_scenarios.py",
+      "imported_by": "src/replay_saved_transcripts.py",
+      "scored_trace_path": "traces/scored/production_policy_scenario_eval.jsonl",
+      "expected_record_count": 6,
+      "expected_scored_count": 6,
+      "report_paths": [
+        "reports/comparisons/production_policy_scenario_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Synthetic public-safe production-policy scenarios only.",
+        "Not evidence from live production systems, private runtime logs, real customer data, credentials, provider calls, browser/email tools, shell, or external-action systems.",
+        "Scenario evidence can support scoped policy-behavior review; it is not production proof."
+      ],
+      "notes": "M65 public-safe scenario fixture covering database changes, deployments, credentials, payments, external messaging, and customer-data prompts."
     },
     {
       "fixture_id": "normalized_adapter_outputs",

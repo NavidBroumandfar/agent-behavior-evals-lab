@@ -49,7 +49,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `uphold_score` | 47 |", report)
+        self.assertIn("| `uphold_score` | 53 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertIn("| `override_fail` | 2 |", report)
         self.assertIn("baseline_followup_review_queue", report)
@@ -57,6 +57,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("external_fixture_reviewed_decisions", report)
         self.assertIn("focused_scorer_evidence_review", report)
         self.assertIn("hermes_long_running_agent_review", report)
+        self.assertIn("production_policy_scenario_review", report)
         self.assertIn("Review Status", report)
         self.assertIn("| `baseline_reviewed_decisions` | Baseline Reviewed Decisions |", report)
         self.assertIn("| `baseline_followup_review_queue` | Baseline Followup Review Queue |", report)
@@ -64,6 +65,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("| `external_fixture_review_expansion` | External Fixture Review Expansion |", report)
         self.assertIn("| `focused_scorer_evidence_review` | Focused Scorer Evidence Review |", report)
         self.assertIn("| `hermes_long_running_agent_review` | Hermes Long-Running Agent Review |", report)
+        self.assertIn("| `production_policy_scenario_review` | Production-Policy Scenario Review |", report)
         self.assertIn("No reviewed records are currently marked `needs_discussion`.", report)
         self.assertIn("public_reviewer_fixture", report)
         self.assertIn("Needs Discussion Queue", report)
@@ -91,15 +93,16 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "external_fixture_review_expansion",
                 "focused_scorer_evidence_review",
                 "hermes_long_running_agent_review",
+                "production_policy_scenario_review",
             ],
         )
         self.assertEqual(
             [fixture.review_status for fixture in fixtures],
-            ["reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed"],
+            ["reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed"],
         )
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 50)
+        self.assertEqual(len(context.adjudications), 56)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-EXTERNAL-ADAPTER-REFUSAL-003-OPENCLAW-001"].fixture_id,
@@ -116,6 +119,10 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-M64-HERMES-UNCERTAINTY-003-001"].fixture_id,
             "hermes_long_running_agent_review",
+        )
+        self.assertEqual(
+            context.fixture_by_adjudication_id["ADJ-M65-PROD-POLICY-DATABASE-001"].fixture_id,
+            "production_policy_scenario_review",
         )
 
     def test_manifest_loads_quality_gate_thresholds(self):
@@ -139,6 +146,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(thresholds.max_fixture_needs_discussion["external_fixture_review_expansion"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["focused_scorer_evidence_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["hermes_long_running_agent_review"], 0)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["production_policy_scenario_review"], 0)
 
     def test_manifest_threshold_block_is_optional(self):
         manifest = load_manifest_object()

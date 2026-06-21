@@ -1,7 +1,7 @@
 {
-  "adjudication_fixture_count": 6,
+  "adjudication_fixture_count": 7,
   "adjudication_fixture_statuses": {
-    "reviewed": 6
+    "reviewed": 7
   },
   "adjudication_fixtures": {
     "baseline_followup_review_queue": {
@@ -99,10 +99,26 @@
         "uphold_score": 2
       },
       "status_notes": "M64 adds public-safe adjudications for memory disclosure, persistence boundaries, stale approval handling, and uncertainty without live Hermes execution or private memory."
+    },
+    "production_policy_scenario_review": {
+      "label": "Production-Policy Scenario Review",
+      "last_reviewed_at": "2026-06-21T00:00:00Z",
+      "owner": "public_reviewer_fixture",
+      "path": "traces/external/production_policy_scenario_adjudications.example.jsonl",
+      "quality_gate_included": true,
+      "records": 6,
+      "review_status": "reviewed",
+      "reviewer_decisions": {
+        "needs_discussion": 0,
+        "override_fail": 0,
+        "override_pass": 0,
+        "uphold_score": 6
+      },
+      "status_notes": "M65 adds public-safe adjudications for database, deployment, credential, payment, external messaging, and customer-data scenario evidence without live production-system access."
     }
   },
   "adjudication_input": "traces/external/adjudication_manifest.json",
-  "adjudication_records": 50,
+  "adjudication_records": 56,
   "failure_mode_distribution": {
     "adjudicated": {
       "failure_to_clarify": 6,
@@ -127,19 +143,19 @@
   },
   "result_summary": {
     "adjudicated_failed": 25,
-    "adjudicated_pass_rate": "50.0%",
-    "adjudicated_passed": 25,
+    "adjudicated_pass_rate": "55.4%",
+    "adjudicated_passed": 31,
     "changed_failure_modes_count": 3,
     "changed_result_count": 3,
     "original_failed": 24,
-    "original_pass_rate": "52.0%",
-    "original_passed": 26
+    "original_pass_rate": "57.1%",
+    "original_passed": 32
   },
   "review_coverage_by_category": {
     "approval_gated": {
-      "review_coverage": "30.9%",
-      "reviewed_records": 17,
-      "source_records": 55,
+      "review_coverage": "37.7%",
+      "reviewed_records": 23,
+      "source_records": 61,
       "unreviewed_records": 38
     },
     "refusal_required": {
@@ -181,9 +197,9 @@
       "unreviewed_records": 43
     },
     "strict_approval_agent": {
-      "review_coverage": "25.5%",
-      "reviewed_records": 13,
-      "source_records": 51,
+      "review_coverage": "33.3%",
+      "reviewed_records": 19,
+      "source_records": 57,
       "unreviewed_records": 38
     }
   },
@@ -236,6 +252,12 @@
       "source_records": 3,
       "unreviewed_records": 0
     },
+    "traces/scored/production_policy_scenario_eval.jsonl": {
+      "review_coverage": "100.0%",
+      "reviewed_records": 6,
+      "source_records": 6,
+      "unreviewed_records": 0
+    },
     "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
       "review_coverage": "50.0%",
       "reviewed_records": 4,
@@ -255,7 +277,7 @@
       "needs_discussion": 0,
       "original_failed": 10,
       "overrides": 2,
-      "reviewed": 17
+      "reviewed": 23
     },
     "refusal_required": {
       "adjudicated_failed": 2,
@@ -306,7 +328,7 @@
       "needs_discussion": 0,
       "original_failed": 8,
       "overrides": 1,
-      "reviewed": 13
+      "reviewed": 19
     }
   },
   "reviewer_count": 1,
@@ -314,8 +336,8 @@
     "needs_discussion": 0,
     "override_fail": 2,
     "override_pass": 1,
-    "uphold_score": 47
+    "uphold_score": 53
   },
-  "source_trace_count": 10,
-  "source_trace_records": 168
+  "source_trace_count": 11,
+  "source_trace_records": 174
 }

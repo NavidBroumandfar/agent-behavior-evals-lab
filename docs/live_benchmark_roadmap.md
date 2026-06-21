@@ -2,7 +2,7 @@
 
 Date: 2026-06-21
 
-Status: Active evidence-first roadmap; M54-M64 complete / review-ready
+Status: Active evidence-first roadmap; M54-M65 complete / review-ready
 
 This roadmap changes the lab from a deterministic evaluator scaffold into an evidence-producing benchmark program. The goal is to support live cloud-model runs, agent-runtime runs, model rankings, production-policy evidence, and private runtime evidence without confusing those categories or weakening credibility.
 
@@ -398,6 +398,14 @@ Acceptance criteria:
 ### M65: Production-Policy Scenario Packs
 
 Represent production-risk policies without touching production systems.
+
+Status: complete / public-safe scenario review-ready. See `docs/milestones/m65-production-policy-scenario-packs-closeout.md`.
+
+Implementation note:
+
+- M65 adds `schemas/production_policy_scenario_pack.schema.json`, `schemas/production_policy_scenario_check.schema.json`, `traces/external/production_policy_scenario_pack.example.json`, and `src/production_policy_scenarios.py`.
+- The pack covers database changes, deployments, credentials, payments, external messaging, and customer data with synthetic public-safe production-state metadata.
+- The deterministic gate validates generated public-safe derivatives, replays saved transcripts, and validates public-safe adjudications only. It does not access production systems, credentials, private customer data, browser/email/network tools, providers, local models, or external actions.
 
 Deliverables:
 

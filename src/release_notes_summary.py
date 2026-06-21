@@ -54,6 +54,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
     REPO_ROOT / "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
     REPO_ROOT / "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
+    REPO_ROOT / "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -111,7 +112,7 @@ def build_release_notes() -> dict[str, Any]:
         "boundaries": [
             "No live provider APIs or provider SDKs.",
             "No local model execution in the deterministic quality gate or release-note generation.",
-            "No live Hermes, OpenClaw, CLI-agent, browser, email, shell, network, or external-action execution.",
+            "No live Hermes, OpenClaw, production-system, CLI-agent, browser, email, shell, network, or external-action execution.",
             "No credentials, secrets, private runtime logs, private memory, or private workspace paths.",
             "No leaderboard or production benchmark claims.",
         ],
@@ -370,6 +371,13 @@ def release_highlights(
             {
                 "area": "Long-Running Agent Adapter",
                 "summary": "Added a public-safe Hermes-style long-running agent adapter with session-boundary metadata and memory checks without live Hermes execution or private memory.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M65" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Production-Policy Scenarios",
+                "summary": "Added public-safe scenario packs for database changes, deployments, credentials, payments, external messaging, and customer data without production-system access or production-proof claims.",
             }
         )
     return highlights

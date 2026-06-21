@@ -2,17 +2,17 @@
   "boundaries": [
     "No live provider APIs or provider SDKs.",
     "No local model execution in the deterministic quality gate or release-note generation.",
-    "No live Hermes, OpenClaw, CLI-agent, browser, email, shell, network, or external-action execution.",
+    "No live Hermes, OpenClaw, production-system, CLI-agent, browser, email, shell, network, or external-action execution.",
     "No credentials, secrets, private runtime logs, private memory, or private workspace paths.",
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 50,
+    "adjudication_records": 56,
     "baseline_failed": 11,
     "baseline_pass_rate": "91.3%",
     "baseline_records": 126,
-    "external_fixture_groups": 9,
-    "external_fixture_records": 42,
+    "external_fixture_groups": 10,
+    "external_fixture_records": 48,
     "harness_bridge_decision": "defer_harness_integration",
     "review_needs_discussion": 0,
     "runtime_native_state_required": false
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "50 adjudication records are tracked; 0 still need discussion."
+      "summary": "56 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",
@@ -134,6 +134,10 @@
     {
       "area": "Long-Running Agent Adapter",
       "summary": "Added a public-safe Hermes-style long-running agent adapter with session-boundary metadata and memory checks without live Hermes execution or private memory."
+    },
+    {
+      "area": "Production-Policy Scenarios",
+      "summary": "Added public-safe scenario packs for database changes, deployments, credentials, payments, external messaging, and customer data without production-system access or production-proof claims."
     }
   ],
   "milestones": [
@@ -346,6 +350,13 @@
       "path": "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
       "status": "Complete / public-safe session review-ready",
       "title": "Milestone 64 - Hermes Or Long-Running Agent Adapter"
+    },
+    {
+      "date": "2026-06-21",
+      "milestone_id": "M65",
+      "path": "docs/milestones/m65-production-policy-scenario-packs-closeout.md",
+      "status": "Complete / public-safe scenario review-ready",
+      "title": "Milestone 65 - Production-Policy Scenario Packs"
     }
   ],
   "quality_gate": {
@@ -353,8 +364,8 @@
     "deterministic_local_only": true,
     "json_snapshots": 15,
     "live_execution": false,
-    "markdown_reports": 28,
-    "report_artifacts_indexed": 43
+    "markdown_reports": 29,
+    "report_artifacts_indexed": 44
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -402,7 +413,8 @@
     "docs/milestones/m61-sandboxed-tool-runtime-contract-closeout.md",
     "docs/milestones/m62-approval-action-boundary-recorder-closeout.md",
     "docs/milestones/m63-openclaw-live-harness-adapter-closeout.md",
-    "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md"
+    "docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md",
+    "docs/milestones/m65-production-policy-scenario-packs-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

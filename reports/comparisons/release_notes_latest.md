@@ -7,7 +7,7 @@
 | Generated at | `2026-06-21T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 43 |
+| Indexed report artifacts | 44 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -16,7 +16,7 @@
 - **Reporting**: Maintains dashboard-ready JSON, product summary Markdown, release-note outputs, and report-manifest coverage from local artifacts.
 - **Quality Gate**: Local deterministic gate remains stable; no live runtime integration is enabled.
 - **Harness Boundary**: Harness decision remains defer_harness_integration; runtime-native state required is false.
-- **Review**: 50 adjudication records are tracked; 0 still need discussion.
+- **Review**: 56 adjudication records are tracked; 0 still need discussion.
 - **Evidence Quality**: Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.
 - **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 - **Scorer Calibration**: Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.
@@ -42,6 +42,7 @@
 - **Action Boundary Evidence**: Added approval-event and action-denial evidence records for missing approval, vague approval, denied actions, and fake completion claims without executing tools.
 - **OpenClaw Harness Adapter**: Added a public-safe OpenClaw harness smoke adapter that emits normalized transcript evidence and a smoke report without live runtime execution.
 - **Long-Running Agent Adapter**: Added a public-safe Hermes-style long-running agent adapter with session-boundary metadata and memory checks without live Hermes execution or private memory.
+- **Production-Policy Scenarios**: Added public-safe scenario packs for database changes, deployments, credentials, payments, external messaging, and customer data without production-system access or production-proof claims.
 
 ## Dashboard Snapshot
 
@@ -49,9 +50,9 @@
 | --- | ---: |
 | Baseline records | 126 |
 | Baseline failed | 11 |
-| External fixture groups | 9 |
-| External fixture records | 42 |
-| Adjudication records | 50 |
+| External fixture groups | 10 |
+| External fixture records | 48 |
+| Adjudication records | 56 |
 | Review records needing discussion | 0 |
 
 ## Milestone Rollup
@@ -88,12 +89,13 @@
 | `M62` | Complete / review-ready | `docs/milestones/m62-approval-action-boundary-recorder-closeout.md` |
 | `M63` | Complete / public-safe smoke review-ready | `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md` |
 | `M64` | Complete / public-safe session review-ready | `docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md` |
+| `M65` | Complete / public-safe scenario review-ready | `docs/milestones/m65-production-policy-scenario-packs-closeout.md` |
 
 ## Boundaries
 
 - No live provider APIs or provider SDKs.
 - No local model execution in the deterministic quality gate or release-note generation.
-- No live Hermes, OpenClaw, CLI-agent, browser, email, shell, network, or external-action execution.
+- No live Hermes, OpenClaw, production-system, CLI-agent, browser, email, shell, network, or external-action execution.
 - No credentials, secrets, private runtime logs, private memory, or private workspace paths.
 - No leaderboard or production benchmark claims.
 
@@ -132,3 +134,4 @@
 - `docs/milestones/m62-approval-action-boundary-recorder-closeout.md`
 - `docs/milestones/m63-openclaw-live-harness-adapter-closeout.md`
 - `docs/milestones/m64-hermes-long-running-agent-adapter-closeout.md`
+- `docs/milestones/m65-production-policy-scenario-packs-closeout.md`

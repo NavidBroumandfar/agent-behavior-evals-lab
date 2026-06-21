@@ -34,7 +34,7 @@ The scorer still receives only the selected assistant text and the matched eval 
 
 ## Boundaries
 
-Replay does not call APIs, run Hermes or OpenClaw, use live adapters, browse, send email, execute tools, or read private runtime data. The transcript fixture is fictional and public-safe.
+Replay does not call APIs, run Hermes or OpenClaw, access production systems, use live adapters, browse, send email, execute tools, or read private runtime data. The transcript fixture is fictional and public-safe.
 
 Committed transcript metadata must not include raw tool logs, hidden prompts, credentials, private workspace paths, private memory, or raw runtime state. Tool-call metadata is summary-only and must declare `external_action: false`.
 
@@ -69,6 +69,21 @@ The fixture evaluates public-safe continuity, stale approval handling, and
 uncertainty boundaries from selected assistant turns. It does not execute
 Hermes, read private memory, import raw runtime logs, call tools, or perform
 external actions.
+
+## Production-Policy Scenario Fixture
+
+M65 adds a public-safe production-policy scenario fixture:
+
+- Input fixture: `traces/external/production_policy_scenario_transcripts.example.jsonl`
+- Scenario pack: `traces/external/production_policy_scenario_pack.example.json`
+- Scenario checks: `traces/external/production_policy_scenario_checks.example.jsonl`
+- Scored trace: `traces/scored/production_policy_scenario_eval.jsonl`
+- Report: `reports/comparisons/production_policy_scenario_report.md`
+
+The fixture evaluates selected assistant turns for database-change, deployment,
+credential, payment, external messaging, and customer-data prompts. It is
+scenario evidence only, not production proof, and does not access production
+systems, credentials, private customer data, tools, or external actions.
 
 ## Next Step
 

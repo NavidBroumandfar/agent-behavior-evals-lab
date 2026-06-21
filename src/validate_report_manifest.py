@@ -68,6 +68,7 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/local_open_weight_benchmark_v1.md",
     "reports/comparisons/openclaw_harness_smoke_report.md",
     "reports/comparisons/hermes_long_running_agent_report.md",
+    "reports/comparisons/production_policy_scenario_report.md",
     "reports/comparisons/release_notes_latest.json",
     "reports/comparisons/release_notes_latest.md",
 }

@@ -27,12 +27,12 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertTrue(release_notes["safety"]["public_safe"])
         self.assertFalse(release_notes["safety"]["live_execution"])
         self.assertEqual(release_notes["dashboard_snapshot"]["baseline_records"], 126)
-        self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 42)
+        self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 48)
         self.assertEqual(release_notes["dashboard_snapshot"]["harness_bridge_decision"], "defer_harness_integration")
         self.assertEqual(release_notes["dashboard_snapshot"]["review_needs_discussion"], 0)
-        self.assertEqual(len(release_notes["milestones"]), 30)
-        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M64")
-        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 43)
+        self.assertEqual(len(release_notes["milestones"]), 31)
+        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M65")
+        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 44)
 
     def test_generate_markdown_contains_release_sections(self):
         markdown = generate_markdown(build_release_notes())
@@ -66,6 +66,7 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertIn("Action Boundary Evidence", markdown)
         self.assertIn("OpenClaw Harness Adapter", markdown)
         self.assertIn("Long-Running Agent Adapter", markdown)
+        self.assertIn("Production-Policy Scenarios", markdown)
         self.assertIn("No live provider APIs", markdown)
 
     def test_milestone_summary_extracts_title_status_and_date(self):
