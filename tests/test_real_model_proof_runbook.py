@@ -38,6 +38,7 @@ class RealModelProofRunbookTests(unittest.TestCase):
             )
 
             self.assertEqual(report["report_id"], "m76_real_model_proof_runbook_report")
+            self.assertEqual(report["second_target_decision"]["selected_model"], "mistral:latest")
             self.assertEqual(report["evidence_status"]["required_cases_per_primary_model"], 210)
             self.assertEqual(report["evidence_status"]["eligible_reviewed_live_local_ledgers"], 1)
             self.assertFalse(report["publication_gate"]["local_ranking_claim_allowed"])
@@ -54,7 +55,27 @@ class RealModelProofRunbookTests(unittest.TestCase):
         runbook = load_valid_runbook()
         runbook["model_lineup"]["primary_local_targets"][0]["model"] = "other:latest"
 
-        self.assert_runbook_fails(runbook, "primary targets")
+        self.assert_runbook_fails(runbook, "M80 selected model")
+
+    def test_selected_target_cannot_be_smoke_control(self):
+        runbook = load_valid_runbook()
+        runbook["second_target_decision"]["selected_model"] = "qwen3.5:2b-q4_K_M"
+        runbook["model_lineup"]["primary_local_targets"][0]["model"] = "qwen3.5:2b-q4_K_M"
+        runbook["operator_commands"][0]["command"] = (
+            "python3 scripts/live_local.py --model qwen3.5:2b-q4_K_M --adapter ollama_text_only --split extended --plan-only"
+        )
+        runbook["operator_commands"][1]["command"] = (
+            "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model qwen3.5:2b-q4_K_M "
+            "--adapter ollama_text_only --split extended --live-local --max-failures 210"
+        )
+
+        self.assert_runbook_fails(runbook, "smoke/control")
+
+    def test_selected_target_requires_plan_command(self):
+        runbook = load_valid_runbook()
+        runbook["operator_commands"][0]["command"] = "python3 scripts/live_local.py --model other:latest --plan-only"
+
+        self.assert_runbook_fails(runbook, "non-live plan")
 
     def test_cloud_target_must_stay_excluded(self):
         runbook = load_valid_runbook()

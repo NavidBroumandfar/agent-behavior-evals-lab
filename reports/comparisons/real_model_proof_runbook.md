@@ -13,23 +13,40 @@ This M76 runbook shows the next manual CLI path to a controlled, opt-in local/op
 | Review queue | 0 waiting, 0 unresolved |
 | Local ranking claim allowed | `false` |
 
+## M80 Second Target Decision
+
+- Decision: replace_gemma4_for_publication_path
+- Selected target: `mistral:latest` via `ollama_text_only` over `extended`.
+- Replaced/deferred target: `gemma4:latest`.
+- Rationale: M77 stopped the heavier gemma4 pass on swap activity. M80 keeps the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81 while deferring gemma4 until resource-stability metadata exists.
+- Claim language: The local/open-weight report remains blocked until reviewed extended ledgers exist for llama3.2:latest and mistral:latest; gemma4:latest is deferred and ranking-ineligible for the current publication path.
+- Decision required live execution: `false`
+
+Pre-execution requirements:
+
+- Run only plan-only metadata checks during M80; do not execute a local model in this decision phase.
+- Before M81 live execution, confirm the selected model is locally available and use the standard ignored raw-output paths.
+- Execute M81 only with AGENT_EVALS_ENABLE_LIVE_LOCAL=1 and --live-local.
+- Do not use qwen3.5:2b-q4_K_M smoke/control evidence for publication.
+- Keep raw outputs ignored, then review, score, and ledger only public-safe derivatives in M82.
+
 ## Next Commands
 
-### Plan gemma4 extended run
+### Plan mistral extended run
 
-`python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --plan-only`
+`python3 scripts/live_local.py --model mistral:latest --adapter ollama_text_only --split extended --plan-only`
 
 - Execution: `non-live`
 - Raw outputs committed: `false`
-- Notes: Plan-only command is safe for operator review and does not call the local model.
+- Notes: M80 plan-only command is safe for operator review and does not call the local model.
 
-### Execute gemma4 extended run
+### Execute mistral extended run
 
-`AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --live-local --max-failures 210`
+`AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model mistral:latest --adapter ollama_text_only --split extended --live-local --max-failures 210`
 
 - Execution: `live`
 - Raw outputs committed: `false`
-- Notes: Manual opt-in only; defer or replace this target if memory pressure or thermal behavior becomes unstable.
+- Notes: M81 manual opt-in only; stop and keep publication blocked if model availability, memory pressure, or thermal behavior becomes unstable.
 
 ### Validate llama3.2 reviewed candidate
 
@@ -65,8 +82,8 @@ This M76 runbook shows the next manual CLI path to a controlled, opt-in local/op
 
 ## Publication Gate
 
-- Blocked reason: M79 produced one eligible reviewed live-local llama3.2 ledger, but the required second eligible local target ledger does not exist yet.
-- Complete or replace the second local extended target after the M77 gemma4:latest swapout blocker.
+- Blocked reason: M79 produced one eligible reviewed live-local llama3.2 ledger, but the required M80-selected mistral second-target ledger does not exist yet.
+- Complete the M80-selected mistral:latest extended target through M81 live-local execution and M82 review, scoring, and ledgering.
 - Review, normalize, score, and ledger the second target with no unresolved review, unsafe output, malformed output, private data, or raw outputs.
 - Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist.
 

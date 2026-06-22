@@ -13,10 +13,10 @@
   "model_lineup": {
     "primary_local_targets": [
       {
-        "model": "gemma4:latest",
+        "model": "mistral:latest",
         "role": "primary_extended_target",
         "eligible_for_local_ranking": true,
-        "reason": "Installed local/open-weight target for reviewed extended evidence."
+        "reason": "M80 selected laptop-safe replacement target for the second reviewed extended ledger after the gemma4 swapout blocker."
       },
       {
         "model": "llama3.2:latest",
@@ -35,12 +35,38 @@
     ],
     "excluded_targets": [
       {
+        "model": "gemma4:latest",
+        "role": "deferred_resource_blocked_local_target",
+        "eligible_for_local_ranking": false,
+        "reason": "Deferred from the publication path after M77 swap activity; can be revisited only with a documented stability profile."
+      },
+      {
         "model": "gemma4:31b-cloud",
         "role": "excluded_from_local_claims",
         "eligible_for_local_ranking": false,
         "reason": "Cloud-labelled target must not support local/open-weight claims."
       }
     ]
+  },
+  "second_target_decision": {
+    "milestone": "M80",
+    "status": "decision_recorded",
+    "decision": "replace_gemma4_for_publication_path",
+    "selected_model": "mistral:latest",
+    "selected_adapter": "ollama_text_only",
+    "selected_split": "extended",
+    "replaced_model": "gemma4:latest",
+    "rationale": "M77 stopped the heavier gemma4 pass on swap activity. M80 keeps the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81 while deferring gemma4 until resource-stability metadata exists.",
+    "pre_execution_requirements": [
+      "Run only plan-only metadata checks during M80; do not execute a local model in this decision phase.",
+      "Before M81 live execution, confirm the selected model is locally available and use the standard ignored raw-output paths.",
+      "Execute M81 only with AGENT_EVALS_ENABLE_LIVE_LOCAL=1 and --live-local.",
+      "Do not use qwen3.5:2b-q4_K_M smoke/control evidence for publication.",
+      "Keep raw outputs ignored, then review, score, and ledger only public-safe derivatives in M82."
+    ],
+    "publication_claim_language": "The local/open-weight report remains blocked until reviewed extended ledgers exist for llama3.2:latest and mistral:latest; gemma4:latest is deferred and ranking-ineligible for the current publication path.",
+    "live_execution_required_for_decision": false,
+    "follow_up_milestone": "M81"
   },
   "evidence_status": {
     "case_set_id": "local_public_v1",
@@ -58,20 +84,20 @@
   },
   "operator_commands": [
     {
-      "step_id": "plan_gemma4_extended",
-      "label": "Plan gemma4 extended run",
-      "command": "python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --plan-only",
+      "step_id": "plan_mistral_extended",
+      "label": "Plan mistral extended run",
+      "command": "python3 scripts/live_local.py --model mistral:latest --adapter ollama_text_only --split extended --plan-only",
       "live_execution": false,
       "commits_raw_outputs": false,
-      "notes": "Plan-only command is safe for operator review and does not call the local model."
+      "notes": "M80 plan-only command is safe for operator review and does not call the local model."
     },
     {
-      "step_id": "run_gemma4_extended",
-      "label": "Execute gemma4 extended run",
-      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --live-local --max-failures 210",
+      "step_id": "run_mistral_extended",
+      "label": "Execute mistral extended run",
+      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model mistral:latest --adapter ollama_text_only --split extended --live-local --max-failures 210",
       "live_execution": true,
       "commits_raw_outputs": false,
-      "notes": "Manual opt-in only; defer or replace this target if memory pressure or thermal behavior becomes unstable."
+      "notes": "M81 manual opt-in only; stop and keep publication blocked if model availability, memory pressure, or thermal behavior becomes unstable."
     },
     {
       "step_id": "validate_llama32_reviewed_candidate",
@@ -108,9 +134,9 @@
   ],
   "publication_gate": {
     "local_ranking_claim_allowed": false,
-    "blocked_reason": "M79 produced one eligible reviewed live-local llama3.2 ledger, but the required second eligible local target ledger does not exist yet.",
+    "blocked_reason": "M79 produced one eligible reviewed live-local llama3.2 ledger, but the required M80-selected mistral second-target ledger does not exist yet.",
     "unlock_requirements": [
-      "Complete or replace the second local extended target after the M77 gemma4:latest swapout blocker.",
+      "Complete the M80-selected mistral:latest extended target through M81 live-local execution and M82 review, scoring, and ledgering.",
       "Review, normalize, score, and ledger the second target with no unresolved review, unsafe output, malformed output, private data, or raw outputs.",
       "Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist."
     ]

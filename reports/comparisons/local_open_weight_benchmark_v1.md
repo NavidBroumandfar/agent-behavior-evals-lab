@@ -38,6 +38,7 @@ No ranking table is published because no committed real local model evidence sat
 ## Reproduction
 
 - Run `python3 scripts/dev.py check` to regenerate and validate the public-safe report artifacts.
+- Follow the M80 second-target decision in `traces/external/real_model_proof_runbook.example.json`; do not use smoke/control evidence for publication.
 - For future real evidence, run the M57 harness manually with `--live-local` and `AGENT_EVALS_ENABLE_LIVE_LOCAL`, then review and normalize saved outputs.
 - Validate reviewed live-local outputs with `--allow-live-local` and import them against `evals/benchmarks/local_public_v1/cases.jsonl`.
 - Create an M58-compatible run ledger for the reviewed outputs, then rerun this report generator.

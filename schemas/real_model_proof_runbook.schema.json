@@ -11,6 +11,7 @@
     "objective",
     "local_runtime",
     "model_lineup",
+    "second_target_decision",
     "evidence_status",
     "review_queue",
     "operator_commands",
@@ -99,6 +100,81 @@
           "items": {
             "$ref": "#/$defs/model_target"
           }
+        }
+      }
+    },
+    "second_target_decision": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "milestone",
+        "status",
+        "decision",
+        "selected_model",
+        "selected_adapter",
+        "selected_split",
+        "replaced_model",
+        "rationale",
+        "pre_execution_requirements",
+        "publication_claim_language",
+        "live_execution_required_for_decision",
+        "follow_up_milestone"
+      ],
+      "properties": {
+        "milestone": {
+          "type": "string",
+          "const": "M80"
+        },
+        "status": {
+          "type": "string",
+          "const": "decision_recorded"
+        },
+        "decision": {
+          "type": "string",
+          "enum": [
+            "replace_gemma4_for_publication_path",
+            "retry_gemma4_with_stability_profile"
+          ]
+        },
+        "selected_model": {
+          "type": "string",
+          "minLength": 1
+        },
+        "selected_adapter": {
+          "type": "string",
+          "const": "ollama_text_only"
+        },
+        "selected_split": {
+          "type": "string",
+          "const": "extended"
+        },
+        "replaced_model": {
+          "type": "string",
+          "const": "gemma4:latest"
+        },
+        "rationale": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pre_execution_requirements": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "publication_claim_language": {
+          "type": "string",
+          "minLength": 1
+        },
+        "live_execution_required_for_decision": {
+          "type": "boolean",
+          "const": false
+        },
+        "follow_up_milestone": {
+          "type": "string",
+          "const": "M81"
         }
       }
     },

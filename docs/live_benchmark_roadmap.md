@@ -552,8 +552,10 @@ Acceptance criteria:
 - The current committed gate remains deterministic and non-live.
 - No ranking publishes from smoke-only, dry-run, partial, unresolved-review,
   raw-output, private, cloud-labelled, or hosted-provider evidence.
-- The first real local proof requires reviewed extended `local_public_v1`
-  ledgers for both `gemma4:latest` and `llama3.2:latest`.
+- After M80, the first real local proof requires reviewed extended
+  `local_public_v1` ledgers for `llama3.2:latest` and the selected second
+  target, `mistral:latest`; `gemma4:latest` is deferred after the M77 swapout
+  blocker.
 - Hosted provider evidence is separate from local/open-weight rankings until a
   future methodology explicitly allows comparison.
 
@@ -576,6 +578,9 @@ Milestone sequence:
   Status: complete with one eligible reviewed ledger; no ranking is published.
 - M80 documents the second local target decision after the M77
   `gemma4:latest` swapout blocker.
+  Status: complete; `mistral:latest` is selected for the current publication
+  path, and `gemma4:latest` is deferred until a resource-stability profile
+  exists.
 - M81 executes the selected second target over the extended split if the
   operator safety profile allows it.
 - M82 reviews, scores, and ledgers the second target.

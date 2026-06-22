@@ -221,6 +221,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 69 closeout: `docs/milestones/m69-retention-consent-access-controls-closeout.md`
 - Milestone 78 closeout: `docs/milestones/m78-review-normalize-llama3-2-evidence-closeout.md`
 - Milestone 79 closeout: `docs/milestones/m79-score-ledger-llama3-2-live-local-closeout.md`
+- Milestone 80 closeout: `docs/milestones/m80-second-local-target-safety-decision-closeout.md`
 
 ## Reading Order
 

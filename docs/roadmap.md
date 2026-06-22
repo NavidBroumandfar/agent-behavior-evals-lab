@@ -933,8 +933,12 @@ Implementation note:
 Current proof status:
 
 - The lab still has no committed publishable real-model benchmark run.
-- Publication remains blocked until at least two eligible reviewed live-local extended ledgers exist for `gemma4:latest` and `llama3.2:latest`.
-- `qwen3.5:2b-q4_K_M` is smoke/control only, and `gemma4:31b-cloud` is excluded from local/open-weight claims.
+- Publication remains blocked until at least two eligible reviewed live-local
+  extended ledgers exist. After M80, the current publication path is
+  `llama3.2:latest` plus `mistral:latest`.
+- `qwen3.5:2b-q4_K_M` is smoke/control only, `gemma4:latest` is deferred after
+  the M77 swapout blocker, and `gemma4:31b-cloud` is excluded from
+  local/open-weight claims.
 
 Success signal:
 
@@ -1078,22 +1082,26 @@ Acceptance criteria:
 Decide how to obtain the required second eligible local/open-weight target
 after the M77 `gemma4:latest` run was stopped on swap activity.
 
-Status: planned.
+Status: complete / decision recorded, no live execution.
 
 Implementation note:
 
-- Default target remains `gemma4:latest` because M70-M77 name it as the primary
-  second model.
-- If `gemma4:latest` is retried, document the operator safety profile first:
-  machine state, model residency, memory-pressure stop criteria, timeout
-  policy, and whether any harness parameters changed.
-- If `gemma4:latest` is replaced, update the methodology and claim language
-  before running the substitute. Do not silently substitute a smoke/control
-  model.
+- M80 replaces `gemma4:latest` with `mistral:latest` for the current
+  two-ledger publication path because M77 stopped the heavier gemma pass on
+  swap activity.
+- The decision is documentation-only. It does not run a local model, contact a
+  provider, read raw outputs, or change the deterministic quality gate.
+- `gemma4:latest` remains a deferred local target that can be revisited only
+  after a documented stability profile covers machine state, model residency,
+  memory-pressure stop criteria, timeout policy, and harness parameters.
+- `qwen3.5:2b-q4_K_M` remains smoke/control only and must not be silently
+  promoted into publication evidence.
 
 Acceptance criteria:
 
 - The second-target decision is documented before execution.
+- The current selected second target is `mistral:latest` over the extended
+  split through the `ollama_text_only` adapter.
 - Cloud-labelled targets remain excluded from local/open-weight claims.
 - No ranking claim is allowed from one reviewed target plus a failed/deferred
   second target.

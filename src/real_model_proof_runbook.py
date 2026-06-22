@@ -101,12 +101,28 @@ def validate_runbook_semantics(runbook: dict[str, Any], context: str) -> None:
         if not runbook["publication_gate"]["blocked_reason"].strip():
             raise RealModelProofRunbookError(f"{context}.publication_gate.blocked_reason must explain publication block")
 
+    decision = runbook["second_target_decision"]
+    selected_model = str(decision["selected_model"])
     primary_targets = runbook["model_lineup"]["primary_local_targets"]
-    if {target["model"] for target in primary_targets} != {"gemma4:latest", "llama3.2:latest"}:
-        raise RealModelProofRunbookError(f"{context}.model_lineup.primary_local_targets must match M71 primary targets")
+    primary_model_names = {target["model"] for target in primary_targets}
+    if primary_model_names != {"llama3.2:latest", selected_model}:
+        raise RealModelProofRunbookError(
+            f"{context}.model_lineup.primary_local_targets must include llama3.2:latest and the M80 selected model"
+        )
+    if selected_model in {"qwen3.5:2b-q4_K_M", "gemma4:31b-cloud"}:
+        raise RealModelProofRunbookError(f"{context}.second_target_decision.selected_model cannot be smoke/control or cloud")
+    if selected_model == decision["replaced_model"] and decision["decision"] == "replace_gemma4_for_publication_path":
+        raise RealModelProofRunbookError(f"{context}.second_target_decision.selected_model must replace gemma4")
+    if selected_model != decision["replaced_model"] and decision["decision"] == "retry_gemma4_with_stability_profile":
+        raise RealModelProofRunbookError(f"{context}.second_target_decision selected model must match retry decision")
+    if decision["live_execution_required_for_decision"] is not False:
+        raise RealModelProofRunbookError(f"{context}.second_target_decision must remain documentation-only")
+
     excluded_targets = runbook["model_lineup"]["excluded_targets"]
     if not any(target["model"] == "gemma4:31b-cloud" for target in excluded_targets):
         raise RealModelProofRunbookError(f"{context}.model_lineup.excluded_targets must exclude gemma4:31b-cloud")
+    if not any(target["model"] == decision["replaced_model"] for target in excluded_targets):
+        raise RealModelProofRunbookError(f"{context}.model_lineup.excluded_targets must defer replaced local target")
     for target in excluded_targets:
         if target["eligible_for_local_ranking"] is not False:
             raise RealModelProofRunbookError(f"{context}.model_lineup.excluded_targets must be ranking-ineligible")
@@ -118,6 +134,16 @@ def validate_runbook_semantics(runbook: dict[str, Any], context: str) -> None:
             raise RealModelProofRunbookError(f"{context}.operator_commands live commands must require explicit opt-in")
         if command["commits_raw_outputs"] is not False:
             raise RealModelProofRunbookError(f"{context}.operator_commands live commands must not commit raw outputs")
+    if not any(
+        selected_model in command["command"] and command["live_execution"] is False
+        for command in runbook["operator_commands"]
+    ):
+        raise RealModelProofRunbookError(f"{context}.operator_commands must include a non-live plan for selected model")
+    if not any(
+        selected_model in command["command"] and command["live_execution"] is True
+        for command in runbook["operator_commands"]
+    ):
+        raise RealModelProofRunbookError(f"{context}.operator_commands must include an opt-in live command for selected model")
     if runbook["hosted_provider_path"]["mixed_with_local_ranking"] is not False:
         raise RealModelProofRunbookError(f"{context}.hosted_provider_path.mixed_with_local_ranking must be false")
 
@@ -131,6 +157,7 @@ def build_report(runbook: dict[str, Any], runbook_path: Path, repo_root: Path) -
         "objective": runbook["objective"],
         "local_runtime": runbook["local_runtime"],
         "model_lineup": runbook["model_lineup"],
+        "second_target_decision": runbook["second_target_decision"],
         "evidence_status": runbook["evidence_status"],
         "review_queue": runbook["review_queue"],
         "operator_commands": runbook["operator_commands"],
@@ -175,6 +202,19 @@ def generate_markdown(report: dict[str, Any]) -> str:
         f"| Eligible reviewed ledgers | {evidence['eligible_reviewed_live_local_ledgers']} / {evidence['required_eligible_ledgers']} |",
         f"| Review queue | {report['review_queue']['records_waiting_for_review']} waiting, {report['review_queue']['needs_discussion_count']} unresolved |",
         f"| Local ranking claim allowed | `{str(gate['local_ranking_claim_allowed']).lower()}` |",
+        "",
+        "## M80 Second Target Decision",
+        "",
+        f"- Decision: {report['second_target_decision']['decision']}",
+        f"- Selected target: `{report['second_target_decision']['selected_model']}` via `{report['second_target_decision']['selected_adapter']}` over `{report['second_target_decision']['selected_split']}`.",
+        f"- Replaced/deferred target: `{report['second_target_decision']['replaced_model']}`.",
+        f"- Rationale: {report['second_target_decision']['rationale']}",
+        f"- Claim language: {report['second_target_decision']['publication_claim_language']}",
+        f"- Decision required live execution: `{str(report['second_target_decision']['live_execution_required_for_decision']).lower()}`",
+        "",
+        "Pre-execution requirements:",
+        "",
+        "\n".join(f"- {item}" for item in report["second_target_decision"]["pre_execution_requirements"]),
         "",
         "## Next Commands",
         "",

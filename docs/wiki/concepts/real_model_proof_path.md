@@ -21,18 +21,21 @@ M78 reviewed all 210 records, approved them as public-safe text-only evidence,
 and wrote an ignored reviewed normalized candidate. M79 scored a public-safe
 derivative of that candidate and built the first eligible reviewed live-local
 ledger for `llama3.2:latest`. `gemma4:latest` was deferred after swap activity
-appeared during the heavier pass. Only one reviewed live-local ledger exists,
-so publication remains blocked.
+appeared during the heavier pass. M80 replaced `gemma4:latest` with
+`mistral:latest` for the current two-ledger publication path and left
+`gemma4:latest` deferred until a stability profile exists. Only one reviewed
+live-local ledger exists, so publication remains blocked.
 
 ## Local Proof Target
 
-The first proof target is reviewed extended `local_public_v1` evidence for two
-installed Ollama models:
+The current proof target is reviewed extended `local_public_v1` evidence for
+two local Ollama models:
 
-- `gemma4:latest`
 - `llama3.2:latest`
+- `mistral:latest`
 
-`qwen3.5:2b-q4_K_M` is smoke/control only. `gemma4:31b-cloud` is excluded from
+`qwen3.5:2b-q4_K_M` is smoke/control only. `gemma4:latest` is deferred after
+the M77 swapout blocker, and `gemma4:31b-cloud` is excluded from
 local/open-weight claims.
 
 ## M77 Technical Proof Profile
@@ -71,8 +74,10 @@ follow-on milestones, not as unfinished M77 scope:
 - M79 scores that reviewed evidence and builds the first reviewed live-local
   ledger. This is complete for `llama3.2:latest`; one eligible ledger exists.
 - M80 documents the second-target decision after the `gemma4:latest` swapout
-  blocker.
-- M81 executes a stable second local target extended run.
+  blocker. This is complete: `mistral:latest` is the selected second target for
+  the current publication path, while `gemma4:latest` is deferred.
+- M81 executes the selected `mistral:latest` extended run if explicit
+  live-local opt-in and operator safety checks pass.
 - M82 reviews, scores, and ledgers the second target.
 - M83 regenerates the local/open-weight benchmark report and publishes rankings
   only if the two-ledger gate passes.
@@ -115,6 +120,7 @@ quality gate.
 - `reports/comparisons/m78_llama3_2_review_normalization.json`
 - `reports/comparisons/m79_llama3_2_score_ledger.json`
 - `traces/external/m79_llama3_2_latest_extended.local_run_ledger.json`
+- `docs/milestones/m80-second-local-target-safety-decision-closeout.md`
 - `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`
 - `docs/milestones/m77-controlled-live-local-technical-proof-run-closeout.md`
 - `docs/milestones/m78-review-normalize-llama3-2-evidence-closeout.md`

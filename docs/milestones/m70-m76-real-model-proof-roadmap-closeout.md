@@ -53,6 +53,11 @@ The target manual proof path remains:
 - `qwen3.5:2b-q4_K_M` smoke/control only.
 - `gemma4:31b-cloud` excluded from local/open-weight claims.
 
+Post-M80 update: `gemma4:latest` was later deferred from the current
+publication path after the M77 swapout blocker, and `mistral:latest` became the
+selected second extended target. This closeout remains the historical M70-M76
+contract snapshot.
+
 ## Safety Boundary
 
 The committed artifacts use fake public-safe metadata only. They do not commit
