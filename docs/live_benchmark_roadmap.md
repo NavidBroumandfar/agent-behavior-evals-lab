@@ -564,8 +564,8 @@ Acceptance criteria:
 Turn the M77 technical proof into publishable local/open-weight evidence only
 through explicit review, ledger, second-target, reproducibility, and claim gates.
 
-Status: active / M81 plan-only preflight complete, live execution blocked without
-explicit opt-in, publication still blocked.
+Status: active / M81 live raw run complete, publication still blocked pending
+M82 review, scoring, and ledgering.
 
 Milestone sequence:
 
@@ -584,8 +584,8 @@ Milestone sequence:
   exists.
 - M81 executes the selected second target over the extended split if the
   operator safety profile allows it.
-  Status: plan-only preflight complete for `mistral:latest`; live execution is
-  blocked until explicit M81 live-local opt-in is provided.
+  Status: complete; `mistral:latest` produced 210 / 210 extended raw records
+  under ignored local-only paths after explicit live-local opt-in.
 - M82 reviews, scores, and ledgers the second target.
 - M83 regenerates the local/open-weight benchmark report and publishes rankings
   only if two eligible reviewed live-local ledgers pass.

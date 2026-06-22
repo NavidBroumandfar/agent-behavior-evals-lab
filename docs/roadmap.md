@@ -1111,20 +1111,23 @@ Acceptance criteria:
 Run the selected second local target over the extended `local_public_v1` split
 with explicit live-local opt-in and laptop-safe controls.
 
-Status: blocked / plan-only preflight complete, live execution awaiting
-explicit M81 live-local opt-in.
+Status: complete / ignored raw run captured, publication blocked pending M82
+review, scoring, and ledgering.
 
 Implementation note:
 
 - Plan-only preflight for `mistral:latest` via `ollama_text_only` over the
   extended split succeeds for 210 planned cases and writes only an ignored
   local plan artifact.
+- Explicit M81 live-local opt-in was provided, `mistral:latest` was installed
+  locally, and the authorized run completed with 210 succeeded, 0 failed, and
+  0 skipped cases.
 - Run one model at a time and unload other Ollama models first.
 - Stop on swap, thermal throttling, or other instability rather than forcing
   completion.
 - Preserve raw outputs and run metadata only under ignored local paths.
-- Do not execute the live-local run unless the operator explicitly opts in for
-  M81 with `AGENT_EVALS_ENABLE_LIVE_LOCAL=1` and `--live-local`.
+- Do not promote, score, or ledger the raw output until M82 review produces a
+  public-safe normalized derivative.
 
 Acceptance criteria:
 
