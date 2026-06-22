@@ -562,13 +562,15 @@ Acceptance criteria:
 Turn the M77 technical proof into publishable local/open-weight evidence only
 through explicit review, ledger, second-target, reproducibility, and claim gates.
 
-Status: planned / M77 technical proof complete, publication still blocked.
+Status: active / M78 local review complete, publication still blocked.
 
 Milestone sequence:
 
 - M77 executes a laptop-safe live-local technical proof and records public-safe
   blockers without publishing rankings.
 - M78 reviews and normalizes the 210 `llama3.2:latest` M77 raw records.
+  Status: complete as a local ignored reviewed candidate; no scored trace or
+  ledger is committed yet.
 - M79 scores the reviewed `llama3.2:latest` evidence and builds the first
   reviewed live-local ledger.
 - M80 documents the second local target decision after the M77

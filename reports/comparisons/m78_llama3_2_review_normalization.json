@@ -1,0 +1,76 @@
+{
+  "generated_at": "2026-06-22T00:00:00Z",
+  "local_artifact_hashes": {
+    "local_review_summary_path": "traces/raw/m78_llama3_2_latest_extended.review_summary.local.json",
+    "local_review_summary_sha256": "c620c8df480c36eb2292ed806c39cb903d2afc4ecf7f3b448c17e28ecf21ba79",
+    "normalized_candidate_path": "traces/external/m77_llama3_2_latest_extended.reviewed.jsonl",
+    "normalized_candidate_sha256": "c331944e2f77b45e5f3f7b66d6aa641b46d67b0a12ebde2d90739703ae673295",
+    "raw_metadata_path": "traces/raw/m77_llama3_2_latest_extended.metadata.local.json",
+    "raw_metadata_sha256": "7c1afb934aee0dbf8b22dd1b684e04009112c52645f9d2651658c821a9e83887",
+    "raw_output_path": "traces/raw/m77_llama3_2_latest_extended.local.jsonl",
+    "raw_output_sha256": "1231c215cab8a17089e5f69186228964629824d409e15375de380e859085e8f4",
+    "reviewed_input_path": "traces/raw/m78_llama3_2_latest_extended.reviewed_input.local.jsonl",
+    "reviewed_input_sha256": "b185dbaf7d812fda37106b644563269f5bd45aa0c4af605bd582c0cd2004679a"
+  },
+  "milestone": "M78",
+  "normalization_result": {
+    "adapter_output_validation": "passed_with_allow_live_local",
+    "candidate_committed": false,
+    "candidate_git_ignored": true,
+    "normalized_candidate_records": 210,
+    "output_text_whitespace_only_sanitization": true,
+    "provenance_execution_mode": "live_local_text_only",
+    "provenance_source_origin": "live_local_model"
+  },
+  "publication_gate": {
+    "blocked_reason": "M78 produced a local ignored reviewed normalized llama3.2 candidate, but M79 scoring/ledger work, the second local target, and the two-ledger publication gate remain incomplete.",
+    "eligible_reviewed_live_local_ledgers": 0,
+    "ranking_claim_allowed": false,
+    "required_eligible_ledgers": 2,
+    "second_model_ledger_present": false
+  },
+  "quality_gate": {
+    "ledger_created_in_m78": false,
+    "live_local_execution_in_quality_gate": false,
+    "raw_outputs_read_in_deterministic_quality_gate": false,
+    "review_normalization_in_deterministic_quality_gate": false,
+    "scored_live_local_trace_created_in_m78": false
+  },
+  "report_id": "m78_llama3_2_review_normalization",
+  "review_counts": {
+    "approved_public_safe": 210,
+    "malformed_output": 0,
+    "needs_discussion": 0,
+    "private_data": 0,
+    "records_reviewed": 210,
+    "rejected": 0,
+    "tool_action_claim_blockers": 0,
+    "unsafe_output": 0,
+    "whitespace_normalized_records": 62
+  },
+  "safety_assertions": {
+    "contains_credentials_or_secrets": false,
+    "contains_normalized_output_text": false,
+    "contains_private_data": false,
+    "contains_raw_output_text": false,
+    "external_actions": false,
+    "production_safety_claim": false,
+    "public_leaderboard_claim": false,
+    "public_safe": true
+  },
+  "source_run": {
+    "adapter_id": "ollama_text_only",
+    "adapter_version": "0.1.0",
+    "benchmark_split": "extended",
+    "failed": 0,
+    "model": "llama3.2:latest",
+    "planned_cases": 210,
+    "recorded_cases": 210,
+    "run_id": "m77_llama3_2_latest_extended",
+    "runtime": "ollama",
+    "succeeded": 210
+  },
+  "status": "local_reviewed_candidate_produced_publication_blocked",
+  "title": "Review And Normalize Llama3.2 M77 Evidence",
+  "version": "0.1.0"
+}

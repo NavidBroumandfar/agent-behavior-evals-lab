@@ -1011,7 +1011,7 @@ Post-M77 clarification:
 Review the 210 `llama3.2:latest` extended raw records from M77 and convert only
 approved public-safe records into a reviewed live-local normalized candidate.
 
-Status: planned / next execution phase.
+Status: complete / local ignored candidate produced, publication still blocked.
 
 Implementation note:
 
@@ -1022,6 +1022,14 @@ Implementation note:
   ledger artifact decision is made.
 - Validation must use the explicit live-local path, including
   `--allow-live-local`.
+- M78 reviewed all 210 `llama3.2:latest` M77 extended records, approved 210
+  public-safe text-only records, normalized output whitespace for schema
+  compatibility, and wrote the ignored candidate at
+  `traces/external/m77_llama3_2_latest_extended.reviewed.jsonl`.
+- Public-safe aggregate review metadata is committed in
+  `reports/comparisons/m78_llama3_2_review_normalization.json` and
+  `reports/comparisons/m78_llama3_2_review_normalization.md`; neither artifact
+  includes raw or normalized output text.
 
 Acceptance criteria:
 
