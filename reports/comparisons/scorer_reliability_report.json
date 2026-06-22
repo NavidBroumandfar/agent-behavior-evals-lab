@@ -8,35 +8,35 @@
   ],
   "calibration_by_category": {
     "approval_gated": {
-      "adjudicated_review_failures": 12,
-      "agreement_rate": "91.3%",
+      "adjudicated_review_failures": 16,
+      "agreement_rate": "92.6%",
       "ambiguous_reviews": 0,
       "calibration_label_counts": {
         "ambiguous_review": 0,
         "scorer_false_negative": 2,
         "scorer_false_positive": 0,
-        "scorer_upheld_failure": 10,
+        "scorer_upheld_failure": 14,
         "scorer_upheld_pass": 11
       },
-      "disagreement_rate": "8.7%",
+      "disagreement_rate": "7.4%",
       "failure_detection": {
-        "failure_accuracy": "91.3%",
+        "failure_accuracy": "92.6%",
         "failure_precision": "100.0%",
-        "failure_recall": "83.3%",
+        "failure_recall": "87.5%",
         "failure_specificity": "100.0%",
         "false_negative_review_failure": 2,
         "false_positive_review_pass": 0,
         "true_negative_review_pass": 11,
-        "true_positive_review_failure": 10
+        "true_positive_review_failure": 14
       },
-      "false_negative_rate": "8.7%",
+      "false_negative_rate": "7.4%",
       "false_positive_rate": "0.0%",
-      "metric_records": 23,
-      "original_scorer_failures": 10,
-      "reviewed_records": 23,
+      "metric_records": 27,
+      "original_scorer_failures": 14,
+      "reviewed_records": 27,
       "scorer_false_negatives": 2,
       "scorer_false_positives": 0,
-      "scorer_review_agreements": 21,
+      "scorer_review_agreements": 25,
       "scorer_review_disagreements": 2
     },
     "refusal_required": {
@@ -329,6 +329,38 @@
       "scorer_review_agreements": 2,
       "scorer_review_disagreements": 0
     },
+    "m89_priority_review_batch": {
+      "adjudicated_review_failures": 4,
+      "agreement_rate": "100.0%",
+      "ambiguous_reviews": 0,
+      "calibration_label_counts": {
+        "ambiguous_review": 0,
+        "scorer_false_negative": 0,
+        "scorer_false_positive": 0,
+        "scorer_upheld_failure": 4,
+        "scorer_upheld_pass": 0
+      },
+      "disagreement_rate": "0.0%",
+      "failure_detection": {
+        "failure_accuracy": "100.0%",
+        "failure_precision": "100.0%",
+        "failure_recall": "100.0%",
+        "failure_specificity": "0.0%",
+        "false_negative_review_failure": 0,
+        "false_positive_review_pass": 0,
+        "true_negative_review_pass": 0,
+        "true_positive_review_failure": 4
+      },
+      "false_negative_rate": "0.0%",
+      "false_positive_rate": "0.0%",
+      "metric_records": 4,
+      "original_scorer_failures": 4,
+      "reviewed_records": 4,
+      "scorer_false_negatives": 0,
+      "scorer_false_positives": 0,
+      "scorer_review_agreements": 4,
+      "scorer_review_disagreements": 0
+    },
     "production_policy_scenario_review": {
       "adjudicated_review_failures": 0,
       "agreement_rate": "100.0%",
@@ -364,35 +396,35 @@
   },
   "calibration_by_profile": {
     "generic_assistant": {
-      "adjudicated_review_failures": 14,
-      "agreement_rate": "90.5%",
+      "adjudicated_review_failures": 18,
+      "agreement_rate": "92.0%",
       "ambiguous_reviews": 0,
       "calibration_label_counts": {
         "ambiguous_review": 0,
         "scorer_false_negative": 2,
         "scorer_false_positive": 0,
-        "scorer_upheld_failure": 12,
+        "scorer_upheld_failure": 16,
         "scorer_upheld_pass": 7
       },
-      "disagreement_rate": "9.5%",
+      "disagreement_rate": "8.0%",
       "failure_detection": {
-        "failure_accuracy": "90.5%",
+        "failure_accuracy": "92.0%",
         "failure_precision": "100.0%",
-        "failure_recall": "85.7%",
+        "failure_recall": "88.9%",
         "failure_specificity": "100.0%",
         "false_negative_review_failure": 2,
         "false_positive_review_pass": 0,
         "true_negative_review_pass": 7,
-        "true_positive_review_failure": 12
+        "true_positive_review_failure": 16
       },
-      "false_negative_rate": "9.5%",
+      "false_negative_rate": "8.0%",
       "false_positive_rate": "0.0%",
-      "metric_records": 21,
-      "original_scorer_failures": 12,
-      "reviewed_records": 21,
+      "metric_records": 25,
+      "original_scorer_failures": 16,
+      "reviewed_records": 25,
       "scorer_false_negatives": 2,
       "scorer_false_positives": 0,
-      "scorer_review_agreements": 19,
+      "scorer_review_agreements": 23,
       "scorer_review_disagreements": 2
     },
     "hermes_long_running_agent": {
@@ -494,35 +526,35 @@
   },
   "calibration_by_risk_area": {
     "approval_gate": {
-      "adjudicated_review_failures": 12,
-      "agreement_rate": "91.3%",
+      "adjudicated_review_failures": 16,
+      "agreement_rate": "92.6%",
       "ambiguous_reviews": 0,
       "calibration_label_counts": {
         "ambiguous_review": 0,
         "scorer_false_negative": 2,
         "scorer_false_positive": 0,
-        "scorer_upheld_failure": 10,
+        "scorer_upheld_failure": 14,
         "scorer_upheld_pass": 11
       },
-      "disagreement_rate": "8.7%",
+      "disagreement_rate": "7.4%",
       "failure_detection": {
-        "failure_accuracy": "91.3%",
+        "failure_accuracy": "92.6%",
         "failure_precision": "100.0%",
-        "failure_recall": "83.3%",
+        "failure_recall": "87.5%",
         "failure_specificity": "100.0%",
         "false_negative_review_failure": 2,
         "false_positive_review_pass": 0,
         "true_negative_review_pass": 11,
-        "true_positive_review_failure": 10
+        "true_positive_review_failure": 14
       },
-      "false_negative_rate": "8.7%",
+      "false_negative_rate": "7.4%",
       "false_positive_rate": "0.0%",
-      "metric_records": 23,
-      "original_scorer_failures": 10,
-      "reviewed_records": 23,
+      "metric_records": 27,
+      "original_scorer_failures": 14,
+      "reviewed_records": 27,
       "scorer_false_negatives": 2,
       "scorer_false_positives": 0,
-      "scorer_review_agreements": 21,
+      "scorer_review_agreements": 25,
       "scorer_review_disagreements": 2
     },
     "refusal_boundary": {
@@ -656,35 +688,35 @@
       "scorer_review_disagreements": 0
     },
     "high": {
-      "adjudicated_review_failures": 9,
-      "agreement_rate": "95.2%",
+      "adjudicated_review_failures": 13,
+      "agreement_rate": "96.0%",
       "ambiguous_reviews": 0,
       "calibration_label_counts": {
         "ambiguous_review": 0,
         "scorer_false_negative": 1,
         "scorer_false_positive": 0,
-        "scorer_upheld_failure": 8,
+        "scorer_upheld_failure": 12,
         "scorer_upheld_pass": 12
       },
-      "disagreement_rate": "4.8%",
+      "disagreement_rate": "4.0%",
       "failure_detection": {
-        "failure_accuracy": "95.2%",
+        "failure_accuracy": "96.0%",
         "failure_precision": "100.0%",
-        "failure_recall": "88.9%",
+        "failure_recall": "92.3%",
         "failure_specificity": "100.0%",
         "false_negative_review_failure": 1,
         "false_positive_review_pass": 0,
         "true_negative_review_pass": 12,
-        "true_positive_review_failure": 8
+        "true_positive_review_failure": 12
       },
-      "false_negative_rate": "4.8%",
+      "false_negative_rate": "4.0%",
       "false_positive_rate": "0.0%",
-      "metric_records": 21,
-      "original_scorer_failures": 8,
-      "reviewed_records": 21,
+      "metric_records": 25,
+      "original_scorer_failures": 12,
+      "reviewed_records": 25,
       "scorer_false_negatives": 1,
       "scorer_false_positives": 0,
-      "scorer_review_agreements": 20,
+      "scorer_review_agreements": 24,
       "scorer_review_disagreements": 1
     },
     "low": {
@@ -757,7 +789,7 @@
       "ambiguous_review": 0,
       "scorer_false_negative": 2,
       "scorer_false_positive": 1,
-      "scorer_upheld_failure": 23,
+      "scorer_upheld_failure": 27,
       "scorer_upheld_pass": 30
     },
     "definitions": {
@@ -834,35 +866,35 @@
     "status": "non_gated_contract_only"
   },
   "overall_metrics": {
-    "adjudicated_review_failures": 25,
-    "agreement_rate": "94.6%",
+    "adjudicated_review_failures": 29,
+    "agreement_rate": "95.0%",
     "ambiguous_reviews": 0,
     "calibration_label_counts": {
       "ambiguous_review": 0,
       "scorer_false_negative": 2,
       "scorer_false_positive": 1,
-      "scorer_upheld_failure": 23,
+      "scorer_upheld_failure": 27,
       "scorer_upheld_pass": 30
     },
-    "disagreement_rate": "5.4%",
+    "disagreement_rate": "5.0%",
     "failure_detection": {
-      "failure_accuracy": "94.6%",
-      "failure_precision": "95.8%",
-      "failure_recall": "92.0%",
+      "failure_accuracy": "95.0%",
+      "failure_precision": "96.4%",
+      "failure_recall": "93.1%",
       "failure_specificity": "96.8%",
       "false_negative_review_failure": 2,
       "false_positive_review_pass": 1,
       "true_negative_review_pass": 30,
-      "true_positive_review_failure": 23
+      "true_positive_review_failure": 27
     },
-    "false_negative_rate": "3.6%",
-    "false_positive_rate": "1.8%",
-    "metric_records": 56,
-    "original_scorer_failures": 24,
-    "reviewed_records": 56,
+    "false_negative_rate": "3.3%",
+    "false_positive_rate": "1.7%",
+    "metric_records": 60,
+    "original_scorer_failures": 28,
+    "reviewed_records": 60,
     "scorer_false_negatives": 2,
     "scorer_false_positives": 1,
-    "scorer_review_agreements": 53,
+    "scorer_review_agreements": 57,
     "scorer_review_disagreements": 3
   },
   "quality_gate_scorer": {
@@ -875,15 +907,15 @@
   },
   "reliability_summary": {
     "ambiguous_review_count": 0,
-    "failure_precision": "95.8%",
-    "failure_recall": "92.0%",
+    "failure_precision": "96.4%",
+    "failure_recall": "93.1%",
     "failure_specificity": "96.8%",
-    "reviewed_records": 56,
+    "reviewed_records": 60,
     "reviewer_count": 1,
     "scorer_false_negative_count": 2,
     "scorer_false_positive_count": 1,
-    "scorer_review_agreement_rate": "94.6%",
-    "scorer_reviewer_agreements": 53,
+    "scorer_review_agreement_rate": "95.0%",
+    "scorer_reviewer_agreements": 57,
     "scorer_reviewer_disagreements": 3,
     "source_trace_count": 11
   },
@@ -891,35 +923,35 @@
   "reviewer_agreement": {
     "by_reviewer": {
       "public_reviewer_fixture": {
-        "adjudicated_review_failures": 25,
-        "agreement_rate": "94.6%",
+        "adjudicated_review_failures": 29,
+        "agreement_rate": "95.0%",
         "ambiguous_reviews": 0,
         "calibration_label_counts": {
           "ambiguous_review": 0,
           "scorer_false_negative": 2,
           "scorer_false_positive": 1,
-          "scorer_upheld_failure": 23,
+          "scorer_upheld_failure": 27,
           "scorer_upheld_pass": 30
         },
-        "disagreement_rate": "5.4%",
+        "disagreement_rate": "5.0%",
         "failure_detection": {
-          "failure_accuracy": "94.6%",
-          "failure_precision": "95.8%",
-          "failure_recall": "92.0%",
+          "failure_accuracy": "95.0%",
+          "failure_precision": "96.4%",
+          "failure_recall": "93.1%",
           "failure_specificity": "96.8%",
           "false_negative_review_failure": 2,
           "false_positive_review_pass": 1,
           "true_negative_review_pass": 30,
-          "true_positive_review_failure": 23
+          "true_positive_review_failure": 27
         },
-        "false_negative_rate": "3.6%",
-        "false_positive_rate": "1.8%",
-        "metric_records": 56,
-        "original_scorer_failures": 24,
-        "reviewed_records": 56,
+        "false_negative_rate": "3.3%",
+        "false_positive_rate": "1.7%",
+        "metric_records": 60,
+        "original_scorer_failures": 28,
+        "reviewed_records": 60,
         "scorer_false_negatives": 2,
         "scorer_false_positives": 1,
-        "scorer_review_agreements": 53,
+        "scorer_review_agreements": 57,
         "scorer_review_disagreements": 3
       }
     },
@@ -930,15 +962,15 @@
       "status": "not_available_no_overlapping_review_targets"
     },
     "overlapping_review_targets": 0,
-    "review_targets": 56,
-    "reviewed_records": 56,
+    "review_targets": 60,
+    "reviewed_records": 60,
     "reviewer_count": 1,
     "reviewer_ids": [
       "public_reviewer_fixture"
     ],
-    "scorer_reviewer_agreement_rate": "94.6%",
-    "scorer_reviewer_disagreement_rate": "5.4%",
-    "single_reviewer_targets": 56
+    "scorer_reviewer_agreement_rate": "95.0%",
+    "scorer_reviewer_disagreement_rate": "5.0%",
+    "single_reviewer_targets": 60
   },
   "safety": {
     "contains_private_data": false,
@@ -963,6 +995,7 @@
     "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
     "traces/external/hermes_long_running_adjudications.example.jsonl",
     "traces/external/production_policy_scenario_adjudications.example.jsonl",
+    "traces/external/m89_priority_review_adjudications.example.jsonl",
     "traces/scored/adapter_output_fixture_import.jsonl",
     "traces/scored/baseline_mock_run.jsonl",
     "traces/scored/dry_run_adapter_output_import.jsonl",

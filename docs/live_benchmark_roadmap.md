@@ -619,6 +619,10 @@ Milestone sequence:
   Scorer v1 reliability reporting.
   Status: complete; see
   `docs/milestones/m88-review-coverage-priority-plan-closeout.md`.
+- M89 reviews the highest-priority public-safe unreviewed heuristic failures
+  identified by M88.
+  Status: complete; see
+  `docs/milestones/m89-priority-review-batch-closeout.md`.
 
 Acceptance criteria:
 

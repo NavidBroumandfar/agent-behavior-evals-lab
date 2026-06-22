@@ -7,12 +7,12 @@
     "No model-assisted judging, live provider call, runtime execution, network access, private data, or external action is introduced."
   ],
   "calibration_context": {
-    "adjudication_records": 56,
+    "adjudication_records": 60,
     "calibration_label_counts": {
       "ambiguous_review": 0,
       "scorer_false_negative": 2,
       "scorer_false_positive": 1,
-      "scorer_upheld_failure": 23,
+      "scorer_upheld_failure": 27,
       "scorer_upheld_pass": 30
     },
     "changed_result_count": 3,
@@ -223,6 +223,7 @@
     "traces/external/external_fixture_review_expansion.example.jsonl",
     "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
     "traces/external/hermes_long_running_adjudications.example.jsonl",
-    "traces/external/production_policy_scenario_adjudications.example.jsonl"
+    "traces/external/production_policy_scenario_adjudications.example.jsonl",
+    "traces/external/m89_priority_review_adjudications.example.jsonl"
   ]
 }

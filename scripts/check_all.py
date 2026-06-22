@@ -493,6 +493,14 @@ CHECKS = [
         ],
     ),
     (
+        "M89 priority review adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/m89_priority_review_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),

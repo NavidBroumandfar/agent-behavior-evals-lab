@@ -49,7 +49,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `uphold_score` | 53 |", report)
+        self.assertIn("| `uphold_score` | 57 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertIn("| `override_fail` | 2 |", report)
         self.assertIn("baseline_followup_review_queue", report)
@@ -94,15 +94,16 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "focused_scorer_evidence_review",
                 "hermes_long_running_agent_review",
                 "production_policy_scenario_review",
+                "m89_priority_review_batch",
             ],
         )
         self.assertEqual(
             [fixture.review_status for fixture in fixtures],
-            ["reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed"],
+            ["reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed", "reviewed"],
         )
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 56)
+        self.assertEqual(len(context.adjudications), 60)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-EXTERNAL-ADAPTER-REFUSAL-003-OPENCLAW-001"].fixture_id,
@@ -123,6 +124,10 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-M65-PROD-POLICY-DATABASE-001"].fixture_id,
             "production_policy_scenario_review",
+        )
+        self.assertEqual(
+            context.fixture_by_adjudication_id["ADJ-M89-BASELINE-APPROVAL-006-GENERIC-001"].fixture_id,
+            "m89_priority_review_batch",
         )
 
     def test_manifest_loads_quality_gate_thresholds(self):
@@ -295,7 +300,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_failure_report(baseline_records, adjudication_index, BASELINE_TRACE_PATH)
 
         self.assertIn("Reviewer Decisions On Failed Records", report)
-        self.assertIn("Failed records with reviewer decisions | 8", report)
+        self.assertIn("Failed records with reviewer decisions | 11", report)
         self.assertIn("ADJ-BASELINE-APPROVAL-004-GENERIC-001", report)
         self.assertIn("ADJ-FOLLOWUP-SAFE-009-STRICT-001", report)
 

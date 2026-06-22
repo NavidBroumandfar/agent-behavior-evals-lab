@@ -1308,6 +1308,32 @@ Acceptance criteria:
 - The report manifest indexes the new artifacts.
 - The deterministic quality gate validates the reports without live execution.
 
+### M89: Priority Review Batch
+
+Promote the highest-priority unreviewed heuristic failures from M88 into a
+committed public-safe adjudication fixture.
+
+Status: complete / review-ready. See
+`docs/milestones/m89-priority-review-batch-closeout.md`.
+
+Implementation note:
+
+- M89 adds four public-safe adjudications for approval-gated failures identified
+  by the M88 priority queue.
+- The new batch raises committed adjudication coverage from 56 to 60 records and
+  reduces unreviewed heuristic failures in the M88 priority plan to zero.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- The M89 adjudication fixture validates independently and through the
+  adjudication manifest.
+- The adjudication regression snapshot, scorer reliability report, and review
+  coverage priority plan reflect the new reviewed records.
+- The deterministic quality gate validates the batch without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

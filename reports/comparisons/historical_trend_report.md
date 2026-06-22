@@ -8,7 +8,7 @@
 | Snapshot version | `0.1.0` |
 | Baseline pass rate | 91.3% |
 | External fixture pass rate | 64.6% |
-| Adjudication records | 56 |
+| Adjudication records | 60 |
 | Report artifacts | 62 |
 | Evidence gaps | 9 |
 | Scorer triage candidates | 2 |
@@ -27,12 +27,12 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `baseline_mock_run` | `baseline` | `failure_modes`=missing_approval_gate=7, over_refusal=4; `pass_rate`=91.3%; `records`=126 |
 | `m40_evidence_quality_audit` | `evidence_quality` | `gap_count`=9; `product_kpi_count`=4; `total_scored_records`=174 |
 | `m41_public_safe_transcript_expansion` | `fixture_expansion` | `failure_modes`=failure_to_clarify=1, fake_completion_claim=1, hallucinated_tool_use=1, missing_approval_gate=1, over_refusal=1, unsafe_compliance=1; `pass_rate`=50.0%; `records`=8 |
-| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=56; `calibration_label_counts`=ambiguous_review=0, scorer_false_negative=2, scorer_false_positive=1, scorer_upheld_failure=23, scorer_upheld_pass=30; `changed_result_count`=3 |
+| `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=60; `calibration_label_counts`=ambiguous_review=0, scorer_false_negative=2, scorer_false_positive=1, scorer_upheld_failure=27, scorer_upheld_pass=30; `changed_result_count`=3 |
 | `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=64.6%; `fixture_groups`=10; `json_snapshots`=24; `markdown_reports`=38; `report_artifacts`=62 |
-| `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=56; `ambiguous_reviews`=0; `external_source_trace_count`=10; `source_trace_count`=11 |
-| `m46_needs_discussion_resolution` | `review_resolution` | `adjudication_records`=56; `ambiguous_reviews`=0; `changed_result_count`=3; `needs_discussion`=0 |
+| `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=60; `ambiguous_reviews`=0; `external_source_trace_count`=10; `source_trace_count`=11 |
+| `m46_needs_discussion_resolution` | `review_resolution` | `adjudication_records`=60; `ambiguous_reviews`=0; `changed_result_count`=3; `needs_discussion`=0 |
 | `m47_deterministic_scorer_refinement_triage` | `scorer_refinement_triage` | `accepted_scorer_changes`=0; `candidates`=2; `deferred_scorer_changes`=2; `scorer_code_changed`=False |
-| `m48_external_fixture_review_expansion` | `review_expansion` | `accepted_scorer_changes`=0; `adjudication_records`=56; `external_source_trace_count`=10; `source_trace_count`=11 |
+| `m48_external_fixture_review_expansion` | `review_expansion` | `accepted_scorer_changes`=0; `adjudication_records`=60; `external_source_trace_count`=10; `source_trace_count`=11 |
 | `m49_scorer_candidate_control_tests` | `scorer_candidate_controls` | `accepted_scorer_changes`=0; `controls`=4; `current_differs_from_review_expectation`=2; `scorer_code_changed`=False |
 | `m50_deterministic_scorer_change_decision` | `scorer_change_decision` | `accepted_scorer_changes`=0; `candidates_evaluated`=2; `rubric_only_no_change_decisions`=2; `scorer_code_changed`=False |
 | `m51_scorer_versioning_guardrails` | `scorer_versioning_guardrails` | `accepted_scorer_changes`=0; `current_records_with_historical_context`=0; `historical_scorer_context_supported`=True; `migration_required_now`=False |
@@ -76,7 +76,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `needs_discussion` | 0 |
 | `override_fail` | 2 |
 | `override_pass` | 1 |
-| `uphold_score` | 53 |
+| `uphold_score` | 57 |
 
 ## Scorer Calibration Labels
 
@@ -85,7 +85,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `ambiguous_review` | 0 |
 | `scorer_false_negative` | 2 |
 | `scorer_false_positive` | 1 |
-| `scorer_upheld_failure` | 23 |
+| `scorer_upheld_failure` | 27 |
 | `scorer_upheld_pass` | 30 |
 
 ## Report Manifest Coverage

@@ -1,6 +1,6 @@
 {
   "manifest_id": "adjudication_manifest",
-  "version": "0.6.0",
+  "version": "0.7.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index committed public-safe human adjudication fixture families for deterministic reporting and regression checks.",
   "scope": [
@@ -38,7 +38,8 @@
         "external_fixture_reviewed_decisions": 0,
         "focused_scorer_evidence_review": 0,
         "hermes_long_running_agent_review": 0,
-        "production_policy_scenario_review": 0
+        "production_policy_scenario_review": 0,
+        "m89_priority_review_batch": 0
       }
   },
   "adjudication_fixtures": [
@@ -192,6 +193,29 @@
       "last_reviewed_at": "2026-06-21T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/production_policy_scenario_eval.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "m89_priority_review_batch",
+      "label": "M89 Priority Review Batch",
+      "path": "traces/external/m89_priority_review_adjudications.example.jsonl",
+      "description": "M89 public-safe reviewer decisions for the highest-priority unreviewed heuristic failures from the M88 review coverage priority queue.",
+      "expected_record_count": 4,
+      "quality_gate_included": true,
+      "review_status": "reviewed",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "M89 reviews the four unreviewed heuristic failures identified by the M88 priority plan while keeping scorer behavior unchanged.",
+      "last_reviewed_at": "2026-06-22T00:00:00Z",
+      "source_trace_paths": [
+        "traces/scored/baseline_mock_run.jsonl",
+        "traces/scored/public_safe_transcript_expansion_eval.jsonl"
       ],
       "safety_assertions": {
         "public_safe": true,

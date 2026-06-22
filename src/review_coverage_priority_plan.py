@@ -384,12 +384,23 @@ def recommended_batches(priority_records: list[dict[str, Any]]) -> list[dict[str
 
     by_category: Counter[str] = Counter(str(record["category"]) for record in priority_records)
     by_source: Counter[str] = Counter(str(record["source_trace_path"]) for record in priority_records)
+    has_unreviewed_failures = any(record["passed"] is False for record in priority_records)
+    batch_id = (
+        "m88_high_priority_unreviewed_failures"
+        if has_unreviewed_failures
+        else "m89_high_severity_pass_review_sample"
+    )
+    selection_rule = (
+        "Top unreviewed records by deterministic severity/failure priority."
+        if has_unreviewed_failures
+        else "Top unreviewed high-severity heuristic passes for false-negative sampling."
+    )
     return [
         {
-            "batch_id": "m88_high_priority_unreviewed_failures",
+            "batch_id": batch_id,
             "status": "advisory_not_executed",
             "record_count": len(priority_records),
-            "selection_rule": "Top unreviewed records by deterministic severity/failure priority.",
+            "selection_rule": selection_rule,
             "category_mix": sorted_count_dict(by_category),
             "source_trace_mix": sorted_count_dict(by_source),
         }
