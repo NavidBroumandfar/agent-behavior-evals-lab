@@ -521,68 +521,41 @@ Acceptance criteria:
 - Private evidence deletion is bounded to ignored local private roots and is not executed by the deterministic gate.
 - Reports identify fake evidence age, retention class, and access boundary using aggregate public-safe metadata only.
 
-### M70: Reviewer Protocol And Inter-Rater Checks
+### M70-M76: Real Model Proof Roadmap
 
-Make human review more credible.
+Move from dry-run evaluator health toward the next controlled, opt-in local
+model proof point.
 
-Deliverables:
-
-- Reviewer rubric v1.
-- Double-review sampling policy.
-- Inter-rater agreement report.
-- Escalation path for unresolved cases.
-
-Acceptance criteria:
-
-- High-risk benchmark cases have reviewer sampling.
-- Reports show unresolved and disagreement rates.
-
-### M71: Statistical Power And Rerun Policy
-
-Avoid unstable rankings.
+Status: complete / proof-path infrastructure ready. See
+`docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`.
 
 Deliverables:
 
-- Minimum sample-size policy.
-- Bootstrap or interval estimates.
-- Rerun cadence and provider-drift policy.
-- Sensitivity report for severity weighting.
+- `schemas/live_local_review_summary.schema.json`,
+  `traces/external/live_local_review_summary.example.json`, and
+  `src/live_local_review_summary.py` for reviewer protocol, deterministic
+  sampling, unresolved-review blockers, and inter-rater reporting.
+- Reviewed live-local ledger validation that requires review summaries to match
+  normalized output record IDs, scored-trace pass results, and severity.
+- Real metric aggregation in `src/local_benchmark_report.py` for reviewed
+  scored traces: severity-weighted effective pass rate, heuristic pass rate,
+  deterministic bootstrap CI, review counts, unresolved review count,
+  abstention count, exclusions, and ledger entry ID.
+- `schemas/hosted_provider_batch.schema.json` and
+  `src/hosted_provider_batch.py` for a later hosted OpenAI Batch path as a
+  separate metadata-only evidence class.
+- `schemas/real_model_proof_runbook.schema.json` and
+  `src/real_model_proof_runbook.py` for the CLI/report operator surface.
 
 Acceptance criteria:
 
-- Rankings are not published when sample size is too small.
-- Reports show uncertainty and drift caveats.
-
-### M72: Benchmark Versioning And Model Disclosure
-
-Make public rankings reproducible.
-
-Deliverables:
-
-- Benchmark version identifiers.
-- Model/provider disclosure schema.
-- Prompt-template and adapter-version hashes.
-- Public benchmark changelog.
-
-Acceptance criteria:
-
-- A leaderboard row states benchmark version, model identity, provider settings, run date, and exclusions.
-
-### M73: External Reproducibility Pack
-
-Allow outside users to inspect or reproduce public-safe results.
-
-Deliverables:
-
-- Public-safe benchmark bundle.
-- Reproduction script from saved outputs.
-- Report-generation instructions.
-- Fixture and run-ledger validation instructions.
-
-Acceptance criteria:
-
-- A third party can regenerate public benchmark reports without provider credentials.
-- Live reruns are optional and explicitly cost-bearing.
+- The current committed gate remains deterministic and non-live.
+- No ranking publishes from smoke-only, dry-run, partial, unresolved-review,
+  raw-output, private, cloud-labelled, or hosted-provider evidence.
+- The first real local proof requires reviewed extended `local_public_v1`
+  ledgers for both `gemma4:latest` and `llama3.2:latest`.
+- Hosted provider evidence is separate from local/open-weight rankings until a
+  future methodology explicitly allows comparison.
 
 ## Revised End State
 

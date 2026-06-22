@@ -1,0 +1,72 @@
+{
+  "batch": {
+    "batch_id": "not_submitted_metadata_only",
+    "batch_status": "not_submitted",
+    "result_file_available": false,
+    "submitted": false
+  },
+  "boundaries": [
+    "M75 metadata is a planned hosted-provider path, not a submitted batch.",
+    "Hosted-provider evidence is separate from local/open-weight benchmark evidence.",
+    "No API keys, request JSONL, result JSONL, provider payloads, private data, or costs are committed.",
+    "No cloud ranking, local/open-weight ranking, production-safety proof, or cross-provider comparison is claimed."
+  ],
+  "cost_metadata": {
+    "cost_metadata_available": false,
+    "cost_source": "not_available_until_provider_result",
+    "estimated_cost_usd": "not_available"
+  },
+  "endpoint_mode": {
+    "api_family": "responses",
+    "async_completion_window": "24h",
+    "endpoint": "/v1/responses",
+    "transport": "batch_jsonl"
+  },
+  "evidence_class": "hosted_provider_metadata_only",
+  "generated_at": "2026-06-22T00:00:00Z",
+  "model": "hosted-model-placeholder",
+  "payload_hashes": {
+    "hash_status": "not_available_until_opt_in_run",
+    "request_file_sha256": "not_applicable_planned_no_request_file",
+    "request_payload_committed": false,
+    "result_file_sha256": "not_applicable_planned_no_result_file",
+    "result_payload_committed": false
+  },
+  "provider": "openai",
+  "publication_state": {
+    "blocked_reason": "Hosted provider path is metadata-only until an explicit opt-in provider run is reviewed.",
+    "hosted_ranking_claim_allowed": false,
+    "hosted_report_ready": false,
+    "local_open_weight_ranking_claim_allowed": false
+  },
+  "quality_gate": {
+    "batch_submission_in_quality_gate": false,
+    "credential_handling_in_quality_gate": false,
+    "deterministic_gate_uses_fake_metadata_only": true,
+    "network_calls_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "request_payload_read_in_quality_gate": false,
+    "result_payload_read_in_quality_gate": false
+  },
+  "safety_assertions": {
+    "cloud_ranking_claim": false,
+    "contains_credentials_or_secrets": false,
+    "contains_private_data": false,
+    "contains_raw_provider_payloads": false,
+    "live_provider_execution": false,
+    "local_open_weight_ranking_claim": false,
+    "metadata_only": true,
+    "production_safety_claim": false,
+    "public_safe": true
+  },
+  "separation_boundary": {
+    "hosted_report_required_before_claims": true,
+    "local_ranking_claim_allowed": false,
+    "mixed_provider_comparison_allowed": false,
+    "production_safety_claim_allowed": false,
+    "separate_from_local_open_weight_rankings": true
+  },
+  "source_metadata_path": "traces/external/hosted_provider_batch_metadata.example.json",
+  "source_schema_path": "schemas/hosted_provider_batch.schema.json",
+  "summary_id": "m75_hosted_provider_batch_summary"
+}

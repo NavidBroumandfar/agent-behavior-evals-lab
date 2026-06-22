@@ -1051,6 +1051,92 @@
       }
     },
     {
+      "artifact_id": "live_local_review_summary_snapshot",
+      "label": "Live-Local Review Summary JSON",
+      "path": "reports/comparisons/live_local_review_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/live_local_review_summary.py",
+      "input_paths": [
+        "traces/external/live_local_review_summary.example.json",
+        "schemas/live_local_review_summary.schema.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "M70 public-safe review-summary snapshot for reviewer protocol, sampling, inter-rater, and unresolved-review gates.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "live_local_review_summary_report",
+      "label": "Live-Local Review Summary Report",
+      "path": "reports/comparisons/live_local_review_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/live_local_review_summary.py",
+      "input_paths": [
+        "reports/comparisons/live_local_review_summary.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/live_local_review_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M70 review gate summary; metadata only, with no raw live-local outputs.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "real_model_proof_runbook_snapshot",
+      "label": "Real Model Proof Runbook JSON",
+      "path": "reports/comparisons/real_model_proof_runbook.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/real_model_proof_runbook.py",
+      "input_paths": [
+        "traces/external/real_model_proof_runbook.example.json",
+        "schemas/real_model_proof_runbook.schema.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "M76 operator runbook snapshot listing the next manual opt-in commands, evidence status, and publication blockers.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "real_model_proof_runbook_report",
+      "label": "Real Model Proof Runbook Report",
+      "path": "reports/comparisons/real_model_proof_runbook.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/real_model_proof_runbook.py",
+      "input_paths": [
+        "reports/comparisons/real_model_proof_runbook.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/real_model_proof_runbook.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M76 runbook for CLI/report workflow; live model execution remains manual and opt-in only.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "openclaw_harness_smoke_report",
       "label": "OpenClaw Harness Smoke Report",
       "path": "reports/comparisons/openclaw_harness_smoke_report.md",
@@ -1305,6 +1391,49 @@
       }
     },
     {
+      "artifact_id": "hosted_provider_batch_summary_snapshot",
+      "label": "Hosted Provider Batch Summary JSON",
+      "path": "reports/comparisons/hosted_provider_batch_summary.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/hosted_provider_batch.py",
+      "input_paths": [
+        "traces/external/hosted_provider_batch_metadata.example.json",
+        "schemas/hosted_provider_batch.schema.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "M75 hosted-provider metadata-only summary for a later OpenAI Batch path; no provider call or request/result payload is committed.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "hosted_provider_batch_summary_report",
+      "label": "Hosted Provider Batch Summary Report",
+      "path": "reports/comparisons/hosted_provider_batch_summary.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/hosted_provider_batch.py",
+      "input_paths": [
+        "reports/comparisons/hosted_provider_batch_summary.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/hosted_provider_batch_summary.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M75 hosted-provider boundary report. Hosted evidence remains separate from local/open-weight rankings.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
       "artifact_id": "release_notes_latest_snapshot",
       "label": "Latest Release Notes JSON",
       "path": "reports/comparisons/release_notes_latest.json",
@@ -1348,7 +1477,8 @@
         "docs/milestones/m66-private-evidence-vault-closeout.md",
         "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
         "docs/milestones/m68-private-audit-reports-closeout.md",
-        "docs/milestones/m69-retention-consent-access-controls-closeout.md"
+        "docs/milestones/m69-retention-consent-access-controls-closeout.md",
+        "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"

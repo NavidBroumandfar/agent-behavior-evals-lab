@@ -7,7 +7,7 @@
 | Generated at | `2026-06-22T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 52 |
+| Indexed report artifacts | 58 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -47,6 +47,7 @@
 - **Redaction Promotion**: Added promotion candidate and redaction-note schemas plus a validator for public-safe promoted derivatives without reading private artifacts.
 - **Private Audit Reports**: Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only.
 - **Retention Consent Access**: Added metadata-only retention, consent, access-control, deletion/export, and evidence-age boundary validation for private runtime evidence.
+- **Real Model Proof Path**: Added review-summary, reviewed-ledger, real metric aggregation, hosted metadata, and CLI runbook contracts for the next controlled opt-in local model benchmark.
 
 ## Dashboard Snapshot
 
@@ -98,6 +99,7 @@
 | `M67` | Complete / public-safe promotion-pipeline review-ready | `docs/milestones/m67-redaction-promotion-pipeline-closeout.md` |
 | `M68` | Complete / public-safe private-report-boundary review-ready | `docs/milestones/m68-private-audit-reports-closeout.md` |
 | `M69` | Complete / public-safe retention-access-boundary review-ready | `docs/milestones/m69-retention-consent-access-controls-closeout.md` |
+| `M70-M76` | Complete / public-safe real-model proof path ready for manual opt-in runs | `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md` |
 
 ## Boundaries
 
@@ -147,3 +149,4 @@
 - `docs/milestones/m67-redaction-promotion-pipeline-closeout.md`
 - `docs/milestones/m68-private-audit-reports-closeout.md`
 - `docs/milestones/m69-retention-consent-access-controls-closeout.md`
+- `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`

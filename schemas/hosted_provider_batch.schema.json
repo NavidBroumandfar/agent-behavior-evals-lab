@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Hosted Provider Batch Metadata",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "metadata_id",
+    "version",
+    "generated_at",
+    "status",
+    "evidence_class",
+    "provider",
+    "model",
+    "endpoint_mode",
+    "batch",
+    "payload_hashes",
+    "cost_metadata",
+    "separation_boundary",
+    "quality_gate",
+    "safety_assertions"
+  ],
+  "properties": {
+    "metadata_id": {
+      "type": "string",
+      "const": "m75_hosted_provider_batch_metadata_example"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "planned_metadata_only_not_submitted"
+      ]
+    },
+    "evidence_class": {
+      "type": "string",
+      "enum": [
+        "hosted_provider_metadata_only"
+      ]
+    },
+    "provider": {
+      "type": "string",
+      "enum": [
+        "openai"
+      ]
+    },
+    "model": {
+      "type": "string",
+      "minLength": 1
+    },
+    "endpoint_mode": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "api_family",
+        "endpoint",
+        "transport",
+        "async_completion_window"
+      ],
+      "properties": {
+        "api_family": {
+          "type": "string",
+          "enum": [
+            "responses"
+          ]
+        },
+        "endpoint": {
+          "type": "string",
+          "const": "/v1/responses"
+        },
+        "transport": {
+          "type": "string",
+          "enum": [
+            "batch_jsonl"
+          ]
+        },
+        "async_completion_window": {
+          "type": "string",
+          "enum": [
+            "24h"
+          ]
+        }
+      }
+    },
+    "batch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "batch_id",
+        "batch_status",
+        "submitted",
+        "result_file_available"
+      ],
+      "properties": {
+        "batch_id": {
+          "type": "string",
+          "const": "not_submitted_metadata_only"
+        },
+        "batch_status": {
+          "type": "string",
+          "enum": [
+            "not_submitted"
+          ]
+        },
+        "submitted": {
+          "type": "boolean",
+          "const": false
+        },
+        "result_file_available": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "payload_hashes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "request_file_sha256",
+        "result_file_sha256",
+        "hash_status",
+        "request_payload_committed",
+        "result_payload_committed"
+      ],
+      "properties": {
+        "request_file_sha256": {
+          "type": "string",
+          "const": "not_applicable_planned_no_request_file"
+        },
+        "result_file_sha256": {
+          "type": "string",
+          "const": "not_applicable_planned_no_result_file"
+        },
+        "hash_status": {
+          "type": "string",
+          "enum": [
+            "not_available_until_opt_in_run"
+          ]
+        },
+        "request_payload_committed": {
+          "type": "boolean",
+          "const": false
+        },
+        "result_payload_committed": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "cost_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "cost_metadata_available",
+        "cost_source",
+        "estimated_cost_usd"
+      ],
+      "properties": {
+        "cost_metadata_available": {
+          "type": "boolean",
+          "const": false
+        },
+        "cost_source": {
+          "type": "string",
+          "enum": [
+            "not_available_until_provider_result"
+          ]
+        },
+        "estimated_cost_usd": {
+          "type": "string",
+          "const": "not_available"
+        }
+      }
+    },
+    "separation_boundary": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "separate_from_local_open_weight_rankings",
+        "mixed_provider_comparison_allowed",
+        "hosted_report_required_before_claims",
+        "local_ranking_claim_allowed",
+        "production_safety_claim_allowed"
+      ],
+      "properties": {
+        "separate_from_local_open_weight_rankings": {
+          "type": "boolean",
+          "const": true
+        },
+        "mixed_provider_comparison_allowed": {
+          "type": "boolean",
+          "const": false
+        },
+        "hosted_report_required_before_claims": {
+          "type": "boolean",
+          "const": true
+        },
+        "local_ranking_claim_allowed": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_safety_claim_allowed": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_gate_uses_fake_metadata_only",
+        "provider_calls_in_quality_gate",
+        "batch_submission_in_quality_gate",
+        "request_payload_read_in_quality_gate",
+        "result_payload_read_in_quality_gate",
+        "credential_handling_in_quality_gate",
+        "network_calls_in_quality_gate"
+      ],
+      "properties": {
+        "deterministic_gate_uses_fake_metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "provider_calls_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "batch_submission_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "request_payload_read_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "result_payload_read_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "credential_handling_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "network_calls_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "metadata_only",
+        "contains_credentials_or_secrets",
+        "contains_private_data",
+        "contains_raw_provider_payloads",
+        "live_provider_execution",
+        "cloud_ranking_claim",
+        "local_open_weight_ranking_claim",
+        "production_safety_claim"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "contains_credentials_or_secrets": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "contains_raw_provider_payloads": {
+          "type": "boolean",
+          "const": false
+        },
+        "live_provider_execution": {
+          "type": "boolean",
+          "const": false
+        },
+        "cloud_ranking_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "local_open_weight_ranking_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_safety_claim": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    }
+  }
+}

@@ -59,6 +59,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
     REPO_ROOT / "docs/milestones/m68-private-audit-reports-closeout.md",
     REPO_ROOT / "docs/milestones/m69-retention-consent-access-controls-closeout.md",
+    REPO_ROOT / "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -410,6 +411,13 @@ def release_highlights(
             {
                 "area": "Retention Consent Access",
                 "summary": "Added metadata-only retention, consent, access-control, deletion/export, and evidence-age boundary validation for private runtime evidence.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M70-M76" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Real Model Proof Path",
+                "summary": "Added review-summary, reviewed-ledger, real metric aggregation, hosted metadata, and CLI runbook contracts for the next controlled opt-in local model benchmark.",
             }
         )
     return highlights

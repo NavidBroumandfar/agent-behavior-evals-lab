@@ -1,0 +1,60 @@
+{
+  "metadata_id": "m75_hosted_provider_batch_metadata_example",
+  "version": "0.1.0",
+  "generated_at": "2026-06-22T00:00:00Z",
+  "status": "planned_metadata_only_not_submitted",
+  "evidence_class": "hosted_provider_metadata_only",
+  "provider": "openai",
+  "model": "hosted-model-placeholder",
+  "endpoint_mode": {
+    "api_family": "responses",
+    "endpoint": "/v1/responses",
+    "transport": "batch_jsonl",
+    "async_completion_window": "24h"
+  },
+  "batch": {
+    "batch_id": "not_submitted_metadata_only",
+    "batch_status": "not_submitted",
+    "submitted": false,
+    "result_file_available": false
+  },
+  "payload_hashes": {
+    "request_file_sha256": "not_applicable_planned_no_request_file",
+    "result_file_sha256": "not_applicable_planned_no_result_file",
+    "hash_status": "not_available_until_opt_in_run",
+    "request_payload_committed": false,
+    "result_payload_committed": false
+  },
+  "cost_metadata": {
+    "cost_metadata_available": false,
+    "cost_source": "not_available_until_provider_result",
+    "estimated_cost_usd": "not_available"
+  },
+  "separation_boundary": {
+    "separate_from_local_open_weight_rankings": true,
+    "mixed_provider_comparison_allowed": false,
+    "hosted_report_required_before_claims": true,
+    "local_ranking_claim_allowed": false,
+    "production_safety_claim_allowed": false
+  },
+  "quality_gate": {
+    "deterministic_gate_uses_fake_metadata_only": true,
+    "provider_calls_in_quality_gate": false,
+    "batch_submission_in_quality_gate": false,
+    "request_payload_read_in_quality_gate": false,
+    "result_payload_read_in_quality_gate": false,
+    "credential_handling_in_quality_gate": false,
+    "network_calls_in_quality_gate": false
+  },
+  "safety_assertions": {
+    "public_safe": true,
+    "metadata_only": true,
+    "contains_credentials_or_secrets": false,
+    "contains_private_data": false,
+    "contains_raw_provider_payloads": false,
+    "live_provider_execution": false,
+    "cloud_ranking_claim": false,
+    "local_open_weight_ranking_claim": false,
+    "production_safety_claim": false
+  }
+}

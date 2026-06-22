@@ -1,0 +1,142 @@
+{
+  "boundaries": [
+    "This runbook is CLI/report product surface only.",
+    "Manual live-local commands require explicit operator opt-in.",
+    "Raw outputs remain local and ignored until reviewed normalization approves public-safe evidence.",
+    "The hosted provider path is deferred and separated from local/open-weight rankings.",
+    "No public leaderboard, production-safety proof, third-party reproducibility claim, or private-audit overclaim is made."
+  ],
+  "evidence_status": {
+    "case_set_id": "local_public_v1",
+    "current_publishable_rankings": 0,
+    "eligible_reviewed_live_local_ledgers": 0,
+    "required_cases_per_primary_model": 210,
+    "required_eligible_ledgers": 2,
+    "target_split": "extended"
+  },
+  "generated_at": "2026-06-22T00:00:00Z",
+  "hosted_provider_path": {
+    "first_target": "openai_batch_responses",
+    "mixed_with_local_ranking": false,
+    "separate_evidence_class": true,
+    "status": "deferred_until_local_proof"
+  },
+  "local_runtime": {
+    "default_api_base": "http://localhost:11434/api",
+    "manual_opt_in_required": true,
+    "quality_gate_live_execution_allowed": false,
+    "runtime": "ollama"
+  },
+  "model_lineup": {
+    "excluded_targets": [
+      {
+        "eligible_for_local_ranking": false,
+        "model": "gemma4:31b-cloud",
+        "reason": "Cloud-labelled target must not support local/open-weight claims.",
+        "role": "excluded_from_local_claims"
+      }
+    ],
+    "primary_local_targets": [
+      {
+        "eligible_for_local_ranking": true,
+        "model": "gemma4:latest",
+        "reason": "Installed local/open-weight target for reviewed extended evidence.",
+        "role": "primary_extended_target"
+      },
+      {
+        "eligible_for_local_ranking": true,
+        "model": "llama3.2:latest",
+        "reason": "Installed local/open-weight target for reviewed extended evidence.",
+        "role": "primary_extended_target"
+      }
+    ],
+    "smoke_control_targets": [
+      {
+        "eligible_for_local_ranking": false,
+        "model": "qwen3.5:2b-q4_K_M",
+        "reason": "Use for quick operator smoke checks only; smoke-only evidence cannot unlock rankings.",
+        "role": "smoke_control"
+      }
+    ]
+  },
+  "objective": "Run reviewed extended local_public_v1 evidence for at least two installed local Ollama models, then unlock the local/open-weight benchmark report only after ledger and review gates pass.",
+  "operator_commands": [
+    {
+      "command": "python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --plan-only",
+      "commits_raw_outputs": false,
+      "label": "Plan gemma4 extended run",
+      "live_execution": false,
+      "notes": "Plan-only command is safe for operator review and does not call the local model.",
+      "step_id": "plan_gemma4_extended"
+    },
+    {
+      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --live-local",
+      "commits_raw_outputs": false,
+      "label": "Execute gemma4 extended run",
+      "live_execution": true,
+      "notes": "Manual opt-in only; raw outputs must remain under ignored local paths until reviewed.",
+      "step_id": "run_gemma4_extended"
+    },
+    {
+      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model llama3.2:latest --adapter ollama_text_only --split extended --live-local",
+      "commits_raw_outputs": false,
+      "label": "Execute llama3.2 extended run",
+      "live_execution": true,
+      "notes": "Manual opt-in only; needed as the second eligible model before local rankings can publish.",
+      "step_id": "run_llama32_extended"
+    },
+    {
+      "command": "python3 src/review_text_only_outputs.py --allow-live-local <raw-local-jsonl> <reviewed-normalized-jsonl>",
+      "commits_raw_outputs": false,
+      "label": "Normalize reviewed outputs",
+      "live_execution": false,
+      "notes": "Only reviewed, public-safe normalized outputs may move into committed evidence paths.",
+      "step_id": "normalize_reviewed_outputs"
+    },
+    {
+      "command": "python3 src/validate_local_run_ledger.py <reviewed-ledger.json> && python3 src/local_benchmark_report.py",
+      "commits_raw_outputs": false,
+      "label": "Validate ledger and regenerate report",
+      "live_execution": false,
+      "notes": "Publication remains blocked until two eligible reviewed extended ledgers exist with no unresolved review.",
+      "step_id": "validate_and_report"
+    }
+  ],
+  "publication_gate": {
+    "blocked_reason": "No reviewed live-local extended ledgers exist for the two primary local targets yet.",
+    "local_ranking_claim_allowed": false,
+    "unlock_requirements": [
+      "Run the extended split for gemma4:latest and llama3.2:latest with explicit live-local opt-in.",
+      "Keep raw outputs local and ignored until review approves public-safe normalized outputs.",
+      "Review every failed case, every high or critical case, and the deterministic pass sample.",
+      "Build ledgers with local_public_benchmark evidence class and no unresolved review, unsafe output, malformed output, private data, or raw outputs.",
+      "Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist."
+    ]
+  },
+  "quality_gate": {
+    "deterministic_gate_uses_fake_metadata_only": true,
+    "external_actions_in_quality_gate": false,
+    "live_local_execution_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_outputs_read_in_quality_gate": false
+  },
+  "report_id": "m76_real_model_proof_runbook_report",
+  "review_queue": {
+    "malformed_output_count": 0,
+    "needs_discussion_count": 0,
+    "records_waiting_for_review": 0,
+    "unsafe_output_count": 0
+  },
+  "safety_assertions": {
+    "contains_credentials_or_secrets": false,
+    "contains_private_data": false,
+    "contains_raw_outputs": false,
+    "metadata_only": true,
+    "production_safety_claim": false,
+    "public_leaderboard_claim": false,
+    "public_safe": true,
+    "third_party_reproducibility_claim": false
+  },
+  "source_runbook_path": "traces/external/real_model_proof_runbook.example.json",
+  "source_schema_path": "schemas/real_model_proof_runbook.schema.json"
+}

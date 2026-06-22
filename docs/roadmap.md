@@ -915,22 +915,30 @@ Success signal:
 
 - A user can ingest private runtime evidence locally, keep it encrypted or ignored by Git, generate local audit reports, and promote only reviewed public-safe derivatives into committed fixtures.
 
-### M70-M73: Benchmark Governance And Statistical Confidence
+### M70-M76: Real Model Proof Roadmap
 
-Make rankings harder to game and easier to trust.
+Prepare the next controlled, opt-in proof point against actual local models
+without weakening public/private safety boundaries.
 
-Status: planned.
+Status: complete / proof-path infrastructure ready. See `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`.
 
-Milestones:
+Implementation note:
 
-- M70 Reviewer Protocol And Inter-Rater Checks.
-- M71 Statistical Power And Rerun Policy.
-- M72 Benchmark Versioning And Model Disclosure.
-- M73 External Reproducibility Pack.
+- M70 adds `schemas/live_local_review_summary.schema.json`, `traces/external/live_local_review_summary.example.json`, `src/live_local_review_summary.py`, and public-safe review/inter-rater reports.
+- M71-M73 strengthen reviewed live-local ledger validation so review summaries must match normalized output record IDs, scored-trace pass results, severity, and publication blockers.
+- M74 upgrades the local/open-weight benchmark report to compute real severity-weighted effective and heuristic pass rates, deterministic bootstrap intervals, review counts, exclusions, and ledger IDs from reviewed scored traces.
+- M75 adds a separate hosted-provider Batch metadata contract for a later OpenAI Batch `/v1/responses` path; it is not mixed with local/open-weight rankings.
+- M76 adds a CLI/report operator runbook that lists next commands, current evidence status, publication blockers, review queue counts, and eligible/ineligible local model targets.
+
+Current proof status:
+
+- The lab still has no committed publishable real-model benchmark run.
+- Publication remains blocked until at least two eligible reviewed live-local extended ledgers exist for `gemma4:latest` and `llama3.2:latest`.
+- `qwen3.5:2b-q4_K_M` is smoke/control only, and `gemma4:31b-cloud` is excluded from local/open-weight claims.
 
 Success signal:
 
-- Benchmark reports state sample sizes, uncertainty intervals, versioned case sets, model/provider metadata, rerun policy, reviewer agreement, and exact exclusions.
+- A manual operator can run the extended split locally with explicit opt-in, review and normalize public-safe outputs, build reviewed ledgers, and unlock a local/open-weight ranking only when all review, ledger, sample-size, and safety gates pass.
 
 ## Hermes And OpenClaw Position
 

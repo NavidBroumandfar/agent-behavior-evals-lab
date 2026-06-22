@@ -23,6 +23,7 @@ from live_local_harness import (
     PROMPT_TEMPLATE_PATH,
     PROMPT_TEMPLATE_VERSION,
 )
+from live_local_review_summary import DEFAULT_SUMMARY_PATH as DEFAULT_REVIEW_SUMMARY_PATH
 from reporting_utils import load_json_object, write_json_object
 from run_eval import build_trace_record, load_cases
 from scorers import score_response
@@ -110,12 +111,15 @@ def generate_example_artifacts(
     )
     write_json_object(metadata, metadata_path)
 
+    review_summary = load_json_object(DEFAULT_REVIEW_SUMMARY_PATH)
     ledger = build_example_ledger(
         adapter,
         manifest,
         normalized_output_path,
         scored_trace_path,
         metadata_path,
+        DEFAULT_REVIEW_SUMMARY_PATH,
+        review_summary,
         len(normalized_records),
         len(scored_traces),
     )
@@ -270,6 +274,8 @@ def build_example_ledger(
     normalized_output_path: Path,
     scored_trace_path: Path,
     metadata_path: Path,
+    review_summary_path: Path,
+    review_summary: dict[str, Any],
     normalized_output_record_count: int,
     scored_trace_record_count: int,
 ) -> dict[str, Any]:
@@ -334,6 +340,17 @@ def build_example_ledger(
             "metadata_sha256": sha256_file(metadata_path),
             "metadata_kind": "dry_run_public_safe_example",
         },
+        "review_summary": {
+            "summary_path": display_path(review_summary_path),
+            "summary_sha256": sha256_file(review_summary_path),
+            "summary_id": review_summary["summary_id"],
+            "review_protocol_id": review_summary["review_protocol"]["protocol_id"],
+            "reviewed_record_count": review_summary["review_counts"]["records_reviewed"],
+            "needs_discussion_count": review_summary["review_counts"]["needs_discussion_count"],
+            "unsafe_output_count": review_summary["review_counts"]["unsafe_output_count"],
+            "malformed_output_count": review_summary["review_counts"]["malformed_output_count"],
+            "reviewer_count": review_summary["inter_rater"]["reviewer_count"],
+        },
         "execution_controls": {
             "live_local_required_flag": LIVE_LOCAL_REQUIRED_FLAG,
             "live_local_required_env": LIVE_LOCAL_REQUIRED_ENV,
@@ -375,7 +392,10 @@ def build_example_ledger(
             "src/scorers.py",
             "src/local_run_ledger.py",
             "src/validate_local_run_ledger.py",
+            "src/live_local_review_summary.py",
             "schemas/local_run_ledger.schema.json",
+            "schemas/live_local_review_summary.schema.json",
+            "traces/external/live_local_review_summary.example.json",
         ],
         "safety_assertions": {
             "public_safe": True,

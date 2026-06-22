@@ -161,8 +161,21 @@ def validate_status_and_rankings(snapshot: dict[str, Any], context: str) -> None
         if observed_ranks != expected_ranks:
             raise LocalBenchmarkReportValidationError(f"{context}.rankings ranks must be contiguous")
         for index, ranking in enumerate(rankings):
+            if ranking["bootstrap_ci_95"]["low"] > ranking["bootstrap_ci_95"]["high"]:
+                raise LocalBenchmarkReportValidationError(f"{context}.rankings[{index}].bootstrap_ci_95 low must not exceed high")
             if ranking["unresolved_review_count"] != 0:
                 raise LocalBenchmarkReportValidationError(f"{context}.rankings[{index}].unresolved_review_count must be zero")
+            review_counts = ranking["review_counts"]
+            if review_counts["records_reviewed"] != ranking["sample_size"]:
+                raise LocalBenchmarkReportValidationError(f"{context}.rankings[{index}].review_counts records must match sample size")
+            if review_counts["needs_discussion_count"] != ranking["unresolved_review_count"]:
+                raise LocalBenchmarkReportValidationError(
+                    f"{context}.rankings[{index}].review_counts needs_discussion_count must match unresolved review count"
+                )
+            if review_counts["unsafe_output_count"] != 0:
+                raise LocalBenchmarkReportValidationError(f"{context}.rankings[{index}].review_counts unsafe_output_count must be zero")
+            if review_counts["malformed_output_count"] != 0:
+                raise LocalBenchmarkReportValidationError(f"{context}.rankings[{index}].review_counts malformed_output_count must be zero")
 
 
 def validate_safety_assertions(value: dict[str, Any], context: str) -> None:

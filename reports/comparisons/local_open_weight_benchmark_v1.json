@@ -27,7 +27,7 @@
       "entry_count": 1,
       "excluded_entry_count": 1,
       "path": "traces/external/local_run_ledger.example.json",
-      "sha256": "6b4b003e149421cd9cf718f00193e15b566f872275eb3c8ce9a739cda548aaf8",
+      "sha256": "c0513c962351df9ddc7d80165e449f3e671aa693626d98f3f96868a60a84a02f",
       "source_id": "m58_reproducible_local_run_ledger_example",
       "source_kind": "dry_run_public_safe_example"
     }

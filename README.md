@@ -2,7 +2,7 @@
 
 Agent Behavior Evals Lab is a local evaluation harness for testing AI assistants and agentic systems against policy-defined behavior expectations. The lab is the evaluator: it defines policies, cases, target profiles, scoring rules, traces, and reports that can be reused across mock clients, real model adapters, local models, saved transcripts, and future agent integrations.
 
-OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results. This repository is intentionally not tied to one runtime, and the current deterministic gate does not execute OpenClaw, Hermes, production systems, private memory, private evidence ingestion, or live agent runtimes.
+OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results. The real-model proof path is prepared for manual opt-in local Ollama runs, but the current deterministic gate does not execute local models, hosted providers, OpenClaw, Hermes, production systems, private memory, private evidence ingestion, or live agent runtimes.
 
 ## Milestone 1 Status
 
@@ -79,6 +79,9 @@ src/
   redaction_promotion_pipeline.py # M67 public-safe redaction/promotion validator
   private_audit_report.py       # M68 local-only private audit report validator/generator
   retention_consent_access.py   # M69 public-safe retention/consent/access-control validator
+  live_local_review_summary.py  # M70 public-safe review/inter-rater summary validator
+  hosted_provider_batch.py      # M75 hosted-provider Batch metadata validator
+  real_model_proof_runbook.py   # M76 CLI/report runbook generator
   validate_adapter_outputs.py   # Normalized adapter-output fixture validator
   import_adapter_outputs.py     # Normalized adapter-output fixture importer
   dry_run_adapter.py            # Deterministic no-network adapter contract fixture producer
@@ -117,6 +120,9 @@ traces/
     promoted_private_evidence_outputs.example.jsonl # Public-safe promoted derivative fixture
     private_audit_report_metadata.example.json # Public-safe private audit report metadata request
     retention_consent_access_metadata.example.json # Public-safe retention/consent/access-control metadata
+    live_local_review_summary.example.json # Public-safe reviewer protocol and inter-rater metadata
+    hosted_provider_batch_metadata.example.json # Metadata-only hosted provider Batch plan
+    real_model_proof_runbook.example.json # CLI/report runbook for manual opt-in local proof
     adapter_outputs.example.jsonl # Public-safe normalized adapter-output fixture
     dry_run_adapter_outputs.jsonl # Generated dry-run adapter-output fixture
     fixture_manifest.json       # Controlled external fixture source index
@@ -152,6 +158,12 @@ reports/
     private_audit_report_boundary_summary.json # Generated M68 public-safe audit-report boundary snapshot
     retention_consent_access_summary.md # Generated M69 public-safe retention/access boundary summary
     retention_consent_access_summary.json # Generated M69 public-safe retention/access boundary snapshot
+    live_local_review_summary.md # Generated M70 review/inter-rater summary
+    live_local_review_summary.json # Generated M70 review/inter-rater snapshot
+    hosted_provider_batch_summary.md # Generated M75 hosted-provider metadata summary
+    hosted_provider_batch_summary.json # Generated M75 hosted-provider metadata snapshot
+    real_model_proof_runbook.md # Generated M76 operator runbook report
+    real_model_proof_runbook.json # Generated M76 operator runbook snapshot
     saved_transcript_replay_report.md # Generated transcript replay report
     external_fixture_comparison_report.md # Generated controlled external fixture comparison
     adjudication_summary_report.md # Generated reviewer decision summary
@@ -169,6 +181,9 @@ schemas/
   adjudication_manifest.schema.json # Adjudication fixture manifest contract
   report_manifest.schema.json   # Generated report artifact manifest contract
   retention_consent_access.schema.json # Retention/consent/access-control metadata contract
+  live_local_review_summary.schema.json # Review/inter-rater summary contract
+  hosted_provider_batch.schema.json # Hosted provider Batch metadata contract
+  real_model_proof_runbook.schema.json # Real-model proof runbook contract
 ```
 
 ## Eval Categories
@@ -529,7 +544,7 @@ From the repository root:
 python3 scripts/check_all.py
 ```
 
-This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, live-local dry-run plan validation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, public-safe Hermes-style long-running fixture generation/replay, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, report manifest validation, Python compile checks, and trace count verification for generated JSONL and report artifacts.
+This runs the local unit tests, schema validation, target registry validation, adapter-output fixture validation/import, dry-run adapter generation/validation/import, live-local dry-run plan validation, live-local review summary validation, local ledger/report validation, hosted-provider metadata validation, real-model proof runbook generation, mock eval generation, baseline report generation, profile comparison report generation, regression snapshot checking, manifest-backed failure inspection report generation, manual output eval generation, OpenClaw-style manual eval generation, saved transcript replay generation, public-safe Hermes-style long-running fixture generation/replay, external fixture comparison report generation, fixture manifest validation, adapter run metadata validation, adjudication fixture validations, manifest-backed adjudication-aware report generation, adjudication regression snapshot and threshold checking, baseline self trace comparison, report manifest validation, Python compile checks, and trace count verification for generated JSONL and report artifacts.
 
 ## Current Interpretation
 

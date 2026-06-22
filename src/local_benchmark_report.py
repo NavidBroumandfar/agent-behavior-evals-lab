@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import random
 import sys
 from pathlib import Path
 from typing import Any
@@ -93,7 +94,7 @@ def build_snapshot(
             if exclusion_reasons:
                 source_exclusions.append(excluded_entry(source_id, entry, exclusion_reasons))
             else:
-                rankings.append(ranking_from_entry(entry))
+                rankings.append(ranking_from_entry(entry, methodology))
         excluded_evidence.extend(source_exclusions)
         evidence_sources.append(
             {
@@ -199,6 +200,16 @@ def ledger_entry_exclusion_reasons(entry: dict[str, Any], methodology: dict[str,
         reasons.append("Benchmark split is not publishable for local rankings.")
     if int(entry["case_set"]["case_count"]) < minimum_sample_size:
         reasons.append("Sample size is below the publication minimum.")
+    if "cloud" in str(entry["model"]).lower():
+        reasons.append("Cloud-labelled model is excluded from local-only rankings.")
+    if entry["review_summary"]["reviewed_record_count"] != entry["outputs"]["scored_trace_record_count"]:
+        reasons.append("Review summary record count does not match scored traces.")
+    if int(entry["review_summary"]["needs_discussion_count"]) != 0:
+        reasons.append("Unresolved review records remain.")
+    if int(entry["review_summary"]["unsafe_output_count"]) != 0:
+        reasons.append("Review summary contains unsafe-output flags.")
+    if int(entry["review_summary"]["malformed_output_count"]) != 0:
+        reasons.append("Review summary contains malformed-output flags.")
     safety = entry["safety_assertions"]
     if safety["public_safe"] is not True:
         reasons.append("Entry is not public-safe.")
@@ -230,30 +241,127 @@ def excluded_entry(source_id: str, entry: dict[str, Any], exclusion_reasons: lis
     }
 
 
-def ranking_from_entry(entry: dict[str, Any]) -> dict[str, Any]:
-    """Build a future ranking row from a fully eligible ledger entry.
+def ranking_from_entry(entry: dict[str, Any], methodology: dict[str, Any]) -> dict[str, Any]:
+    """Build a ranking row from reviewed, scored, ledger-backed local evidence."""
 
-    Current committed evidence does not reach this path. The placeholder metric
-    fields keep the schema stable until reviewed benchmark result aggregation is
-    added around real M58 ledgers.
-    """
+    scored_traces = load_jsonl(repo_path(entry["outputs"]["scored_trace_path"]))
+    review_summary = load_json_object(repo_path(entry["review_summary"]["summary_path"]))
+    review_by_record_id = {
+        str(record["record_id"]): record
+        for record in review_summary["reviewed_records"]
+    }
+    case_results = []
+    severity_weights = methodology["severity_weights"]
+    for trace in scored_traces:
+        record_id = str(trace["source_record_id"])
+        review_record = review_by_record_id[record_id]
+        severity = str(trace["severity"])
+        if review_record["case_id"] != trace["case_id"]:
+            raise LocalBenchmarkReportGenerationError(
+                f"review summary case_id does not match scored trace for {record_id}"
+            )
+        if review_record["severity"] != severity:
+            raise LocalBenchmarkReportGenerationError(
+                f"review summary severity does not match scored trace for {record_id}"
+            )
+        severity_weight = float(severity_weights[severity])
+        case_results.append(
+            {
+                "record_id": record_id,
+                "case_id": str(trace["case_id"]),
+                "severity": severity,
+                "severity_weight": severity_weight,
+                "heuristic_score": 1.0 if trace["passed"] is True else 0.0,
+                "effective_score": 1.0 if review_record["effective_passed"] is True else 0.0,
+                "reviewer_decision": str(review_record["reviewer_decision"]),
+            }
+        )
+
+    total_weight = sum(float(item["severity_weight"]) for item in case_results)
+    effective_weighted = safe_divide(
+        sum(float(item["effective_score"]) * float(item["severity_weight"]) for item in case_results),
+        total_weight,
+    )
+    heuristic_weighted = safe_divide(
+        sum(float(item["heuristic_score"]) * float(item["severity_weight"]) for item in case_results),
+        total_weight,
+    )
+    review_counts = dict(review_summary["review_counts"])
+    review_counts["reviewer_count"] = review_summary["inter_rater"]["reviewer_count"]
+    review_counts["agreement_rate"] = review_summary["inter_rater"]["agreement_rate"]
 
     return {
         "rank": 0,
         "model": str(entry["model"]),
         "runtime": str(entry["runtime"]),
         "ledger_entry_id": str(entry["entry_id"]),
-        "sample_size": int(entry["case_set"]["case_count"]),
+        "sample_size": len(case_results),
         "benchmark_split": str(entry["case_set"]["benchmark_split"]),
-        "severity_weighted_effective_pass_rate": 0.0,
-        "severity_weighted_heuristic_pass_rate": 0.0,
-        "bootstrap_ci_95": {
-            "low": 0.0,
-            "high": 0.0,
-        },
-        "unresolved_review_count": 0,
+        "severity_weighted_effective_pass_rate": round(effective_weighted, 4),
+        "severity_weighted_heuristic_pass_rate": round(heuristic_weighted, 4),
+        "bootstrap_ci_95": deterministic_bootstrap_ci(
+            case_results,
+            int(methodology["uncertainty_policy"]["resample_count"]),
+            str(methodology["uncertainty_policy"]["random_seed"]),
+            str(entry["run_id"]),
+        ),
+        "unresolved_review_count": int(review_summary["review_counts"]["needs_discussion_count"]),
         "abstention_count": 0,
+        "review_counts": review_counts,
     }
+
+
+def deterministic_bootstrap_ci(
+    case_results: list[dict[str, Any]],
+    resample_count: int,
+    seed: str,
+    run_id: str,
+) -> dict[str, float]:
+    """Return a deterministic bootstrap CI over effective weighted pass rate."""
+
+    if not case_results:
+        return {"low": 0.0, "high": 0.0}
+    rng = random.Random(f"{seed}:{run_id}")
+    samples = []
+    for _ in range(resample_count):
+        resampled = [case_results[rng.randrange(len(case_results))] for _ in case_results]
+        total_weight = sum(float(item["severity_weight"]) for item in resampled)
+        weighted_score = safe_divide(
+            sum(float(item["effective_score"]) * float(item["severity_weight"]) for item in resampled),
+            total_weight,
+        )
+        samples.append(weighted_score)
+    samples.sort()
+    return {
+        "low": round(percentile(samples, 0.025), 4),
+        "high": round(percentile(samples, 0.975), 4),
+    }
+
+
+def percentile(values: list[float], fraction: float) -> float:
+    if not values:
+        return 0.0
+    index = round((len(values) - 1) * fraction)
+    return values[max(0, min(index, len(values) - 1))]
+
+
+def safe_divide(numerator: float, denominator: float) -> float:
+    return 0.0 if denominator == 0 else numerator / denominator
+
+
+def load_jsonl(path: Path) -> list[dict[str, Any]]:
+    records = []
+    with path.open("r", encoding="utf-8") as input_file:
+        for line in input_file:
+            stripped = line.strip()
+            if stripped:
+                records.append(json.loads(stripped))
+    return records
+
+
+def repo_path(value: Any) -> Path:
+    path = Path(str(value))
+    return path if path.is_absolute() else REPO_ROOT / path
 
 
 def generate_markdown(snapshot: dict[str, Any]) -> str:

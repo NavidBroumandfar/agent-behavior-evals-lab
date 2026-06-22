@@ -49,6 +49,9 @@ EXPECTED_LOCAL_BENCHMARK_CASE_LINES = 210
 LOCAL_BENCHMARK_MANIFEST_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/manifest.json"
 LOCAL_ADAPTER_REGISTRY_PATH = REPO_ROOT / "targets/adapters/local_adapter_registry.json"
 LIVE_LOCAL_RUN_PLAN_PATH = REPO_ROOT / "traces/external/live_local_run_plan.example.json"
+LIVE_LOCAL_REVIEW_SUMMARY_PATH = REPO_ROOT / "traces/external/live_local_review_summary.example.json"
+LIVE_LOCAL_REVIEW_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/live_local_review_summary.json"
+LIVE_LOCAL_REVIEW_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/live_local_review_summary.md"
 LOCAL_RUN_LEDGER_PATH = REPO_ROOT / "traces/external/local_run_ledger.example.json"
 LOCAL_RUN_LEDGER_METADATA_PATH = REPO_ROOT / "traces/external/local_run_ledger_metadata.example.json"
 LOCAL_RUN_LEDGER_OUTPUT_PATH = REPO_ROOT / "traces/external/local_run_ledger_outputs.example.jsonl"
@@ -61,6 +64,9 @@ LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local
 LOCAL_RANKING_METHODOLOGY_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_ranking_methodology_example.md"
 LOCAL_BENCHMARK_REPORT_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.json"
 LOCAL_BENCHMARK_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.md"
+REAL_MODEL_PROOF_RUNBOOK_PATH = REPO_ROOT / "traces/external/real_model_proof_runbook.example.json"
+REAL_MODEL_PROOF_RUNBOOK_JSON_PATH = REPO_ROOT / "reports/comparisons/real_model_proof_runbook.json"
+REAL_MODEL_PROOF_RUNBOOK_REPORT_PATH = REPO_ROOT / "reports/comparisons/real_model_proof_runbook.md"
 TOOL_CALL_SUMMARY_PATH = REPO_ROOT / "traces/external/tool_call_summaries.example.jsonl"
 EXPECTED_TOOL_CALL_SUMMARY_LINES = 3
 ACTION_BOUNDARY_INPUT_PATH = REPO_ROOT / "traces/external/action_boundary_tool_summaries.example.jsonl"
@@ -115,6 +121,9 @@ PRIVATE_AUDIT_REPORT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/priv
 RETENTION_CONSENT_ACCESS_METADATA_PATH = REPO_ROOT / "traces/external/retention_consent_access_metadata.example.json"
 RETENTION_CONSENT_ACCESS_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/retention_consent_access_summary.json"
 RETENTION_CONSENT_ACCESS_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/retention_consent_access_summary.md"
+HOSTED_PROVIDER_BATCH_METADATA_PATH = REPO_ROOT / "traces/external/hosted_provider_batch_metadata.example.json"
+HOSTED_PROVIDER_BATCH_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/hosted_provider_batch_summary.json"
+HOSTED_PROVIDER_BATCH_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/hosted_provider_batch_summary.md"
 OPENCLAW_SAVED_TRANSCRIPT_REPORT_PATH = REPO_ROOT / "reports/comparisons/openclaw_saved_transcript_pilot_report.md"
 PUBLIC_SAFE_TRANSCRIPT_EXPANSION_REPORT_PATH = REPO_ROOT / "reports/comparisons/public_safe_transcript_expansion_report.md"
 FOCUSED_SCORER_EVIDENCE_REPORT_PATH = REPO_ROOT / "reports/comparisons/focused_scorer_evidence_report.md"
@@ -387,6 +396,10 @@ CHECKS = [
         ["python3", "src/retention_consent_access.py"],
     ),
     (
+        "hosted provider batch metadata validation",
+        ["python3", "src/hosted_provider_batch.py"],
+    ),
+    (
         "external fixture comparison report generation",
         ["python3", "src/compare_external_fixtures.py"],
     ),
@@ -557,6 +570,10 @@ CHECKS = [
         ["python3", "src/validate_live_local_run.py"],
     ),
     (
+        "live-local review summary validation",
+        ["python3", "src/live_local_review_summary.py"],
+    ),
+    (
         "local run ledger example generation",
         ["python3", "src/local_run_ledger.py"],
     ),
@@ -579,6 +596,10 @@ CHECKS = [
     (
         "local benchmark report validation",
         ["python3", "src/validate_local_benchmark_report.py"],
+    ),
+    (
+        "real-model proof runbook generation",
+        ["python3", "src/real_model_proof_runbook.py"],
     ),
     (
         "tool sandbox contract validation",
@@ -653,12 +674,14 @@ CHECKS = [
             "src/validate_local_adapter_registry.py",
             "src/live_local_harness.py",
             "src/validate_live_local_run.py",
+            "src/live_local_review_summary.py",
             "src/local_run_ledger.py",
             "src/validate_local_run_ledger.py",
             "src/local_ranking_methodology.py",
             "src/validate_local_ranking_methodology.py",
             "src/local_benchmark_report.py",
             "src/validate_local_benchmark_report.py",
+            "src/real_model_proof_runbook.py",
             "src/validate_tool_sandbox_contract.py",
             "src/action_boundary_recorder.py",
             "src/openclaw_harness_adapter.py",
@@ -668,6 +691,7 @@ CHECKS = [
             "src/redaction_promotion_pipeline.py",
             "src/private_audit_report.py",
             "src/retention_consent_access.py",
+            "src/hosted_provider_batch.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -829,6 +853,10 @@ def main() -> int:
                 verify_report_exists(LOCAL_ADAPTER_REGISTRY_PATH)
             if name == "live-local dry-run plan validation":
                 verify_report_exists(LIVE_LOCAL_RUN_PLAN_PATH)
+            if name == "live-local review summary validation":
+                verify_report_exists(LIVE_LOCAL_REVIEW_SUMMARY_PATH)
+                verify_report_exists(LIVE_LOCAL_REVIEW_SUMMARY_JSON_PATH)
+                verify_report_exists(LIVE_LOCAL_REVIEW_SUMMARY_REPORT_PATH)
             if name == "local run ledger example generation":
                 verify_report_exists(LOCAL_RUN_LEDGER_PATH)
                 verify_report_exists(LOCAL_RUN_LEDGER_METADATA_PATH)
@@ -850,6 +878,10 @@ def main() -> int:
             if name == "local benchmark report validation":
                 verify_report_exists(LOCAL_BENCHMARK_REPORT_SNAPSHOT_PATH)
                 verify_report_exists(LOCAL_BENCHMARK_REPORT_PATH)
+            if name == "real-model proof runbook generation":
+                verify_report_exists(REAL_MODEL_PROOF_RUNBOOK_PATH)
+                verify_report_exists(REAL_MODEL_PROOF_RUNBOOK_JSON_PATH)
+                verify_report_exists(REAL_MODEL_PROOF_RUNBOOK_REPORT_PATH)
             if name == "tool sandbox contract validation":
                 verify_jsonl_count(TOOL_CALL_SUMMARY_PATH, EXPECTED_TOOL_CALL_SUMMARY_LINES)
             if name == "action boundary recorder generation":
@@ -919,6 +951,10 @@ def main() -> int:
                 verify_report_exists(RETENTION_CONSENT_ACCESS_METADATA_PATH)
                 verify_report_exists(RETENTION_CONSENT_ACCESS_SUMMARY_JSON_PATH)
                 verify_report_exists(RETENTION_CONSENT_ACCESS_SUMMARY_REPORT_PATH)
+            if name == "hosted provider batch metadata validation":
+                verify_report_exists(HOSTED_PROVIDER_BATCH_METADATA_PATH)
+                verify_report_exists(HOSTED_PROVIDER_BATCH_SUMMARY_JSON_PATH)
+                verify_report_exists(HOSTED_PROVIDER_BATCH_SUMMARY_REPORT_PATH)
     except (subprocess.CalledProcessError, RuntimeError) as exc:
         print(f"FAILED: {exc}", file=sys.stderr)
         return 1

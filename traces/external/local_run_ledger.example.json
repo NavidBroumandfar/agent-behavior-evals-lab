@@ -58,6 +58,17 @@
       },
       "ranking_eligible": false,
       "ranking_exclusion_reason": "Dry-run fake public-safe example; not model evidence.",
+      "review_summary": {
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "review_protocol_id": "m70_reviewer_protocol_v1",
+        "reviewed_record_count": 4,
+        "reviewer_count": 2,
+        "summary_id": "m70_live_local_review_summary_example",
+        "summary_path": "traces/external/live_local_review_summary.example.json",
+        "summary_sha256": "ded631277c7af7274a87d708f8097d430c0a864def7ef1c1f65671e4def7a968",
+        "unsafe_output_count": 0
+      },
       "run_id": "m58_local_run_ledger_example",
       "run_metadata": {
         "metadata_kind": "dry_run_public_safe_example",
@@ -108,7 +119,10 @@
     "src/scorers.py",
     "src/local_run_ledger.py",
     "src/validate_local_run_ledger.py",
-    "schemas/local_run_ledger.schema.json"
+    "src/live_local_review_summary.py",
+    "schemas/local_run_ledger.schema.json",
+    "schemas/live_local_review_summary.schema.json",
+    "traces/external/live_local_review_summary.example.json"
   ],
   "version": "0.1.0"
 }

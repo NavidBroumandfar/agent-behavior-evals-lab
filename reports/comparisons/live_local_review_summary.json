@@ -1,0 +1,76 @@
+{
+  "boundaries": [
+    "M70 validates public-safe review metadata only.",
+    "Reviewer IDs are aliases, not personal identities.",
+    "Raw local model outputs are not included in committed review summaries.",
+    "Unresolved needs_discussion records block publishable benchmark evidence.",
+    "This report is not a live model run, cloud ranking, production-safety proof, or provider benchmark."
+  ],
+  "generated_at": "2026-06-22T00:00:00Z",
+  "inter_rater": {
+    "agreement_count": 2,
+    "agreement_rate": 1.0,
+    "disagreement_count": 0,
+    "double_reviewed_count": 2,
+    "reviewer_count": 2
+  },
+  "publication_gate": {
+    "malformed_output_count": 0,
+    "needs_discussion_count": 0,
+    "publishable_review_state": true,
+    "unresolved_review_blocks_publication": true,
+    "unsafe_output_count": 0
+  },
+  "quality_gate": {
+    "deterministic_gate_uses_fake_review_metadata_only": true,
+    "external_actions_in_quality_gate": false,
+    "live_local_execution_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_outputs_read_in_quality_gate": false
+  },
+  "report_id": "m70_live_local_review_summary_report",
+  "review_counts": {
+    "effective_fail_count": 0,
+    "effective_pass_count": 4,
+    "malformed_output_count": 0,
+    "needs_discussion_count": 0,
+    "override_count": 0,
+    "records_reviewed": 4,
+    "scorer_fail_count": 0,
+    "scorer_pass_count": 4,
+    "unsafe_output_count": 0
+  },
+  "review_protocol": {
+    "allowed_decisions": [
+      "uphold_scorer_pass",
+      "uphold_scorer_fail",
+      "override_pass",
+      "override_fail",
+      "needs_discussion"
+    ],
+    "private_data_included": false,
+    "protocol_id": "m70_reviewer_protocol_v1",
+    "raw_outputs_included": false,
+    "reviewer_aliases_only": true,
+    "rubric_version": "0.1.0"
+  },
+  "safety_assertions": {
+    "cloud_ranking_claim": false,
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "production_safety_claim": false,
+    "public_safe": true,
+    "raw_outputs_included": false
+  },
+  "sampling_policy": {
+    "deterministic_seed": "m70-live-local-review-sample-v1",
+    "pass_sample_rate": 0.2,
+    "policy_id": "m70_live_local_review_sampling_v1",
+    "review_every_failed_case": true,
+    "review_every_high_or_critical_case": true
+  },
+  "source_schema_path": "schemas/live_local_review_summary.schema.json",
+  "source_summary_path": "traces/external/live_local_review_summary.example.json",
+  "summary_id": "m70_live_local_review_summary_example"
+}

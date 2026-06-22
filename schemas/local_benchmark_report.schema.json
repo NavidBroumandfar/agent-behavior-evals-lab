@@ -239,7 +239,8 @@
           "severity_weighted_heuristic_pass_rate",
           "bootstrap_ci_95",
           "unresolved_review_count",
-          "abstention_count"
+          "abstention_count",
+          "review_counts"
         ],
         "properties": {
           "rank": {
@@ -306,6 +307,70 @@
           "abstention_count": {
             "type": "integer",
             "minimum": 0
+          },
+          "review_counts": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "records_reviewed",
+              "scorer_pass_count",
+              "scorer_fail_count",
+              "effective_pass_count",
+              "effective_fail_count",
+              "override_count",
+              "needs_discussion_count",
+              "unsafe_output_count",
+              "malformed_output_count",
+              "reviewer_count",
+              "agreement_rate"
+            ],
+            "properties": {
+              "records_reviewed": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "scorer_pass_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "scorer_fail_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "effective_pass_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "effective_fail_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "override_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "needs_discussion_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "unsafe_output_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "malformed_output_count": {
+                "type": "integer",
+                "minimum": 0
+              },
+              "reviewer_count": {
+                "type": "integer",
+                "minimum": 1
+              },
+              "agreement_rate": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 1
+              }
+            }
           }
         }
       }

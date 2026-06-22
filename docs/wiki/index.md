@@ -130,9 +130,13 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Local public benchmark corpus: `evals/benchmarks/local_public_v1/cases.jsonl`, `evals/benchmarks/local_public_v1/manifest.json`, and `src/validate_local_benchmark_corpus.py`
 - Local adapter registry: `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`
 - Live local text-only harness: `scripts/live_local.py`, `src/live_local_harness.py`, `schemas/live_local_run.schema.json`, `src/validate_live_local_run.py`, and `traces/external/live_local_run_plan.example.json`
+- Live-local review summary: `traces/external/live_local_review_summary.example.json`, `schemas/live_local_review_summary.schema.json`, `src/live_local_review_summary.py`, `reports/comparisons/live_local_review_summary.json`, and `reports/comparisons/live_local_review_summary.md`
 - Reproducible local run ledger: `traces/external/local_run_ledger.example.json`, `schemas/local_run_ledger.schema.json`, `src/local_run_ledger.py`, and `src/validate_local_run_ledger.py`
 - Local ranking methodology: `benchmarks/local_ranking_methodology.json`, `schemas/local_ranking_methodology.schema.json`, `src/local_ranking_methodology.py`, and `src/validate_local_ranking_methodology.py`
 - Local/open-weight benchmark report: `reports/comparisons/local_open_weight_benchmark_v1.json`, `reports/comparisons/local_open_weight_benchmark_v1.md`, `schemas/local_benchmark_report.schema.json`, and `src/validate_local_benchmark_report.py`
+- Real-model proof runbook: `traces/external/real_model_proof_runbook.example.json`, `schemas/real_model_proof_runbook.schema.json`, `src/real_model_proof_runbook.py`, `reports/comparisons/real_model_proof_runbook.json`, and `reports/comparisons/real_model_proof_runbook.md`
+- Hosted provider Batch metadata: `traces/external/hosted_provider_batch_metadata.example.json`, `schemas/hosted_provider_batch.schema.json`, `src/hosted_provider_batch.py`, `reports/comparisons/hosted_provider_batch_summary.json`, and `reports/comparisons/hosted_provider_batch_summary.md`
+- Real model proof path concept: `docs/wiki/concepts/real_model_proof_path.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
 - Reporting product summary: `src/reporting_product_summary.py`, `reports/comparisons/reporting_product_summary.json`, and `reports/comparisons/reporting_product_summary.md`
 - Historical trend snapshots: `src/historical_trend_snapshot.py`, `reports/comparisons/historical_trend_snapshot.json`, and `reports/comparisons/historical_trend_report.md`

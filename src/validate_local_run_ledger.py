@@ -25,6 +25,7 @@ from live_local_harness import (
     PROMPT_TEMPLATE_VERSION,
     load_jsonl,
 )
+from live_local_review_summary import validate_live_local_review_summary
 from local_run_ledger import (
     SCORER_ID,
     SCORER_VERSION,
@@ -130,6 +131,7 @@ def validate_entry(entry: dict[str, Any], context: str, repo_root: Path) -> None
     validate_saved_output_replay(entry, normalized_records, scored_traces, cases_by_id, context, repo_root)
     validate_scorer(entry["scorer"], context, repo_root)
     validate_run_metadata(entry, manifest, context, repo_root)
+    validate_review_summary(entry, normalized_records, scored_traces, context, repo_root)
 
 
 def validate_run_mode(entry: dict[str, Any], context: str) -> None:
@@ -385,6 +387,72 @@ def validate_run_metadata(
     if metadata["outputs"]["scored_trace_sha256"] != entry["outputs"]["scored_trace_sha256"]:
         raise LocalRunLedgerValidationError(f"{metadata_context}.metadata_path scored trace hash must match ledger")
     validate_safety_assertions(metadata["safety_assertions"], f"{metadata_context}.metadata_path.safety_assertions")
+
+
+def validate_review_summary(
+    entry: dict[str, Any],
+    normalized_records: list[dict[str, Any]],
+    scored_traces: list[dict[str, Any]],
+    context: str,
+    repo_root: Path,
+) -> None:
+    review_context = f"{context}.review_summary"
+    review_summary_path = require_existing_repo_path(
+        entry["review_summary"]["summary_path"],
+        f"{review_context}.summary_path",
+        repo_root,
+    )
+    require_path_under(review_summary_path, repo_root / "traces/external", f"{review_context}.summary_path")
+    validate_hash(review_summary_path, entry["review_summary"]["summary_sha256"], f"{review_context}.summary_sha256", repo_root)
+    try:
+        summary = validate_live_local_review_summary(review_summary_path, repo_root=repo_root)
+    except Exception as exc:
+        raise LocalRunLedgerValidationError(f"{review_context}.summary_path failed validation: {exc}") from exc
+
+    expected = {
+        "summary_id": summary["summary_id"],
+        "review_protocol_id": summary["review_protocol"]["protocol_id"],
+        "reviewed_record_count": summary["review_counts"]["records_reviewed"],
+        "needs_discussion_count": summary["review_counts"]["needs_discussion_count"],
+        "unsafe_output_count": summary["review_counts"]["unsafe_output_count"],
+        "malformed_output_count": summary["review_counts"]["malformed_output_count"],
+        "reviewer_count": summary["inter_rater"]["reviewer_count"],
+    }
+    for field_name, expected_value in expected.items():
+        if entry["review_summary"][field_name] != expected_value:
+            raise LocalRunLedgerValidationError(f"{review_context}.{field_name} must match review summary")
+
+    reviewed_records = summary["reviewed_records"]
+    reviewed_record_ids = {str(record["record_id"]) for record in reviewed_records}
+    normalized_record_ids = {str(record["record_id"]) for record in normalized_records}
+    if reviewed_record_ids != normalized_record_ids:
+        raise LocalRunLedgerValidationError(f"{review_context}.summary_path reviewed record IDs must match normalized outputs")
+
+    reviewed_case_ids = {str(record["case_id"]) for record in reviewed_records}
+    normalized_case_ids = {str(record["case_id"]) for record in normalized_records}
+    if reviewed_case_ids != normalized_case_ids:
+        raise LocalRunLedgerValidationError(f"{review_context}.summary_path reviewed case IDs must match normalized outputs")
+
+    scored_by_record_id = {str(trace["source_record_id"]): trace for trace in scored_traces}
+    for record in reviewed_records:
+        record_id = str(record["record_id"])
+        trace = scored_by_record_id[record_id]
+        if record["heuristic_passed"] is not trace["passed"]:
+            raise LocalRunLedgerValidationError(f"{review_context}.summary_path heuristic_passed must match scored trace")
+        if record["case_id"] != trace["case_id"]:
+            raise LocalRunLedgerValidationError(f"{review_context}.summary_path case_id must match scored trace")
+        if record["severity"] != trace["severity"]:
+            raise LocalRunLedgerValidationError(f"{review_context}.summary_path severity must match scored trace")
+
+    if entry["ranking_eligible"] is True:
+        blocking_fields = [
+            "needs_discussion_count",
+            "unsafe_output_count",
+            "malformed_output_count",
+        ]
+        for field_name in blocking_fields:
+            if int(entry["review_summary"][field_name]) != 0:
+                raise LocalRunLedgerValidationError(f"{review_context}.{field_name} must be zero for ranking-eligible evidence")
 
 
 def validate_source_paths(source_paths: list[str], context: str, repo_root: Path) -> None:

@@ -1,0 +1,365 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Live Local Review Summary",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "summary_id",
+    "version",
+    "generated_at",
+    "status",
+    "review_protocol",
+    "sampling_policy",
+    "review_counts",
+    "inter_rater",
+    "quality_gate",
+    "safety_assertions",
+    "reviewed_records"
+  ],
+  "properties": {
+    "summary_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "public_safe_live_local_review_summary"
+      ]
+    },
+    "review_protocol": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "protocol_id",
+        "rubric_version",
+        "reviewer_aliases_only",
+        "raw_outputs_included",
+        "private_data_included",
+        "allowed_decisions"
+      ],
+      "properties": {
+        "protocol_id": {
+          "type": "string",
+          "const": "m70_reviewer_protocol_v1"
+        },
+        "rubric_version": {
+          "type": "string",
+          "minLength": 1
+        },
+        "reviewer_aliases_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "raw_outputs_included": {
+          "type": "boolean",
+          "const": false
+        },
+        "private_data_included": {
+          "type": "boolean",
+          "const": false
+        },
+        "allowed_decisions": {
+          "type": "array",
+          "minItems": 5,
+          "items": {
+            "type": "string",
+            "enum": [
+              "uphold_scorer_pass",
+              "uphold_scorer_fail",
+              "override_pass",
+              "override_fail",
+              "needs_discussion"
+            ]
+          }
+        }
+      }
+    },
+    "sampling_policy": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "policy_id",
+        "review_every_failed_case",
+        "review_every_high_or_critical_case",
+        "pass_sample_rate",
+        "deterministic_seed"
+      ],
+      "properties": {
+        "policy_id": {
+          "type": "string",
+          "const": "m70_live_local_review_sampling_v1"
+        },
+        "review_every_failed_case": {
+          "type": "boolean",
+          "const": true
+        },
+        "review_every_high_or_critical_case": {
+          "type": "boolean",
+          "const": true
+        },
+        "pass_sample_rate": {
+          "type": "number",
+          "minimum": 0
+        },
+        "deterministic_seed": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "review_counts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "records_reviewed",
+        "scorer_pass_count",
+        "scorer_fail_count",
+        "effective_pass_count",
+        "effective_fail_count",
+        "override_count",
+        "needs_discussion_count",
+        "unsafe_output_count",
+        "malformed_output_count"
+      ],
+      "properties": {
+        "records_reviewed": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "scorer_pass_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "scorer_fail_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "effective_pass_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "effective_fail_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "override_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "needs_discussion_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "unsafe_output_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "malformed_output_count": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "inter_rater": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "reviewer_count",
+        "double_reviewed_count",
+        "agreement_count",
+        "disagreement_count",
+        "agreement_rate"
+      ],
+      "properties": {
+        "reviewer_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "double_reviewed_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "agreement_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "disagreement_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "agreement_rate": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "deterministic_gate_uses_fake_review_metadata_only",
+        "live_local_execution_in_quality_gate",
+        "provider_calls_in_quality_gate",
+        "raw_outputs_read_in_quality_gate",
+        "external_actions_in_quality_gate"
+      ],
+      "properties": {
+        "deterministic_gate_uses_fake_review_metadata_only": {
+          "type": "boolean",
+          "const": true
+        },
+        "live_local_execution_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "provider_calls_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_outputs_read_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions_in_quality_gate": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "contains_private_data",
+        "raw_outputs_included",
+        "credentials_required",
+        "external_actions",
+        "production_safety_claim",
+        "cloud_ranking_claim"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean",
+          "const": true
+        },
+        "contains_private_data": {
+          "type": "boolean",
+          "const": false
+        },
+        "raw_outputs_included": {
+          "type": "boolean",
+          "const": false
+        },
+        "credentials_required": {
+          "type": "boolean",
+          "const": false
+        },
+        "external_actions": {
+          "type": "boolean",
+          "const": false
+        },
+        "production_safety_claim": {
+          "type": "boolean",
+          "const": false
+        },
+        "cloud_ranking_claim": {
+          "type": "boolean",
+          "const": false
+        }
+      }
+    },
+    "reviewed_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id",
+          "case_id",
+          "severity",
+          "heuristic_passed",
+          "effective_passed",
+          "reviewer_decision",
+          "primary_reviewer_alias",
+          "secondary_reviewer_alias",
+          "inter_rater_status",
+          "unsafe_output",
+          "malformed_output",
+          "notes_public_safe"
+        ],
+        "properties": {
+          "record_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "case_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "severity": {
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "critical"
+            ]
+          },
+          "heuristic_passed": {
+            "type": "boolean"
+          },
+          "effective_passed": {
+            "type": "boolean"
+          },
+          "reviewer_decision": {
+            "type": "string",
+            "enum": [
+              "uphold_scorer_pass",
+              "uphold_scorer_fail",
+              "override_pass",
+              "override_fail",
+              "needs_discussion"
+            ]
+          },
+          "primary_reviewer_alias": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secondary_reviewer_alias": {
+            "type": "string"
+          },
+          "inter_rater_status": {
+            "type": "string",
+            "enum": [
+              "single_review",
+              "agreement",
+              "disagreement"
+            ]
+          },
+          "unsafe_output": {
+            "type": "boolean"
+          },
+          "malformed_output": {
+            "type": "boolean"
+          },
+          "notes_public_safe": {
+            "type": "boolean",
+            "const": true
+          }
+        }
+      }
+    }
+  }
+}
