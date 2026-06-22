@@ -564,8 +564,8 @@ Acceptance criteria:
 Turn the M77 technical proof into publishable local/open-weight evidence only
 through explicit review, ledger, second-target, reproducibility, and claim gates.
 
-Status: active / M84 public-safe reproducibility packet published after the
-M83 local-open-weight ranking.
+Status: active / M85 runtime stability metadata published after the M83
+local-open-weight ranking and M84 reproducibility packet.
 
 Milestone sequence:
 
@@ -581,8 +581,8 @@ Milestone sequence:
 - M80 documents the second local target decision after the M77
   `gemma4:latest` swapout blocker.
   Status: complete; `mistral:latest` is selected for the current publication
-  path, and `gemma4:latest` is deferred until a resource-stability profile
-  exists.
+  path, and `gemma4:latest` remains deferred after the M85 stability profile
+  until a separate explicit retry decision exists.
 - M81 executes the selected second target over the extended split if the
   operator safety profile allows it.
   Status: complete; `mistral:latest` produced 210 / 210 extended raw records
@@ -601,6 +601,8 @@ Milestone sequence:
   `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`.
 - M85 adds runtime stability/resource metadata so heavier models have explicit
   stop criteria.
+  Status: complete; see
+  `docs/milestones/m85-runtime-stability-resource-profile-closeout.md`.
 - M86 adds a claim-review and release checklist before any result is described
   as publishable, production-relevant, externally reproducible, or comparable to
   hosted-provider evidence.

@@ -84,8 +84,8 @@ from saved public-safe derivatives. They are not raw model outputs.
 | --- | --- | --- |
 | `reports/comparisons/local_open_weight_benchmark_v1.json` | Machine-readable published local ranking | `ae9d2e7a20ad4e9b25db9760847e1d54b6ac89f88002e2cd9abca9e409f48596` |
 | `reports/comparisons/local_open_weight_benchmark_v1.md` | Reader-facing published local ranking | `36b5e401e5ac301d92e827bce5c9f02ff29acb824bbb1405ea42a868df5deb36` |
-| `reports/comparisons/real_model_proof_runbook.json` | Machine-readable runbook state | `3b1ea83bd5b03648465a080047bb7ea96056d12dd568a27789dad2568d40e640` |
-| `reports/comparisons/real_model_proof_runbook.md` | Reader-facing runbook state | `70cff5fb1e55456121bc66fcc086e8b83bf5edfe217692d4fde05680229f88a0` |
+| `reports/comparisons/real_model_proof_runbook.json` | Machine-readable runbook state | `ae0c7a51432eb1fccdb7f6bef7df29eb28e1e30baa835605b0f53b6e0248b1ac` |
+| `reports/comparisons/real_model_proof_runbook.md` | Reader-facing runbook state | `27490c29862385e33fd9f81d6788efe687bf18ba3ef7115882d557464e7d440f` |
 
 ### Ranked Ledger Artifacts
 
@@ -222,7 +222,8 @@ Disallowed claims:
 
 Explicit target boundaries:
 
-- `gemma4:latest` remains deferred pending resource-stability metadata.
+- `gemma4:latest` remains deferred; M85 records resource-stability metadata but
+  does not authorize a retry or make it ranking-eligible.
 - `qwen3.5:2b-q4_K_M` remains smoke/control only.
 - `gemma4:31b-cloud` remains excluded from local/open-weight claims.
 

@@ -1,0 +1,161 @@
+{
+  "claim_boundaries": [
+    "Runtime stability metadata is operational metadata, not model-quality evidence.",
+    "Interrupted or partial live-local runs are excluded from local/open-weight rankings.",
+    "A deferred heavy local target can be retried only after explicit operator opt-in and updated stability metadata.",
+    "Smoke/control targets remain excluded from publication claims.",
+    "Cloud-labelled targets remain excluded from local/open-weight claims."
+  ],
+  "generated_at": "2026-06-22T00:00:00Z",
+  "model_profiles": [
+    {
+      "allowed_splits": [
+        "extended"
+      ],
+      "model": "llama3.2:latest",
+      "notes": "Completed reviewed extended evidence in M79 and is part of the current local/open-weight ranking.",
+      "publication_use": "current_local_open_weight_ranking",
+      "ranking_eligible": true,
+      "resource_class": "observed_laptop_safe",
+      "role": "ranked_local_target",
+      "status": "completed_reviewed_extended"
+    },
+    {
+      "allowed_splits": [
+        "extended"
+      ],
+      "model": "mistral:latest",
+      "notes": "Completed reviewed extended evidence in M82 and is part of the current local/open-weight ranking.",
+      "publication_use": "current_local_open_weight_ranking",
+      "ranking_eligible": true,
+      "resource_class": "observed_laptop_safe",
+      "role": "ranked_local_target",
+      "status": "completed_reviewed_extended"
+    },
+    {
+      "allowed_splits": [
+        "smoke"
+      ],
+      "model": "qwen3.5:2b-q4_K_M",
+      "notes": "Reserved for quick operator smoke checks only; smoke/control evidence cannot unlock or change rankings.",
+      "publication_use": "operator_smoke_only",
+      "ranking_eligible": false,
+      "resource_class": "small_smoke_control",
+      "role": "smoke_control",
+      "status": "smoke_control_only"
+    },
+    {
+      "allowed_splits": [
+        "extended"
+      ],
+      "model": "gemma4:latest",
+      "notes": "Deferred after M77 swap activity. A future retry needs explicit opt-in, plan-only preflight, and updated resource observations before any reviewed evidence can be considered.",
+      "publication_use": "deferred_operational_blocker",
+      "ranking_eligible": false,
+      "resource_class": "heavy_requires_stability_profile",
+      "role": "deferred_heavy_local_target",
+      "status": "deferred_after_swap_activity"
+    },
+    {
+      "allowed_splits": [
+        "extended"
+      ],
+      "model": "gemma4:31b-cloud",
+      "notes": "Cloud-labelled target is outside local/open-weight claims and cannot be mixed into the local ranking.",
+      "publication_use": "excluded_cloud_boundary",
+      "ranking_eligible": false,
+      "resource_class": "not_local_open_weight",
+      "role": "excluded_cloud_labelled_target",
+      "status": "excluded_from_local_claims"
+    }
+  ],
+  "observed_blockers": [
+    {
+      "blocker_id": "m77_gemma4_latest_swap_activity",
+      "decision": "defer_target",
+      "milestone": "M77",
+      "model": "gemma4:latest",
+      "observation": "The heavier extended run was stopped after swap activity was observed during operator monitoring.",
+      "public_safe_summary": "The target was treated as an operational stability blocker. No completed raw run, reviewed derivative, scored trace, or ledger was promoted for ranking.",
+      "ranking_evidence": false,
+      "raw_run_artifact_written": false,
+      "split": "extended"
+    }
+  ],
+  "operator_controls": {
+    "interrupted_runs_rankable": false,
+    "manual_opt_in_required": true,
+    "one_model_at_a_time": true,
+    "plan_only_preflight_required": true,
+    "quality_gate_live_execution_allowed": false,
+    "raw_outputs_committable": false,
+    "review_required_before_scoring": true,
+    "stop_on_instability": true
+  },
+  "profile_id": "m85_runtime_stability_profile",
+  "purpose": "Public-safe runtime stability metadata for live-local model runs, with explicit stop criteria for heavier targets.",
+  "quality_gate": {
+    "external_actions_in_quality_gate": false,
+    "live_local_execution_in_quality_gate": false,
+    "profile_validation_in_quality_gate": true,
+    "provider_calls_in_quality_gate": false,
+    "raw_output_read_in_quality_gate": false,
+    "runtime_probe_in_quality_gate": false
+  },
+  "runtime": {
+    "adapter_id": "ollama_text_only",
+    "external_actions_allowed": false,
+    "harness_id": "live_local_text_only_harness",
+    "harness_version": "0.1.0",
+    "required_env": "AGENT_EVALS_ENABLE_LIVE_LOCAL",
+    "required_flag": "--live-local",
+    "runtime_id": "ollama",
+    "tools_enabled": false
+  },
+  "safety_assertions": {
+    "contains_credentials_or_secrets": false,
+    "contains_private_data": false,
+    "contains_raw_outputs": false,
+    "live_execution": false,
+    "metadata_only": true,
+    "production_safety_claim": false,
+    "public_safe": true,
+    "ranking_claim_from_interrupted_runs": false,
+    "third_party_reproducibility_claim": false
+  },
+  "source_paths": [
+    "docs/roadmap.md",
+    "docs/live_benchmark_roadmap.md",
+    "docs/milestones/m77-controlled-live-local-technical-proof-run-closeout.md",
+    "docs/milestones/m80-second-local-target-safety-decision-closeout.md",
+    "docs/milestones/m84-public-safe-reproducibility-packet-closeout.md",
+    "reports/comparisons/real_model_proof_runbook.json",
+    "targets/adapters/local_adapter_registry.json",
+    "src/live_local_harness.py"
+  ],
+  "status": "public_safe_resource_profile",
+  "stop_criteria": [
+    {
+      "criterion_id": "memory_pressure_or_swap_activity",
+      "public_metadata_allowed": true,
+      "ranking_effect": "operational_blocker_not_evidence",
+      "required_action": "Stop the run, keep raw/local artifacts ignored, and record only public-safe blocker metadata.",
+      "trigger": "Operator observes memory pressure, swap activity, or sustained paging during a live-local run."
+    },
+    {
+      "criterion_id": "thermal_or_power_instability",
+      "public_metadata_allowed": true,
+      "ranking_effect": "defer_until_profile_updated",
+      "required_action": "Stop or defer the run until the operator can document a stable machine profile.",
+      "trigger": "Thermal throttling, unstable power state, or other machine instability is observed."
+    },
+    {
+      "criterion_id": "model_availability_or_timeout_failure",
+      "public_metadata_allowed": true,
+      "ranking_effect": "exclude_partial_run",
+      "required_action": "Exclude the incomplete run from rankings and require a fresh complete reviewed run before ledgering.",
+      "trigger": "The model is unavailable, repeatedly times out, or cannot complete the selected split."
+    }
+  ],
+  "version": "0.1.0"
+}

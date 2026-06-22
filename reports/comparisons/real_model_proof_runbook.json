@@ -32,7 +32,7 @@
       {
         "eligible_for_local_ranking": false,
         "model": "gemma4:latest",
-        "reason": "Deferred from the publication path after M77 swap activity; can be revisited only with a documented stability profile.",
+        "reason": "Deferred from the publication path after M77 swap activity. M85 records the stability blocker and stop criteria; any future retry still requires a separate explicit operator decision.",
         "role": "deferred_resource_blocked_local_target"
       },
       {
@@ -178,7 +178,7 @@
       "Keep raw outputs ignored, then review, score, and ledger only public-safe derivatives in M82."
     ],
     "publication_claim_language": "The local/open-weight report may publish the reviewed extended llama3.2:latest and mistral:latest ranking after both ledgers validate; gemma4:latest is deferred and ranking-ineligible for the current publication path.",
-    "rationale": "M77 stopped the heavier gemma4 pass on swap activity. M80 keeps the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81 while deferring gemma4 until resource-stability metadata exists.",
+    "rationale": "M77 stopped the heavier gemma4 pass on swap activity. M80 kept the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81. M85 records the gemma4 stability blocker and stop criteria, but gemma4 remains ranking-ineligible until a separate retry decision exists.",
     "replaced_model": "gemma4:latest",
     "selected_adapter": "ollama_text_only",
     "selected_model": "mistral:latest",

@@ -22,11 +22,12 @@ and wrote an ignored reviewed normalized candidate. M79 scored a public-safe
 derivative of that candidate and built the first eligible reviewed live-local
 ledger for `llama3.2:latest`. `gemma4:latest` was deferred after swap activity
 appeared during the heavier pass. M80 replaced `gemma4:latest` with
-`mistral:latest` for the current two-ledger publication path and left
-`gemma4:latest` deferred until a stability profile exists. M81 executed the
+`mistral:latest` for the current two-ledger publication path. M81 executed the
 `mistral:latest` extended run, M82 reviewed and ledgered it, and M83 published
 the scoped local/open-weight ranking from two eligible reviewed ledgers.
-M84 adds the public-safe reproducibility packet for that ranking.
+M84 adds the public-safe reproducibility packet for that ranking. M85 records
+runtime stability metadata and keeps `gemma4:latest` deferred until a future
+explicit retry decision.
 
 ## Local Proof Target
 
@@ -85,7 +86,9 @@ follow-on milestones, not as unfinished M77 scope:
 - M83 regenerated the local/open-weight benchmark report from two eligible
   reviewed live-local ledgers and published the local ranking.
 - M84 adds a public-safe reproducibility packet.
-- M85 adds runtime stability and resource-profile metadata.
+- M85 adds runtime stability and resource-profile metadata. This is complete:
+  `gemma4:latest` remains deferred, and interrupted heavy-model runs remain
+  operational blockers rather than ranking evidence.
 - M86 adds a final claim-review and release checklist.
 
 These milestones exist to make the proof path auditable. They keep live-local
@@ -139,4 +142,6 @@ quality gate.
 - `docs/milestones/m82-review-score-ledger-mistral-closeout.md`
 - `docs/milestones/m83-two-model-report-unlock-closeout.md`
 - `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`
+- `docs/milestones/m85-runtime-stability-resource-profile-closeout.md`
 - `docs/wiki/concepts/public_safe_reproducibility_packet.md`
+- `docs/wiki/concepts/runtime_stability_resource_profile.md`

@@ -1091,9 +1091,9 @@ Implementation note:
   swap activity.
 - The decision is documentation-only. It does not run a local model, contact a
   provider, read raw outputs, or change the deterministic quality gate.
-- `gemma4:latest` remains a deferred local target that can be revisited only
-  after a documented stability profile covers machine state, model residency,
-  memory-pressure stop criteria, timeout policy, and harness parameters.
+- `gemma4:latest` remains a deferred local target. M85 documents the first
+  stability profile, but a future retry still requires a separate explicit
+  operator decision and updated stability observations.
 - `qwen3.5:2b-q4_K_M` remains smoke/control only and must not be silently
   promoted into publication evidence.
 
@@ -1193,7 +1193,8 @@ Acceptance criteria:
 Create a public-safe reproducibility packet for the real-model proof without
 committing raw outputs.
 
-Status: planned.
+Status: complete / public-safe packet published. See
+`docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`.
 
 Implementation note:
 
@@ -1215,7 +1216,8 @@ Acceptance criteria:
 Add a public-safe resource and stability profile for live-local runs so future
 operators know when a run is laptop-safe, deferred, or needs a larger machine.
 
-Status: planned.
+Status: complete / public-safe stability metadata published. See
+`docs/milestones/m85-runtime-stability-resource-profile-closeout.md`.
 
 Implementation note:
 

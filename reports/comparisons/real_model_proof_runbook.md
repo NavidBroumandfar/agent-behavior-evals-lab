@@ -18,7 +18,7 @@ This M76 runbook shows the next manual CLI path to a controlled, opt-in local/op
 - Decision: replace_gemma4_for_publication_path
 - Selected target: `mistral:latest` via `ollama_text_only` over `extended`.
 - Replaced/deferred target: `gemma4:latest`.
-- Rationale: M77 stopped the heavier gemma4 pass on swap activity. M80 keeps the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81 while deferring gemma4 until resource-stability metadata exists.
+- Rationale: M77 stopped the heavier gemma4 pass on swap activity. M80 kept the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81. M85 records the gemma4 stability blocker and stop criteria, but gemma4 remains ranking-ineligible until a separate retry decision exists.
 - Claim language: The local/open-weight report may publish the reviewed extended llama3.2:latest and mistral:latest ranking after both ledgers validate; gemma4:latest is deferred and ranking-ineligible for the current publication path.
 - Decision required live execution: `false`
 
