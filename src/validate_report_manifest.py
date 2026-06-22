@@ -57,6 +57,8 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/scorer_promotion_decision.md",
     "reports/comparisons/scorer_reliability_report.json",
     "reports/comparisons/scorer_reliability_report.md",
+    "reports/comparisons/review_coverage_priority_plan.json",
+    "reports/comparisons/review_coverage_priority_plan.md",
     "reports/comparisons/baseline_self_comparison_report.md",
     "reports/comparisons/reporting_product_summary.json",
     "reports/comparisons/reporting_product_summary.md",

@@ -1,6 +1,6 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.14.0",
+  "version": "0.15.0",
   "generated_at": "2026-06-22T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
@@ -732,6 +732,54 @@
       ],
       "quality_gate_included": true,
       "notes": "Reader-facing Scorer v1 reliability report with deterministic review calibration metrics.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "review_coverage_priority_plan_snapshot",
+      "label": "Review Coverage Priority Plan JSON",
+      "path": "reports/comparisons/review_coverage_priority_plan.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/review_coverage_priority_plan.py",
+      "input_paths": [
+        "traces/scored/baseline_mock_run.jsonl",
+        "traces/external/fixture_manifest.json",
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/scorer_reliability_report.json",
+        "docs/wiki/concepts/v0_scorer_limitations.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/scorer_reliability_report.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Deterministic M88 public-safe review coverage and prioritization snapshot for the next adjudication batch.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "review_coverage_priority_plan",
+      "label": "Review Coverage Priority Plan",
+      "path": "reports/comparisons/review_coverage_priority_plan.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/review_coverage_priority_plan.py",
+      "input_paths": [
+        "reports/comparisons/review_coverage_priority_plan.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/review_coverage_priority_plan.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M88 review coverage priority plan with deterministic public-safe review queue guidance.",
       "safety_assertions": {
         "public_safe": true,
         "live_execution": false,

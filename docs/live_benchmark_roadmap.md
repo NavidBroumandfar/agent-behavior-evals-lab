@@ -615,6 +615,10 @@ Milestone sequence:
   blocked-claim instructions, and selected-doc overclaim scanning.
   Status: complete; see
   `docs/milestones/m87-claim-locked-public-release-bundle-closeout.md`.
+- M88 adds deterministic public-safe review coverage prioritization after
+  Scorer v1 reliability reporting.
+  Status: complete; see
+  `docs/milestones/m88-review-coverage-priority-plan-closeout.md`.
 
 Acceptance criteria:
 

@@ -167,6 +167,8 @@ SCORER_PROMOTION_DECISION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_pr
 SCORER_PROMOTION_DECISION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_promotion_decision.md"
 SCORER_RELIABILITY_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_reliability_report.json"
 SCORER_RELIABILITY_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_reliability_report.md"
+REVIEW_COVERAGE_PRIORITY_JSON_PATH = REPO_ROOT / "reports/comparisons/review_coverage_priority_plan.json"
+REVIEW_COVERAGE_PRIORITY_REPORT_PATH = REPO_ROOT / "reports/comparisons/review_coverage_priority_plan.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -540,6 +542,10 @@ CHECKS = [
         ["python3", "src/scorer_reliability_report.py"],
     ),
     (
+        "review coverage priority plan generation",
+        ["python3", "src/review_coverage_priority_plan.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -764,6 +770,7 @@ CHECKS = [
             "src/scorer_promotion_decision.py",
             "src/scorer_reliability_report.py",
             "src/scorer_review_contract.py",
+            "src/review_coverage_priority_plan.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -894,6 +901,9 @@ def main() -> int:
             if name == "scorer reliability report generation":
                 verify_report_exists(SCORER_RELIABILITY_JSON_PATH)
                 verify_report_exists(SCORER_RELIABILITY_REPORT_PATH)
+            if name == "review coverage priority plan generation":
+                verify_report_exists(REVIEW_COVERAGE_PRIORITY_JSON_PATH)
+                verify_report_exists(REVIEW_COVERAGE_PRIORITY_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":

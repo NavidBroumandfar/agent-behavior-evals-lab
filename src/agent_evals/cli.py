@@ -37,7 +37,16 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for name in ["check", "test", "lint", "run-baseline", "report", "scorer-reliability", "version"]:
+    for name in [
+        "check",
+        "test",
+        "lint",
+        "run-baseline",
+        "report",
+        "scorer-reliability",
+        "review-coverage-priority",
+        "version",
+    ]:
         subparsers.add_parser(name)
 
     review_contract = subparsers.add_parser("scorer-review-contract")
@@ -69,9 +78,14 @@ def main(argv: list[str] | None = None) -> int:
         comparison_status = run_command([sys.executable, "src/comparison_report.py"])
         if comparison_status != 0:
             return comparison_status
-        return run_command([sys.executable, "src/scorer_reliability_report.py"])
+        reliability_status = run_command([sys.executable, "src/scorer_reliability_report.py"])
+        if reliability_status != 0:
+            return reliability_status
+        return run_command([sys.executable, "src/review_coverage_priority_plan.py"])
     if args.command == "scorer-reliability":
         return run_command([sys.executable, "src/scorer_reliability_report.py"])
+    if args.command == "review-coverage-priority":
+        return run_command([sys.executable, "src/review_coverage_priority_plan.py"])
     if args.command == "scorer-review-contract":
         command = [sys.executable, "src/scorer_review_contract.py"]
         if args.input is not None:

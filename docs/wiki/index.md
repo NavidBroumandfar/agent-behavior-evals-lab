@@ -53,6 +53,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Focused Scorer Evidence Expansion](concepts/focused_scorer_evidence_expansion.md)
 - [Scorer Promotion Decision](concepts/scorer_promotion_decision.md)
 - [Scorer Reliability Reporting](concepts/scorer_reliability_reporting.md)
+- [Review Coverage Priority Plan](concepts/review_coverage_priority_plan.md)
 - [Benchmark Claim Charter](concepts/benchmark_claim_charter.md)
 - [Local Public Benchmark Corpus](concepts/local_public_benchmark_corpus.md)
 - [Local Adapter Registry](concepts/local_adapter_registry.md)
@@ -132,6 +133,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Focused scorer evidence expansion: `src/focused_scorer_evidence_expansion.py`, `reports/comparisons/focused_scorer_evidence_expansion.json`, and `reports/comparisons/focused_scorer_evidence_expansion.md`
 - Scorer promotion decision: `src/scorer_promotion_decision.py`, `reports/comparisons/scorer_promotion_decision.json`, and `reports/comparisons/scorer_promotion_decision.md`
 - Scorer reliability reporting: `src/scorer_reliability_report.py`, `src/scorer_review_contract.py`, `reports/comparisons/scorer_reliability_report.json`, and `reports/comparisons/scorer_reliability_report.md`
+- Review coverage priority plan: `src/review_coverage_priority_plan.py`, `reports/comparisons/review_coverage_priority_plan.json`, and `reports/comparisons/review_coverage_priority_plan.md`
 - Benchmark claim charter: `benchmarks/evidence_class_charter.json`, `schemas/benchmark_claim_charter.schema.json`, and `src/validate_benchmark_claim_charter.py`
 - Local public benchmark corpus: `evals/benchmarks/local_public_v1/cases.jsonl`, `evals/benchmarks/local_public_v1/manifest.json`, and `src/validate_local_benchmark_corpus.py`
 - Local adapter registry: `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`
@@ -239,6 +241,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 85 closeout: `docs/milestones/m85-runtime-stability-resource-profile-closeout.md`
 - Milestone 86 closeout: `docs/milestones/m86-claim-review-release-checklist-closeout.md`
 - Milestone 87 closeout: `docs/milestones/m87-claim-locked-public-release-bundle-closeout.md`
+- Milestone 88 closeout: `docs/milestones/m88-review-coverage-priority-plan-closeout.md`
 
 ## Reading Order
 

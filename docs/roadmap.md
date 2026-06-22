@@ -1283,6 +1283,31 @@ Acceptance criteria:
 - Raw/local-only artifacts remain ignored and uncommitted.
 - `python3 scripts/dev.py check` validates the bundle without live execution.
 
+### M88: Review Coverage Priority Plan
+
+Prioritize the next public-safe adjudication batch after Scorer v1 reliability
+reporting without changing scorer behavior.
+
+Status: complete / review-ready. See
+`docs/milestones/m88-review-coverage-priority-plan-closeout.md`.
+
+Implementation note:
+
+- M88 adds deterministic review coverage reporting over committed public-safe
+  scored traces, fixture manifests, and adjudications.
+- The priority queue favors unreviewed heuristic failures and high-severity
+  records so the next review batch improves scorer calibration depth before any
+  future scorer changes are considered.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- `agent-evals review-coverage-priority` regenerates JSON and Markdown reports.
+- The report manifest indexes the new artifacts.
+- The deterministic quality gate validates the reports without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.
