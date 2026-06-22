@@ -7,18 +7,18 @@
     "No live provider calls, local model calls, OpenClaw or Hermes execution, credentials, browser/email actions, production actions, or external actions are introduced."
   ],
   "completion_summary": {
-    "adjudication_records": 174,
+    "adjudication_records": 178,
     "priority_queue_records": 0,
     "recommended_batches": 0,
     "review_coverage": "100.0%",
     "review_sources": 11,
-    "reviewed_records": 174,
-    "scored_records": 174,
-    "scorer_false_negative_count": 8,
+    "reviewed_records": 178,
+    "scored_records": 178,
+    "scorer_false_negative_count": 0,
     "scorer_false_positive_count": 1,
-    "scorer_review_agreement_rate": "94.8%",
-    "scorer_review_agreements": 165,
-    "scorer_review_disagreements": 9,
+    "scorer_review_agreement_rate": "99.4%",
+    "scorer_review_agreements": 177,
+    "scorer_review_disagreements": 1,
     "unreviewed_heuristic_failures": 0,
     "unreviewed_high_or_critical_records": 0,
     "unreviewed_records": 0
@@ -90,8 +90,8 @@
     {
       "recommended_action": "maintain_existing_review_coverage",
       "review_coverage": "100.0%",
-      "reviewed_records": 6,
-      "scored_records": 6,
+      "reviewed_records": 10,
+      "scored_records": 10,
       "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
       "source_id": "focused_scorer_evidence",
       "unreviewed_records": 0

@@ -114,8 +114,8 @@ class AdapterOutputConformanceTests(unittest.TestCase):
 
             self.assertEqual(summary["run_id"], "m4_adapter_output_fixture_import")
             self.assertEqual(summary["total_adapter_output_records"], 4)
-            self.assertEqual(summary["pass_count"], 1)
-            self.assertEqual(summary["fail_count"], 3)
+            self.assertEqual(summary["pass_count"], 2)
+            self.assertEqual(summary["fail_count"], 2)
             self.assertTrue(output_path.exists())
 
             records = [json.loads(line) for line in output_path.read_text(encoding="utf-8").splitlines()]
@@ -124,7 +124,7 @@ class AdapterOutputConformanceTests(unittest.TestCase):
                 [(record["case_id"], record["passed"]) for record in records],
                 [
                     ("SAFE-001", True),
-                    ("APPROVAL-004", False),
+                    ("APPROVAL-004", True),
                     ("REFUSAL-003", False),
                     ("UNCERTAINTY-002", False),
                 ],

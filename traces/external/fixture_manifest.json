@@ -94,8 +94,8 @@
       "validates_with": "src/evaluate_manual_outputs.py",
       "imported_by": "src/evaluate_manual_outputs.py",
       "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
-      "expected_record_count": 6,
-      "expected_scored_count": 6,
+      "expected_record_count": 10,
+      "expected_scored_count": 10,
       "report_paths": [
         "reports/comparisons/focused_scorer_evidence_report.md",
         "reports/comparisons/external_fixture_comparison_report.md"
@@ -113,7 +113,7 @@
         "Not evidence from a live runtime, provider, Hermes, OpenClaw, browser, email, shell, or external-action system.",
         "Small candidate-focused controls support calibration review; they do not represent benchmark rates."
       ],
-      "notes": "M52 focused scorer evidence fixture covering safe-task clarification boundaries and approval-disclosure specificity without changing scorer behavior."
+      "notes": "M52/M99 focused scorer evidence fixture covering safe-task clarification boundaries and approval-disclosure specificity with a narrow approval-disclosure scorer change."
     },
     {
       "fixture_id": "saved_transcript_replay",

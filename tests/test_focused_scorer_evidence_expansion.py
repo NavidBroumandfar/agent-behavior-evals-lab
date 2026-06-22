@@ -12,22 +12,22 @@ from focused_scorer_evidence_expansion import build_evidence_expansion, generate
 
 
 class FocusedScorerEvidenceExpansionTests(unittest.TestCase):
-    def test_build_evidence_expansion_records_no_scorer_change(self):
+    def test_build_evidence_expansion_records_m99_approval_hardening(self):
         evidence = build_evidence_expansion()
 
         self.assertEqual(evidence["evidence_id"], "m52_focused_scorer_evidence_expansion")
         self.assertEqual(evidence["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(evidence["safety"]["public_safe"])
         self.assertFalse(evidence["safety"]["live_execution"])
-        self.assertEqual(evidence["focused_fixture"]["input_records"], 6)
-        self.assertEqual(evidence["focused_fixture"]["scored_trace_records"], 6)
-        self.assertEqual(evidence["focused_fixture"]["adjudication_records"], 6)
-        self.assertEqual(evidence["decision_summary"]["focused_controls"], 6)
+        self.assertEqual(evidence["focused_fixture"]["input_records"], 10)
+        self.assertEqual(evidence["focused_fixture"]["scored_trace_records"], 10)
+        self.assertEqual(evidence["focused_fixture"]["adjudication_records"], 10)
+        self.assertEqual(evidence["decision_summary"]["focused_controls"], 10)
         self.assertEqual(evidence["decision_summary"]["candidate_groups"], 2)
-        self.assertEqual(evidence["decision_summary"]["review_scorer_result_mismatches"], 1)
-        self.assertEqual(evidence["decision_summary"]["accepted_scorer_changes"], 0)
-        self.assertFalse(evidence["decision_summary"]["scorer_code_changed"])
-        self.assertFalse(evidence["decision_summary"]["scored_trace_behavior_changed"])
+        self.assertEqual(evidence["decision_summary"]["review_scorer_result_mismatches"], 0)
+        self.assertEqual(evidence["decision_summary"]["accepted_scorer_changes"], 1)
+        self.assertTrue(evidence["decision_summary"]["scorer_code_changed"])
+        self.assertTrue(evidence["decision_summary"]["scored_trace_behavior_changed"])
 
     def test_candidate_evidence_maps_to_current_scorer_candidates(self):
         evidence = build_evidence_expansion()
@@ -43,11 +43,11 @@ class FocusedScorerEvidenceExpansionTests(unittest.TestCase):
         )
         self.assertEqual(
             candidates["triage_strengthen_approval_risk_disclosure_review"]["record_count"],
-            3,
+            7,
         )
         self.assertEqual(
             candidates["triage_strengthen_approval_risk_disclosure_review"]["review_scorer_result_mismatches"],
-            1,
+            0,
         )
         approval_ids = {
             record["adjudication_id"]
@@ -59,10 +59,10 @@ class FocusedScorerEvidenceExpansionTests(unittest.TestCase):
         markdown = generate_markdown(build_evidence_expansion())
 
         self.assertIn("# Focused Scorer Evidence Expansion", markdown)
-        self.assertIn("Focused controls | 6", markdown)
-        self.assertIn("Decision | `evidence_expanded_no_scorer_change`", markdown)
+        self.assertIn("Focused controls | 10", markdown)
+        self.assertIn("Decision | `m99_approval_disclosure_scorer_hardened`", markdown)
         self.assertIn("## Candidate Evidence", markdown)
-        self.assertIn("No scorer code changes are accepted in M52", markdown)
+        self.assertIn("M99 expands focused public-safe approval-gate evidence", markdown)
 
 
 if __name__ == "__main__":

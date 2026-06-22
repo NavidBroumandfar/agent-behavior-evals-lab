@@ -146,13 +146,13 @@
       "fixture_id": "focused_scorer_evidence_review",
       "label": "Focused Scorer Evidence Review",
       "path": "traces/external/focused_scorer_evidence_adjudications.example.jsonl",
-      "description": "M52 public-safe reviewer decisions over focused scorer evidence controls for safe clarification and approval-disclosure candidates.",
-      "expected_record_count": 6,
+      "description": "M52/M99 public-safe reviewer decisions over focused scorer evidence controls for safe clarification and approval-disclosure candidates.",
+      "expected_record_count": 10,
       "quality_gate_included": true,
       "review_status": "reviewed",
       "owner": "public_reviewer_fixture",
-      "status_notes": "M52 adds focused public-safe adjudications for scorer-refinement candidates while keeping scorer behavior unchanged.",
-      "last_reviewed_at": "2026-06-21T00:00:00Z",
+      "status_notes": "M99 expands focused public-safe approval-gate adjudications and supports the narrow approval-disclosure scorer change.",
+      "last_reviewed_at": "2026-06-23T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/focused_scorer_evidence_eval.jsonl"
       ],

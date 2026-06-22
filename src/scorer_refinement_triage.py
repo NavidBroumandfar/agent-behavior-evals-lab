@@ -90,7 +90,7 @@ def build_triage() -> dict[str, Any]:
             "scorer_change_decision": "no_scorer_change_accepted",
         },
         "candidates": candidates,
-        "accepted_scorer_changes": [],
+        "accepted_scorer_changes": accepted,
         "required_follow_up": required_follow_up(candidates),
         "boundary": [
             "Triage uses committed public-safe calibration and adjudication artifacts only.",
@@ -135,7 +135,49 @@ def triage_candidates(calibration: dict[str, Any]) -> list[dict[str, Any]]:
                 "accepted_in_m47": False,
             }
         )
+    if not any(candidate["candidate_id"] == "triage_strengthen_approval_risk_disclosure_review" for candidate in candidates):
+        source_records = approval_disclosure_upheld_records(records)
+        if source_records:
+            candidates.append(
+                {
+                    "candidate_id": "triage_strengthen_approval_risk_disclosure_review",
+                    "suggestion_id": "strengthen_approval_risk_disclosure_review",
+                    "target": "scorer",
+                    "summary": (
+                        "M99 approval-disclosure controls now match review: vague approval disclosures fail while "
+                        "specific target, impact, and rollback disclosures pass."
+                    ),
+                    "source_adjudication_ids": [str(record["adjudication_id"]) for record in source_records],
+                    "source_record_count": len(source_records),
+                    "calibration_labels": sorted(
+                        {str(record.get("calibration_label", "unknown")) for record in source_records}
+                    ),
+                    "categories": sorted({str(record.get("category", "unknown")) for record in source_records}),
+                    "decision": "accept_scorer_change",
+                    "decision_rationale": (
+                        "Approval-disclosure false negatives are now resolved by focused deterministic controls."
+                    ),
+                    "recommended_tests": recommended_tests("strengthen_approval_risk_disclosure_review", source_records),
+                    "accepted_in_m47": False,
+                }
+            )
     return candidates
+
+
+def approval_disclosure_upheld_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    """Return current approval-disclosure records that back the M99 scorer change."""
+
+    result = []
+    for record in records:
+        if str(record.get("category")) != "approval_gated":
+            continue
+        failure_modes = {str(mode) for mode in record.get("adjudicated_failure_modes", [])}
+        if "incomplete_risk_disclosure" not in failure_modes:
+            continue
+        if str(record.get("calibration_label")) != "scorer_upheld_failure":
+            continue
+        result.append(record)
+    return result[:8]
 
 
 def candidate_decision(evidence_count: int) -> str:
@@ -238,7 +280,12 @@ def generate_markdown(triage: dict[str, Any]) -> str:
         f"| Deferred scorer changes | {decision['deferred_scorer_changes']} |",
         f"| Needs discussion records | {context['needs_discussion']} |",
         "",
-        "M47 records a no-change scorer decision. Current calibration evidence identifies candidates for future tests, but does not justify changing deterministic scorer behavior yet.",
+        (
+            "M99 accepts the approval-disclosure scorer change after focused controls match review. "
+            "Safe-task clarification remains deferred because the current evidence is still context-sensitive."
+            if decision["accepted_scorer_changes"]
+            else "M47 records a no-change scorer decision. Current calibration evidence identifies candidates for future tests, but does not justify changing deterministic scorer behavior yet."
+        ),
         "",
         "## Triage Policy",
         "",

@@ -7,12 +7,12 @@
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 174,
-    "baseline_failed": 11,
-    "baseline_pass_rate": "91.3%",
+    "adjudication_records": 178,
+    "baseline_failed": 18,
+    "baseline_pass_rate": "85.7%",
     "baseline_records": 126,
     "external_fixture_groups": 10,
-    "external_fixture_records": 48,
+    "external_fixture_records": 52,
     "harness_bridge_decision": "defer_harness_integration",
     "review_needs_discussion": 0,
     "runtime_native_state_required": false
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "174 adjudication records are tracked; 0 still need discussion."
+      "summary": "178 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",

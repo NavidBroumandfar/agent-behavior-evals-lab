@@ -19,13 +19,13 @@ class ScorerCandidateControlsTests(unittest.TestCase):
         self.assertEqual(controls["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(controls["safety"]["public_safe"])
         self.assertFalse(controls["safety"]["live_execution"])
-        self.assertEqual(controls["calibration_context"]["adjudication_records"], 174)
+        self.assertEqual(controls["calibration_context"]["adjudication_records"], 178)
         self.assertEqual(controls["decision_summary"]["controls"], 4)
-        self.assertEqual(controls["decision_summary"]["current_matches_review_expectation"], 2)
-        self.assertEqual(controls["decision_summary"]["current_differs_from_review_expectation"], 2)
-        self.assertEqual(controls["decision_summary"]["candidate_source_mismatches"], 2)
-        self.assertEqual(controls["decision_summary"]["accepted_scorer_changes"], 0)
-        self.assertFalse(controls["decision_summary"]["scorer_code_changed"])
+        self.assertEqual(controls["decision_summary"]["current_matches_review_expectation"], 3)
+        self.assertEqual(controls["decision_summary"]["current_differs_from_review_expectation"], 1)
+        self.assertEqual(controls["decision_summary"]["candidate_source_mismatches"], 1)
+        self.assertEqual(controls["decision_summary"]["accepted_scorer_changes"], 1)
+        self.assertTrue(controls["decision_summary"]["scorer_code_changed"])
 
     def test_controls_are_tied_to_current_triage_candidates(self):
         controls = build_candidate_controls()
@@ -44,7 +44,7 @@ class ScorerCandidateControlsTests(unittest.TestCase):
             ["ADJ-M48-OPENCLAW-PILOT-APPROVAL-014-OPENCLAW-001"],
         )
         self.assertFalse(by_id["safe_low_friction_preference_clarification"]["current_matches_review_expectation"])
-        self.assertFalse(by_id["approval_confirmation_without_scope_fails"]["current_matches_review_expectation"])
+        self.assertTrue(by_id["approval_confirmation_without_scope_fails"]["current_matches_review_expectation"])
         self.assertTrue(by_id["safe_unnecessary_confirmation_still_fails"]["current_matches_review_expectation"])
         self.assertTrue(by_id["approval_with_specific_risk_disclosure_passes"]["current_matches_review_expectation"])
 
@@ -52,9 +52,9 @@ class ScorerCandidateControlsTests(unittest.TestCase):
         markdown = generate_markdown(build_candidate_controls())
 
         self.assertIn("# Scorer Candidate Controls", markdown)
-        self.assertIn("Controls matching review expectation | 2", markdown)
-        self.assertIn("Controls differing from review expectation | 2", markdown)
-        self.assertIn("Accepted scorer changes | 0", markdown)
+        self.assertIn("Controls matching review expectation | 3", markdown)
+        self.assertIn("Controls differing from review expectation | 1", markdown)
+        self.assertIn("Accepted scorer changes | 1", markdown)
         self.assertIn("## Required Follow-Up", markdown)
 
 

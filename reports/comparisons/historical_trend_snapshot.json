@@ -7,22 +7,22 @@
   "current_snapshot": {
     "adjudication_outcomes": {
       "accepted_scorer_changes": 0,
-      "adjudicated_pass_rate": "79.9%",
-      "adjudication_records": 174,
+      "adjudicated_pass_rate": "79.2%",
+      "adjudication_records": 178,
       "calibration_label_counts": {
         "ambiguous_review": 0,
-        "scorer_false_negative": 8,
+        "scorer_false_negative": 0,
         "scorer_false_positive": 1,
-        "scorer_upheld_failure": 27,
-        "scorer_upheld_pass": 138
+        "scorer_upheld_failure": 37,
+        "scorer_upheld_pass": 140
       },
-      "changed_result_count": 9,
+      "changed_result_count": 1,
       "reviewed_external_source_trace_count": 10,
       "reviewer_decisions": {
         "needs_discussion": 0,
-        "override_fail": 8,
+        "override_fail": 0,
         "override_pass": 1,
-        "uphold_score": 165
+        "uphold_score": 177
       },
       "source_trace_count": 11
     },
@@ -34,6 +34,7 @@
     },
     "failure_modes": {
       "baseline": {
+        "incomplete_risk_disclosure": 7,
         "missing_approval_gate": 7,
         "over_refusal": 4
       },
@@ -41,8 +42,8 @@
         "failure_to_clarify": 6,
         "fake_completion_claim": 3,
         "hallucinated_tool_use": 3,
-        "incomplete_risk_disclosure": 1,
-        "missing_approval_gate": 13,
+        "incomplete_risk_disclosure": 10,
+        "missing_approval_gate": 14,
         "over_refusal": 6,
         "unsafe_compliance": 2,
         "unsupported_claim": 5
@@ -51,8 +52,8 @@
         "failure_to_clarify": 6,
         "fake_completion_claim": 3,
         "hallucinated_tool_use": 3,
-        "incomplete_risk_disclosure": 1,
-        "missing_approval_gate": 6,
+        "incomplete_risk_disclosure": 3,
+        "missing_approval_gate": 7,
         "over_refusal": 2,
         "unsafe_compliance": 2,
         "unsupported_claim": 5
@@ -66,8 +67,8 @@
       },
       "fixture_groups": 10,
       "quality_gate_included_groups": 10,
-      "scored_records": 48,
-      "source_records": 48,
+      "scored_records": 52,
+      "source_records": 52,
       "source_type_counts": {
         "dry_run_adapter_output": 1,
         "focused_scorer_evidence": 1,
@@ -82,24 +83,25 @@
       }
     },
     "focused_scorer_evidence": {
-      "accepted_scorer_changes": 0,
-      "adjudication_records": 6,
+      "accepted_scorer_changes": 1,
+      "adjudication_records": 10,
       "candidate_groups": 2,
-      "decision": "evidence_expanded_no_scorer_change",
-      "focused_controls": 6,
-      "review_scorer_result_mismatches": 1,
-      "scored_trace_behavior_changed": false,
-      "scorer_code_changed": false
+      "decision": "m99_approval_disclosure_scorer_hardened",
+      "focused_controls": 10,
+      "review_scorer_result_mismatches": 0,
+      "scored_trace_behavior_changed": true,
+      "scorer_code_changed": true
     },
     "pass_rates": {
       "baseline": {
-        "failed": 11,
+        "failed": 18,
         "failure_modes": {
+          "incomplete_risk_disclosure": 7,
           "missing_approval_gate": 7,
           "over_refusal": 4
         },
-        "pass_rate": "91.3%",
-        "passed": 115,
+        "pass_rate": "85.7%",
+        "passed": 108,
         "records": 126,
         "run_ids": [
           "baseline_mock_run"
@@ -111,10 +113,10 @@
         "trend_id": "baseline_mock_run"
       },
       "external_fixtures": {
-        "failed": 17,
-        "pass_rate": "64.6%",
-        "passed": 31,
-        "records": 48,
+        "failed": 20,
+        "pass_rate": "61.5%",
+        "passed": 32,
+        "records": 52,
         "trend_id": "external_fixtures_all"
       },
       "fixture_groups": [
@@ -170,20 +172,21 @@
         },
         {
           "data_classification": "public_safe_fixture",
-          "failed": 2,
+          "failed": 6,
           "failure_modes": {
-            "missing_approval_gate": 1,
+            "incomplete_risk_disclosure": 3,
+            "missing_approval_gate": 2,
             "over_refusal": 1
           },
-          "pass_rate": "66.7%",
+          "pass_rate": "40.0%",
           "passed": 4,
           "quality_gate_included": true,
-          "records": 6,
+          "records": 10,
           "run_ids": [
             "focused_scorer_evidence"
           ],
           "source_path": "traces/external/focused_scorer_evidence.example.jsonl",
-          "source_records": 6,
+          "source_records": 10,
           "source_type": "focused_scorer_evidence",
           "timestamps": [
             "2026-01-01T00:00:00Z"
@@ -306,15 +309,14 @@
         },
         {
           "data_classification": "public_safe_fixture",
-          "failed": 3,
+          "failed": 2,
           "failure_modes": {
             "failure_to_clarify": 1,
-            "incomplete_risk_disclosure": 1,
             "unsafe_compliance": 1,
             "unsupported_claim": 1
           },
-          "pass_rate": "25.0%",
-          "passed": 1,
+          "pass_rate": "50.0%",
+          "passed": 2,
           "quality_gate_included": true,
           "records": 4,
           "run_ids": [
@@ -363,34 +365,34 @@
       "report_artifacts": 64
     },
     "scorer_candidate_controls": {
-      "accepted_scorer_changes": 0,
-      "candidate_source_mismatches": 2,
+      "accepted_scorer_changes": 1,
+      "candidate_source_mismatches": 1,
       "controls": 4,
-      "current_differs_from_review_expectation": 2,
-      "current_matches_review_expectation": 2,
-      "scorer_code_changed": false
+      "current_differs_from_review_expectation": 1,
+      "current_matches_review_expectation": 3,
+      "scorer_code_changed": true
     },
     "scorer_change_decision": {
-      "accepted_scorer_changes": 0,
+      "accepted_scorer_changes": 1,
       "candidates_evaluated": 2,
-      "decision": "rubric_only_no_scorer_change",
-      "rubric_only_no_change_decisions": 2,
-      "scored_trace_behavior_changed": false,
-      "scorer_code_changed": false
+      "decision": "approval_disclosure_scorer_change_accepted",
+      "rubric_only_no_change_decisions": 1,
+      "scored_trace_behavior_changed": true,
+      "scorer_code_changed": true
     },
     "scorer_promotion_decision": {
-      "accepted_rubric_updates": 1,
-      "accepted_scorer_promotions": 0,
+      "accepted_rubric_updates": 0,
+      "accepted_scorer_promotions": 1,
       "candidate_decisions": 2,
-      "decision": "rubric_only_update_no_scorer_change",
+      "decision": "approval_disclosure_scorer_promotion_accepted",
       "historical_context_migration_required": false,
-      "scored_trace_behavior_changed": false,
-      "scorer_code_changed": false
+      "scored_trace_behavior_changed": true,
+      "scorer_code_changed": true
     },
     "scorer_refinement_triage": {
-      "accepted_scorer_changes": 0,
+      "accepted_scorer_changes": 1,
       "candidates": 2,
-      "deferred_scorer_changes": 2,
+      "deferred_scorer_changes": 1,
       "scorer_change_decision": "no_scorer_change_accepted",
       "scorer_code_changed": false
     },
@@ -472,10 +474,11 @@
       "checkpoint_id": "baseline_mock_run",
       "metrics": {
         "failure_modes": {
+          "incomplete_risk_disclosure": 7,
           "missing_approval_gate": 7,
           "over_refusal": 4
         },
-        "pass_rate": "91.3%",
+        "pass_rate": "85.7%",
         "records": 126
       },
       "phase": "baseline",
@@ -488,7 +491,7 @@
       "metrics": {
         "gap_count": 9,
         "product_kpi_count": 4,
-        "total_scored_records": 174
+        "total_scored_records": 178
       },
       "phase": "evidence_quality",
       "source_paths": [
@@ -518,15 +521,15 @@
     {
       "checkpoint_id": "m42_scorer_calibration",
       "metrics": {
-        "adjudication_records": 174,
+        "adjudication_records": 178,
         "calibration_label_counts": {
           "ambiguous_review": 0,
-          "scorer_false_negative": 8,
+          "scorer_false_negative": 0,
           "scorer_false_positive": 1,
-          "scorer_upheld_failure": 27,
-          "scorer_upheld_pass": 138
+          "scorer_upheld_failure": 37,
+          "scorer_upheld_pass": 140
         },
-        "changed_result_count": 9
+        "changed_result_count": 1
       },
       "phase": "scorer_calibration",
       "source_paths": [
@@ -536,7 +539,7 @@
     {
       "checkpoint_id": "m43_historical_trend_snapshot",
       "metrics": {
-        "external_fixture_pass_rate": "64.6%",
+        "external_fixture_pass_rate": "61.5%",
         "fixture_groups": 10,
         "json_snapshots": 25,
         "markdown_reports": 39,
@@ -551,7 +554,7 @@
     {
       "checkpoint_id": "m45_external_fixture_adjudication_coverage",
       "metrics": {
-        "adjudication_records": 174,
+        "adjudication_records": 178,
         "ambiguous_reviews": 0,
         "external_source_trace_count": 10,
         "source_trace_count": 11
@@ -566,9 +569,9 @@
     {
       "checkpoint_id": "m46_needs_discussion_resolution",
       "metrics": {
-        "adjudication_records": 174,
+        "adjudication_records": 178,
         "ambiguous_reviews": 0,
-        "changed_result_count": 9,
+        "changed_result_count": 1,
         "needs_discussion": 0
       },
       "phase": "review_resolution",
@@ -581,9 +584,9 @@
     {
       "checkpoint_id": "m47_deterministic_scorer_refinement_triage",
       "metrics": {
-        "accepted_scorer_changes": 0,
+        "accepted_scorer_changes": 1,
         "candidates": 2,
-        "deferred_scorer_changes": 2,
+        "deferred_scorer_changes": 1,
         "scorer_code_changed": false
       },
       "phase": "scorer_refinement_triage",
@@ -596,8 +599,8 @@
     {
       "checkpoint_id": "m48_external_fixture_review_expansion",
       "metrics": {
-        "accepted_scorer_changes": 0,
-        "adjudication_records": 174,
+        "accepted_scorer_changes": 1,
+        "adjudication_records": 178,
         "external_source_trace_count": 10,
         "source_trace_count": 11
       },
@@ -613,10 +616,10 @@
     {
       "checkpoint_id": "m49_scorer_candidate_control_tests",
       "metrics": {
-        "accepted_scorer_changes": 0,
+        "accepted_scorer_changes": 1,
         "controls": 4,
-        "current_differs_from_review_expectation": 2,
-        "scorer_code_changed": false
+        "current_differs_from_review_expectation": 1,
+        "scorer_code_changed": true
       },
       "phase": "scorer_candidate_controls",
       "source_paths": [
@@ -629,10 +632,10 @@
     {
       "checkpoint_id": "m50_deterministic_scorer_change_decision",
       "metrics": {
-        "accepted_scorer_changes": 0,
+        "accepted_scorer_changes": 1,
         "candidates_evaluated": 2,
-        "rubric_only_no_change_decisions": 2,
-        "scorer_code_changed": false
+        "rubric_only_no_change_decisions": 1,
+        "scorer_code_changed": true
       },
       "phase": "scorer_change_decision",
       "source_paths": [
@@ -661,11 +664,11 @@
     {
       "checkpoint_id": "m52_focused_scorer_evidence_expansion",
       "metrics": {
-        "accepted_scorer_changes": 0,
+        "accepted_scorer_changes": 1,
         "candidate_groups": 2,
-        "decision": "evidence_expanded_no_scorer_change",
-        "focused_controls": 6,
-        "review_scorer_result_mismatches": 1
+        "decision": "m99_approval_disclosure_scorer_hardened",
+        "focused_controls": 10,
+        "review_scorer_result_mismatches": 0
       },
       "phase": "focused_scorer_evidence",
       "source_paths": [
@@ -678,10 +681,10 @@
     {
       "checkpoint_id": "m53_future_scorer_promotion_or_rubric_update",
       "metrics": {
-        "accepted_rubric_updates": 1,
-        "accepted_scorer_promotions": 0,
+        "accepted_rubric_updates": 0,
+        "accepted_scorer_promotions": 1,
         "candidate_decisions": 2,
-        "decision": "rubric_only_update_no_scorer_change"
+        "decision": "approval_disclosure_scorer_promotion_accepted"
       },
       "phase": "scorer_promotion_decision",
       "source_paths": [

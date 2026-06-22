@@ -24,9 +24,9 @@ class ReviewCoveragePriorityPlanTests(unittest.TestCase):
 
         summary = plan["coverage_summary"]
         self.assertEqual(summary["review_sources"], 11)
-        self.assertEqual(summary["scored_records"], 174)
-        self.assertEqual(summary["adjudication_records"], 174)
-        self.assertEqual(summary["reviewed_records"], 174)
+        self.assertEqual(summary["scored_records"], 178)
+        self.assertEqual(summary["adjudication_records"], 178)
+        self.assertEqual(summary["reviewed_records"], 178)
         self.assertEqual(summary["unreviewed_records"], 0)
         self.assertEqual(summary["review_coverage"], "100.0%")
         self.assertEqual(summary["unreviewed_heuristic_failures"], 0)

@@ -19,13 +19,13 @@ class ScorerRefinementTriageTests(unittest.TestCase):
         self.assertEqual(triage["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(triage["safety"]["public_safe"])
         self.assertFalse(triage["safety"]["live_execution"])
-        self.assertEqual(triage["calibration_context"]["adjudication_records"], 174)
+        self.assertEqual(triage["calibration_context"]["adjudication_records"], 178)
         self.assertEqual(triage["calibration_context"]["needs_discussion"], 0)
         self.assertEqual(triage["decision_summary"]["candidates"], 2)
-        self.assertEqual(triage["decision_summary"]["accepted_scorer_changes"], 0)
-        self.assertEqual(triage["decision_summary"]["deferred_scorer_changes"], 2)
+        self.assertEqual(triage["decision_summary"]["accepted_scorer_changes"], 1)
+        self.assertEqual(triage["decision_summary"]["deferred_scorer_changes"], 1)
         self.assertFalse(triage["decision_summary"]["scorer_code_changed"])
-        self.assertEqual(triage["accepted_scorer_changes"], [])
+        self.assertEqual(len(triage["accepted_scorer_changes"]), 1)
 
     def test_candidates_are_tied_to_public_safe_adjudications(self):
         triage = build_triage()
@@ -45,21 +45,20 @@ class ScorerRefinementTriageTests(unittest.TestCase):
                 "ADJ-M91-BASELINE-APPROVAL-009-GENERIC-001",
                 "ADJ-M91-BASELINE-APPROVAL-011-GENERIC-001",
                 "ADJ-M92-BASELINE-APPROVAL-013-GENERIC-001",
-                "ADJ-M52-FOCUSED-APPROVAL-007-GENERIC-001",
+                "ADJ-M99-FOCUSED-APPROVAL-001-GENERIC-001",
             ],
         )
-        self.assertTrue(
-            all(candidate["decision"] == "defer_scorer_change" for candidate in candidates.values())
-        )
+        self.assertEqual(candidates["review_safe_clarification_vs_over_refusal"]["decision"], "defer_scorer_change")
+        self.assertEqual(candidates["strengthen_approval_risk_disclosure_review"]["decision"], "accept_scorer_change")
         self.assertTrue(all(candidate["recommended_tests"] for candidate in candidates.values()))
 
     def test_generate_markdown_contains_no_change_decision(self):
         markdown = generate_markdown(build_triage())
 
         self.assertIn("# Scorer Refinement Triage", markdown)
-        self.assertIn("Accepted scorer changes | 0", markdown)
-        self.assertIn("Deferred scorer changes | 2", markdown)
-        self.assertIn("M47 records a no-change scorer decision", markdown)
+        self.assertIn("Accepted scorer changes | 1", markdown)
+        self.assertIn("Deferred scorer changes | 1", markdown)
+        self.assertIn("M99 accepts the approval-disclosure scorer change", markdown)
         self.assertIn("## Recommended Tests", markdown)
 
 

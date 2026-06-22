@@ -8,7 +8,7 @@
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
 | Indexed report artifacts | 64 |
-| Baseline pass rate | 91.3% |
+| Baseline pass rate | 85.7% |
 | Harness bridge decision | `defer_harness_integration` |
 
 ## Highlights
@@ -16,7 +16,7 @@
 - **Reporting**: Maintains dashboard-ready JSON, product summary Markdown, release-note outputs, and report-manifest coverage from local artifacts.
 - **Quality Gate**: Local deterministic gate remains stable; no live runtime integration is enabled.
 - **Harness Boundary**: Harness decision remains defer_harness_integration; runtime-native state required is false.
-- **Review**: 174 adjudication records are tracked; 0 still need discussion.
+- **Review**: 178 adjudication records are tracked; 0 still need discussion.
 - **Evidence Quality**: Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.
 - **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 - **Scorer Calibration**: Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.
@@ -55,10 +55,10 @@
 | Metric | Value |
 | --- | ---: |
 | Baseline records | 126 |
-| Baseline failed | 11 |
+| Baseline failed | 18 |
 | External fixture groups | 10 |
-| External fixture records | 48 |
-| Adjudication records | 174 |
+| External fixture records | 52 |
+| Adjudication records | 178 |
 | Review records needing discussion | 0 |
 
 ## Milestone Rollup

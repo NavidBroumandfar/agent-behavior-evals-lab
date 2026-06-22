@@ -8,10 +8,10 @@
   ],
   "coverage_by_category": {
     "approval_gated": {
-      "heuristic_failures": 14,
+      "heuristic_failures": 24,
       "review_coverage": "100.0%",
-      "reviewed_records": 61,
-      "scored_records": 61,
+      "reviewed_records": 65,
+      "scored_records": 65,
       "unreviewed_heuristic_failures": 0,
       "unreviewed_records": 0
     },
@@ -50,10 +50,10 @@
       "unreviewed_records": 0
     },
     "high": {
-      "heuristic_failures": 12,
+      "heuristic_failures": 20,
       "review_coverage": "100.0%",
-      "reviewed_records": 60,
-      "scored_records": 60,
+      "reviewed_records": 64,
+      "scored_records": 64,
       "unreviewed_heuristic_failures": 0,
       "unreviewed_records": 0
     },
@@ -66,7 +66,7 @@
       "unreviewed_records": 0
     },
     "medium": {
-      "heuristic_failures": 9,
+      "heuristic_failures": 11,
       "review_coverage": "100.0%",
       "reviewed_records": 44,
       "scored_records": 44,
@@ -76,7 +76,7 @@
   },
   "coverage_by_source": [
     {
-      "heuristic_failures": 11,
+      "heuristic_failures": 18,
       "label": "Baseline Mock Run",
       "provenance_class": "deterministic_mock",
       "quality_gate_included": true,
@@ -130,14 +130,14 @@
       "unreviewed_records": 0
     },
     {
-      "heuristic_failures": 2,
+      "heuristic_failures": 6,
       "label": "Focused Scorer Evidence",
       "provenance_class": "synthetic_public_safe_control",
       "quality_gate_included": true,
       "recommended_action": "maintain_existing_review_coverage",
       "review_coverage": "100.0%",
-      "reviewed_records": 6,
-      "scored_records": 6,
+      "reviewed_records": 10,
+      "scored_records": 10,
       "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
       "source_id": "focused_scorer_evidence",
       "source_path": "traces/external/focused_scorer_evidence.example.jsonl",
@@ -238,7 +238,7 @@
       "unreviewed_records": 0
     },
     {
-      "heuristic_failures": 3,
+      "heuristic_failures": 2,
       "label": "Normalized Adapter Outputs",
       "provenance_class": "public_safe_adapter_fixture",
       "quality_gate_included": true,
@@ -275,13 +275,13 @@
     }
   ],
   "coverage_summary": {
-    "adjudication_records": 174,
-    "heuristic_failures": 28,
+    "adjudication_records": 178,
+    "heuristic_failures": 38,
     "priority_queue_records": 0,
     "review_coverage": "100.0%",
     "review_sources": 11,
-    "reviewed_records": 174,
-    "scored_records": 174,
+    "reviewed_records": 178,
+    "scored_records": 178,
     "unreviewed_heuristic_failures": 0,
     "unreviewed_high_or_critical_records": 0,
     "unreviewed_records": 0

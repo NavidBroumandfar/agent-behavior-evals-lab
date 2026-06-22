@@ -28,44 +28,44 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
 
         current = snapshot["current_snapshot"]
         self.assertEqual(current["pass_rates"]["baseline"]["records"], 126)
-        self.assertEqual(current["pass_rates"]["baseline"]["pass_rate"], "91.3%")
+        self.assertEqual(current["pass_rates"]["baseline"]["pass_rate"], "85.7%")
         self.assertEqual(current["fixture_counts"]["fixture_groups"], 10)
-        self.assertEqual(current["fixture_counts"]["scored_records"], 48)
-        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 174)
+        self.assertEqual(current["fixture_counts"]["scored_records"], 52)
+        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 178)
         self.assertEqual(current["adjudication_outcomes"]["source_trace_count"], 11)
         self.assertEqual(current["adjudication_outcomes"]["reviewed_external_source_trace_count"], 10)
-        self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 9)
+        self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 1)
         self.assertEqual(current["adjudication_outcomes"]["reviewer_decisions"]["needs_discussion"], 0)
         self.assertEqual(current["adjudication_outcomes"]["calibration_label_counts"]["ambiguous_review"], 0)
         self.assertEqual(current["report_manifest_coverage"]["report_artifacts"], 64)
         self.assertEqual(current["report_manifest_coverage"]["json_snapshots"], 25)
         self.assertEqual(current["report_manifest_coverage"]["markdown_reports"], 39)
-        self.assertEqual(current["scorer_refinement_triage"]["accepted_scorer_changes"], 0)
-        self.assertEqual(current["scorer_refinement_triage"]["deferred_scorer_changes"], 2)
+        self.assertEqual(current["scorer_refinement_triage"]["accepted_scorer_changes"], 1)
+        self.assertEqual(current["scorer_refinement_triage"]["deferred_scorer_changes"], 1)
         self.assertEqual(current["scorer_candidate_controls"]["controls"], 4)
-        self.assertEqual(current["scorer_candidate_controls"]["accepted_scorer_changes"], 0)
+        self.assertEqual(current["scorer_candidate_controls"]["accepted_scorer_changes"], 1)
         self.assertEqual(current["scorer_change_decision"]["candidates_evaluated"], 2)
-        self.assertEqual(current["scorer_change_decision"]["accepted_scorer_changes"], 0)
-        self.assertEqual(current["scorer_change_decision"]["decision"], "rubric_only_no_scorer_change")
+        self.assertEqual(current["scorer_change_decision"]["accepted_scorer_changes"], 1)
+        self.assertEqual(current["scorer_change_decision"]["decision"], "approval_disclosure_scorer_change_accepted")
         self.assertTrue(current["scorer_versioning_guardrails"]["historical_scorer_context_supported"])
         self.assertEqual(current["scorer_versioning_guardrails"]["current_records_with_historical_context"], 0)
         self.assertFalse(current["scorer_versioning_guardrails"]["migration_required_now"])
-        self.assertEqual(current["focused_scorer_evidence"]["focused_controls"], 6)
+        self.assertEqual(current["focused_scorer_evidence"]["focused_controls"], 10)
         self.assertEqual(current["focused_scorer_evidence"]["candidate_groups"], 2)
-        self.assertEqual(current["focused_scorer_evidence"]["review_scorer_result_mismatches"], 1)
-        self.assertEqual(current["focused_scorer_evidence"]["accepted_scorer_changes"], 0)
+        self.assertEqual(current["focused_scorer_evidence"]["review_scorer_result_mismatches"], 0)
+        self.assertEqual(current["focused_scorer_evidence"]["accepted_scorer_changes"], 1)
         self.assertEqual(
             current["focused_scorer_evidence"]["decision"],
-            "evidence_expanded_no_scorer_change",
+            "m99_approval_disclosure_scorer_hardened",
         )
-        self.assertFalse(current["focused_scorer_evidence"]["scorer_code_changed"])
+        self.assertTrue(current["focused_scorer_evidence"]["scorer_code_changed"])
         self.assertEqual(current["scorer_promotion_decision"]["candidate_decisions"], 2)
-        self.assertEqual(current["scorer_promotion_decision"]["accepted_scorer_promotions"], 0)
-        self.assertEqual(current["scorer_promotion_decision"]["accepted_rubric_updates"], 1)
-        self.assertFalse(current["scorer_promotion_decision"]["scorer_code_changed"])
+        self.assertEqual(current["scorer_promotion_decision"]["accepted_scorer_promotions"], 1)
+        self.assertEqual(current["scorer_promotion_decision"]["accepted_rubric_updates"], 0)
+        self.assertTrue(current["scorer_promotion_decision"]["scorer_code_changed"])
         self.assertEqual(
             current["scorer_promotion_decision"]["decision"],
-            "rubric_only_update_no_scorer_change",
+            "approval_disclosure_scorer_promotion_accepted",
         )
 
     def test_versioned_checkpoints_cover_recent_roadmap_phases(self):

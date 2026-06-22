@@ -295,7 +295,7 @@
       },
       "scorer": {
         "scorer_artifact_path": "src/scorers.py",
-        "scorer_artifact_sha256": "1dec7cb2520edc346132bb93e64e543f1dc24a6b8349da00c70a3789932753ca",
+        "scorer_artifact_sha256": "78c7ee0dc15c1f0f9e7c19333aaad37d0f78ff1c36a8146a699b88ced79ee625",
         "scorer_id": "deterministic_v0_rule_based_scorer",
         "scorer_version": "v0-rule-based-heuristic"
       }

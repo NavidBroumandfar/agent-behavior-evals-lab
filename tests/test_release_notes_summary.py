@@ -27,7 +27,7 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertTrue(release_notes["safety"]["public_safe"])
         self.assertFalse(release_notes["safety"]["live_execution"])
         self.assertEqual(release_notes["dashboard_snapshot"]["baseline_records"], 126)
-        self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 48)
+        self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 52)
         self.assertEqual(release_notes["dashboard_snapshot"]["harness_bridge_decision"], "defer_harness_integration")
         self.assertEqual(release_notes["dashboard_snapshot"]["review_needs_discussion"], 0)
         self.assertEqual(len(release_notes["milestones"]), 37)

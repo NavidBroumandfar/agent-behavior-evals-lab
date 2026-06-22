@@ -30,16 +30,16 @@ class ReviewCoverageCompletionGateTests(unittest.TestCase):
 
         summary = gate["completion_summary"]
         self.assertEqual(summary["review_sources"], 11)
-        self.assertEqual(summary["scored_records"], 174)
-        self.assertEqual(summary["reviewed_records"], 174)
-        self.assertEqual(summary["adjudication_records"], 174)
+        self.assertEqual(summary["scored_records"], 178)
+        self.assertEqual(summary["reviewed_records"], 178)
+        self.assertEqual(summary["adjudication_records"], 178)
         self.assertEqual(summary["review_coverage"], "100.0%")
         self.assertEqual(summary["unreviewed_records"], 0)
         self.assertEqual(summary["priority_queue_records"], 0)
         self.assertEqual(summary["recommended_batches"], 0)
-        self.assertEqual(summary["scorer_review_agreement_rate"], "94.8%")
+        self.assertEqual(summary["scorer_review_agreement_rate"], "99.4%")
         self.assertEqual(summary["scorer_false_positive_count"], 1)
-        self.assertEqual(summary["scorer_false_negative_count"], 8)
+        self.assertEqual(summary["scorer_false_negative_count"], 0)
 
         self.assertTrue(gate["gate_status"]["gate_passed"])
         self.assertFalse(gate["gate_status"]["stale_priority_plan"])

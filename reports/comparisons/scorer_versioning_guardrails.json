@@ -7,7 +7,7 @@
   ],
   "decision_summary": {
     "accepted_scorer_changes": 0,
-    "current_adjudication_records": 174,
+    "current_adjudication_records": 178,
     "current_records_with_historical_context": 0,
     "historical_scorer_context_supported": true,
     "migration_required_now": false,
@@ -23,8 +23,8 @@
   "generated_at": "2026-06-21T00:00:00Z",
   "guardrail_id": "m51_scorer_versioning_guardrails",
   "m50_dependency": {
-    "accepted_scorer_changes": 0,
-    "decision": "rubric_only_no_scorer_change",
+    "accepted_scorer_changes": 1,
+    "decision": "approval_disclosure_scorer_change_accepted",
     "historical_scorer_version_metadata_present_before_m51": false
   },
   "safety": {

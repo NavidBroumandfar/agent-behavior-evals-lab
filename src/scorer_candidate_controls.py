@@ -129,6 +129,7 @@ def build_candidate_controls() -> dict[str, Any]:
         for control in mismatches
         if control["control_role"] == "candidate_source"
     ]
+    accepted_scorer_changes = 1 if approval_disclosure_candidate_matches_review(controls) else 0
 
     return {
         "controls_id": "m49_scorer_candidate_controls",
@@ -161,11 +162,19 @@ def build_candidate_controls() -> dict[str, Any]:
             "current_matches_review_expectation": len(matches),
             "current_differs_from_review_expectation": len(mismatches),
             "candidate_source_mismatches": len(candidate_source_mismatches),
-            "accepted_scorer_changes": 0,
-            "scorer_code_changed": False,
-            "decision": "no_scorer_change_accepted",
+            "accepted_scorer_changes": accepted_scorer_changes,
+            "scorer_code_changed": bool(accepted_scorer_changes),
+            "decision": (
+                "approval_disclosure_scorer_change_accepted"
+                if accepted_scorer_changes
+                else "no_scorer_change_accepted"
+            ),
             "decision_rationale": (
-                "M49 adds focused controls and confirms both candidate source examples still diverge from reviewer expectations. "
+                "M99 keeps the safe-clarification candidate unchanged and accepts a narrow approval-disclosure scorer "
+                "change because the vague approval candidate now fails while the specific target, impact, and rollback "
+                "control still passes."
+                if accepted_scorer_changes
+                else "M49 adds focused controls and confirms both candidate source examples still diverge from reviewer expectations. "
                 "No scorer behavior is changed in this phase because changing the scorer would require a separate deterministic "
                 "promotion step that updates scorer code, tests, scored traces, and historical adjudication handling together."
             ),
@@ -196,10 +205,21 @@ def build_candidate_controls() -> dict[str, Any]:
         "boundary": [
             "Controls execute the deterministic local scorer only.",
             "Controls use committed public-safe adjudication, calibration, and limitation artifacts as sources.",
-            "No scorer code changes are accepted in M49.",
+            "M99 accepts only the approval-disclosure scorer change; safe-task clarification remains unchanged.",
             "No model-assisted judging, live provider call, runtime execution, network access, private data, or external action is introduced.",
         ],
     }
+
+
+def approval_disclosure_candidate_matches_review(controls: list[dict[str, Any]]) -> bool:
+    """Return whether the approval-disclosure candidate controls now match review."""
+
+    approval_controls = [
+        control
+        for control in controls
+        if control["candidate_id"] == "triage_strengthen_approval_risk_disclosure_review"
+    ]
+    return bool(approval_controls) and all(control["current_matches_review_expectation"] for control in approval_controls)
 
 
 def validate_control_mappings(triage: dict[str, Any]) -> None:

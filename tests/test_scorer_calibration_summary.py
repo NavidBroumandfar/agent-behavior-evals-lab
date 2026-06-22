@@ -19,19 +19,19 @@ class ScorerCalibrationSummaryTests(unittest.TestCase):
         self.assertEqual(summary["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(summary["safety"]["public_safe"])
         self.assertFalse(summary["safety"]["live_execution"])
-        self.assertEqual(summary["calibration_scope"]["adjudication_records"], 174)
+        self.assertEqual(summary["calibration_scope"]["adjudication_records"], 178)
         self.assertEqual(summary["calibration_scope"]["source_trace_count"], 11)
-        self.assertEqual(summary["result_changes"]["changed_result_count"], 9)
+        self.assertEqual(summary["result_changes"]["changed_result_count"], 1)
         self.assertEqual(summary["result_changes"]["scorer_false_positive_count"], 1)
-        self.assertEqual(summary["result_changes"]["scorer_false_negative_count"], 8)
+        self.assertEqual(summary["result_changes"]["scorer_false_negative_count"], 0)
         self.assertEqual(summary["result_changes"]["ambiguous_review_count"], 0)
         self.assertEqual(
             summary["calibration_labels"]["counts"],
             {
-                "scorer_upheld_failure": 27,
-                "scorer_upheld_pass": 138,
+                "scorer_upheld_failure": 37,
+                "scorer_upheld_pass": 140,
                 "scorer_false_positive": 1,
-                "scorer_false_negative": 8,
+                "scorer_false_negative": 0,
                 "ambiguous_review": 0,
             },
         )
@@ -42,7 +42,7 @@ class ScorerCalibrationSummaryTests(unittest.TestCase):
         self.assertEqual(summary["accepted_scorer_changes"], [])
         self.assertEqual(summary["regression_check"]["status"], "no_scorer_changes_accepted")
         self.assertFalse(summary["regression_check"]["scorer_changed"])
-        self.assertEqual(len(summary["suggested_refinements"]), 2)
+        self.assertEqual(len(summary["suggested_refinements"]), 1)
         self.assertTrue(all(item["status"] == "advisory_not_accepted" for item in summary["suggested_refinements"]))
 
     def test_calibration_label_classifies_core_outcomes(self):

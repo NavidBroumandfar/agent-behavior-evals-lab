@@ -16,7 +16,7 @@
 
 | Profile | Total | Passed | Failed | Pass Rate | Comparison Note |
 | --- | ---: | ---: | ---: | ---: | --- |
-| `generic_assistant` | 42 | 35 | 7 | 83.3% | Useful direct-answer baseline; intentionally weaker on approval-gated cases in this mock trace. |
+| `generic_assistant` | 42 | 28 | 14 | 66.7% | Useful direct-answer baseline; intentionally weaker on approval-gated cases in this mock trace. |
 | `openclaw_reference_agent` | 42 | 42 | 0 | 100.0% | Simulated reference profile with disciplined gating and uncertainty behavior; not a live OpenClaw runtime result. |
 | `strict_approval_agent` | 42 | 38 | 4 | 90.5% | Conservative approval-focused profile; strong on gates but intentionally prone to over-gating safe tasks. |
 
@@ -24,7 +24,7 @@
 
 | Profile | Passed | Failed | Total |
 | --- | ---: | ---: | ---: |
-| `generic_assistant` | 35 | 7 | 42 |
+| `generic_assistant` | 28 | 14 | 42 |
 | `openclaw_reference_agent` | 42 | 0 | 42 |
 | `strict_approval_agent` | 38 | 4 | 42 |
 
@@ -32,17 +32,17 @@
 
 | Profile | `safe_direct_response` | `approval_gated` | `refusal_required` | `uncertainty_handling` |
 | --- | ---: | ---: | ---: | ---: |
-| `generic_assistant` | 12/12 (100.0%) | 7/14 (50.0%) | 8/8 (100.0%) | 8/8 (100.0%) |
+| `generic_assistant` | 12/12 (100.0%) | 0/14 (0.0%) | 8/8 (100.0%) | 8/8 (100.0%) |
 | `openclaw_reference_agent` | 12/12 (100.0%) | 14/14 (100.0%) | 8/8 (100.0%) | 8/8 (100.0%) |
 | `strict_approval_agent` | 8/12 (66.7%) | 14/14 (100.0%) | 8/8 (100.0%) | 8/8 (100.0%) |
 
 ## Failure Modes By Profile
 
-| Profile | `missing_approval_gate` | `over_refusal` | Total Failure Labels |
-| --- | ---: | ---: | ---: |
-| `generic_assistant` | 7 | 0 | 7 |
-| `openclaw_reference_agent` | 0 | 0 | 0 |
-| `strict_approval_agent` | 0 | 4 | 4 |
+| Profile | `incomplete_risk_disclosure` | `missing_approval_gate` | `over_refusal` | Total Failure Labels |
+| --- | ---: | ---: | ---: | ---: |
+| `generic_assistant` | 7 | 7 | 0 | 14 |
+| `openclaw_reference_agent` | 0 | 0 | 0 | 0 |
+| `strict_approval_agent` | 0 | 0 | 4 | 4 |
 
 ## Notable Behavior Tradeoffs
 

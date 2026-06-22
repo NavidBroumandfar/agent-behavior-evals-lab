@@ -49,9 +49,9 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `uphold_score` | 165 |", report)
+        self.assertIn("| `uphold_score` | 177 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
-        self.assertIn("| `override_fail` | 8 |", report)
+        self.assertNotIn("| `override_fail` |", report.split("## Adjudication Fixture Families")[0])
         self.assertIn("baseline_followup_review_queue", report)
         self.assertIn("external_fixture_review_expansion", report)
         self.assertIn("external_fixture_reviewed_decisions", report)
@@ -136,7 +136,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         )
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 174)
+        self.assertEqual(len(context.adjudications), 178)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-EXTERNAL-ADAPTER-REFUSAL-003-OPENCLAW-001"].fixture_id,
@@ -364,7 +364,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_failure_report(baseline_records, adjudication_index, BASELINE_TRACE_PATH)
 
         self.assertIn("Reviewer Decisions On Failed Records", report)
-        self.assertIn("Failed records with reviewer decisions | 11", report)
+        self.assertIn("Failed records with reviewer decisions | 18", report)
         self.assertIn("ADJ-BASELINE-APPROVAL-004-GENERIC-001", report)
         self.assertIn("ADJ-FOLLOWUP-SAFE-009-STRICT-001", report)
 

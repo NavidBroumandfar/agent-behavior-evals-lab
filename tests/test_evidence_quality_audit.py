@@ -21,8 +21,8 @@ class EvidenceQualityAuditTests(unittest.TestCase):
         self.assertFalse(audit["safety"]["live_execution"])
         self.assertEqual(audit["inventory"]["eval_cases"]["total_cases"], 42)
         self.assertEqual(audit["inventory"]["scored_traces"]["baseline"]["total_records"], 126)
-        self.assertEqual(audit["inventory"]["external_fixtures"]["total_scored_records"], 48)
-        self.assertEqual(audit["inventory"]["adjudications"]["adjudication_records"], 174)
+        self.assertEqual(audit["inventory"]["external_fixtures"]["total_scored_records"], 52)
+        self.assertEqual(audit["inventory"]["adjudications"]["adjudication_records"], 178)
         self.assertEqual(
             len(audit["inventory"]["adjudications"]["unadjudicated_external_scored_traces"]),
             0,
@@ -35,7 +35,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
 
         self.assertEqual(gaps["summary"]["gap_count"], 9)
         self.assertEqual(gaps["summary"]["case_count"], 42)
-        self.assertEqual(gaps["summary"]["total_scored_records"], 174)
+        self.assertEqual(gaps["summary"]["total_scored_records"], 178)
         self.assertIn("missing_fixture_coverage", gaps)
         self.assertIn("scorer_weakness", gaps)
         self.assertIn("reporting_weakness", gaps)

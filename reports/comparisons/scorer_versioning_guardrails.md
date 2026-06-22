@@ -6,7 +6,7 @@
 | --- | ---: |
 | Generated at | `2026-06-21T00:00:00Z` |
 | Historical scorer context supported | true |
-| Current adjudication records | 174 |
+| Current adjudication records | 178 |
 | Records with historical context | 0 |
 | Migration required now | false |
 | Accepted scorer changes | 0 |

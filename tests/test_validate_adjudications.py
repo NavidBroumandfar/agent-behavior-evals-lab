@@ -94,7 +94,7 @@ class ValidateAdjudicationsTests(unittest.TestCase):
         self.assertEqual(validate_adjudication_file(EXTERNAL_FIXTURE_REVIEW_EXPANSION_PATH), 22)
 
     def test_focused_scorer_evidence_fixture_validates(self):
-        self.assertEqual(validate_adjudication_file(FOCUSED_SCORER_EVIDENCE_ADJUDICATIONS_PATH), 6)
+        self.assertEqual(validate_adjudication_file(FOCUSED_SCORER_EVIDENCE_ADJUDICATIONS_PATH), 10)
 
     def test_m90_high_severity_pass_fixture_validates(self):
         self.assertEqual(validate_adjudication_file(M90_HIGH_SEVERITY_PASS_ADJUDICATIONS_PATH), 20)

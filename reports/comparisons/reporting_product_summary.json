@@ -1,10 +1,10 @@
 {
   "adjudication": {
-    "adjudicated_pass_rate": "79.9%",
-    "adjudication_records": 174,
-    "changed_result_count": 9,
+    "adjudicated_pass_rate": "79.2%",
+    "adjudication_records": 178,
+    "changed_result_count": 1,
     "needs_discussion": 0,
-    "override_fail": 8,
+    "override_fail": 0,
     "override_pass": 1,
     "reviewer_count": 1,
     "source_trace_coverage": {
@@ -28,8 +28,8 @@
       },
       "traces/scored/focused_scorer_evidence_eval.jsonl": {
         "review_coverage": "100.0%",
-        "reviewed_records": 6,
-        "source_records": 6,
+        "reviewed_records": 10,
+        "source_records": 10,
         "unreviewed_records": 0
       },
       "traces/scored/hermes_long_running_agent_eval.jsonl": {
@@ -79,9 +79,9 @@
   "baseline": {
     "by_category": {
       "approval_gated": {
-        "failed": 7,
-        "pass_rate": "83.3%",
-        "passed": 35,
+        "failed": 14,
+        "pass_rate": "66.7%",
+        "passed": 28,
         "total": 42
       },
       "refusal_required": {
@@ -105,9 +105,9 @@
     },
     "by_profile": {
       "generic_assistant": {
-        "failed": 7,
-        "pass_rate": "83.3%",
-        "passed": 35,
+        "failed": 14,
+        "pass_rate": "66.7%",
+        "passed": 28,
         "total": 42
       },
       "openclaw_reference_agent": {
@@ -123,13 +123,14 @@
         "total": 42
       }
     },
-    "failed": 11,
+    "failed": 18,
     "failure_modes": {
+      "incomplete_risk_disclosure": 7,
       "missing_approval_gate": 7,
       "over_refusal": 4
     },
-    "pass_rate": "91.3%",
-    "passed": 115,
+    "pass_rate": "85.7%",
+    "passed": 108,
     "run_ids": [
       "baseline_mock_run"
     ],
@@ -139,8 +140,20 @@
     "total_records": 126
   },
   "engineering_view": {
-    "changed_review_results": 9,
+    "changed_review_results": 1,
     "highest_failure_fixture_groups": [
+      {
+        "data_classification": "public_safe_fixture",
+        "failed": 6,
+        "fixture_id": "focused_scorer_evidence",
+        "pass_rate": "40.0%",
+        "passed": 4,
+        "quality_gate_included": true,
+        "scored_records": 10,
+        "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
+        "source_path": "traces/external/focused_scorer_evidence.example.jsonl",
+        "source_type": "focused_scorer_evidence"
+      },
       {
         "data_classification": "public_safe_fixture",
         "failed": 4,
@@ -152,18 +165,6 @@
         "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
         "source_path": "traces/external/public_safe_transcript_expansion.example.jsonl",
         "source_type": "public_safe_transcript_expansion"
-      },
-      {
-        "data_classification": "public_safe_fixture",
-        "failed": 3,
-        "fixture_id": "normalized_adapter_outputs",
-        "pass_rate": "25.0%",
-        "passed": 1,
-        "quality_gate_included": true,
-        "scored_records": 4,
-        "scored_trace_path": "traces/scored/adapter_output_fixture_import.jsonl",
-        "source_path": "traces/external/adapter_outputs.example.jsonl",
-        "source_type": "normalized_adapter_output"
       },
       {
         "data_classification": "public_synthetic",
@@ -179,6 +180,7 @@
       }
     ],
     "primary_failure_modes": {
+      "incomplete_risk_disclosure": 7,
       "missing_approval_gate": 7,
       "over_refusal": 4
     },
@@ -203,8 +205,8 @@
       },
       "traces/scored/focused_scorer_evidence_eval.jsonl": {
         "review_coverage": "100.0%",
-        "reviewed_records": 6,
-        "source_records": 6,
+        "reviewed_records": 10,
+        "source_records": 10,
         "unreviewed_records": 0
       },
       "traces/scored/hermes_long_running_agent_eval.jsonl": {
@@ -252,7 +254,7 @@
     }
   },
   "external_fixtures": {
-    "failed_records": 17,
+    "failed_records": 20,
     "fixture_groups": 10,
     "groups": [
       {
@@ -281,12 +283,12 @@
       },
       {
         "data_classification": "public_safe_fixture",
-        "failed": 2,
+        "failed": 6,
         "fixture_id": "focused_scorer_evidence",
-        "pass_rate": "66.7%",
+        "pass_rate": "40.0%",
         "passed": 4,
         "quality_gate_included": true,
-        "scored_records": 6,
+        "scored_records": 10,
         "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
         "source_path": "traces/external/focused_scorer_evidence.example.jsonl",
         "source_type": "focused_scorer_evidence"
@@ -353,10 +355,10 @@
       },
       {
         "data_classification": "public_safe_fixture",
-        "failed": 3,
+        "failed": 2,
         "fixture_id": "normalized_adapter_outputs",
-        "pass_rate": "25.0%",
-        "passed": 1,
+        "pass_rate": "50.0%",
+        "passed": 2,
         "quality_gate_included": true,
         "scored_records": 4,
         "scored_trace_path": "traces/scored/adapter_output_fixture_import.jsonl",
@@ -376,7 +378,7 @@
         "source_type": "dry_run_adapter_output"
       }
     ],
-    "total_scored_records": 48
+    "total_scored_records": 52
   },
   "generated_at": "2026-06-21T00:00:00Z",
   "harness_bridge": {
@@ -393,16 +395,16 @@
   },
   "product_kpis": [
     {
-      "detail": "115 passed of 126 scored records",
+      "detail": "108 passed of 126 scored records",
       "label": "Baseline Pass Rate",
       "metric_id": "baseline_pass_rate",
-      "value": "91.3%"
+      "value": "85.7%"
     },
     {
-      "detail": "31 passed of 48 scored fixture records",
+      "detail": "32 passed of 52 scored fixture records",
       "label": "External Fixture Pass Rate",
       "metric_id": "external_fixture_pass_rate",
-      "value": "64.6%"
+      "value": "61.5%"
     },
     {
       "detail": "Reviewer decisions still marked needs_discussion",
@@ -418,10 +420,10 @@
     }
   ],
   "release_view": {
-    "baseline_result": "115 passed, 11 failed (91.3% pass rate)",
+    "baseline_result": "108 passed, 18 failed (85.7% pass rate)",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
     "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
-    "review_status": "174 adjudication records; 0 need discussion"
+    "review_status": "178 adjudication records; 0 need discussion"
   },
   "safety": {
     "contains_private_data": false,

@@ -5,8 +5,8 @@
 | Field | Value |
 | --- | --- |
 | Generated at | `2026-06-22T00:00:00Z` |
-| Scored records in scope | 174 |
-| Reviewed records | 174 |
+| Scored records in scope | 178 |
+| Reviewed records | 178 |
 | Review coverage | 100.0% |
 | Unreviewed heuristic failures | 0 |
 | Unreviewed high/critical records | 0 |
@@ -20,7 +20,7 @@ This plan is advisory reviewer-work planning over committed public-safe artifact
 | `baseline_mock_run` | 126 | 126 | 100.0% | 0 | `maintain_existing_review_coverage` |
 | `manual_outputs` | 4 | 4 | 100.0% | 0 | `maintain_existing_review_coverage` |
 | `sanitized_openclaw_style_manual_samples` | 6 | 6 | 100.0% | 0 | `maintain_existing_review_coverage` |
-| `focused_scorer_evidence` | 6 | 6 | 100.0% | 0 | `maintain_existing_review_coverage` |
+| `focused_scorer_evidence` | 10 | 10 | 100.0% | 0 | `maintain_existing_review_coverage` |
 | `saved_transcript_replay` | 5 | 5 | 100.0% | 0 | `maintain_existing_review_coverage` |
 | `openclaw_saved_transcript_pilot` | 3 | 3 | 100.0% | 0 | `maintain_existing_review_coverage` |
 | `public_safe_transcript_expansion` | 8 | 8 | 100.0% | 0 | `maintain_existing_review_coverage` |
@@ -33,7 +33,7 @@ This plan is advisory reviewer-work planning over committed public-safe artifact
 
 | Category | Scored | Reviewed | Coverage | Unreviewed failures |
 | --- | ---: | ---: | ---: | ---: |
-| `approval_gated` | 61 | 61 | 100.0% | 0 |
+| `approval_gated` | 65 | 65 | 100.0% | 0 |
 | `safe_direct_response` | 46 | 46 | 100.0% | 0 |
 | `refusal_required` | 32 | 32 | 100.0% | 0 |
 | `uncertainty_handling` | 35 | 35 | 100.0% | 0 |

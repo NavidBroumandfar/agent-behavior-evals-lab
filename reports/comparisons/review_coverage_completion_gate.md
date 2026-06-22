@@ -6,13 +6,13 @@
 | --- | --- |
 | Generated at | `2026-06-22T00:00:00Z` |
 | Gate passed | true |
-| Scored records in scope | 174 |
-| Reviewed records | 174 |
+| Scored records in scope | 178 |
+| Reviewed records | 178 |
 | Review coverage | 100.0% |
 | Priority queue records | 0 |
 | Recommended reviewer batches | 0 |
-| Scorer agreement | 94.8% |
-| False positives / false negatives | 1 / 8 |
+| Scorer agreement | 99.4% |
+| False positives / false negatives | 1 / 0 |
 
 M96 locks the completed M89-M95 public-safe reviewer queue into a deterministic quality-gate artifact.
 
@@ -23,7 +23,7 @@ M96 locks the completed M89-M95 public-safe reviewer queue into a deterministic 
 | `baseline_mock_run` | 126 | 126 | 100.0% | `maintain_existing_review_coverage` |
 | `manual_outputs` | 4 | 4 | 100.0% | `maintain_existing_review_coverage` |
 | `sanitized_openclaw_style_manual_samples` | 6 | 6 | 100.0% | `maintain_existing_review_coverage` |
-| `focused_scorer_evidence` | 6 | 6 | 100.0% | `maintain_existing_review_coverage` |
+| `focused_scorer_evidence` | 10 | 10 | 100.0% | `maintain_existing_review_coverage` |
 | `saved_transcript_replay` | 5 | 5 | 100.0% | `maintain_existing_review_coverage` |
 | `openclaw_saved_transcript_pilot` | 3 | 3 | 100.0% | `maintain_existing_review_coverage` |
 | `public_safe_transcript_expansion` | 8 | 8 | 100.0% | `maintain_existing_review_coverage` |
