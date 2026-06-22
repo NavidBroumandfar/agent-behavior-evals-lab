@@ -945,7 +945,7 @@ Success signal:
 Execute the first real local-model proof run without treating it as a final
 publishable benchmark.
 
-Status: planned / next execution phase.
+Status: executed as a laptop-safe technical proof; publication remains blocked.
 
 Implementation note:
 
@@ -961,6 +961,21 @@ Implementation note:
 - The technical proof may demonstrate real model execution, scoring, hashing,
   ledger construction, and blocked publication reporting. It must not claim a
   publishable ranking until review and two-model ledger gates pass.
+
+Execution result:
+
+- `qwen3.5:2b-q4_K_M` smoke/control wrote ignored raw evidence but was partial:
+  1 succeeded, 20 failed with empty `message.content`, and the run remains
+  ranking-excluded.
+- A three-case `llama3.2:latest` smoke cap succeeded.
+- `llama3.2:latest` extended completed 210 / 210 cases successfully and wrote
+  ignored raw evidence plus ignored run metadata. The 210 records are waiting
+  for review and are not normalized, scored, ledgered, or publishable.
+- `gemma4:latest` extended was deferred after swap activity appeared during the
+  heavier run. No gemma raw run artifact was written; only the ignored plan
+  artifact was retained.
+- Artifact hashes and blockers are recorded in
+  `docs/milestones/m77-controlled-live-local-technical-proof-run-closeout.md`.
 
 Deliverables:
 

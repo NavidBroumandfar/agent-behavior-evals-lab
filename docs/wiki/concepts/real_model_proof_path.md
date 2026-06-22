@@ -15,6 +15,12 @@ package adds the contracts needed to run one safely:
 - hosted-provider metadata boundaries,
 - operator runbook with next commands and blocked publication reason.
 
+M77 executed the first live-local technical proof attempt. The run completed the
+extended split for `llama3.2:latest` with 210 / 210 successful generations and
+left those raw records waiting for review under ignored local paths.
+`gemma4:latest` was deferred after swap activity appeared during the heavier
+pass. No reviewed live-local ledgers exist yet, so publication remains blocked.
+
 ## Local Proof Target
 
 The first proof target is reviewed extended `local_public_v1` evidence for two
@@ -81,3 +87,4 @@ quality gate.
 - `reports/comparisons/real_model_proof_runbook.json`
 - `reports/comparisons/hosted_provider_batch_summary.json`
 - `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`
+- `docs/milestones/m77-controlled-live-local-technical-proof-run-closeout.md`

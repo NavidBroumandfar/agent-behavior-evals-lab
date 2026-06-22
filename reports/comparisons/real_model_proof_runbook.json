@@ -62,6 +62,22 @@
   "objective": "Run reviewed extended local_public_v1 evidence for at least two installed local Ollama models, then unlock the local/open-weight benchmark report only after ledger and review gates pass.",
   "operator_commands": [
     {
+      "command": "python3 scripts/live_local.py --model llama3.2:latest --adapter ollama_text_only --split extended --plan-only",
+      "commits_raw_outputs": false,
+      "label": "Plan llama3.2 extended run",
+      "live_execution": false,
+      "notes": "Plan-only command is safe for operator review and does not call the local model.",
+      "step_id": "plan_llama32_extended"
+    },
+    {
+      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model llama3.2:latest --adapter ollama_text_only --split extended --live-local --max-failures 210",
+      "commits_raw_outputs": false,
+      "label": "Execute llama3.2 extended run",
+      "live_execution": true,
+      "notes": "Manual opt-in only; raw outputs must remain under ignored local paths until reviewed.",
+      "step_id": "run_llama32_extended"
+    },
+    {
       "command": "python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --plan-only",
       "commits_raw_outputs": false,
       "label": "Plan gemma4 extended run",
@@ -70,23 +86,15 @@
       "step_id": "plan_gemma4_extended"
     },
     {
-      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --live-local",
+      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model gemma4:latest --adapter ollama_text_only --split extended --live-local --max-failures 210",
       "commits_raw_outputs": false,
       "label": "Execute gemma4 extended run",
       "live_execution": true,
-      "notes": "Manual opt-in only; raw outputs must remain under ignored local paths until reviewed.",
+      "notes": "Manual opt-in only; run after llama3.2 and defer if memory pressure or thermal behavior becomes unstable.",
       "step_id": "run_gemma4_extended"
     },
     {
-      "command": "AGENT_EVALS_ENABLE_LIVE_LOCAL=1 python3 scripts/live_local.py --model llama3.2:latest --adapter ollama_text_only --split extended --live-local",
-      "commits_raw_outputs": false,
-      "label": "Execute llama3.2 extended run",
-      "live_execution": true,
-      "notes": "Manual opt-in only; needed as the second eligible model before local rankings can publish.",
-      "step_id": "run_llama32_extended"
-    },
-    {
-      "command": "python3 src/review_text_only_outputs.py --allow-live-local <raw-local-jsonl> <reviewed-normalized-jsonl>",
+      "command": "python3 src/review_text_only_outputs.py --input <raw-local-jsonl> --output <reviewed-normalized-jsonl>",
       "commits_raw_outputs": false,
       "label": "Normalize reviewed outputs",
       "live_execution": false,
@@ -103,12 +111,12 @@
     }
   ],
   "publication_gate": {
-    "blocked_reason": "No reviewed live-local extended ledgers exist for the two primary local targets yet.",
+    "blocked_reason": "M77 produced one completed llama3.2 extended raw run waiting for review; no reviewed live-local extended ledgers exist yet, and gemma4 was deferred after swap activity.",
     "local_ranking_claim_allowed": false,
     "unlock_requirements": [
-      "Run the extended split for gemma4:latest and llama3.2:latest with explicit live-local opt-in.",
+      "Complete a stable extended split for gemma4:latest with explicit live-local opt-in.",
       "Keep raw outputs local and ignored until review approves public-safe normalized outputs.",
-      "Review every failed case, every high or critical case, and the deterministic pass sample.",
+      "Review the 210 llama3.2:latest raw records plus every future failed case, every high or critical case, and the deterministic pass sample.",
       "Build ledgers with local_public_benchmark evidence class and no unresolved review, unsafe output, malformed output, private data, or raw outputs.",
       "Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist."
     ]
@@ -124,7 +132,7 @@
   "review_queue": {
     "malformed_output_count": 0,
     "needs_discussion_count": 0,
-    "records_waiting_for_review": 0,
+    "records_waiting_for_review": 210,
     "unsafe_output_count": 0
   },
   "safety_assertions": {
