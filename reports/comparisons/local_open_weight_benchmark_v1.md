@@ -11,7 +11,7 @@ This report is public-safe and evidence-gated. It publishes no model rankings un
 | Ranking claim allowed | `false` |
 | Case set | `local_public_v1` `1.0.0` |
 | Publishable splits | `standard`, `extended` |
-| Eligible real local targets | 0 |
+| Eligible real local targets | 1 |
 | Excluded targets | 1 |
 
 ## Ranking Table

@@ -28,6 +28,7 @@ LOCAL_BENCHMARK_CASE_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/cases.
 LOCAL_BENCHMARK_MANIFEST_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/manifest.json"
 DEFAULT_LEDGER_PATHS = [
     REPO_ROOT / "traces/external/local_run_ledger.example.json",
+    REPO_ROOT / "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
 ]
 DEFAULT_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.json"
 DEFAULT_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.md"
@@ -83,7 +84,7 @@ def build_snapshot(
     """Build the benchmark report snapshot."""
 
     evidence_sources = []
-    rankings: list[dict[str, Any]] = []
+    eligible_rankings: list[dict[str, Any]] = []
     excluded_evidence: list[dict[str, Any]] = []
 
     for ledger in ledgers:
@@ -94,7 +95,7 @@ def build_snapshot(
             if exclusion_reasons:
                 source_exclusions.append(excluded_entry(source_id, entry, exclusion_reasons))
             else:
-                rankings.append(ranking_from_entry(entry, methodology))
+                eligible_rankings.append(ranking_from_entry(entry, methodology))
         excluded_evidence.extend(source_exclusions)
         evidence_sources.append(
             {
@@ -108,17 +109,18 @@ def build_snapshot(
             }
         )
 
-    rankings.sort(key=lambda item: (-float(item["severity_weighted_effective_pass_rate"]), str(item["model"])))
-    for index, ranking in enumerate(rankings, start=1):
-        ranking["rank"] = index
+    eligible_rankings.sort(key=lambda item: (-float(item["severity_weighted_effective_pass_rate"]), str(item["model"])))
 
-    eligible_real_local_targets = len(rankings)
+    eligible_real_local_targets = len(eligible_rankings)
     acceptance_criteria_met = eligible_real_local_targets >= 2
-    ranking_claim_allowed = acceptance_criteria_met and bool(rankings)
+    ranking_claim_allowed = acceptance_criteria_met and bool(eligible_rankings)
     report_status = "published_local_ranking" if ranking_claim_allowed else "no_rankings_published"
     blocked_reason = "" if ranking_claim_allowed else (
-        "No committed reviewed live-local, ledger-backed standard-or-extended split evidence meets M59 ranking requirements."
+        "Fewer than two committed reviewed live-local, ledger-backed standard-or-extended split targets meet M59 ranking requirements."
     )
+    rankings = eligible_rankings if ranking_claim_allowed else []
+    for index, ranking in enumerate(rankings, start=1):
+        ranking["rank"] = index
 
     return {
         "snapshot_id": SNAPSHOT_ID,
@@ -173,6 +175,7 @@ def build_snapshot(
             "benchmarks/local_ranking_methodology.json",
             "evals/benchmarks/local_public_v1/manifest.json",
             "traces/external/local_run_ledger.example.json",
+            "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
             "docs/live_benchmark_roadmap.md",
             "docs/wiki/concepts/local_ranking_methodology.md",
         ],

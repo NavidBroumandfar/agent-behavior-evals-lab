@@ -1015,6 +1015,7 @@
         "benchmarks/local_ranking_methodology.json",
         "evals/benchmarks/local_public_v1/manifest.json",
         "traces/external/local_run_ledger.example.json",
+        "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
         "schemas/local_benchmark_report.schema.json"
       ],
       "snapshot_dependency_paths": [],

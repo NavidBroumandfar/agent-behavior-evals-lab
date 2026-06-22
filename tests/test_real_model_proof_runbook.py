@@ -39,7 +39,7 @@ class RealModelProofRunbookTests(unittest.TestCase):
 
             self.assertEqual(report["report_id"], "m76_real_model_proof_runbook_report")
             self.assertEqual(report["evidence_status"]["required_cases_per_primary_model"], 210)
-            self.assertEqual(report["evidence_status"]["eligible_reviewed_live_local_ledgers"], 0)
+            self.assertEqual(report["evidence_status"]["eligible_reviewed_live_local_ledgers"], 1)
             self.assertFalse(report["publication_gate"]["local_ranking_claim_allowed"])
             self.assertTrue(report_json.exists())
             self.assertIn("Real Model Proof Runbook", report_md.read_text(encoding="utf-8"))

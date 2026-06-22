@@ -9,7 +9,7 @@
   "evidence_status": {
     "case_set_id": "local_public_v1",
     "current_publishable_rankings": 0,
-    "eligible_reviewed_live_local_ledgers": 0,
+    "eligible_reviewed_live_local_ledgers": 1,
     "required_cases_per_primary_model": 210,
     "required_eligible_ledgers": 2,
     "target_split": "extended"
@@ -90,32 +90,30 @@
       "commits_raw_outputs": false,
       "label": "Score llama3.2 reviewed candidate",
       "live_execution": false,
-      "notes": "M79 should score the reviewed saved outputs locally without committing raw outputs or adding live-local execution to the quality gate.",
+      "notes": "M79 scored the reviewed saved outputs locally without committing raw outputs or adding live-local execution to the quality gate.",
       "step_id": "score_llama32_reviewed_candidate"
     },
     {
-      "command": "python3 src/validate_local_run_ledger.py <llama32-reviewed-ledger.json>",
+      "command": "python3 src/m79_llama3_2_reviewed_ledger.py && python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
       "commits_raw_outputs": false,
       "label": "Build llama3.2 reviewed ledger",
       "live_execution": false,
-      "notes": "The first ledger can become eligible only if it references reviewed normalized output, scored trace, run metadata, and review summary with no unresolved blockers.",
+      "notes": "M79 built the first eligible reviewed live-local ledger for llama3.2:latest from committed public-safe derivatives.",
       "step_id": "build_llama32_reviewed_ledger"
     },
     {
-      "command": "python3 src/validate_local_run_ledger.py <reviewed-ledger.json> && python3 src/local_benchmark_report.py",
+      "command": "python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json && python3 src/local_benchmark_report.py",
       "commits_raw_outputs": false,
       "label": "Validate ledgers and regenerate report",
       "live_execution": false,
-      "notes": "Publication remains blocked until two eligible reviewed extended ledgers exist with no unresolved review.",
+      "notes": "Publication remains blocked because only one eligible reviewed extended ledger exists.",
       "step_id": "validate_and_report"
     }
   ],
   "publication_gate": {
-    "blocked_reason": "M78 produced a local ignored reviewed normalized llama3.2 candidate, but no scored live-local trace, M58-compatible reviewed ledger, or second eligible local target ledger exists yet.",
+    "blocked_reason": "M79 produced one eligible reviewed live-local llama3.2 ledger, but the required second eligible local target ledger does not exist yet.",
     "local_ranking_claim_allowed": false,
     "unlock_requirements": [
-      "Score the M78 llama3.2 reviewed normalized candidate with explicit --allow-live-local and the local_public_v1 case path.",
-      "Build and validate an M58-compatible reviewed live-local ledger for llama3.2:latest.",
       "Complete or replace the second local extended target after the M77 gemma4:latest swapout blocker.",
       "Review, normalize, score, and ledger the second target with no unresolved review, unsafe output, malformed output, private data, or raw outputs.",
       "Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist."

@@ -1,0 +1,71 @@
+{
+  "generated_at": "2026-06-22T00:00:00Z",
+  "ledger_result": {
+    "eligible_reviewed_live_local_ledgers": 1,
+    "ledger_id": "m79_llama3_2_latest_extended_reviewed_live_local_ledger",
+    "ledger_path": "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
+    "ledger_sha256": "dccf3e85c0fabb7e8916beee5a70061759a32f102be7a6bafa18d5083b01e9f7",
+    "ranking_eligible": true,
+    "required_eligible_ledgers": 2,
+    "run_mode": "reviewed_live_local_run",
+    "validation": "passed"
+  },
+  "milestone": "M79",
+  "publication_gate": {
+    "blocked_reason": "M79 produced one eligible reviewed live-local llama3.2 ledger, but the required second eligible local target ledger does not exist yet.",
+    "current_publishable_rankings": 0,
+    "eligible_reviewed_live_local_ledgers": 1,
+    "ranking_claim_allowed": false,
+    "required_eligible_ledgers": 2,
+    "second_model_ledger_present": false
+  },
+  "quality_gate": {
+    "live_local_execution_in_quality_gate": false,
+    "local_model_execution_in_m79": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_outputs_committed": false,
+    "raw_outputs_read_in_deterministic_quality_gate": false
+  },
+  "report_id": "m79_llama3_2_score_ledger",
+  "review_summary": {
+    "effective_fail_count": 126,
+    "effective_pass_count": 84,
+    "malformed_output_count": 0,
+    "needs_discussion_count": 0,
+    "review_summary_path": "traces/external/m79_llama3_2_latest_extended.review_summary.json",
+    "review_summary_sha256": "771f73636a15bcd0664ee2a311badb420f725bae7165fd766a55375a1a74f5de",
+    "reviewer_count": 1,
+    "unsafe_output_count": 0
+  },
+  "safety_assertions": {
+    "contains_credentials_or_secrets": false,
+    "contains_private_data": false,
+    "contains_raw_output_text": false,
+    "external_actions": false,
+    "production_safety_claim": false,
+    "public_leaderboard_claim": false,
+    "public_safe": true
+  },
+  "scoring_result": {
+    "adapter_output_validation": "passed_with_allow_live_local",
+    "case_path": "evals/benchmarks/local_public_v1/cases.jsonl",
+    "fail_count": 126,
+    "normalized_output_path": "traces/external/m79_llama3_2_latest_extended.reviewed_live_local_outputs.jsonl",
+    "normalized_output_sha256": "c331944e2f77b45e5f3f7b66d6aa641b46d67b0a12ebde2d90739703ae673295",
+    "pass_count": 84,
+    "scored_trace_path": "traces/scored/m79_llama3_2_latest_extended.reviewed_live_local_eval.jsonl",
+    "scored_trace_sha256": "8d96030fd512eba2e0937f31ff050212d3652e35980c3c0e6755b0e27dfc8705",
+    "total_records": 210
+  },
+  "source_run": {
+    "adapter_id": "ollama_text_only",
+    "adapter_version": "0.1.0",
+    "benchmark_split": "extended",
+    "model": "llama3.2:latest",
+    "run_id": "m77_llama3_2_latest_extended",
+    "runtime": "ollama"
+  },
+  "status": "first_reviewed_live_local_ledger_created_publication_blocked",
+  "title": "Score And Ledger First Reviewed Live-Local Run",
+  "version": "0.1.0"
+}

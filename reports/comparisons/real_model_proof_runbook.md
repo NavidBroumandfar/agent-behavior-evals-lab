@@ -9,7 +9,7 @@ This M76 runbook shows the next manual CLI path to a controlled, opt-in local/op
 | Runtime | `ollama` |
 | Target split | `extended` |
 | Cases per primary model | 210 |
-| Eligible reviewed ledgers | 0 / 2 |
+| Eligible reviewed ledgers | 1 / 2 |
 | Review queue | 0 waiting, 0 unresolved |
 | Local ranking claim allowed | `false` |
 
@@ -45,29 +45,27 @@ This M76 runbook shows the next manual CLI path to a controlled, opt-in local/op
 
 - Execution: `non-live`
 - Raw outputs committed: `false`
-- Notes: M79 should score the reviewed saved outputs locally without committing raw outputs or adding live-local execution to the quality gate.
+- Notes: M79 scored the reviewed saved outputs locally without committing raw outputs or adding live-local execution to the quality gate.
 
 ### Build llama3.2 reviewed ledger
 
-`python3 src/validate_local_run_ledger.py <llama32-reviewed-ledger.json>`
+`python3 src/m79_llama3_2_reviewed_ledger.py && python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json`
 
 - Execution: `non-live`
 - Raw outputs committed: `false`
-- Notes: The first ledger can become eligible only if it references reviewed normalized output, scored trace, run metadata, and review summary with no unresolved blockers.
+- Notes: M79 built the first eligible reviewed live-local ledger for llama3.2:latest from committed public-safe derivatives.
 
 ### Validate ledgers and regenerate report
 
-`python3 src/validate_local_run_ledger.py <reviewed-ledger.json> && python3 src/local_benchmark_report.py`
+`python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json && python3 src/local_benchmark_report.py`
 
 - Execution: `non-live`
 - Raw outputs committed: `false`
-- Notes: Publication remains blocked until two eligible reviewed extended ledgers exist with no unresolved review.
+- Notes: Publication remains blocked because only one eligible reviewed extended ledger exists.
 
 ## Publication Gate
 
-- Blocked reason: M78 produced a local ignored reviewed normalized llama3.2 candidate, but no scored live-local trace, M58-compatible reviewed ledger, or second eligible local target ledger exists yet.
-- Score the M78 llama3.2 reviewed normalized candidate with explicit --allow-live-local and the local_public_v1 case path.
-- Build and validate an M58-compatible reviewed live-local ledger for llama3.2:latest.
+- Blocked reason: M79 produced one eligible reviewed live-local llama3.2 ledger, but the required second eligible local target ledger does not exist yet.
 - Complete or replace the second local extended target after the M77 gemma4:latest swapout blocker.
 - Review, normalize, score, and ledger the second target with no unresolved review, unsafe output, malformed output, private data, or raw outputs.
 - Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist.

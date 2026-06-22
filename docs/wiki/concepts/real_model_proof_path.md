@@ -18,9 +18,11 @@ package adds the contracts needed to run one safely:
 M77 executed the first live-local technical proof attempt. The run completed the
 extended split for `llama3.2:latest` with 210 / 210 successful generations.
 M78 reviewed all 210 records, approved them as public-safe text-only evidence,
-and wrote an ignored reviewed normalized candidate. `gemma4:latest` was
-deferred after swap activity appeared during the heavier pass. No reviewed
-live-local ledgers exist yet, so publication remains blocked.
+and wrote an ignored reviewed normalized candidate. M79 scored a public-safe
+derivative of that candidate and built the first eligible reviewed live-local
+ledger for `llama3.2:latest`. `gemma4:latest` was deferred after swap activity
+appeared during the heavier pass. Only one reviewed live-local ledger exists,
+so publication remains blocked.
 
 ## Local Proof Target
 
@@ -67,7 +69,7 @@ follow-on milestones, not as unfinished M77 scope:
 - M78 reviewed and normalized the 210 `llama3.2:latest` M77 raw records into a
   local ignored candidate.
 - M79 scores that reviewed evidence and builds the first reviewed live-local
-  ledger.
+  ledger. This is complete for `llama3.2:latest`; one eligible ledger exists.
 - M80 documents the second-target decision after the `gemma4:latest` swapout
   blocker.
 - M81 executes a stable second local target extended run.
@@ -111,6 +113,9 @@ quality gate.
 - `reports/comparisons/real_model_proof_runbook.json`
 - `reports/comparisons/hosted_provider_batch_summary.json`
 - `reports/comparisons/m78_llama3_2_review_normalization.json`
+- `reports/comparisons/m79_llama3_2_score_ledger.json`
+- `traces/external/m79_llama3_2_latest_extended.local_run_ledger.json`
 - `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`
 - `docs/milestones/m77-controlled-live-local-technical-proof-run-closeout.md`
 - `docs/milestones/m78-review-normalize-llama3-2-evidence-closeout.md`
+- `docs/milestones/m79-score-ledger-llama3-2-live-local-closeout.md`

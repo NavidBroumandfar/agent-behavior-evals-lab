@@ -562,7 +562,7 @@ Acceptance criteria:
 Turn the M77 technical proof into publishable local/open-weight evidence only
 through explicit review, ledger, second-target, reproducibility, and claim gates.
 
-Status: active / M78 local review complete, publication still blocked.
+Status: active / M79 first reviewed ledger complete, publication still blocked.
 
 Milestone sequence:
 
@@ -573,6 +573,7 @@ Milestone sequence:
   ledger is committed yet.
 - M79 scores the reviewed `llama3.2:latest` evidence and builds the first
   reviewed live-local ledger.
+  Status: complete with one eligible reviewed ledger; no ranking is published.
 - M80 documents the second local target decision after the M77
   `gemma4:latest` swapout blocker.
 - M81 executes the selected second target over the extended split if the
@@ -592,7 +593,8 @@ Acceptance criteria:
 
 - No raw outputs are committed.
 - Reviewed candidates remain ignored until an explicit promotion or ledger
-  artifact decision is made.
+  artifact decision is made; M79 makes that decision only for the public-safe
+  `llama3.2:latest` derivative artifacts needed by the first ledger.
 - The deterministic gate remains non-live.
 - A ranking is published only after two reviewed extended local targets satisfy
   review, scoring, ledger, sample-size, and safety gates.

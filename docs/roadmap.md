@@ -1045,7 +1045,8 @@ Acceptance criteria:
 Score the reviewed `llama3.2:latest` normalized candidate and build the first
 M58-compatible reviewed live-local ledger.
 
-Status: planned.
+Status: complete / first eligible reviewed ledger produced, publication still
+blocked.
 
 Implementation note:
 
@@ -1055,9 +1056,14 @@ Implementation note:
 - The ledger must hash the case file, manifest, adapter registry, prompt
   template, normalized outputs, scored traces, scorer artifact, review summary,
   and public-safe run metadata.
-- If existing promotion tooling only supports `saved_output_only` provenance,
-  add or document a live-local-specific promotion convention before committing
-  reviewed live-local evidence.
+- M79 committed public-safe reviewed live-local derivatives under
+  `traces/external/m79_llama3_2_latest_extended.*` and
+  `traces/scored/m79_llama3_2_latest_extended.reviewed_live_local_eval.jsonl`;
+  raw M77 outputs remain ignored.
+- The M79 ledger validates at
+  `traces/external/m79_llama3_2_latest_extended.local_run_ledger.json`.
+- The regenerated local/open-weight benchmark report sees one eligible
+  reviewed live-local ledger but publishes zero rankings.
 
 Acceptance criteria:
 

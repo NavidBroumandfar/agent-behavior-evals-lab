@@ -44,6 +44,8 @@ def import_adapter_outputs(
     *,
     allow_live_local: bool = False,
     case_paths: list[Path] | None = None,
+    run_id: str = RUN_ID,
+    trace_timestamp: str = TRACE_TIMESTAMP,
 ) -> dict[str, Any]:
     """Import normalized adapter outputs into deterministic scored traces."""
 
@@ -63,7 +65,7 @@ def import_adapter_outputs(
             raise AdapterOutputImportError(
                 f"{display_path(input_path)}: scoring failed for record_id={record['record_id']!r}: {exc}"
             ) from exc
-        scored_traces.append(build_trace_record(RUN_ID, TRACE_TIMESTAMP, case, response, score))
+        scored_traces.append(build_trace_record(run_id, trace_timestamp, case, response, score))
 
     validate_scored_traces(scored_traces, output_path)
     try:
@@ -74,7 +76,7 @@ def import_adapter_outputs(
     pass_count = sum(1 for trace in scored_traces if trace["passed"])
     fail_count = len(scored_traces) - pass_count
     return {
-        "run_id": RUN_ID,
+        "run_id": run_id,
         "input_path": display_path(input_path),
         "output_path": display_path(output_path),
         "total_adapter_output_records": len(scored_traces),
@@ -208,6 +210,16 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         dest="case_paths",
         help="Case JSONL path to use for scoring. Repeat to include multiple case files.",
     )
+    parser.add_argument(
+        "--run-id",
+        default=RUN_ID,
+        help="Run ID to write into generated scored traces.",
+    )
+    parser.add_argument(
+        "--trace-timestamp",
+        default=TRACE_TIMESTAMP,
+        help="Timestamp to write into generated scored traces.",
+    )
     return parser.parse_args(argv)
 
 
@@ -229,6 +241,8 @@ def main(argv: list[str] | None = None) -> int:
             args.output,
             allow_live_local=args.allow_live_local,
             case_paths=args.case_paths,
+            run_id=args.run_id,
+            trace_timestamp=args.trace_timestamp,
         )
     except (AdapterOutputValidationError, AdapterOutputImportError, OSError, ValueError) as exc:
         print(f"ERROR: {exc}", file=sys.stderr)

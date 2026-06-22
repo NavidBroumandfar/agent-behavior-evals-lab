@@ -103,7 +103,7 @@ class LocalBenchmarkReportTests(unittest.TestCase):
 
         self.assertEqual(snapshot["report_status"], "no_rankings_published")
         self.assertFalse(snapshot["eligibility_summary"]["acceptance_criteria_met"])
-        self.assertEqual(snapshot["eligibility_summary"]["eligible_real_local_targets"], 0)
+        self.assertEqual(snapshot["eligibility_summary"]["eligible_real_local_targets"], 1)
         self.assertEqual(snapshot["rankings"], [])
         excluded = snapshot["excluded_evidence"][0]
         self.assertEqual(excluded["run_mode"], "dry_run_public_safe_example")
@@ -123,6 +123,31 @@ class LocalBenchmarkReportTests(unittest.TestCase):
         self.assertEqual(row["bootstrap_ci_95"], {"low": 1.0, "high": 1.0})
         self.assertEqual(row["review_counts"]["records_reviewed"], 4)
         self.assertEqual(row["review_counts"]["needs_discussion_count"], 0)
+
+    def test_one_reviewed_live_local_ledger_remains_blocked(self):
+        with tempfile.TemporaryDirectory(dir=REPO_ROOT / "reports" / "comparisons") as temp_dir:
+            root = Path(temp_dir)
+            methodology = load_methodology()
+            methodology["uncertainty_policy"]["minimum_sample_size_for_publication"] = 4
+            methodology_path = root / "methodology.json"
+            ledger_path = root / "ledger.json"
+            write_json(methodology_path, methodology)
+            write_json(ledger_path, reviewed_local_ledger("model-a:latest"))
+
+            summary = generate_benchmark_report(
+                snapshot_path=root / "local_report.json",
+                report_path=root / "local_report.md",
+                methodology_path=methodology_path,
+                ledger_paths=[ledger_path],
+            )
+            snapshot = json.loads((root / "local_report.json").read_text(encoding="utf-8"))
+
+            self.assertEqual(summary["report_status"], "no_rankings_published")
+            self.assertFalse(summary["ranking_claim_allowed"])
+            self.assertEqual(summary["rankings"], 0)
+            self.assertEqual(snapshot["eligibility_summary"]["eligible_real_local_targets"], 1)
+            self.assertFalse(snapshot["eligibility_summary"]["acceptance_criteria_met"])
+            self.assertEqual(snapshot["rankings"], [])
 
     def test_two_reviewed_live_local_ledgers_unlock_fake_public_safe_report(self):
         with tempfile.TemporaryDirectory(dir=REPO_ROOT / "reports" / "comparisons") as temp_dir:

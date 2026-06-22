@@ -16,10 +16,10 @@
     "acceptance_criteria_met": false,
     "eligible_manual_public_targets": 0,
     "eligible_ranked_targets": 0,
-    "eligible_real_local_targets": 0,
+    "eligible_real_local_targets": 1,
     "excluded_targets": 1,
     "minimum_real_local_targets_required": 2,
-    "ranking_publication_blocked_reason": "No committed reviewed live-local, ledger-backed standard-or-extended split evidence meets M59 ranking requirements."
+    "ranking_publication_blocked_reason": "Fewer than two committed reviewed live-local, ledger-backed standard-or-extended split targets meet M59 ranking requirements."
   },
   "evidence_sources": [
     {
@@ -30,6 +30,15 @@
       "sha256": "c0513c962351df9ddc7d80165e449f3e671aa693626d98f3f96868a60a84a02f",
       "source_id": "m58_reproducible_local_run_ledger_example",
       "source_kind": "dry_run_public_safe_example"
+    },
+    {
+      "eligible_entry_count": 1,
+      "entry_count": 1,
+      "excluded_entry_count": 0,
+      "path": "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
+      "sha256": "dccf3e85c0fabb7e8916beee5a70061759a32f102be7a6bafa18d5083b01e9f7",
+      "source_id": "m79_llama3_2_latest_extended_reviewed_live_local_ledger",
+      "source_kind": "published_local_benchmark"
     }
   ],
   "excluded_evidence": [
@@ -90,6 +99,7 @@
     "benchmarks/local_ranking_methodology.json",
     "evals/benchmarks/local_public_v1/manifest.json",
     "traces/external/local_run_ledger.example.json",
+    "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
     "docs/live_benchmark_roadmap.md",
     "docs/wiki/concepts/local_ranking_methodology.md"
   ],

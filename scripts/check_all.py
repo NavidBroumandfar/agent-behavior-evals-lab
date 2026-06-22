@@ -58,6 +58,13 @@ LOCAL_RUN_LEDGER_OUTPUT_PATH = REPO_ROOT / "traces/external/local_run_ledger_out
 EXPECTED_LOCAL_RUN_LEDGER_OUTPUT_LINES = 4
 LOCAL_RUN_LEDGER_SCORED_TRACE_PATH = REPO_ROOT / "traces/scored/local_run_ledger_outputs.example.jsonl"
 EXPECTED_LOCAL_RUN_LEDGER_SCORED_TRACE_LINES = 4
+M79_REVIEWED_OUTPUT_PATH = REPO_ROOT / "traces/external/m79_llama3_2_latest_extended.reviewed_live_local_outputs.jsonl"
+M79_REVIEW_SUMMARY_PATH = REPO_ROOT / "traces/external/m79_llama3_2_latest_extended.review_summary.json"
+M79_RUN_METADATA_PATH = REPO_ROOT / "traces/external/m79_llama3_2_latest_extended.run_metadata.json"
+M79_RUN_LEDGER_PATH = REPO_ROOT / "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json"
+M79_SCORED_TRACE_PATH = REPO_ROOT / "traces/scored/m79_llama3_2_latest_extended.reviewed_live_local_eval.jsonl"
+EXPECTED_M79_REVIEWED_LINES = 210
+EXPECTED_M79_SCORED_TRACE_LINES = 210
 LOCAL_RANKING_METHODOLOGY_PATH = REPO_ROOT / "benchmarks/local_ranking_methodology.json"
 LOCAL_RANKING_METHODOLOGY_INPUT_PATH = REPO_ROOT / "traces/external/local_ranking_methodology_inputs.example.json"
 LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_ranking_methodology_example.json"
@@ -582,6 +589,14 @@ CHECKS = [
         ["python3", "src/validate_local_run_ledger.py"],
     ),
     (
+        "M79 reviewed live-local ledger generation",
+        ["python3", "src/m79_llama3_2_reviewed_ledger.py"],
+    ),
+    (
+        "M79 reviewed live-local ledger validation",
+        ["python3", "src/validate_local_run_ledger.py", "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json"],
+    ),
+    (
         "local ranking methodology generation",
         ["python3", "src/local_ranking_methodology.py"],
     ),
@@ -677,6 +692,7 @@ CHECKS = [
             "src/live_local_review_summary.py",
             "src/local_run_ledger.py",
             "src/validate_local_run_ledger.py",
+            "src/m79_llama3_2_reviewed_ledger.py",
             "src/local_ranking_methodology.py",
             "src/validate_local_ranking_methodology.py",
             "src/local_benchmark_report.py",
@@ -864,6 +880,14 @@ def main() -> int:
                 verify_trace_count(LOCAL_RUN_LEDGER_SCORED_TRACE_PATH, EXPECTED_LOCAL_RUN_LEDGER_SCORED_TRACE_LINES)
             if name == "local run ledger validation":
                 verify_report_exists(LOCAL_RUN_LEDGER_PATH)
+            if name == "M79 reviewed live-local ledger generation":
+                verify_jsonl_count(M79_REVIEWED_OUTPUT_PATH, EXPECTED_M79_REVIEWED_LINES)
+                verify_report_exists(M79_REVIEW_SUMMARY_PATH)
+                verify_report_exists(M79_RUN_METADATA_PATH)
+                verify_report_exists(M79_RUN_LEDGER_PATH)
+                verify_trace_count(M79_SCORED_TRACE_PATH, EXPECTED_M79_SCORED_TRACE_LINES)
+            if name == "M79 reviewed live-local ledger validation":
+                verify_report_exists(M79_RUN_LEDGER_PATH)
             if name == "local ranking methodology generation":
                 verify_report_exists(LOCAL_RANKING_METHODOLOGY_PATH)
                 verify_report_exists(LOCAL_RANKING_METHODOLOGY_INPUT_PATH)
