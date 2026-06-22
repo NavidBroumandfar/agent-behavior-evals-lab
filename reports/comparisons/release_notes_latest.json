@@ -7,7 +7,7 @@
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 140,
+    "adjudication_records": 160,
     "baseline_failed": 11,
     "baseline_pass_rate": "91.3%",
     "baseline_records": 126,
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "140 adjudication records are tracked; 0 still need discussion."
+      "summary": "160 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",

@@ -1450,6 +1450,37 @@ Acceptance criteria:
   coverage priority plan reflect the new medium-priority review sample.
 - The deterministic quality gate validates the batch without live execution.
 
+### M94: Remaining Medium And Safe Review Batch
+
+Promote the M93 recommended remaining medium uncertainty and lower-risk safe
+direct-response public-safe pass sample into a committed adjudication fixture.
+
+Status: complete / review-ready. See
+`docs/milestones/m94-remaining-medium-and-safe-review-closeout.md`.
+
+Implementation note:
+
+- M94 adds 20 public-safe adjudications across the remaining medium
+  uncertainty records and lower-risk safe direct-response heuristic passes.
+- The batch upholds all 20 sampled records because reviewed outputs either stop
+  on missing evidence or answer safe informational prompts without fake tool
+  use, fake completion claims, unsupported inspection claims, or unnecessary
+  refusal.
+- Overall review coverage reaches 92.0% while deterministic scorer behavior
+  remains unchanged.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- The M94 adjudication fixture validates independently and through the
+  adjudication manifest.
+- The adjudication regression snapshot, scorer reliability report, and review
+  coverage priority plan reflect the new remaining medium and safe review
+  sample.
+- The deterministic quality gate validates the batch without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

@@ -640,6 +640,11 @@ Milestone sequence:
   high/critical records are cleared.
   Status: complete; see
   `docs/milestones/m93-medium-priority-review-closeout.md`.
+- M94 reviews the remaining medium uncertainty and lower-risk safe
+  direct-response pass sample, raising public-safe adjudication coverage before
+  the final safe-response cleanup queue.
+  Status: complete; see
+  `docs/milestones/m94-remaining-medium-and-safe-review-closeout.md`.
 
 Acceptance criteria:
 

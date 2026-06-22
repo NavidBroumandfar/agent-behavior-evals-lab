@@ -16,7 +16,7 @@
 - **Reporting**: Maintains dashboard-ready JSON, product summary Markdown, release-note outputs, and report-manifest coverage from local artifacts.
 - **Quality Gate**: Local deterministic gate remains stable; no live runtime integration is enabled.
 - **Harness Boundary**: Harness decision remains defer_harness_integration; runtime-native state required is false.
-- **Review**: 140 adjudication records are tracked; 0 still need discussion.
+- **Review**: 160 adjudication records are tracked; 0 still need discussion.
 - **Evidence Quality**: Added a deterministic evidence inventory and gap report for fixture, scorer, adjudication, and reporting coverage.
 - **Transcript Expansion**: Added synthetic public-safe saved transcripts covering task-following, approval, refusal, and uncertainty behavior.
 - **Scorer Calibration**: Added advisory calibration labels for scorer false positives, false negatives, ambiguous reviews, and upheld outcomes.
@@ -57,7 +57,7 @@
 | Baseline failed | 11 |
 | External fixture groups | 10 |
 | External fixture records | 48 |
-| Adjudication records | 140 |
+| Adjudication records | 160 |
 | Review records needing discussion | 0 |
 
 ## Milestone Rollup

@@ -25,10 +25,10 @@ class ReviewCoveragePriorityPlanTests(unittest.TestCase):
         summary = plan["coverage_summary"]
         self.assertEqual(summary["review_sources"], 11)
         self.assertEqual(summary["scored_records"], 174)
-        self.assertEqual(summary["adjudication_records"], 140)
-        self.assertEqual(summary["reviewed_records"], 140)
-        self.assertEqual(summary["unreviewed_records"], 34)
-        self.assertEqual(summary["review_coverage"], "80.5%")
+        self.assertEqual(summary["adjudication_records"], 160)
+        self.assertEqual(summary["reviewed_records"], 160)
+        self.assertEqual(summary["unreviewed_records"], 14)
+        self.assertEqual(summary["review_coverage"], "92.0%")
         self.assertEqual(summary["unreviewed_heuristic_failures"], 0)
         self.assertEqual(summary["unreviewed_high_or_critical_records"], 0)
 
@@ -36,24 +36,24 @@ class ReviewCoveragePriorityPlanTests(unittest.TestCase):
         plan = build_review_coverage_priority_plan()
         priority_queue = plan["priority_queue"]
 
-        self.assertEqual(len(priority_queue), 20)
-        self.assertTrue(any(record["review_priority"] > 0 for record in priority_queue))
+        self.assertEqual(len(priority_queue), 14)
+        self.assertTrue(all(record["review_priority"] == 0 for record in priority_queue))
         self.assertTrue(priority_queue[0]["passed"])
-        self.assertEqual(priority_queue[0]["severity"], "medium")
-        self.assertEqual(priority_queue[0]["category"], "uncertainty_handling")
+        self.assertEqual(priority_queue[0]["severity"], "low")
+        self.assertEqual(priority_queue[0]["category"], "safe_direct_response")
         self.assertEqual(priority_queue[0]["priority_rationale"], "Unreviewed lower-risk pass.")
-        self.assertEqual(plan["recommended_batches"][0]["batch_id"], "m94_remaining_medium_and_safe_review_sample")
+        self.assertEqual(plan["recommended_batches"][0]["batch_id"], "m95_remaining_safe_direct_response_review_sample")
 
     def test_source_coverage_includes_baseline_and_fixtures(self):
         plan = build_review_coverage_priority_plan()
         by_source = {row["source_id"]: row for row in plan["coverage_by_source"]}
 
         self.assertEqual(by_source["baseline_mock_run"]["scored_records"], 126)
-        self.assertEqual(by_source["baseline_mock_run"]["reviewed_records"], 94)
+        self.assertEqual(by_source["baseline_mock_run"]["reviewed_records"], 113)
         self.assertEqual(by_source["baseline_mock_run"]["unreviewed_heuristic_failures"], 0)
         self.assertEqual(by_source["focused_scorer_evidence"]["review_coverage"], "100.0%")
         self.assertEqual(by_source["hermes_long_running_agent"]["review_coverage"], "100.0%")
-        self.assertEqual(by_source["public_safe_transcript_expansion"]["review_coverage"], "75.0%")
+        self.assertEqual(by_source["public_safe_transcript_expansion"]["review_coverage"], "87.5%")
 
     def test_generate_markdown_contains_boundary_sections(self):
         markdown = generate_markdown(build_review_coverage_priority_plan())

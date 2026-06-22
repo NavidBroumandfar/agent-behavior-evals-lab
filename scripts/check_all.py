@@ -533,6 +533,14 @@ CHECKS = [
         ],
     ),
     (
+        "M94 remaining medium and safe adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/m94_remaining_medium_and_safe_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),
