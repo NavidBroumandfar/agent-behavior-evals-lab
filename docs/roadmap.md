@@ -16,6 +16,7 @@ The repository currently has a deterministic local evaluation harness:
 - A deterministic mock client and v0 rule-based scorer.
 - Scored JSONL traces and generated Markdown reports.
 - Regression snapshots, comparison reports, failure inspection, and human adjudication overlays.
+- Scorer calibration, promotion decisions, and deterministic Scorer v1 reliability reporting.
 - Schema validators, fixture manifests, report manifests, and a local quality gate.
 - Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, a controlled local agent sandbox pilot, an optional harness-integration decision gate, and a default-deny sandboxed tool runtime contract.
 - Reporting product summaries and deterministic release-note artifacts.
@@ -108,6 +109,7 @@ Acceptance criteria:
 - The deterministic scorer remains standard-library and local.
 - Adjudicated reports continue to keep heuristic and reviewed results separate.
 - Any model-assisted judging remains outside the deterministic quality gate.
+- Scorer reliability reports track false positives, false negatives, calibration slices, and reviewer-agreement availability without changing scorer behavior.
 
 ### M33: First Real Text-Only Adapter
 

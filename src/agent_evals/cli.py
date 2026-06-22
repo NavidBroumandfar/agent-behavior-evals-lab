@@ -37,8 +37,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     )
     subparsers = parser.add_subparsers(dest="command", required=True)
 
-    for name in ["check", "test", "lint", "run-baseline", "report", "version"]:
+    for name in ["check", "test", "lint", "run-baseline", "report", "scorer-reliability", "version"]:
         subparsers.add_parser(name)
+
+    review_contract = subparsers.add_parser("scorer-review-contract")
+    review_contract.add_argument("--input", type=Path)
+    review_contract.add_argument("--output-json", type=Path)
+    review_contract.add_argument("--output-markdown", type=Path)
+    review_contract.add_argument("--acknowledge-non-gated", action="store_true")
 
     return parser.parse_args(argv)
 
@@ -60,7 +66,23 @@ def main(argv: list[str] | None = None) -> int:
         report_status = run_command([sys.executable, "src/report_generator.py"])
         if report_status != 0:
             return report_status
-        return run_command([sys.executable, "src/comparison_report.py"])
+        comparison_status = run_command([sys.executable, "src/comparison_report.py"])
+        if comparison_status != 0:
+            return comparison_status
+        return run_command([sys.executable, "src/scorer_reliability_report.py"])
+    if args.command == "scorer-reliability":
+        return run_command([sys.executable, "src/scorer_reliability_report.py"])
+    if args.command == "scorer-review-contract":
+        command = [sys.executable, "src/scorer_review_contract.py"]
+        if args.input is not None:
+            command.extend(["--input", str(args.input)])
+        if args.output_json is not None:
+            command.extend(["--output-json", str(args.output_json)])
+        if args.output_markdown is not None:
+            command.extend(["--output-markdown", str(args.output_markdown)])
+        if args.acknowledge_non_gated:
+            command.append("--acknowledge-non-gated")
+        return run_command(command)
     if args.command == "version":
         print(__version__)
         return 0

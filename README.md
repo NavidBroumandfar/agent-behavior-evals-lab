@@ -51,9 +51,14 @@ Useful local commands:
 ```bash
 python3 scripts/dev.py test
 python3 scripts/dev.py check
+agent-evals scorer-reliability
+agent-evals scorer-review-contract
 ```
 
 `test` runs the unit test suite. `check` runs the full deterministic local quality gate through `scripts/check_all.py`.
+`scorer-reliability` regenerates deterministic scorer reliability reporting.
+`scorer-review-contract` prints the explicit non-gated review contract stub and
+does not run a model judge.
 
 Optional lint tooling:
 

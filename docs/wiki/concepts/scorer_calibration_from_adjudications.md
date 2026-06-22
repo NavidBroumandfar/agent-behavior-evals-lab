@@ -16,10 +16,18 @@ M50 evaluates those controls and records a durable no-change scorer decision. Th
 
 M52 adds focused public-safe scorer evidence for the same candidate areas. The added records increase calibration depth while keeping accepted scorer-code changes at zero.
 
+Scorer v1 reliability reporting builds on these calibration labels by adding
+deterministic false-positive/false-negative rates, failure precision and recall,
+risk-area and category slices, and reviewer-agreement availability signals.
+Those metrics live in `reports/comparisons/scorer_reliability_report.json` and
+`reports/comparisons/scorer_reliability_report.md`.
+
 Generated artifacts:
 
 - `reports/comparisons/scorer_calibration_summary.json`
 - `reports/comparisons/scorer_calibration_summary.md`
+- `reports/comparisons/scorer_reliability_report.json`
+- `reports/comparisons/scorer_reliability_report.md`
 
 ## Calibration Labels
 
@@ -36,3 +44,7 @@ The calibration report assigns one label to each reviewed adjudication:
 The summary reads committed adjudication fixtures and source scored traces only. It does not change `src/scorers.py`, rewrite traces, collect new outputs, call model providers, run local models, execute agents, use browser/email tools, inspect private logs, or perform external actions.
 
 Suggested refinements remain advisory unless a later milestone accepts a deterministic scorer or rubric change with focused tests and regression coverage.
+
+Optional model-assisted scorer review remains outside the deterministic quality
+gate. `agent-evals scorer-review-contract` documents the non-gated contract
+stub only; it does not run a judge or change quality-gate outcomes.

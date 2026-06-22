@@ -52,6 +52,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Scorer Versioning Guardrails](concepts/scorer_versioning_guardrails.md)
 - [Focused Scorer Evidence Expansion](concepts/focused_scorer_evidence_expansion.md)
 - [Scorer Promotion Decision](concepts/scorer_promotion_decision.md)
+- [Scorer Reliability Reporting](concepts/scorer_reliability_reporting.md)
 - [Benchmark Claim Charter](concepts/benchmark_claim_charter.md)
 - [Local Public Benchmark Corpus](concepts/local_public_benchmark_corpus.md)
 - [Local Adapter Registry](concepts/local_adapter_registry.md)
@@ -130,6 +131,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Scorer versioning guardrails: `src/scorer_versioning_guardrails.py`, `reports/comparisons/scorer_versioning_guardrails.json`, and `reports/comparisons/scorer_versioning_guardrails.md`
 - Focused scorer evidence expansion: `src/focused_scorer_evidence_expansion.py`, `reports/comparisons/focused_scorer_evidence_expansion.json`, and `reports/comparisons/focused_scorer_evidence_expansion.md`
 - Scorer promotion decision: `src/scorer_promotion_decision.py`, `reports/comparisons/scorer_promotion_decision.json`, and `reports/comparisons/scorer_promotion_decision.md`
+- Scorer reliability reporting: `src/scorer_reliability_report.py`, `src/scorer_review_contract.py`, `reports/comparisons/scorer_reliability_report.json`, and `reports/comparisons/scorer_reliability_report.md`
 - Benchmark claim charter: `benchmarks/evidence_class_charter.json`, `schemas/benchmark_claim_charter.schema.json`, and `src/validate_benchmark_claim_charter.py`
 - Local public benchmark corpus: `evals/benchmarks/local_public_v1/cases.jsonl`, `evals/benchmarks/local_public_v1/manifest.json`, and `src/validate_local_benchmark_corpus.py`
 - Local adapter registry: `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`

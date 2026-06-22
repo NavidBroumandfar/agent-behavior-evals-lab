@@ -1,6 +1,6 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.13.0",
+  "version": "0.14.0",
   "generated_at": "2026-06-22T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
@@ -680,6 +680,58 @@
       ],
       "quality_gate_included": true,
       "notes": "Reader-facing M53 scorer promotion or rubric-update report.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "scorer_reliability_report_snapshot",
+      "label": "Scorer Reliability Report JSON",
+      "path": "reports/comparisons/scorer_reliability_report.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/scorer_reliability_report.py",
+      "input_paths": [
+        "traces/external/adjudication_manifest.json",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/scorer_calibration_summary.json",
+        "reports/comparisons/scorer_promotion_decision.json",
+        "src/scorers.py",
+        "src/scorer_review_contract.py",
+        "docs/wiki/concepts/v0_scorer_limitations.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "reports/comparisons/scorer_calibration_summary.json",
+        "reports/comparisons/scorer_promotion_decision.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Deterministic Scorer v1 reliability metrics for false positives, false negatives, calibration slices, and reviewer-agreement availability.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "scorer_reliability_report",
+      "label": "Scorer Reliability Report",
+      "path": "reports/comparisons/scorer_reliability_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/scorer_reliability_report.py",
+      "input_paths": [
+        "reports/comparisons/scorer_reliability_report.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/scorer_reliability_report.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing Scorer v1 reliability report with deterministic review calibration metrics.",
       "safety_assertions": {
         "public_safe": true,
         "live_execution": false,

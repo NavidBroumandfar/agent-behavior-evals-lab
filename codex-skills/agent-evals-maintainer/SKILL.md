@@ -41,6 +41,15 @@ committing.
 Never silently accept generated changes that alter evidence claims, rankings,
 or release boundaries.
 
+Scorer reliability reports are deterministic report artifacts. Regenerate
+`src/scorer_reliability_report.py` when adjudication, calibration, or scorer
+review inputs change.
+
+Optional scorer-review contract work must stay non-gated. Use
+`agent-evals scorer-review-contract` only as an explicit operator surface; do
+not add provider calls, local model calls, or model-assisted judging to
+`python3 scripts/dev.py check`.
+
 ## Safety Boundary
 
 The deterministic gate must not call providers, local models, live agents,

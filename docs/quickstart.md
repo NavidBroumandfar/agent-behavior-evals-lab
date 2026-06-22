@@ -36,10 +36,15 @@ agent-evals test
 agent-evals lint
 agent-evals run-baseline
 agent-evals report
+agent-evals scorer-reliability
+agent-evals scorer-review-contract
 agent-evals version
 ```
 
-The CLI wraps existing local scripts. It does not add live model execution.
+The CLI wraps existing local scripts. `scorer-reliability` regenerates the
+deterministic scorer reliability report. `scorer-review-contract` prints a
+non-gated optional review contract and does not call model providers or local
+models.
 
 ## Docker Check
 

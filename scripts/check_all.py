@@ -165,6 +165,8 @@ FOCUSED_SCORER_EVIDENCE_EXPANSION_REPORT_PATH = (
 )
 SCORER_PROMOTION_DECISION_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_promotion_decision.json"
 SCORER_PROMOTION_DECISION_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_promotion_decision.md"
+SCORER_RELIABILITY_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_reliability_report.json"
+SCORER_RELIABILITY_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_reliability_report.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -534,6 +536,10 @@ CHECKS = [
         ["python3", "src/scorer_promotion_decision.py"],
     ),
     (
+        "scorer reliability report generation",
+        ["python3", "src/scorer_reliability_report.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -756,6 +762,8 @@ CHECKS = [
             "src/scorer_versioning_guardrails.py",
             "src/focused_scorer_evidence_expansion.py",
             "src/scorer_promotion_decision.py",
+            "src/scorer_reliability_report.py",
+            "src/scorer_review_contract.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -883,6 +891,9 @@ def main() -> int:
             if name == "scorer promotion decision generation":
                 verify_report_exists(SCORER_PROMOTION_DECISION_JSON_PATH)
                 verify_report_exists(SCORER_PROMOTION_DECISION_REPORT_PATH)
+            if name == "scorer reliability report generation":
+                verify_report_exists(SCORER_RELIABILITY_JSON_PATH)
+                verify_report_exists(SCORER_RELIABILITY_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":

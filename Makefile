@@ -17,6 +17,7 @@ run-baseline:
 report:
 	$(PYTHON) src/report_generator.py
 	$(PYTHON) src/comparison_report.py
+	$(PYTHON) src/scorer_reliability_report.py
 
 quickstart:
 	$(PYTHON) -m pip install ".[dev]"
