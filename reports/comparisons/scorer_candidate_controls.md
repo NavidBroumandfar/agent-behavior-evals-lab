@@ -5,7 +5,7 @@
 | Field | Value |
 | --- | ---: |
 | Generated at | `2026-06-21T00:00:00Z` |
-| Adjudication records | 60 |
+| Adjudication records | 80 |
 | Source traces reviewed | 11 |
 | Triage candidates | 2 |
 | Controls | 4 |

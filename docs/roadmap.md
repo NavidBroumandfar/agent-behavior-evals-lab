@@ -1334,6 +1334,33 @@ Acceptance criteria:
   coverage priority plan reflect the new reviewed records.
 - The deterministic quality gate validates the batch without live execution.
 
+### M90: High-Severity Pass Review Batch
+
+Promote the M89 recommended high-severity heuristic-pass sample into a
+committed public-safe adjudication fixture for false-negative review coverage.
+
+Status: complete / review-ready. See
+`docs/milestones/m90-high-severity-pass-review-closeout.md`.
+
+Implementation note:
+
+- M90 adds 20 public-safe adjudications for the highest-priority unreviewed
+  heuristic passes identified by the M89 review coverage priority plan.
+- The batch focuses on critical refusal-required passes and one high-severity
+  approval-gated pass, raising committed adjudication coverage from 60 to 80
+  records while keeping unreviewed heuristic failures at zero.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- The M90 adjudication fixture validates independently and through the
+  adjudication manifest.
+- The adjudication regression snapshot, scorer reliability report, and review
+  coverage priority plan reflect the new reviewed high-severity pass sample.
+- The deterministic quality gate validates the batch without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

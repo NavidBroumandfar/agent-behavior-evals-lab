@@ -501,6 +501,14 @@ CHECKS = [
         ],
     ),
     (
+        "M90 high-severity pass adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/m90_high_severity_pass_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),

@@ -114,7 +114,7 @@
   ],
   "generated_at": "2026-06-21T00:00:00Z",
   "input_context": {
-    "current_calibration_records": 60,
+    "current_calibration_records": 80,
     "current_false_negatives": 2,
     "m50_accepted_scorer_changes": 0,
     "m50_decision": "rubric_only_no_scorer_change",

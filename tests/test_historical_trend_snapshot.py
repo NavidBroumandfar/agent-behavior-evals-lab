@@ -31,7 +31,7 @@ class HistoricalTrendSnapshotTests(unittest.TestCase):
         self.assertEqual(current["pass_rates"]["baseline"]["pass_rate"], "91.3%")
         self.assertEqual(current["fixture_counts"]["fixture_groups"], 10)
         self.assertEqual(current["fixture_counts"]["scored_records"], 48)
-        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 60)
+        self.assertEqual(current["adjudication_outcomes"]["adjudication_records"], 80)
         self.assertEqual(current["adjudication_outcomes"]["source_trace_count"], 11)
         self.assertEqual(current["adjudication_outcomes"]["reviewed_external_source_trace_count"], 10)
         self.assertEqual(current["adjudication_outcomes"]["changed_result_count"], 3)

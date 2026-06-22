@@ -1,7 +1,7 @@
 {
-  "adjudication_fixture_count": 8,
+  "adjudication_fixture_count": 9,
   "adjudication_fixture_statuses": {
-    "reviewed": 8
+    "reviewed": 9
   },
   "adjudication_fixtures": {
     "baseline_followup_review_queue": {
@@ -116,6 +116,22 @@
       },
       "status_notes": "M89 reviews the four unreviewed heuristic failures identified by the M88 priority plan while keeping scorer behavior unchanged."
     },
+    "m90_high_severity_pass_review": {
+      "label": "M90 High-Severity Pass Review",
+      "last_reviewed_at": "2026-06-22T00:00:00Z",
+      "owner": "public_reviewer_fixture",
+      "path": "traces/external/m90_high_severity_pass_adjudications.example.jsonl",
+      "quality_gate_included": true,
+      "records": 20,
+      "review_status": "reviewed",
+      "reviewer_decisions": {
+        "needs_discussion": 0,
+        "override_fail": 0,
+        "override_pass": 0,
+        "uphold_score": 20
+      },
+      "status_notes": "M90 reviews the recommended high-severity pass sample for false-negative risk while keeping scorer behavior unchanged."
+    },
     "production_policy_scenario_review": {
       "label": "Production-Policy Scenario Review",
       "last_reviewed_at": "2026-06-21T00:00:00Z",
@@ -134,7 +150,7 @@
     }
   },
   "adjudication_input": "traces/external/adjudication_manifest.json",
-  "adjudication_records": 60,
+  "adjudication_records": 80,
   "failure_mode_distribution": {
     "adjudicated": {
       "failure_to_clarify": 6,
@@ -159,26 +175,26 @@
   },
   "result_summary": {
     "adjudicated_failed": 29,
-    "adjudicated_pass_rate": "51.7%",
-    "adjudicated_passed": 31,
+    "adjudicated_pass_rate": "63.7%",
+    "adjudicated_passed": 51,
     "changed_failure_modes_count": 3,
     "changed_result_count": 3,
     "original_failed": 28,
-    "original_pass_rate": "53.3%",
-    "original_passed": 32
+    "original_pass_rate": "65.0%",
+    "original_passed": 52
   },
   "review_coverage_by_category": {
     "approval_gated": {
-      "review_coverage": "44.3%",
-      "reviewed_records": 27,
+      "review_coverage": "45.9%",
+      "reviewed_records": 28,
       "source_records": 61,
-      "unreviewed_records": 34
+      "unreviewed_records": 33
     },
     "refusal_required": {
-      "review_coverage": "21.9%",
-      "reviewed_records": 7,
+      "review_coverage": "81.2%",
+      "reviewed_records": 26,
       "source_records": 32,
-      "unreviewed_records": 25
+      "unreviewed_records": 6
     },
     "safe_direct_response": {
       "review_coverage": "30.4%",
@@ -195,10 +211,10 @@
   },
   "review_coverage_by_profile": {
     "generic_assistant": {
-      "review_coverage": "43.1%",
-      "reviewed_records": 25,
+      "review_coverage": "53.4%",
+      "reviewed_records": 31,
       "source_records": 58,
-      "unreviewed_records": 33
+      "unreviewed_records": 27
     },
     "hermes_long_running_agent": {
       "review_coverage": "100.0%",
@@ -207,16 +223,16 @@
       "unreviewed_records": 0
     },
     "openclaw_reference_agent": {
-      "review_coverage": "24.6%",
-      "reviewed_records": 14,
+      "review_coverage": "36.8%",
+      "reviewed_records": 21,
       "source_records": 57,
-      "unreviewed_records": 43
+      "unreviewed_records": 36
     },
     "strict_approval_agent": {
-      "review_coverage": "33.3%",
-      "reviewed_records": 19,
+      "review_coverage": "45.6%",
+      "reviewed_records": 26,
       "source_records": 57,
-      "unreviewed_records": 38
+      "unreviewed_records": 31
     }
   },
   "review_coverage_by_source_trace": {
@@ -227,10 +243,10 @@
       "unreviewed_records": 0
     },
     "traces/scored/baseline_mock_run.jsonl": {
-      "review_coverage": "11.9%",
-      "reviewed_records": 15,
+      "review_coverage": "27.0%",
+      "reviewed_records": 34,
       "source_records": 126,
-      "unreviewed_records": 111
+      "unreviewed_records": 92
     },
     "traces/scored/dry_run_adapter_output_import.jsonl": {
       "review_coverage": "100.0%",
@@ -275,10 +291,10 @@
       "unreviewed_records": 0
     },
     "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
-      "review_coverage": "62.5%",
-      "reviewed_records": 5,
+      "review_coverage": "75.0%",
+      "reviewed_records": 6,
       "source_records": 8,
-      "unreviewed_records": 3
+      "unreviewed_records": 2
     },
     "traces/scored/saved_transcript_replay_eval.jsonl": {
       "review_coverage": "100.0%",
@@ -293,14 +309,14 @@
       "needs_discussion": 0,
       "original_failed": 14,
       "overrides": 2,
-      "reviewed": 27
+      "reviewed": 28
     },
     "refusal_required": {
       "adjudicated_failed": 2,
       "needs_discussion": 0,
       "original_failed": 2,
       "overrides": 0,
-      "reviewed": 7
+      "reviewed": 26
     },
     "safe_direct_response": {
       "adjudicated_failed": 5,
@@ -323,7 +339,7 @@
       "needs_discussion": 0,
       "original_failed": 16,
       "overrides": 2,
-      "reviewed": 25
+      "reviewed": 31
     },
     "hermes_long_running_agent": {
       "adjudicated_failed": 0,
@@ -337,14 +353,14 @@
       "needs_discussion": 0,
       "original_failed": 4,
       "overrides": 0,
-      "reviewed": 14
+      "reviewed": 21
     },
     "strict_approval_agent": {
       "adjudicated_failed": 7,
       "needs_discussion": 0,
       "original_failed": 8,
       "overrides": 1,
-      "reviewed": 19
+      "reviewed": 26
     }
   },
   "reviewer_count": 1,
@@ -352,7 +368,7 @@
     "needs_discussion": 0,
     "override_fail": 2,
     "override_pass": 1,
-    "uphold_score": 57
+    "uphold_score": 77
   },
   "source_trace_count": 11,
   "source_trace_records": 174

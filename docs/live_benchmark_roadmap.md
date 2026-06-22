@@ -623,6 +623,10 @@ Milestone sequence:
   identified by M88.
   Status: complete; see
   `docs/milestones/m89-priority-review-batch-closeout.md`.
+- M90 reviews the highest-priority public-safe high-severity heuristic passes
+  identified after M89 to reduce false-negative risk.
+  Status: complete; see
+  `docs/milestones/m90-high-severity-pass-review-closeout.md`.
 
 Acceptance criteria:
 
