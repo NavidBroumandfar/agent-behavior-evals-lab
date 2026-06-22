@@ -940,6 +940,49 @@ Success signal:
 
 - A manual operator can run the extended split locally with explicit opt-in, review and normalize public-safe outputs, build reviewed ledgers, and unlock a local/open-weight ranking only when all review, ledger, sample-size, and safety gates pass.
 
+### M77: Controlled Live-Local Technical Proof Run
+
+Execute the first real local-model proof run without treating it as a final
+publishable benchmark.
+
+Status: planned / next execution phase.
+
+Implementation note:
+
+- M77 targets a laptop-safe technical pass in less than five hours on the
+  current local Ollama setup.
+- The run order is conservative: preflight, `qwen3.5:2b-q4_K_M` smoke/control,
+  `llama3.2:latest` extended, then `gemma4:latest` extended if the machine
+  remains stable.
+- Models run sequentially, not in parallel. The laptop should stay plugged in,
+  on a hard surface, with clear airflow.
+- Raw outputs remain under ignored local paths. Only reviewed public-safe
+  normalized outputs can move into committed evidence paths.
+- The technical proof may demonstrate real model execution, scoring, hashing,
+  ledger construction, and blocked publication reporting. It must not claim a
+  publishable ranking until review and two-model ledger gates pass.
+
+Deliverables:
+
+- Live-local preflight notes.
+- Smoke/control run status for `qwen3.5:2b-q4_K_M`.
+- Extended run status for `llama3.2:latest` and, if stable, `gemma4:latest`.
+- Ignored raw-output paths and public-safe hash metadata.
+- Review queue counts and publication blocker report.
+- Updated local/open-weight benchmark report that remains blocked until review
+  gates are complete.
+
+Acceptance criteria:
+
+- Live execution requires explicit `AGENT_EVALS_ENABLE_LIVE_LOCAL=1` and
+  `--live-local` opt-in.
+- No live-local command is added to the deterministic quality gate.
+- No raw private paths, credentials, raw outputs, private data, or provider
+  payloads are committed.
+- A successful M77 technical proof may say the live-local pipeline executed
+  against real installed models; it may not say the lab has published a final
+  benchmark ranking unless M70-M76 review and ledger gates are also satisfied.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

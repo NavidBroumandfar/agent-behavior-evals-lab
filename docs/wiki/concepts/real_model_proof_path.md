@@ -26,6 +26,32 @@ installed Ollama models:
 `qwen3.5:2b-q4_K_M` is smoke/control only. `gemma4:31b-cloud` is excluded from
 local/open-weight claims.
 
+## M77 Technical Proof Profile
+
+M77 is the first live-local proof attempt. Its target is a laptop-safe
+technical pass in less than five hours, not a publishable ranked benchmark.
+
+The M77 proof is allowed to demonstrate that the lab can:
+
+- run real installed Ollama models with explicit live-local opt-in,
+- collect raw local outputs under ignored local paths,
+- score reviewed or review-pending normalized outputs,
+- hash outputs, scored traces, review summaries, and ledgers,
+- regenerate blocked benchmark reports that state why publication is not yet
+  unlocked.
+
+The M77 operator profile is conservative by design:
+
+- run one model at a time,
+- start with the `qwen3.5:2b-q4_K_M` smoke/control target,
+- run `llama3.2:latest` before the heavier `gemma4:latest`,
+- keep the laptop plugged in on a hard surface with clear airflow,
+- stop or defer the heavier run if macOS memory pressure or thermal throttling
+  becomes unstable.
+
+M77 can prove the live path works. It must not claim a publishable ranking until
+the full review, ledger, and two-model publication gates below are satisfied.
+
 ## Publication Gate
 
 The local/open-weight benchmark report publishes rankings only when at least
