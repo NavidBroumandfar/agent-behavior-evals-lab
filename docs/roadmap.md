@@ -998,6 +998,223 @@ Acceptance criteria:
   against real installed models; it may not say the lab has published a final
   benchmark ranking unless M70-M76 review and ledger gates are also satisfied.
 
+Post-M77 clarification:
+
+- M77 is complete as a technical proof. The remaining blocked items are not
+  unfinished M77 work.
+- The missing publishable ranking, reviewed normalized outputs, second eligible
+  live-local ledger, and stable `gemma4:latest` completion are tracked as the
+  follow-on milestones below.
+
+### M78: Review And Normalize Llama3.2 M77 Evidence
+
+Review the 210 `llama3.2:latest` extended raw records from M77 and convert only
+approved public-safe records into a reviewed live-local normalized candidate.
+
+Status: planned / next execution phase.
+
+Implementation note:
+
+- Raw M77 records remain under ignored `traces/raw/*.local.jsonl` paths.
+- Review should reject failed, unsafe, malformed, private-data, tool-claim, or
+  unresolved records rather than normalizing them.
+- The reviewed candidate remains local/ignored until an explicit promotion or
+  ledger artifact decision is made.
+- Validation must use the explicit live-local path, including
+  `--allow-live-local`.
+
+Acceptance criteria:
+
+- No raw output text is committed.
+- Review decisions cover all 210 `llama3.2:latest` extended records.
+- Reviewed normalized output carries `live_local_model` /
+  `live_local_text_only` provenance and validates with live-local opt-in.
+- The local/open-weight benchmark report remains blocked after this milestone
+  unless ledger and two-model gates are also satisfied.
+
+### M79: Score And Ledger First Reviewed Live-Local Run
+
+Score the reviewed `llama3.2:latest` normalized candidate and build the first
+M58-compatible reviewed live-local ledger.
+
+Status: planned.
+
+Implementation note:
+
+- Import/scoring must use
+  `--case-path evals/benchmarks/local_public_v1/cases.jsonl` and
+  `--allow-live-local`.
+- The ledger must hash the case file, manifest, adapter registry, prompt
+  template, normalized outputs, scored traces, scorer artifact, review summary,
+  and public-safe run metadata.
+- If existing promotion tooling only supports `saved_output_only` provenance,
+  add or document a live-local-specific promotion convention before committing
+  reviewed live-local evidence.
+
+Acceptance criteria:
+
+- One `reviewed_live_local_run` ledger validates.
+- The ledger is public-safe, excludes raw outputs, and records zero unresolved
+  review blockers if it is ranking-eligible.
+- Publication remains blocked because only one eligible reviewed live-local
+  ledger exists.
+
+### M80: Second Local Target Safety Decision
+
+Decide how to obtain the required second eligible local/open-weight target
+after the M77 `gemma4:latest` run was stopped on swap activity.
+
+Status: planned.
+
+Implementation note:
+
+- Default target remains `gemma4:latest` because M70-M77 name it as the primary
+  second model.
+- If `gemma4:latest` is retried, document the operator safety profile first:
+  machine state, model residency, memory-pressure stop criteria, timeout
+  policy, and whether any harness parameters changed.
+- If `gemma4:latest` is replaced, update the methodology and claim language
+  before running the substitute. Do not silently substitute a smoke/control
+  model.
+
+Acceptance criteria:
+
+- The second-target decision is documented before execution.
+- Cloud-labelled targets remain excluded from local/open-weight claims.
+- No ranking claim is allowed from one reviewed target plus a failed/deferred
+  second target.
+
+### M81: Execute Second Local Target Extended Run
+
+Run the selected second local target over the extended `local_public_v1` split
+with explicit live-local opt-in and laptop-safe controls.
+
+Status: planned.
+
+Implementation note:
+
+- Run one model at a time and unload other Ollama models first.
+- Stop on swap, thermal throttling, or other instability rather than forcing
+  completion.
+- Preserve raw outputs and run metadata only under ignored local paths.
+
+Acceptance criteria:
+
+- The second target produces a complete extended raw run, or the blocker is
+  documented and publication remains blocked.
+- No raw output, private data, credentials, provider payloads, or cloud evidence
+  are committed.
+- The deterministic quality gate remains non-live.
+
+### M82: Review, Score, And Ledger Second Target
+
+Apply the same review, normalization, scoring, and ledger path to the second
+eligible local target.
+
+Status: planned.
+
+Implementation note:
+
+- The second-target ledger must satisfy the same review-summary, scored-trace,
+  hash, provenance, sample-size, and safety checks as the first ledger.
+- Unsafe, malformed, unresolved, partial, or private records block ranking
+  eligibility for that ledger.
+
+Acceptance criteria:
+
+- A second `reviewed_live_local_run` ledger validates.
+- Both eligible ledgers use the same frozen case set, compatible harness
+  controls, and public-safe reviewed evidence.
+- The report gate can evaluate two real local targets without mixing cloud or
+  hosted-provider evidence.
+
+### M83: Two-Model Publication Gate And Report Unlock
+
+Regenerate the local/open-weight benchmark report from two eligible reviewed
+live-local extended ledgers and publish rankings only if every gate passes.
+
+Status: planned.
+
+Implementation note:
+
+- The report may publish local/open-weight rankings only when at least two
+  eligible reviewed ledgers exist.
+- If any review, ledger, safety, sample-size, or evidence-class condition fails,
+  regenerate the report in blocked mode with explicit reasons.
+- The report must include limitations and must not claim production safety,
+  cloud-provider ranking, private-audit proof, or third-party reproducibility.
+
+Acceptance criteria:
+
+- `reports/comparisons/local_open_weight_benchmark_v1.json` and `.md` are
+  regenerated from real reviewed ledgers.
+- `ranking_claim_allowed` is true only if all M70-M82 gates pass.
+- `python3 scripts/dev.py check` still passes without live-local execution.
+
+### M84: Public-Safe Reproducibility Packet
+
+Create a public-safe reproducibility packet for the real-model proof without
+committing raw outputs.
+
+Status: planned.
+
+Implementation note:
+
+- Record model names, local model digests where available, harness version,
+  prompt template hash, case-set hash, command templates, stop criteria,
+  artifact hashes, and report versions.
+- Keep private machine paths, raw responses, credentials, provider payloads, and
+  local-only logs out of committed artifacts.
+
+Acceptance criteria:
+
+- A reviewer can verify the artifact chain from public-safe hashes and committed
+  ledgers.
+- The packet distinguishes reproducible evaluator logic from non-reproducible
+  local hardware/runtime conditions.
+
+### M85: Runtime Stability And Resource Profile
+
+Add a public-safe resource and stability profile for live-local runs so future
+operators know when a run is laptop-safe, deferred, or needs a larger machine.
+
+Status: planned.
+
+Implementation note:
+
+- Track memory-pressure observations, model residency, stop criteria, and
+  model-specific resource notes as metadata, not raw private logs.
+- Use the M77 `gemma4:latest` swapout stop as the first documented stability
+  blocker.
+
+Acceptance criteria:
+
+- Heavier models have documented preflight and stop criteria.
+- Failed or interrupted runs are treated as operational blockers, not benchmark
+  evidence.
+
+### M86: Claim Review And Release Checklist
+
+Add a final claim-review checklist before any real-model result is described as
+publishable, production-relevant, externally reproducible, or comparable to
+hosted-provider evidence.
+
+Status: planned.
+
+Implementation note:
+
+- Check claim wording against evidence class, reviewed ledger status, model
+  target status, provider boundaries, private-evidence boundaries, and report
+  status.
+- Keep hosted-provider Batch evidence separate unless a later methodology
+  explicitly allows comparison.
+
+Acceptance criteria:
+
+- Release notes and reports cannot overstate local evidence as cloud,
+  production-safety, private-audit, or third-party reproducibility proof.
+- Any blocked gate appears as a concrete blocker, not as missing context.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

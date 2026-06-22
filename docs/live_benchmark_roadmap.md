@@ -557,6 +557,44 @@ Acceptance criteria:
 - Hosted provider evidence is separate from local/open-weight rankings until a
   future methodology explicitly allows comparison.
 
+### M77-M86: Live-Local Publication Path
+
+Turn the M77 technical proof into publishable local/open-weight evidence only
+through explicit review, ledger, second-target, reproducibility, and claim gates.
+
+Status: planned / M77 technical proof complete, publication still blocked.
+
+Milestone sequence:
+
+- M77 executes a laptop-safe live-local technical proof and records public-safe
+  blockers without publishing rankings.
+- M78 reviews and normalizes the 210 `llama3.2:latest` M77 raw records.
+- M79 scores the reviewed `llama3.2:latest` evidence and builds the first
+  reviewed live-local ledger.
+- M80 documents the second local target decision after the M77
+  `gemma4:latest` swapout blocker.
+- M81 executes the selected second target over the extended split if the
+  operator safety profile allows it.
+- M82 reviews, scores, and ledgers the second target.
+- M83 regenerates the local/open-weight benchmark report and publishes rankings
+  only if two eligible reviewed live-local ledgers pass.
+- M84 adds a public-safe reproducibility packet with hashes, model identifiers,
+  harness versions, and command templates but no raw outputs.
+- M85 adds runtime stability/resource metadata so heavier models have explicit
+  stop criteria.
+- M86 adds a claim-review and release checklist before any result is described
+  as publishable, production-relevant, externally reproducible, or comparable to
+  hosted-provider evidence.
+
+Acceptance criteria:
+
+- No raw outputs are committed.
+- Reviewed candidates remain ignored until an explicit promotion or ledger
+  artifact decision is made.
+- The deterministic gate remains non-live.
+- A ranking is published only after two reviewed extended local targets satisfy
+  review, scoring, ledger, sample-size, and safety gates.
+
 ## Revised End State
 
 ```text

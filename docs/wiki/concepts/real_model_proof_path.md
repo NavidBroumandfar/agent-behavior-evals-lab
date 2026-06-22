@@ -58,6 +58,28 @@ The M77 operator profile is conservative by design:
 M77 can prove the live path works. It must not claim a publishable ranking until
 the full review, ledger, and two-model publication gates below are satisfied.
 
+## Post-M77 Roadmap
+
+M77 is closed as a technical proof. The remaining publication work is tracked as
+follow-on milestones, not as unfinished M77 scope:
+
+- M78 reviews and normalizes the 210 `llama3.2:latest` M77 raw records.
+- M79 scores that reviewed evidence and builds the first reviewed live-local
+  ledger.
+- M80 documents the second-target decision after the `gemma4:latest` swapout
+  blocker.
+- M81 executes a stable second local target extended run.
+- M82 reviews, scores, and ledgers the second target.
+- M83 regenerates the local/open-weight benchmark report and publishes rankings
+  only if the two-ledger gate passes.
+- M84 adds a public-safe reproducibility packet.
+- M85 adds runtime stability and resource-profile metadata.
+- M86 adds a final claim-review and release checklist.
+
+These milestones exist to make the proof path auditable. They keep live-local
+execution, raw output storage, review, ledger construction, report generation,
+and claim approval as separate gates.
+
 ## Publication Gate
 
 The local/open-weight benchmark report publishes rankings only when at least
