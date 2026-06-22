@@ -14,16 +14,18 @@ Primary artifacts:
 
 ## Current Report Status
 
-The committed M60 report has `report_status: no_rankings_published` and
-`ranking_claim_allowed: false`.
+The committed report now has `report_status: published_local_ranking` and
+`ranking_claim_allowed: true`.
 
-That is intentional. The repository currently has a dry-run M58 ledger example
-and synthetic M59 methodology examples, but no reviewed live-local,
-ledger-backed standard-or-extended split evidence from real local models.
+M83 unlocked the report from two eligible reviewed live-local extended ledgers:
+`llama3.2:latest` from M79 and `mistral:latest` from M82. The dry-run M58
+ledger remains excluded, and the report still does not support cloud-model
+rankings, hosted-provider comparisons, production-safety proof, private-audit
+proof, or third-party output-regeneration claims.
 
 ## Publication Requirements
 
-A future local ranking requires:
+A local ranking requires:
 
 - At least two eligible real local/open-weight targets.
 - `local_public_benchmark` evidence only.
@@ -31,6 +33,9 @@ A future local ranking requires:
 - Reviewed live-local outputs with public-safe provenance.
 - Standard or extended split coverage, not smoke-only examples.
 - M59 metrics, uncertainty, review counts, exclusions, and limitations.
+
+M84 adds the public-safe reproducibility packet for the current published
+ranking at `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`.
 
 ## Boundary
 

@@ -564,8 +564,8 @@ Acceptance criteria:
 Turn the M77 technical proof into publishable local/open-weight evidence only
 through explicit review, ledger, second-target, reproducibility, and claim gates.
 
-Status: active / M83 local-open-weight ranking published from two reviewed
-live-local ledgers.
+Status: active / M84 public-safe reproducibility packet published after the
+M83 local-open-weight ranking.
 
 Milestone sequence:
 
@@ -576,7 +576,8 @@ Milestone sequence:
   ledger is committed yet.
 - M79 scores the reviewed `llama3.2:latest` evidence and builds the first
   reviewed live-local ledger.
-  Status: complete with one eligible reviewed ledger; no ranking is published.
+  Status at M79 closeout: complete with one eligible reviewed ledger; no
+  ranking was published until the second ledger arrived.
 - M80 documents the second local target decision after the M77
   `gemma4:latest` swapout blocker.
   Status: complete; `mistral:latest` is selected for the current publication
@@ -594,7 +595,10 @@ Milestone sequence:
   Status: complete; `ranking_claim_allowed` is `true` for the local/open-weight
   report with `llama3.2:latest` and `mistral:latest`.
 - M84 adds a public-safe reproducibility packet with hashes, model identifiers,
-  harness versions, and command templates but no raw outputs.
+  harness/scorer/adapter versions, command templates, validation commands,
+  source artifact inventory, and claim boundaries but no raw outputs.
+  Status: complete; see
+  `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`.
 - M85 adds runtime stability/resource metadata so heavier models have explicit
   stop criteria.
 - M86 adds a claim-review and release checklist before any result is described

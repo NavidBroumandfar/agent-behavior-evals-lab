@@ -1,6 +1,6 @@
 # Evaluator Wiki
 
-This wiki explains the core concepts used by Agent Behavior Evals Lab. It is project-local documentation for the evaluator itself, not a personal knowledge base and not a claim of real model benchmarking.
+This wiki explains the core concepts used by Agent Behavior Evals Lab. It is project-local documentation for the evaluator itself, not a personal knowledge base and not a claim beyond the scoped evidence boundaries recorded in the local/open-weight benchmark reports.
 
 Milestone 1 is a deterministic mock evaluation harness. The current pipeline loads JSONL cases, generates controlled mock responses for three profiles, scores them with a v0 heuristic scorer, writes scored traces, and generates a Markdown report.
 
@@ -59,6 +59,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Reproducible Local Run Ledger](concepts/local_run_ledger.md)
 - [Local Ranking Methodology](concepts/local_ranking_methodology.md)
 - [Local/Open-Weight Benchmark Report](concepts/local_open_weight_benchmark_report.md)
+- [Public-Safe Reproducibility Packet](concepts/public_safe_reproducibility_packet.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -135,6 +136,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Local ranking methodology: `benchmarks/local_ranking_methodology.json`, `schemas/local_ranking_methodology.schema.json`, `src/local_ranking_methodology.py`, and `src/validate_local_ranking_methodology.py`
 - Local/open-weight benchmark report: `reports/comparisons/local_open_weight_benchmark_v1.json`, `reports/comparisons/local_open_weight_benchmark_v1.md`, `schemas/local_benchmark_report.schema.json`, and `src/validate_local_benchmark_report.py`
 - Real-model proof runbook: `traces/external/real_model_proof_runbook.example.json`, `schemas/real_model_proof_runbook.schema.json`, `src/real_model_proof_runbook.py`, `reports/comparisons/real_model_proof_runbook.json`, and `reports/comparisons/real_model_proof_runbook.md`
+- Public-safe reproducibility packet: `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md` and `docs/wiki/concepts/public_safe_reproducibility_packet.md`
 - Hosted provider Batch metadata: `traces/external/hosted_provider_batch_metadata.example.json`, `schemas/hosted_provider_batch.schema.json`, `src/hosted_provider_batch.py`, `reports/comparisons/hosted_provider_batch_summary.json`, and `reports/comparisons/hosted_provider_batch_summary.md`
 - Real model proof path concept: `docs/wiki/concepts/real_model_proof_path.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
@@ -222,6 +224,10 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 78 closeout: `docs/milestones/m78-review-normalize-llama3-2-evidence-closeout.md`
 - Milestone 79 closeout: `docs/milestones/m79-score-ledger-llama3-2-live-local-closeout.md`
 - Milestone 80 closeout: `docs/milestones/m80-second-local-target-safety-decision-closeout.md`
+- Milestone 81 closeout: `docs/milestones/m81-second-local-target-live-run-closeout.md`
+- Milestone 82 closeout: `docs/milestones/m82-review-score-ledger-mistral-closeout.md`
+- Milestone 83 closeout: `docs/milestones/m83-two-model-report-unlock-closeout.md`
+- Milestone 84 closeout: `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`
 
 ## Reading Order
 

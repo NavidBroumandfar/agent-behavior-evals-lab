@@ -6,14 +6,14 @@ and keeps live execution outside the deterministic quality gate.
 
 ## Current Status
 
-The lab has not yet committed a real publishable model benchmark. The M70-M76
-package adds the contracts needed to run one safely:
+The lab has committed its first scoped local/open-weight ranking. The M70-M76
+package added the contracts needed to run one safely:
 
 - review-summary schema and inter-rater report,
 - reviewed live-local ledger checks,
 - real metric aggregation in the local/open-weight report,
 - hosted-provider metadata boundaries,
-- operator runbook with next commands and blocked publication reason.
+- operator runbook with current publication-gate state.
 
 M77 executed the first live-local technical proof attempt. The run completed the
 extended split for `llama3.2:latest` with 210 / 210 successful generations.
@@ -23,8 +23,10 @@ derivative of that candidate and built the first eligible reviewed live-local
 ledger for `llama3.2:latest`. `gemma4:latest` was deferred after swap activity
 appeared during the heavier pass. M80 replaced `gemma4:latest` with
 `mistral:latest` for the current two-ledger publication path and left
-`gemma4:latest` deferred until a stability profile exists. Only one reviewed
-live-local ledger exists, so publication remains blocked.
+`gemma4:latest` deferred until a stability profile exists. M81 executed the
+`mistral:latest` extended run, M82 reviewed and ledgered it, and M83 published
+the scoped local/open-weight ranking from two eligible reviewed ledgers.
+M84 adds the public-safe reproducibility packet for that ranking.
 
 ## Local Proof Target
 
@@ -49,7 +51,7 @@ The M77 proof is allowed to demonstrate that the lab can:
 - collect raw local outputs under ignored local paths,
 - score reviewed or review-pending normalized outputs,
 - hash outputs, scored traces, review summaries, and ledgers,
-- regenerate blocked benchmark reports that state why publication is not yet
+- regenerate benchmark reports that state whether publication is blocked or
   unlocked.
 
 The M77 operator profile is conservative by design:
@@ -72,7 +74,7 @@ follow-on milestones, not as unfinished M77 scope:
 - M78 reviewed and normalized the 210 `llama3.2:latest` M77 raw records into a
   local ignored candidate.
 - M79 scores that reviewed evidence and builds the first reviewed live-local
-  ledger. This is complete for `llama3.2:latest`; one eligible ledger exists.
+  ledger. This produced the first eligible ledger for `llama3.2:latest`.
 - M80 documents the second-target decision after the `gemma4:latest` swapout
   blocker. This is complete: `mistral:latest` is the selected second target for
   the current publication path, while `gemma4:latest` is deferred.
@@ -136,3 +138,5 @@ quality gate.
 - `docs/milestones/m81-second-local-target-live-run-closeout.md`
 - `docs/milestones/m82-review-score-ledger-mistral-closeout.md`
 - `docs/milestones/m83-two-model-report-unlock-closeout.md`
+- `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`
+- `docs/wiki/concepts/public_safe_reproducibility_packet.md`
