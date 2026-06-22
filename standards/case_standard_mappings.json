@@ -1,0 +1,142 @@
+{
+  "mapping_id": "agent_behavior_standards_mapping_v1",
+  "version": "0.1.0",
+  "status": "coverage_not_compliance",
+  "purpose": "Map public Agent Behavior Evals Lab cases to standards coverage rows for traceability. This mapping supports coverage reporting, not compliance certification.",
+  "case_sources": [
+    "evals/cases/safe_task_cases.jsonl",
+    "evals/cases/approval_gate_cases.jsonl",
+    "evals/cases/refusal_cases.jsonl",
+    "evals/cases/uncertainty_cases.jsonl",
+    "evals/benchmarks/local_public_v1/cases.jsonl"
+  ],
+  "mapping_groups": [
+    {
+      "group_id": "safe_direct_response",
+      "case_selectors": {
+        "case_id_prefixes": [
+          "SAFE-",
+          "LPB-SAFE-"
+        ]
+      },
+      "standards": [
+        {
+          "catalog_id": "owasp_llm_top_10",
+          "control_id": "LLM09:2025"
+        },
+        {
+          "catalog_id": "nist_ai_rmf",
+          "control_id": "MEASURE"
+        },
+        {
+          "catalog_id": "mitre_atlas",
+          "control_id": "ATLAS-EVAL-MONITOR"
+        }
+      ],
+      "coverage_note": "Safe-task cases check direct helpfulness, groundedness, over-refusal, and unsupported claim boundaries."
+    },
+    {
+      "group_id": "approval_and_production_change",
+      "case_selectors": {
+        "case_id_prefixes": [
+          "APPROVAL-",
+          "LPB-APPROVAL-",
+          "LPB-PRODCHANGE-"
+        ]
+      },
+      "standards": [
+        {
+          "catalog_id": "owasp_llm_top_10",
+          "control_id": "LLM06:2025"
+        },
+        {
+          "catalog_id": "owasp_agentic",
+          "control_id": "AGENTIC-AUTHZ"
+        },
+        {
+          "catalog_id": "owasp_agentic",
+          "control_id": "AGENTIC-TOOL-USE"
+        },
+        {
+          "catalog_id": "nist_ai_rmf",
+          "control_id": "MANAGE"
+        },
+        {
+          "catalog_id": "mitre_atlas",
+          "control_id": "ATLAS-UNSAFE-ACTION"
+        }
+      ],
+      "coverage_note": "Approval and production-change cases check consequential-action gating, scope disclosure, reversibility, and safe stopping."
+    },
+    {
+      "group_id": "refusal_and_privacy",
+      "case_selectors": {
+        "case_id_prefixes": [
+          "REFUSAL-",
+          "LPB-REFUSAL-",
+          "LPB-PRIVACY-"
+        ]
+      },
+      "standards": [
+        {
+          "catalog_id": "owasp_llm_top_10",
+          "control_id": "LLM02:2025"
+        },
+        {
+          "catalog_id": "owasp_llm_top_10",
+          "control_id": "LLM05:2025"
+        },
+        {
+          "catalog_id": "owasp_agentic",
+          "control_id": "AGENTIC-DATA-EXPOSURE"
+        },
+        {
+          "catalog_id": "nist_ai_rmf",
+          "control_id": "MANAGE"
+        },
+        {
+          "catalog_id": "mitre_atlas",
+          "control_id": "ATLAS-DATA-DISCLOSURE"
+        }
+      ],
+      "coverage_note": "Refusal and privacy cases check unsafe compliance, unauthorized disclosure, and safe alternatives."
+    },
+    {
+      "group_id": "uncertainty_and_tool_claims",
+      "case_selectors": {
+        "case_id_prefixes": [
+          "UNCERTAINTY-",
+          "LPB-UNCERTAINTY-",
+          "LPB-TOOLCLAIM-"
+        ]
+      },
+      "standards": [
+        {
+          "catalog_id": "owasp_llm_top_10",
+          "control_id": "LLM01:2025"
+        },
+        {
+          "catalog_id": "owasp_llm_top_10",
+          "control_id": "LLM07:2025"
+        },
+        {
+          "catalog_id": "owasp_agentic",
+          "control_id": "AGENTIC-DECEPTION"
+        },
+        {
+          "catalog_id": "owasp_agentic",
+          "control_id": "AGENTIC-OVERSIGHT"
+        },
+        {
+          "catalog_id": "nist_ai_rmf",
+          "control_id": "MAP"
+        },
+        {
+          "catalog_id": "mitre_atlas",
+          "control_id": "ATLAS-PROMPT-INJECTION"
+        }
+      ],
+      "coverage_note": "Uncertainty and tool-claim cases check missing-context handling, fake tool-use claims, fake completion claims, and safe escalation."
+    }
+  ]
+}

@@ -1,0 +1,24 @@
+{
+  "catalog_id": "nist_ai_rmf",
+  "version": "1.0",
+  "title": "NIST AI Risk Management Framework Core",
+  "source_url": "https://airc.nist.gov/airmf-resources/airmf/5-sec-core/",
+  "controls": [
+    {
+      "control_id": "GOVERN",
+      "name": "Govern"
+    },
+    {
+      "control_id": "MAP",
+      "name": "Map"
+    },
+    {
+      "control_id": "MEASURE",
+      "name": "Measure"
+    },
+    {
+      "control_id": "MANAGE",
+      "name": "Manage"
+    }
+  ]
+}

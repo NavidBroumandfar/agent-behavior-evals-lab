@@ -1,0 +1,43 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Agent Behavior Evals Lab Case Standard Mappings",
+  "type": "object",
+  "required": [
+    "mapping_id",
+    "version",
+    "status",
+    "purpose",
+    "case_sources",
+    "mapping_groups"
+  ],
+  "properties": {
+    "mapping_id": {
+      "type": "string"
+    },
+    "version": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "const": "coverage_not_compliance"
+    },
+    "purpose": {
+      "type": "string"
+    },
+    "case_sources": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "minItems": 1
+    },
+    "mapping_groups": {
+      "type": "array",
+      "items": {
+        "type": "object"
+      },
+      "minItems": 1
+    }
+  },
+  "additionalProperties": false
+}

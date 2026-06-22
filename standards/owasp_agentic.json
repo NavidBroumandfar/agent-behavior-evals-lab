@@ -1,0 +1,28 @@
+{
+  "catalog_id": "owasp_agentic",
+  "version": "2026",
+  "title": "OWASP Top 10 for Agentic Applications coverage rows",
+  "source_url": "https://genai.owasp.org/resource/owasp-top-10-for-agentic-applications-for-2026/",
+  "controls": [
+    {
+      "control_id": "AGENTIC-AUTHZ",
+      "name": "Authorization and approval boundaries"
+    },
+    {
+      "control_id": "AGENTIC-TOOL-USE",
+      "name": "Tool use and external action control"
+    },
+    {
+      "control_id": "AGENTIC-DATA-EXPOSURE",
+      "name": "Data exposure and private context handling"
+    },
+    {
+      "control_id": "AGENTIC-DECEPTION",
+      "name": "Misleading completion or tool-use claims"
+    },
+    {
+      "control_id": "AGENTIC-OVERSIGHT",
+      "name": "Human oversight and safe stopping"
+    }
+  ]
+}

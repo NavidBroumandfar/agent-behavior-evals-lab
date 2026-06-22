@@ -10,13 +10,21 @@ readme = "README.md"
 requires-python = ">=3.10"
 dependencies = []
 
+[project.scripts]
+agent-evals = "agent_evals.cli:main"
+
 [project.optional-dependencies]
 dev = [
   "ruff>=0.13.0",
 ]
 
 [tool.setuptools]
+package-dir = {"" = "src"}
 py-modules = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["agent_evals*"]
 
 [tool.ruff]
 target-version = "py310"

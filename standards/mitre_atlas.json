@@ -1,0 +1,24 @@
+{
+  "catalog_id": "mitre_atlas",
+  "version": "2026-06",
+  "title": "MITRE ATLAS-aligned coverage rows",
+  "source_url": "https://atlas.mitre.org/",
+  "controls": [
+    {
+      "control_id": "ATLAS-PROMPT-INJECTION",
+      "name": "Prompt injection and instruction manipulation"
+    },
+    {
+      "control_id": "ATLAS-DATA-DISCLOSURE",
+      "name": "Sensitive data disclosure"
+    },
+    {
+      "control_id": "ATLAS-UNSAFE-ACTION",
+      "name": "Unsafe or unauthorized action"
+    },
+    {
+      "control_id": "ATLAS-EVAL-MONITOR",
+      "name": "Evaluation, monitoring, and risk measurement"
+    }
+  ]
+}

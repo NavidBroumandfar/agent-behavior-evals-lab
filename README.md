@@ -1,24 +1,46 @@
 # Agent Behavior Evals Lab
 
-Agent Behavior Evals Lab is a local evaluation harness for testing AI assistants and agentic systems against policy-defined behavior expectations. The lab is the evaluator: it defines policies, cases, target profiles, scoring rules, traces, and reports that can be reused across mock clients, real model adapters, local models, saved transcripts, and future agent integrations.
+Agent Behavior Evals Lab is a local-first safety audit harness for AI agents before production.
 
-OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results. The real-model proof path is prepared for manual opt-in local Ollama runs, but the current deterministic gate does not execute local models, hosted providers, OpenClaw, Hermes, production systems, private memory, private evidence ingestion, or live agent runtimes.
+It evaluates whether assistants and agentic systems handle approval gates, refusals, uncertainty, fake tool-use claims, privacy boundaries, and production-change requests in a way that is traceable to policy-defined expectations.
 
-## Milestone 1 Status
+The lab is the evaluator. OpenClaw, Hermes, Codex, local models, hosted models, and customer agents are systems under test.
 
-Milestone 1 establishes a deterministic baseline pipeline:
+## What This Repo Is For
 
-- 1 behavior policy: `policy/agent_behavior_policy.md`
-- 1 failure taxonomy: `evals/failure_taxonomy.md`
-- 30 JSONL eval cases across 4 categories in the original mock baseline; the current M31-expanded suite has 42 cases.
-- 3 deterministic quality-gate mock profiles, plus non-gated saved-output and saved-transcript target labels
-- 1 deterministic mock model client
-- 1 rule-based deterministic scorer
-- 1 end-to-end mock eval runner
-- JSONL scored traces
-- 1 generated Markdown baseline report
+- Local deterministic evaluator-health checks.
+- Public-safe benchmark cases and scored traces.
+- Reviewed local/open-weight model evidence.
+- Claim-bounded reports, ledgers, and release artifacts.
+- Safe adapter contracts for future model and agent integrations.
 
-The current run is a deterministic mock evaluation. It is not a real model benchmark and should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
+## What This Repo Does Not Claim
+
+- It does not prove production safety or regulatory compliance.
+- It does not claim cloud-model rankings without cloud benchmark evidence.
+- It does not put private evidence into public rankings.
+- It does not execute live providers, live agents, local models, browser/email tools, production systems, or external actions in the deterministic quality gate.
+
+OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results.
+
+## Quickstart
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install ".[dev]"
+python3 scripts/dev.py check
+```
+
+Equivalent commands:
+
+```bash
+make check
+agent-evals check
+```
+
+The `agent-evals` command is installed by `python -m pip install ".[dev]"` from this checkout.
 
 ## Development Setup
 
@@ -41,6 +63,48 @@ python3 scripts/dev.py lint
 ```
 
 The lint command uses Ruff when it is installed. The deterministic quality gate remains the source of truth and does not call real model APIs, execute agents, use credentials, perform network collection, or trigger external actions.
+
+## Documentation Map
+
+- [Quickstart](docs/quickstart.md)
+- [Architecture](docs/architecture.md)
+- [Evidence model](docs/evidence-model.md)
+- [Open-core boundary](OPEN_CORE_BOUNDARY.md)
+- [Public release checklist](docs/public-release-checklist.md)
+- [Product positioning](docs/product-positioning.md)
+- [Commercial use cases](docs/commercial-use-cases.md)
+- [Live benchmark roadmap](docs/live_benchmark_roadmap.md)
+- [Project wiki](docs/wiki/index.md)
+
+## Codex Skills
+
+Public Codex playbooks live under `codex-skills/`. They help maintainers add
+cases, mappings, adapters, and release checks consistently. They are process
+guides only; they do not contain secrets, private evidence, customer data, or
+runtime credentials.
+
+To use one locally, copy the relevant skill folder into your Codex skills
+directory and keep public/private workflows separate.
+
+## Current Benchmark Status
+
+The deterministic gate validates the evaluator, reports, fixtures, schemas, and ledgers. The repository also contains reviewed local/open-weight benchmark ledgers for `llama3.2:latest` and `mistral:latest` over the public `local_public_v1` corpus. Those reports are local/open-weight benchmark evidence only; they are not cloud rankings, production-safety proof, or compliance certification.
+
+## Milestone 1 Status
+
+Milestone 1 establishes a deterministic baseline pipeline:
+
+- 1 behavior policy: `policy/agent_behavior_policy.md`
+- 1 failure taxonomy: `evals/failure_taxonomy.md`
+- 30 JSONL eval cases across 4 categories in the original mock baseline; the current M31-expanded suite has 42 cases.
+- 3 deterministic quality-gate mock profiles, plus non-gated saved-output and saved-transcript target labels
+- 1 deterministic mock model client
+- 1 rule-based deterministic scorer
+- 1 end-to-end mock eval runner
+- JSONL scored traces
+- 1 generated Markdown baseline report
+
+The current deterministic mock baseline should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
 See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md` for the adjudication manifest schema hardening closeout, `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md` for the manifest validator/report loader integration closeout, `docs/milestones/m19-report-artifact-manifest-closeout.md` for the report artifact manifest closeout, `docs/milestones/m20-shared-schema-validation-helpers-closeout.md` for the shared schema validation helpers closeout, `docs/milestones/m21-schema-validator-helper-reuse-closeout.md` for the schema validator helper reuse closeout, `docs/milestones/m22-schema-validation-coverage-matrix-closeout.md` for the schema validation coverage matrix closeout, `docs/milestones/m23-target-registry-schema-helper-reuse-closeout.md` for the target registry schema helper reuse closeout, `docs/milestones/m24-saved-transcript-schema-helper-reuse-closeout.md` for the saved transcript schema helper reuse closeout, `docs/milestones/m25-adapter-output-schema-helper-reuse-closeout.md` for the adapter-output schema helper reuse closeout, `docs/milestones/m26-adjudication-schema-helper-reuse-closeout.md` for the adjudication schema helper reuse closeout, `docs/milestones/m27-adapter-run-metadata-schema-helper-reuse-closeout.md` for the adapter-run metadata schema helper reuse closeout, `docs/milestones/m28-schema-coverage-helper-enforcement-closeout.md` for the schema coverage helper enforcement closeout, `docs/milestones/m29-report-manifest-quality-gate-coverage-closeout.md` for the report manifest quality-gate coverage closeout, `docs/milestones/m30-project-packaging-ci-closeout.md` for the project packaging and CI closeout, `docs/milestones/m31-eval-suite-expansion-closeout.md` for the eval suite expansion closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
 

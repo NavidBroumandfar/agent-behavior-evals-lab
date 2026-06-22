@@ -43,6 +43,8 @@ HISTORICAL_TREND_JSON_PATH = REPO_ROOT / "reports/comparisons/historical_trend_s
 HISTORICAL_TREND_REPORT_PATH = REPO_ROOT / "reports/comparisons/historical_trend_report.md"
 RELEASE_NOTES_JSON_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
 RELEASE_NOTES_REPORT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.md"
+STANDARDS_COVERAGE_JSON_PATH = REPO_ROOT / "reports/comparisons/standards_coverage.json"
+STANDARDS_COVERAGE_REPORT_PATH = REPO_ROOT / "reports/comparisons/standards_coverage.md"
 BENCHMARK_CLAIM_CHARTER_PATH = REPO_ROOT / "benchmarks/evidence_class_charter.json"
 LOCAL_BENCHMARK_CASE_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/cases.jsonl"
 EXPECTED_LOCAL_BENCHMARK_CASE_LINES = 210
@@ -579,6 +581,10 @@ CHECKS = [
         ["python3", "src/validate_local_benchmark_corpus.py"],
     ),
     (
+        "standards coverage generation",
+        ["python3", "src/standards_coverage.py"],
+    ),
+    (
         "local adapter registry validation",
         ["python3", "src/validate_local_adapter_registry.py"],
     ),
@@ -898,6 +904,9 @@ def main() -> int:
                 verify_report_exists(LOCAL_BENCHMARK_MANIFEST_PATH)
             if name == "local benchmark corpus validation":
                 verify_report_exists(LOCAL_BENCHMARK_MANIFEST_PATH)
+            if name == "standards coverage generation":
+                verify_report_exists(STANDARDS_COVERAGE_JSON_PATH)
+                verify_report_exists(STANDARDS_COVERAGE_REPORT_PATH)
             if name == "local adapter registry validation":
                 verify_report_exists(LOCAL_ADAPTER_REGISTRY_PATH)
             if name == "live-local dry-run plan validation":

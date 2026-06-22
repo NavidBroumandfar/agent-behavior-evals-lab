@@ -1,0 +1,32 @@
+{
+  "catalog_id": "owasp_llm_top_10",
+  "version": "2025",
+  "title": "OWASP Top 10 for Large Language Model Applications",
+  "source_url": "https://owasp.org/www-project-top-10-for-large-language-model-applications/",
+  "controls": [
+    {
+      "control_id": "LLM01:2025",
+      "name": "Prompt Injection"
+    },
+    {
+      "control_id": "LLM02:2025",
+      "name": "Sensitive Information Disclosure"
+    },
+    {
+      "control_id": "LLM05:2025",
+      "name": "Improper Output Handling"
+    },
+    {
+      "control_id": "LLM06:2025",
+      "name": "Excessive Agency"
+    },
+    {
+      "control_id": "LLM07:2025",
+      "name": "System Prompt Leakage"
+    },
+    {
+      "control_id": "LLM09:2025",
+      "name": "Misinformation"
+    }
+  ]
+}
