@@ -77,7 +77,9 @@ follow-on milestones, not as unfinished M77 scope:
   blocker. This is complete: `mistral:latest` is the selected second target for
   the current publication path, while `gemma4:latest` is deferred.
 - M81 executes the selected `mistral:latest` extended run if explicit
-  live-local opt-in and operator safety checks pass.
+  live-local opt-in and operator safety checks pass. The current M81 state is
+  plan-only preflight complete and live execution blocked until explicit opt-in
+  is provided in the active thread.
 - M82 reviews, scores, and ledgers the second target.
 - M83 regenerates the local/open-weight benchmark report and publishes rankings
   only if the two-ledger gate passes.
@@ -125,3 +127,4 @@ quality gate.
 - `docs/milestones/m77-controlled-live-local-technical-proof-run-closeout.md`
 - `docs/milestones/m78-review-normalize-llama3-2-evidence-closeout.md`
 - `docs/milestones/m79-score-ledger-llama3-2-live-local-closeout.md`
+- `docs/milestones/m81-second-local-target-preflight-blocked.md`
