@@ -559,14 +559,15 @@ Acceptance criteria:
 - Hosted provider evidence is separate from local/open-weight rankings until a
   future methodology explicitly allows comparison.
 
-### M77-M86: Live-Local Publication Path
+### M77-M87: Live-Local Publication Path
 
 Turn the M77 technical proof into publishable local/open-weight evidence only
-through explicit review, ledger, second-target, reproducibility, and claim gates.
+through explicit review, ledger, second-target, reproducibility, claim, and
+release-bundle gates.
 
-Status: complete / M86 claim-review gate published after the M83
-local-open-weight ranking, M84 reproducibility packet, and M85 runtime
-stability metadata.
+Status: complete / M87 claim-locked public release bundle published after the
+M83 local-open-weight ranking, M84 reproducibility packet, M85 runtime
+stability metadata, and M86 claim-review gate.
 
 Milestone sequence:
 
@@ -609,6 +610,11 @@ Milestone sequence:
   hosted-provider evidence.
   Status: complete; see
   `docs/milestones/m86-claim-review-release-checklist-closeout.md`.
+- M87 packages the M83-M86 local/open-weight release into a claim-locked
+  public-safe bundle with approved wording, ranked rows, release artifacts,
+  blocked-claim instructions, and selected-doc overclaim scanning.
+  Status: complete; see
+  `docs/milestones/m87-claim-locked-public-release-bundle-closeout.md`.
 
 Acceptance criteria:
 

@@ -46,3 +46,7 @@ validator cross-checks the checklist against the evidence charter, local report,
 real-model proof runbook, runtime stability profile, and hosted-provider
 metadata. It does not run local models, call providers, read raw outputs, read
 private evidence, handle credentials, or perform external actions.
+
+M87 builds on this checklist with a claim-locked public release bundle. M86 is
+the policy gate; M87 is the release-facing handoff that carries the approved
+wording and blocked-claim instructions forward.

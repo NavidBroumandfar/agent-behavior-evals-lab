@@ -1,0 +1,234 @@
+{
+  "approved_release_statement": {
+    "headline": "Public-safe local/open-weight ranking for llama3.2:latest and mistral:latest",
+    "required_qualifier": "This is not a cloud-model ranking, hosted-provider comparison, production-safety proof, private-audit proof, or third-party output-regeneration claim.",
+    "summary": "The committed report may be described as a public-safe local/open-weight ranking for llama3.2:latest and mistral:latest over the local_public_v1 extended split, backed by two reviewed local Ollama ledgers."
+  },
+  "blocked_claims": [
+    {
+      "blocker_id": "m86_block_cloud_ranking_no_cloud_evidence",
+      "claim_id": "cloud_model_ranking",
+      "release_instruction": "Do not describe this release as a cloud-model ranking.",
+      "required_unlock": "Collect and validate cloud_public_benchmark evidence under a separate cloud methodology."
+    },
+    {
+      "blocker_id": "m86_block_hosted_comparison_no_methodology",
+      "claim_id": "hosted_provider_comparison",
+      "release_instruction": "Do not compare these local/open-weight results to hosted providers.",
+      "required_unlock": "Publish a hosted-provider methodology with submitted provider evidence before making comparisons."
+    },
+    {
+      "blocker_id": "m86_block_production_no_production_evidence",
+      "claim_id": "production_safety",
+      "release_instruction": "Do not describe this release as production-safety proof.",
+      "required_unlock": "Use a production evidence class with consent, access controls, and production-specific review."
+    },
+    {
+      "blocker_id": "m86_block_third_party_repro_no_independent_rerun",
+      "claim_id": "third_party_reproducibility",
+      "release_instruction": "Do not claim third-party model-output regeneration.",
+      "required_unlock": "Capture immutable model digests and an independent rerun record before claiming third-party output regeneration."
+    },
+    {
+      "blocker_id": "m86_block_private_audit_no_private_evidence",
+      "claim_id": "private_audit",
+      "release_instruction": "Do not describe this release as private-audit proof.",
+      "required_unlock": "Create a private-audit report under the private evidence path and keep it separate from public rankings."
+    },
+    {
+      "blocker_id": "m86_block_qwen_smoke_only",
+      "claim_id": "qwen_smoke_control_ranking",
+      "release_instruction": "Do not treat qwen3.5:2b-q4_K_M smoke/control evidence as ranked evidence.",
+      "required_unlock": "Run, review, score, and ledger a complete publishable split before considering ranking eligibility."
+    },
+    {
+      "blocker_id": "m86_block_gemma4_deferred",
+      "claim_id": "gemma4_deferred_target_ranking",
+      "release_instruction": "Do not rank gemma4:latest in this release.",
+      "required_unlock": "Make a separate explicit retry decision, satisfy stability criteria, then complete review and ledger gates."
+    },
+    {
+      "blocker_id": "m86_block_raw_output_publication",
+      "claim_id": "raw_output_publication",
+      "release_instruction": "Do not publish raw local outputs.",
+      "required_unlock": "Promote only reviewed public-safe derivatives; do not publish raw local outputs."
+    }
+  ],
+  "bundle_id": "m87_claim_locked_public_release_bundle",
+  "generated_at": "2026-06-22T00:00:00Z",
+  "publication_checks": [
+    {
+      "check_id": "m86_claim_gate_passed",
+      "evidence": "traces/external/claim_review_checklist.example.json",
+      "notes": "M86 allows exactly one release claim and blocks eight unsupported claim families.",
+      "status": "pass"
+    },
+    {
+      "check_id": "local_report_publishable",
+      "evidence": "reports/comparisons/local_open_weight_benchmark_v1.json",
+      "notes": "The local report status is published_local_ranking and ranking_claim_allowed is true.",
+      "status": "pass"
+    },
+    {
+      "check_id": "allowed_wording_scoped",
+      "evidence": "approved_release_statement",
+      "notes": "The approved statement names local/open-weight scope, ranked models, case set, split, and reviewed local Ollama ledgers.",
+      "status": "pass"
+    },
+    {
+      "check_id": "blocked_wording_named",
+      "evidence": "blocked_claims",
+      "notes": "Each unsupported claim family has a release instruction and an M86 blocker ID.",
+      "status": "pass"
+    },
+    {
+      "check_id": "release_docs_scanned",
+      "evidence": "scan_paths",
+      "notes": "Selected release notes, roadmap, and wiki pages are scanned for unsupported positive claim phrasing.",
+      "status": "pass"
+    },
+    {
+      "check_id": "raw_outputs_excluded",
+      "evidence": "source_paths",
+      "notes": "The bundle references public-safe committed derivatives and metadata only.",
+      "status": "pass"
+    }
+  ],
+  "purpose": "Claim-locked public release bundle for the M83-M86 local/open-weight benchmark release.",
+  "quality_gate": {
+    "bundle_validation_in_quality_gate": true,
+    "external_actions_in_quality_gate": false,
+    "hosted_provider_submission_in_quality_gate": false,
+    "live_local_execution_in_quality_gate": false,
+    "private_evidence_read_in_quality_gate": false,
+    "provider_calls_in_quality_gate": false,
+    "raw_output_read_in_quality_gate": false,
+    "runtime_probe_in_quality_gate": false
+  },
+  "ranking_rows": [
+    {
+      "ci_95": "0.2860-0.4158",
+      "model": "llama3.2:latest",
+      "rank": 1,
+      "runtime": "ollama",
+      "sample_size": 210,
+      "weighted_effective": 0.3484
+    },
+    {
+      "ci_95": "0.0708-0.1425",
+      "model": "mistral:latest",
+      "rank": 2,
+      "runtime": "ollama",
+      "sample_size": 210,
+      "weighted_effective": 0.1065
+    }
+  ],
+  "release_artifacts": [
+    {
+      "artifact_id": "local_open_weight_report_json",
+      "path": "reports/comparisons/local_open_weight_benchmark_v1.json",
+      "public_safe": true,
+      "required_for_release": true,
+      "role": "published_report"
+    },
+    {
+      "artifact_id": "local_open_weight_report_md",
+      "path": "reports/comparisons/local_open_weight_benchmark_v1.md",
+      "public_safe": true,
+      "required_for_release": true,
+      "role": "published_report"
+    },
+    {
+      "artifact_id": "claim_review_checklist",
+      "path": "traces/external/claim_review_checklist.example.json",
+      "public_safe": true,
+      "required_for_release": true,
+      "role": "claim_gate"
+    },
+    {
+      "artifact_id": "public_safe_reproducibility_packet",
+      "path": "docs/milestones/m84-public-safe-reproducibility-packet-closeout.md",
+      "public_safe": true,
+      "required_for_release": true,
+      "role": "reproducibility_packet"
+    },
+    {
+      "artifact_id": "runtime_stability_profile",
+      "path": "traces/external/runtime_stability_profile.example.json",
+      "public_safe": true,
+      "required_for_release": true,
+      "role": "runtime_stability_profile"
+    },
+    {
+      "artifact_id": "real_model_proof_runbook",
+      "path": "traces/external/real_model_proof_runbook.example.json",
+      "public_safe": true,
+      "required_for_release": true,
+      "role": "runbook"
+    },
+    {
+      "artifact_id": "release_notes_latest",
+      "path": "reports/comparisons/release_notes_latest.md",
+      "public_safe": true,
+      "required_for_release": false,
+      "role": "release_notes"
+    },
+    {
+      "artifact_id": "public_release_bundle",
+      "path": "traces/external/public_release_bundle.example.json",
+      "public_safe": true,
+      "required_for_release": true,
+      "role": "release_bundle"
+    }
+  ],
+  "release_scope": {
+    "allowed_claim_id": "local_open_weight_ranking",
+    "case_set_id": "local_public_v1",
+    "case_set_version": "1.0.0",
+    "evidence_class": "local_public_benchmark",
+    "ranking_claim_allowed": true,
+    "release_allowed": true,
+    "release_label": "public_safe_local_open_weight_ranking",
+    "source_checklist_path": "traces/external/claim_review_checklist.example.json",
+    "source_report_path": "reports/comparisons/local_open_weight_benchmark_v1.json",
+    "split": "extended"
+  },
+  "safety_assertions": {
+    "cloud_ranking_claim": false,
+    "contains_credentials_or_secrets": false,
+    "contains_private_data": false,
+    "contains_raw_outputs": false,
+    "hosted_provider_comparison_claim": false,
+    "live_execution": false,
+    "metadata_only": true,
+    "private_audit_claim": false,
+    "production_safety_claim": false,
+    "provider_calls": false,
+    "public_safe": true,
+    "third_party_reproducibility_claim": false,
+    "unsupported_claims_released": false
+  },
+  "scan_paths": [
+    "reports/comparisons/release_notes_latest.md",
+    "docs/roadmap.md",
+    "docs/live_benchmark_roadmap.md",
+    "docs/wiki/concepts/local_open_weight_benchmark_report.md",
+    "docs/wiki/concepts/real_model_proof_path.md",
+    "docs/wiki/concepts/claim_review_release_checklist.md"
+  ],
+  "source_paths": [
+    "benchmarks/evidence_class_charter.json",
+    "reports/comparisons/local_open_weight_benchmark_v1.json",
+    "reports/comparisons/local_open_weight_benchmark_v1.md",
+    "reports/comparisons/release_notes_latest.md",
+    "traces/external/claim_review_checklist.example.json",
+    "traces/external/runtime_stability_profile.example.json",
+    "traces/external/real_model_proof_runbook.example.json",
+    "docs/milestones/m84-public-safe-reproducibility-packet-closeout.md",
+    "docs/milestones/m86-claim-review-release-checklist-closeout.md",
+    "docs/roadmap.md",
+    "docs/live_benchmark_roadmap.md"
+  ],
+  "status": "public_safe_release_bundle",
+  "version": "0.1.0"
+}

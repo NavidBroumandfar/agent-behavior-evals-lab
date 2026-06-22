@@ -1255,6 +1255,32 @@ Acceptance criteria:
   production-safety, private-audit, or third-party reproducibility proof.
 - Any blocked gate appears as a concrete blocker, not as missing context.
 
+### M87: Claim-Locked Public Release Bundle
+
+Package the M83-M86 local/open-weight release into a public-safe bundle with
+approved wording, ranked rows, release artifact inventory, blocked-claim
+instructions, selected-doc overclaim scanning, and deterministic validation.
+
+Status: complete / public-safe release bundle published. See
+`docs/milestones/m87-claim-locked-public-release-bundle-closeout.md`.
+
+Implementation note:
+
+- Generate no new model evidence. Treat M87 as release packaging and claim
+  hygiene only.
+- Use the M86 checklist as the source of truth for the allowed claim and
+  blocked claim families.
+- Scan release-facing docs for unsupported positive claim phrasing while
+  allowing explicit boundary and blocked-claim language.
+
+Acceptance criteria:
+
+- The release bundle allows only the scoped public-safe local/open-weight
+  ranking claim.
+- Release artifacts remain public-safe and repository-relative.
+- Raw/local-only artifacts remain ignored and uncommitted.
+- `python3 scripts/dev.py check` validates the bundle without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

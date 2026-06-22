@@ -40,6 +40,10 @@ M86 adds the claim-review checklist at
 `traces/external/claim_review_checklist.example.json`; it keeps release wording
 bounded to the local/open-weight ranking and names concrete blockers for
 unsupported claim families.
+M87 adds the claim-locked public release bundle at
+`traces/external/public_release_bundle.example.json`; it packages the allowed
+release wording, ranked rows, public artifact inventory, and blocked-claim
+instructions for publication hygiene.
 
 ## Boundary
 
