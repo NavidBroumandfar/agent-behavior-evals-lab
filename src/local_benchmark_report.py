@@ -29,6 +29,7 @@ LOCAL_BENCHMARK_MANIFEST_PATH = REPO_ROOT / "evals/benchmarks/local_public_v1/ma
 DEFAULT_LEDGER_PATHS = [
     REPO_ROOT / "traces/external/local_run_ledger.example.json",
     REPO_ROOT / "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
+    REPO_ROOT / "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
 ]
 DEFAULT_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.json"
 DEFAULT_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.md"
@@ -177,6 +178,7 @@ def build_snapshot(
             "evals/benchmarks/local_public_v1/manifest.json",
             "traces/external/local_run_ledger.example.json",
             "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
+            "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
             "traces/external/real_model_proof_runbook.example.json",
             "docs/live_benchmark_roadmap.md",
             "docs/wiki/concepts/local_ranking_methodology.md",

@@ -7,16 +7,19 @@ This report is public-safe and evidence-gated. It publishes no model rankings un
 | Field | Value |
 | --- | --- |
 | Generated at | `2026-06-21T00:00:00Z` |
-| Report status | `no_rankings_published` |
-| Ranking claim allowed | `false` |
+| Report status | `published_local_ranking` |
+| Ranking claim allowed | `true` |
 | Case set | `local_public_v1` `1.0.0` |
 | Publishable splits | `standard`, `extended` |
-| Eligible real local targets | 1 |
+| Eligible real local targets | 2 |
 | Excluded targets | 1 |
 
 ## Ranking Table
 
-No ranking table is published because no committed real local model evidence satisfies M59.
+| Rank | Model | Runtime | Weighted effective | 95% CI | Sample | Split |
+| ---: | --- | --- | ---: | --- | ---: | --- |
+| 1 | `llama3.2:latest` | `ollama` | 0.3484 | 0.2860-0.4158 | 210 | `extended` |
+| 2 | `mistral:latest` | `ollama` | 0.1065 | 0.0708-0.1425 | 210 | `extended` |
 
 ## Excluded Evidence
 

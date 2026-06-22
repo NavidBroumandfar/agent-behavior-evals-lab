@@ -77,12 +77,11 @@ follow-on milestones, not as unfinished M77 scope:
   blocker. This is complete: `mistral:latest` is the selected second target for
   the current publication path, while `gemma4:latest` is deferred.
 - M81 executed the selected `mistral:latest` extended run after explicit
-  live-local opt-in. The ignored local raw run completed 210 / 210 records, and
-  publication remains blocked until M82 review, scoring, and ledgering produce
-  a second eligible reviewed ledger.
-- M82 reviews, scores, and ledgers the second target.
-- M83 regenerates the local/open-weight benchmark report and publishes rankings
-  only if the two-ledger gate passes.
+  live-local opt-in. The ignored local raw run completed 210 / 210 records.
+- M82 reviewed, normalized, scored, and ledgered the `mistral:latest` second
+  target, producing the second eligible reviewed live-local ledger.
+- M83 regenerated the local/open-weight benchmark report from two eligible
+  reviewed live-local ledgers and published the local ranking.
 - M84 adds a public-safe reproducibility packet.
 - M85 adds runtime stability and resource-profile metadata.
 - M86 adds a final claim-review and release checklist.
@@ -105,6 +104,11 @@ two eligible reviewed live-local ledgers exist. Eligible entries must be:
   review, unsafe output flags, malformed output flags, and cloud-labelled local
   targets.
 
+The current report satisfies that gate for `llama3.2:latest` and
+`mistral:latest`. It remains limited to local/open-weight evidence and does not
+claim production safety, hosted-provider ranking, private-audit proof, or
+third-party reproducibility.
+
 ## Hosted Path
 
 Hosted provider evidence starts as separate metadata under
@@ -121,10 +125,14 @@ quality gate.
 - `reports/comparisons/hosted_provider_batch_summary.json`
 - `reports/comparisons/m78_llama3_2_review_normalization.json`
 - `reports/comparisons/m79_llama3_2_score_ledger.json`
+- `reports/comparisons/local_open_weight_benchmark_v1.json`
 - `traces/external/m79_llama3_2_latest_extended.local_run_ledger.json`
+- `traces/external/m82_mistral_latest_extended.local_run_ledger.json`
 - `docs/milestones/m80-second-local-target-safety-decision-closeout.md`
 - `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`
 - `docs/milestones/m77-controlled-live-local-technical-proof-run-closeout.md`
 - `docs/milestones/m78-review-normalize-llama3-2-evidence-closeout.md`
 - `docs/milestones/m79-score-ledger-llama3-2-live-local-closeout.md`
 - `docs/milestones/m81-second-local-target-live-run-closeout.md`
+- `docs/milestones/m82-review-score-ledger-mistral-closeout.md`
+- `docs/milestones/m83-two-model-report-unlock-closeout.md`

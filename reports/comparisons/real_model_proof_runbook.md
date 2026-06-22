@@ -9,9 +9,9 @@ This M76 runbook shows the next manual CLI path to a controlled, opt-in local/op
 | Runtime | `ollama` |
 | Target split | `extended` |
 | Cases per primary model | 210 |
-| Eligible reviewed ledgers | 1 / 2 |
+| Eligible reviewed ledgers | 2 / 2 |
 | Review queue | 0 waiting, 0 unresolved |
-| Local ranking claim allowed | `false` |
+| Local ranking claim allowed | `true` |
 
 ## M80 Second Target Decision
 
@@ -19,7 +19,7 @@ This M76 runbook shows the next manual CLI path to a controlled, opt-in local/op
 - Selected target: `mistral:latest` via `ollama_text_only` over `extended`.
 - Replaced/deferred target: `gemma4:latest`.
 - Rationale: M77 stopped the heavier gemma4 pass on swap activity. M80 keeps the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81 while deferring gemma4 until resource-stability metadata exists.
-- Claim language: The local/open-weight report remains blocked until reviewed extended ledgers exist for llama3.2:latest and mistral:latest; gemma4:latest is deferred and ranking-ineligible for the current publication path.
+- Claim language: The local/open-weight report may publish the reviewed extended llama3.2:latest and mistral:latest ranking after both ledgers validate; gemma4:latest is deferred and ranking-ineligible for the current publication path.
 - Decision required live execution: `false`
 
 Pre-execution requirements:
@@ -48,6 +48,22 @@ Pre-execution requirements:
 - Raw outputs committed: `false`
 - Notes: M81 manual opt-in only; stop and keep publication blocked if model availability, memory pressure, or thermal behavior becomes unstable.
 
+### Validate mistral reviewed candidate
+
+`python3 src/validate_adapter_outputs.py --allow-live-local traces/external/m81_mistral_latest_extended.reviewed.jsonl`
+
+- Execution: `non-live`
+- Raw outputs committed: `false`
+- Notes: M82 produced this local ignored candidate from the M81 raw run; validation uses explicit live-local allowance and remains outside the deterministic gate.
+
+### Build mistral reviewed ledger
+
+`python3 src/m82_mistral_reviewed_ledger.py && python3 src/validate_local_run_ledger.py traces/external/m82_mistral_latest_extended.local_run_ledger.json`
+
+- Execution: `non-live`
+- Raw outputs committed: `false`
+- Notes: M82 built the second eligible reviewed live-local ledger for mistral:latest from committed public-safe derivatives.
+
 ### Validate llama3.2 reviewed candidate
 
 `python3 src/validate_adapter_outputs.py --allow-live-local traces/external/m77_llama3_2_latest_extended.reviewed.jsonl`
@@ -74,18 +90,19 @@ Pre-execution requirements:
 
 ### Validate ledgers and regenerate report
 
-`python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json && python3 src/local_benchmark_report.py`
+`python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json && python3 src/validate_local_run_ledger.py traces/external/m82_mistral_latest_extended.local_run_ledger.json && python3 src/local_benchmark_report.py`
 
 - Execution: `non-live`
 - Raw outputs committed: `false`
-- Notes: Publication remains blocked because only one eligible reviewed extended ledger exists.
+- Notes: M83 publishes the local/open-weight ranking only after both reviewed extended ledgers validate.
 
 ## Publication Gate
 
-- Blocked reason: M79 produced one eligible reviewed live-local llama3.2 ledger, but the required M80-selected mistral second-target ledger does not exist yet.
-- Complete the M80-selected mistral:latest extended target through M81 live-local execution and M82 review, scoring, and ledgering.
-- Review, normalize, score, and ledger the second target with no unresolved review, unsafe output, malformed output, private data, or raw outputs.
-- Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist.
+- Status: unlocked
+- Blocked reason: None
+- Maintain validated reviewed extended ledgers for llama3.2:latest and mistral:latest.
+- Keep raw outputs and local run metadata ignored and excluded from committed reports.
+- Regenerate the local/open-weight benchmark report after ledger or methodology changes.
 
 ## Boundaries
 

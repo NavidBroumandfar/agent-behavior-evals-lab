@@ -1142,7 +1142,7 @@ Acceptance criteria:
 Apply the same review, normalization, scoring, and ledger path to the second
 eligible local target.
 
-Status: planned.
+Status: complete / second reviewed live-local ledger produced.
 
 Implementation note:
 
@@ -1150,6 +1150,9 @@ Implementation note:
   hash, provenance, sample-size, and safety checks as the first ledger.
 - Unsafe, malformed, unresolved, partial, or private records block ranking
   eligibility for that ledger.
+- M82 reviewed the M81 `mistral:latest` raw outputs, normalized a public-safe
+  derivative, scored 210 records, and generated a validated M58-compatible
+  ledger with 38 scorer passes and 172 scorer fails.
 
 Acceptance criteria:
 
@@ -1164,7 +1167,7 @@ Acceptance criteria:
 Regenerate the local/open-weight benchmark report from two eligible reviewed
 live-local extended ledgers and publish rankings only if every gate passes.
 
-Status: planned.
+Status: complete / local-open-weight ranking published.
 
 Implementation note:
 
@@ -1174,6 +1177,9 @@ Implementation note:
   regenerate the report in blocked mode with explicit reasons.
 - The report must include limitations and must not claim production safety,
   cloud-provider ranking, private-audit proof, or third-party reproducibility.
+- M83 regenerated `local_open_weight_benchmark_v1` from the M79 and M82
+  reviewed ledgers. The report status is `published_local_ranking`, with
+  `ranking_claim_allowed: true`.
 
 Acceptance criteria:
 

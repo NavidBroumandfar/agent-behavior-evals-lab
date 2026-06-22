@@ -1,6 +1,6 @@
 # Milestone 81 - Execute Second Local Target Extended Run
 
-Status: Complete / ignored raw run captured, publication blocked pending M82
+Status: Complete / ignored raw run captured, M82 review required at closeout
 Date: 2026-06-22
 
 ## Summary
@@ -66,11 +66,11 @@ AGENT_EVALS_ENABLE_LIVE_LOCAL=1 /usr/bin/time -p caffeinate -dimsu python3 scrip
 
 ## Publication Boundary
 
-The local/open-weight report remains blocked at one eligible reviewed
-live-local ledger. `ranking_claim_allowed` remains `false`; the missing blocker
-is still the absence of a second eligible reviewed extended ledger. M82 must
-review, normalize, score, and ledger `mistral:latest` public-safe derivatives
-before the second target can count toward the publication gate.
+M81 alone did not unlock the local/open-weight report. At M81 closeout the
+missing blocker was still the absence of a second eligible reviewed extended
+ledger. M82 had to review, normalize, score, and ledger `mistral:latest`
+public-safe derivatives before the second target could count toward the
+publication gate.
 
 Raw outputs and run metadata remain ignored and local-only. No raw output,
 private data, credentials, provider payloads, cloud-labelled targets,

@@ -74,12 +74,12 @@ class LocalBenchmarkReportTests(unittest.TestCase):
         self.assertEqual(summary["schema_path"], "schemas/local_benchmark_report.schema.json")
         self.assertEqual(summary["report_path"], "reports/comparisons/local_open_weight_benchmark_v1.md")
         self.assertEqual(summary["snapshot_id"], "local_open_weight_benchmark_report_v1")
-        self.assertEqual(summary["report_status"], "no_rankings_published")
-        self.assertFalse(summary["ranking_claim_allowed"])
-        self.assertEqual(summary["rankings"], 0)
+        self.assertEqual(summary["report_status"], "published_local_ranking")
+        self.assertTrue(summary["ranking_claim_allowed"])
+        self.assertEqual(summary["rankings"], 2)
         self.assertEqual(summary["excluded_evidence"], 1)
 
-    def test_generator_can_write_public_safe_no_ranking_report_to_temp_paths(self):
+    def test_generator_can_write_public_safe_published_ranking_report_to_temp_paths(self):
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             summary = generate_benchmark_report(
@@ -87,9 +87,9 @@ class LocalBenchmarkReportTests(unittest.TestCase):
                 report_path=root / "local_report.md",
             )
 
-            self.assertEqual(summary["report_status"], "no_rankings_published")
-            self.assertFalse(summary["ranking_claim_allowed"])
-            self.assertEqual(summary["rankings"], 0)
+            self.assertEqual(summary["report_status"], "published_local_ranking")
+            self.assertTrue(summary["ranking_claim_allowed"])
+            self.assertEqual(summary["rankings"], 2)
             self.assertEqual(summary["excluded_evidence"], 1)
             self.assertTrue((root / "local_report.json").exists())
             self.assertTrue((root / "local_report.md").exists())
@@ -98,13 +98,14 @@ class LocalBenchmarkReportTests(unittest.TestCase):
         self.assertTrue(DEFAULT_SNAPSHOT_PATH.exists())
         self.assertTrue(DEFAULT_REPORT_PATH.exists())
 
-    def test_snapshot_excludes_dry_run_ledger_evidence(self):
+    def test_snapshot_publishes_two_reviewed_ledgers_and_excludes_dry_run_evidence(self):
         snapshot = load_snapshot()
 
-        self.assertEqual(snapshot["report_status"], "no_rankings_published")
-        self.assertFalse(snapshot["eligibility_summary"]["acceptance_criteria_met"])
-        self.assertEqual(snapshot["eligibility_summary"]["eligible_real_local_targets"], 1)
-        self.assertEqual(snapshot["rankings"], [])
+        self.assertEqual(snapshot["report_status"], "published_local_ranking")
+        self.assertTrue(snapshot["ranking_claim_allowed"])
+        self.assertTrue(snapshot["eligibility_summary"]["acceptance_criteria_met"])
+        self.assertEqual(snapshot["eligibility_summary"]["eligible_real_local_targets"], 2)
+        self.assertEqual(len(snapshot["rankings"]), 2)
         excluded = snapshot["excluded_evidence"][0]
         self.assertEqual(excluded["run_mode"], "dry_run_public_safe_example")
         self.assertIn("Evidence class is not local_public_benchmark.", excluded["exclusion_reasons"])
@@ -177,12 +178,20 @@ class LocalBenchmarkReportTests(unittest.TestCase):
 
     def test_rejects_ranking_claim_without_rankings(self):
         snapshot = load_snapshot()
+        snapshot["report_status"] = "no_rankings_published"
         snapshot["ranking_claim_allowed"] = True
+        snapshot["rankings"] = []
+        snapshot["eligibility_summary"]["acceptance_criteria_met"] = False
+        snapshot["eligibility_summary"]["ranking_publication_blocked_reason"] = "Blocked test fixture."
 
         self.assert_snapshot_error(snapshot, "ranking_claim_allowed")
 
     def test_rejects_rankings_when_no_rankings_published(self):
         snapshot = load_snapshot()
+        snapshot["report_status"] = "no_rankings_published"
+        snapshot["ranking_claim_allowed"] = False
+        snapshot["eligibility_summary"]["acceptance_criteria_met"] = False
+        snapshot["eligibility_summary"]["ranking_publication_blocked_reason"] = "Blocked test fixture."
         snapshot["rankings"] = [
             {
                 "rank": 1,

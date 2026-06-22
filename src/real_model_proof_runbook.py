@@ -238,7 +238,8 @@ def generate_markdown(report: dict[str, Any]) -> str:
         [
             "## Publication Gate",
             "",
-            f"- Blocked reason: {gate['blocked_reason']}",
+            f"- Status: {'unlocked' if gate['local_ranking_claim_allowed'] else 'blocked'}",
+            f"- Blocked reason: {gate['blocked_reason'] or 'None'}",
             "\n".join(f"- {item}" for item in gate["unlock_requirements"]),
             "",
             "## Boundaries",

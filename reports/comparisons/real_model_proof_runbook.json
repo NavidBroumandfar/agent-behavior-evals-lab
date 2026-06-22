@@ -8,8 +8,8 @@
   ],
   "evidence_status": {
     "case_set_id": "local_public_v1",
-    "current_publishable_rankings": 0,
-    "eligible_reviewed_live_local_ledgers": 1,
+    "current_publishable_rankings": 2,
+    "eligible_reviewed_live_local_ledgers": 2,
     "required_cases_per_primary_model": 210,
     "required_eligible_ledgers": 2,
     "target_split": "extended"
@@ -84,6 +84,22 @@
       "step_id": "run_mistral_extended"
     },
     {
+      "command": "python3 src/validate_adapter_outputs.py --allow-live-local traces/external/m81_mistral_latest_extended.reviewed.jsonl",
+      "commits_raw_outputs": false,
+      "label": "Validate mistral reviewed candidate",
+      "live_execution": false,
+      "notes": "M82 produced this local ignored candidate from the M81 raw run; validation uses explicit live-local allowance and remains outside the deterministic gate.",
+      "step_id": "validate_mistral_reviewed_candidate"
+    },
+    {
+      "command": "python3 src/m82_mistral_reviewed_ledger.py && python3 src/validate_local_run_ledger.py traces/external/m82_mistral_latest_extended.local_run_ledger.json",
+      "commits_raw_outputs": false,
+      "label": "Build mistral reviewed ledger",
+      "live_execution": false,
+      "notes": "M82 built the second eligible reviewed live-local ledger for mistral:latest from committed public-safe derivatives.",
+      "step_id": "build_mistral_reviewed_ledger"
+    },
+    {
       "command": "python3 src/validate_adapter_outputs.py --allow-live-local traces/external/m77_llama3_2_latest_extended.reviewed.jsonl",
       "commits_raw_outputs": false,
       "label": "Validate llama3.2 reviewed candidate",
@@ -108,21 +124,21 @@
       "step_id": "build_llama32_reviewed_ledger"
     },
     {
-      "command": "python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json && python3 src/local_benchmark_report.py",
+      "command": "python3 src/validate_local_run_ledger.py traces/external/m79_llama3_2_latest_extended.local_run_ledger.json && python3 src/validate_local_run_ledger.py traces/external/m82_mistral_latest_extended.local_run_ledger.json && python3 src/local_benchmark_report.py",
       "commits_raw_outputs": false,
       "label": "Validate ledgers and regenerate report",
       "live_execution": false,
-      "notes": "Publication remains blocked because only one eligible reviewed extended ledger exists.",
+      "notes": "M83 publishes the local/open-weight ranking only after both reviewed extended ledgers validate.",
       "step_id": "validate_and_report"
     }
   ],
   "publication_gate": {
-    "blocked_reason": "M79 produced one eligible reviewed live-local llama3.2 ledger, but the required M80-selected mistral second-target ledger does not exist yet.",
-    "local_ranking_claim_allowed": false,
+    "blocked_reason": "",
+    "local_ranking_claim_allowed": true,
     "unlock_requirements": [
-      "Complete the M80-selected mistral:latest extended target through M81 live-local execution and M82 review, scoring, and ledgering.",
-      "Review, normalize, score, and ledger the second target with no unresolved review, unsafe output, malformed output, private data, or raw outputs.",
-      "Regenerate the local/open-weight benchmark report after at least two eligible reviewed ledgers exist."
+      "Maintain validated reviewed extended ledgers for llama3.2:latest and mistral:latest.",
+      "Keep raw outputs and local run metadata ignored and excluded from committed reports.",
+      "Regenerate the local/open-weight benchmark report after ledger or methodology changes."
     ]
   },
   "quality_gate": {
@@ -161,7 +177,7 @@
       "Do not use qwen3.5:2b-q4_K_M smoke/control evidence for publication.",
       "Keep raw outputs ignored, then review, score, and ledger only public-safe derivatives in M82."
     ],
-    "publication_claim_language": "The local/open-weight report remains blocked until reviewed extended ledgers exist for llama3.2:latest and mistral:latest; gemma4:latest is deferred and ranking-ineligible for the current publication path.",
+    "publication_claim_language": "The local/open-weight report may publish the reviewed extended llama3.2:latest and mistral:latest ranking after both ledgers validate; gemma4:latest is deferred and ranking-ineligible for the current publication path.",
     "rationale": "M77 stopped the heavier gemma4 pass on swap activity. M80 keeps the two-ledger publication path moving by selecting a smaller local Ollama text-only target for M81 while deferring gemma4 until resource-stability metadata exists.",
     "replaced_model": "gemma4:latest",
     "selected_adapter": "ollama_text_only",

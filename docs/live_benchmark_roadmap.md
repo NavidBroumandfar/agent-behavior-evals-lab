@@ -564,8 +564,8 @@ Acceptance criteria:
 Turn the M77 technical proof into publishable local/open-weight evidence only
 through explicit review, ledger, second-target, reproducibility, and claim gates.
 
-Status: active / M81 live raw run complete, publication still blocked pending
-M82 review, scoring, and ledgering.
+Status: active / M83 local-open-weight ranking published from two reviewed
+live-local ledgers.
 
 Milestone sequence:
 
@@ -587,8 +587,12 @@ Milestone sequence:
   Status: complete; `mistral:latest` produced 210 / 210 extended raw records
   under ignored local-only paths after explicit live-local opt-in.
 - M82 reviews, scores, and ledgers the second target.
+  Status: complete; `mistral:latest` has a validated reviewed live-local
+  ledger with 210 reviewed records.
 - M83 regenerates the local/open-weight benchmark report and publishes rankings
   only if two eligible reviewed live-local ledgers pass.
+  Status: complete; `ranking_claim_allowed` is `true` for the local/open-weight
+  report with `llama3.2:latest` and `mistral:latest`.
 - M84 adds a public-safe reproducibility packet with hashes, model identifiers,
   harness versions, and command templates but no raw outputs.
 - M85 adds runtime stability/resource metadata so heavier models have explicit

@@ -13,13 +13,13 @@
     ]
   },
   "eligibility_summary": {
-    "acceptance_criteria_met": false,
+    "acceptance_criteria_met": true,
     "eligible_manual_public_targets": 0,
-    "eligible_ranked_targets": 0,
-    "eligible_real_local_targets": 1,
+    "eligible_ranked_targets": 2,
+    "eligible_real_local_targets": 2,
     "excluded_targets": 1,
     "minimum_real_local_targets_required": 2,
-    "ranking_publication_blocked_reason": "Fewer than two committed reviewed live-local, ledger-backed standard-or-extended split targets meet M59 ranking requirements."
+    "ranking_publication_blocked_reason": ""
   },
   "evidence_sources": [
     {
@@ -38,6 +38,15 @@
       "path": "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
       "sha256": "dccf3e85c0fabb7e8916beee5a70061759a32f102be7a6bafa18d5083b01e9f7",
       "source_id": "m79_llama3_2_latest_extended_reviewed_live_local_ledger",
+      "source_kind": "published_local_benchmark"
+    },
+    {
+      "eligible_entry_count": 1,
+      "entry_count": 1,
+      "excluded_entry_count": 0,
+      "path": "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
+      "sha256": "0576c56cb33553909f9278cddcc351bfa77ed892269a2b813fbfbf9cc89ca764",
+      "source_id": "m82_mistral_latest_extended_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     }
   ],
@@ -75,9 +84,68 @@
     "methodology_version": "1.0.0",
     "primary_metric_id": "severity_weighted_effective_pass_rate"
   },
-  "ranking_claim_allowed": false,
-  "rankings": [],
-  "report_status": "no_rankings_published",
+  "ranking_claim_allowed": true,
+  "rankings": [
+    {
+      "abstention_count": 0,
+      "benchmark_split": "extended",
+      "bootstrap_ci_95": {
+        "high": 0.4158,
+        "low": 0.286
+      },
+      "ledger_entry_id": "m79_llama3_2_latest_extended_reviewed_live_local_entry",
+      "model": "llama3.2:latest",
+      "rank": 1,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 126,
+        "effective_pass_count": 84,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 210,
+        "reviewer_count": 1,
+        "scorer_fail_count": 126,
+        "scorer_pass_count": 84,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 210,
+      "severity_weighted_effective_pass_rate": 0.3484,
+      "severity_weighted_heuristic_pass_rate": 0.3484,
+      "unresolved_review_count": 0
+    },
+    {
+      "abstention_count": 0,
+      "benchmark_split": "extended",
+      "bootstrap_ci_95": {
+        "high": 0.1425,
+        "low": 0.0708
+      },
+      "ledger_entry_id": "m82_mistral_latest_extended_reviewed_live_local_entry",
+      "model": "mistral:latest",
+      "rank": 2,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 172,
+        "effective_pass_count": 38,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 210,
+        "reviewer_count": 1,
+        "scorer_fail_count": 172,
+        "scorer_pass_count": 38,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 210,
+      "severity_weighted_effective_pass_rate": 0.1065,
+      "severity_weighted_heuristic_pass_rate": 0.1065,
+      "unresolved_review_count": 0
+    }
+  ],
+  "report_status": "published_local_ranking",
   "reproduction_instructions": [
     "Run `python3 scripts/dev.py check` to regenerate and validate the public-safe report artifacts.",
     "Follow the M80 second-target decision in `traces/external/real_model_proof_runbook.example.json`; do not use smoke/control evidence for publication.",
@@ -101,6 +169,7 @@
     "evals/benchmarks/local_public_v1/manifest.json",
     "traces/external/local_run_ledger.example.json",
     "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
+    "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
     "traces/external/real_model_proof_runbook.example.json",
     "docs/live_benchmark_roadmap.md",
     "docs/wiki/concepts/local_ranking_methodology.md"
