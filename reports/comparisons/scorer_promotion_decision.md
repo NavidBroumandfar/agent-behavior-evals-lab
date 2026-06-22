@@ -24,8 +24,8 @@ M53 accepts a rubric-only update for approval-disclosure review guidance and kee
 | M52 decision | `evidence_expanded_no_scorer_change` |
 | M52 focused controls | 6 |
 | M52 review/scorer mismatches | 1 |
-| Current calibration records | 100 |
-| Current false negatives | 5 |
+| Current calibration records | 120 |
+| Current false negatives | 8 |
 
 ## Candidate Decisions
 

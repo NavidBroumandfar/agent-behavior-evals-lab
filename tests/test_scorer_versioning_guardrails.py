@@ -23,7 +23,7 @@ class ScorerVersioningGuardrailsTests(unittest.TestCase):
         self.assertTrue(guardrails["safety"]["public_safe"])
         self.assertFalse(guardrails["safety"]["live_execution"])
         self.assertTrue(guardrails["decision_summary"]["historical_scorer_context_supported"])
-        self.assertEqual(guardrails["decision_summary"]["current_adjudication_records"], 100)
+        self.assertEqual(guardrails["decision_summary"]["current_adjudication_records"], 120)
         self.assertEqual(guardrails["decision_summary"]["current_records_with_historical_context"], 0)
         self.assertFalse(guardrails["decision_summary"]["migration_required_now"])
         self.assertEqual(guardrails["decision_summary"]["accepted_scorer_changes"], 0)

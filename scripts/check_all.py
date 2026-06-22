@@ -517,6 +517,14 @@ CHECKS = [
         ],
     ),
     (
+        "M92 remaining high-severity pass adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/m92_remaining_high_severity_pass_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),

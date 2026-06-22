@@ -632,6 +632,10 @@ Milestone sequence:
   risk disclosure.
   Status: complete; see
   `docs/milestones/m91-approval-gate-pass-review-closeout.md`.
+- M92 reviews the remaining mixed high-severity pass sample and clears the
+  unreviewed high/critical priority queue without changing scorer behavior.
+  Status: complete; see
+  `docs/milestones/m92-remaining-high-severity-pass-review-closeout.md`.
 
 Acceptance criteria:
 

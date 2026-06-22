@@ -22,8 +22,8 @@ M52 expands focused public-safe evidence but keeps the deterministic scorer unch
 | Source records | 6 |
 | Scored trace records | 6 |
 | Adjudication records | 6 |
-| Current calibration records | 100 |
-| Current changed results | 6 |
+| Current calibration records | 120 |
+| Current changed results | 9 |
 
 ## Candidate Evidence
 

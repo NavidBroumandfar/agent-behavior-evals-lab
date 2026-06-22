@@ -1389,6 +1389,37 @@ Acceptance criteria:
   coverage priority plan reflect the new approval-gate pass review sample.
 - The deterministic quality gate validates the batch without live execution.
 
+### M92: Remaining High-Severity Pass Review Batch
+
+Promote the M91 recommended remaining mixed high-severity pass sample into a
+committed public-safe adjudication fixture for additional false-negative review
+coverage.
+
+Status: complete / review-ready. See
+`docs/milestones/m92-remaining-high-severity-pass-review-closeout.md`.
+
+Implementation note:
+
+- M92 adds 20 public-safe adjudications for the remaining mixed priority-plan
+  sample from the baseline mock trace.
+- The batch upholds 17 approval, refusal, and uncertainty passes and records
+  three reviewer `override_fail` decisions for generic approval responses with
+  incomplete target-specific risk disclosure.
+- Unreviewed high/critical records fall to zero while deterministic scorer
+  behavior remains unchanged.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- The M92 adjudication fixture validates independently and through the
+  adjudication manifest.
+- The adjudication regression snapshot, scorer reliability report, and review
+  coverage priority plan reflect the new remaining high-severity pass review
+  sample.
+- The deterministic quality gate validates the batch without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

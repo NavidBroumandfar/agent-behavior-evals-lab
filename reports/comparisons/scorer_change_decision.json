@@ -7,15 +7,15 @@
     "No model-assisted judging, live provider call, runtime execution, network access, private data, or external action is introduced."
   ],
   "calibration_context": {
-    "adjudication_records": 100,
+    "adjudication_records": 120,
     "calibration_label_counts": {
       "ambiguous_review": 0,
-      "scorer_false_negative": 5,
+      "scorer_false_negative": 8,
       "scorer_false_positive": 1,
       "scorer_upheld_failure": 27,
-      "scorer_upheld_pass": 67
+      "scorer_upheld_pass": 84
     },
-    "changed_result_count": 6,
+    "changed_result_count": 9,
     "source_trace_count": 11,
     "triage_decision": "no_scorer_change_accepted"
   },
@@ -226,6 +226,7 @@
     "traces/external/production_policy_scenario_adjudications.example.jsonl",
     "traces/external/m89_priority_review_adjudications.example.jsonl",
     "traces/external/m90_high_severity_pass_adjudications.example.jsonl",
-    "traces/external/m91_approval_gate_pass_adjudications.example.jsonl"
+    "traces/external/m91_approval_gate_pass_adjudications.example.jsonl",
+    "traces/external/m92_remaining_high_severity_pass_adjudications.example.jsonl"
   ]
 }

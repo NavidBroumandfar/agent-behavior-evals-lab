@@ -49,9 +49,9 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `uphold_score` | 94 |", report)
+        self.assertIn("| `uphold_score` | 111 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
-        self.assertIn("| `override_fail` | 5 |", report)
+        self.assertIn("| `override_fail` | 8 |", report)
         self.assertIn("baseline_followup_review_queue", report)
         self.assertIn("external_fixture_review_expansion", report)
         self.assertIn("external_fixture_reviewed_decisions", report)
@@ -60,6 +60,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("production_policy_scenario_review", report)
         self.assertIn("m90_high_severity_pass_review", report)
         self.assertIn("m91_approval_gate_pass_review", report)
+        self.assertIn("m92_remaining_high_severity_pass_review", report)
         self.assertIn("Review Status", report)
         self.assertIn("| `baseline_reviewed_decisions` | Baseline Reviewed Decisions |", report)
         self.assertIn("| `baseline_followup_review_queue` | Baseline Followup Review Queue |", report)
@@ -70,6 +71,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("| `production_policy_scenario_review` | Production-Policy Scenario Review |", report)
         self.assertIn("| `m90_high_severity_pass_review` | M90 High-Severity Pass Review |", report)
         self.assertIn("| `m91_approval_gate_pass_review` | M91 Approval-Gate Pass Review |", report)
+        self.assertIn("| `m92_remaining_high_severity_pass_review` | M92 Remaining High-Severity Pass Review |", report)
         self.assertIn("No reviewed records are currently marked `needs_discussion`.", report)
         self.assertIn("public_reviewer_fixture", report)
         self.assertIn("Needs Discussion Queue", report)
@@ -101,6 +103,7 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "m89_priority_review_batch",
                 "m90_high_severity_pass_review",
                 "m91_approval_gate_pass_review",
+                "m92_remaining_high_severity_pass_review",
             ],
         )
         self.assertEqual(
@@ -116,11 +119,12 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "reviewed",
                 "reviewed",
                 "reviewed",
+                "reviewed",
             ],
         )
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 100)
+        self.assertEqual(len(context.adjudications), 120)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-EXTERNAL-ADAPTER-REFUSAL-003-OPENCLAW-001"].fixture_id,
@@ -154,6 +158,10 @@ class AdjudicationReportingTests(unittest.TestCase):
             context.fixture_by_adjudication_id["ADJ-M91-BASELINE-APPROVAL-005-GENERIC-001"].fixture_id,
             "m91_approval_gate_pass_review",
         )
+        self.assertEqual(
+            context.fixture_by_adjudication_id["ADJ-M92-BASELINE-APPROVAL-013-GENERIC-001"].fixture_id,
+            "m92_remaining_high_severity_pass_review",
+        )
 
     def test_manifest_loads_quality_gate_thresholds(self):
         manifest = load_adjudication_manifest_data(ADJUDICATION_MANIFEST_PATH)
@@ -177,8 +185,10 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(thresholds.max_fixture_needs_discussion["focused_scorer_evidence_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["hermes_long_running_agent_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["production_policy_scenario_review"], 0)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["m89_priority_review_batch"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["m90_high_severity_pass_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["m91_approval_gate_pass_review"], 0)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["m92_remaining_high_severity_pass_review"], 0)
 
     def test_manifest_threshold_block_is_optional(self):
         manifest = load_manifest_object()

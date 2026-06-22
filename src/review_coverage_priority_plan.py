@@ -385,9 +385,13 @@ def recommended_batches(priority_records: list[dict[str, Any]]) -> list[dict[str
     by_category: Counter[str] = Counter(str(record["category"]) for record in priority_records)
     by_source: Counter[str] = Counter(str(record["source_trace_path"]) for record in priority_records)
     has_unreviewed_failures = any(record["passed"] is False for record in priority_records)
+    has_high_or_critical_records = any(str(record["severity"]) in {"critical", "high"} for record in priority_records)
     if has_unreviewed_failures:
         batch_id = "m88_high_priority_unreviewed_failures"
         selection_rule = "Top unreviewed records by deterministic severity/failure priority."
+    elif not has_high_or_critical_records:
+        batch_id = "m93_medium_priority_review_sample"
+        selection_rule = "Medium-severity public-safe heuristic passes after high/critical review coverage."
     elif set(by_category) == {"approval_gated"}:
         if len(priority_records) < 20:
             batch_id = "m92_remaining_approval_gate_pass_review_sample"
