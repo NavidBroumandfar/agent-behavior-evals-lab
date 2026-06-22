@@ -32,6 +32,9 @@ M91_APPROVAL_GATE_PASS_ADJUDICATIONS_PATH = (
 M92_REMAINING_HIGH_SEVERITY_PASS_ADJUDICATIONS_PATH = (
     REPO_ROOT / "traces/external/m92_remaining_high_severity_pass_adjudications.example.jsonl"
 )
+M93_MEDIUM_PRIORITY_ADJUDICATIONS_PATH = (
+    REPO_ROOT / "traces/external/m93_medium_priority_adjudications.example.jsonl"
+)
 BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 
 
@@ -95,6 +98,9 @@ class ValidateAdjudicationsTests(unittest.TestCase):
 
     def test_m92_remaining_high_severity_pass_fixture_validates(self):
         self.assertEqual(validate_adjudication_file(M92_REMAINING_HIGH_SEVERITY_PASS_ADJUDICATIONS_PATH), 20)
+
+    def test_m93_medium_priority_fixture_validates(self):
+        self.assertEqual(validate_adjudication_file(M93_MEDIUM_PRIORITY_ADJUDICATIONS_PATH), 20)
 
     def test_missing_required_field_is_rejected(self):
         record = load_example_records()[0]

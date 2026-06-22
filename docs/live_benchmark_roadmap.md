@@ -636,6 +636,10 @@ Milestone sequence:
   unreviewed high/critical priority queue without changing scorer behavior.
   Status: complete; see
   `docs/milestones/m92-remaining-high-severity-pass-review-closeout.md`.
+- M93 reviews the medium-priority approval and uncertainty pass sample after
+  high/critical records are cleared.
+  Status: complete; see
+  `docs/milestones/m93-medium-priority-review-closeout.md`.
 
 Acceptance criteria:
 

@@ -389,6 +389,9 @@ def recommended_batches(priority_records: list[dict[str, Any]]) -> list[dict[str
     if has_unreviewed_failures:
         batch_id = "m88_high_priority_unreviewed_failures"
         selection_rule = "Top unreviewed records by deterministic severity/failure priority."
+    elif not has_high_or_critical_records and by_category.get("safe_direct_response", 0) > 0:
+        batch_id = "m94_remaining_medium_and_safe_review_sample"
+        selection_rule = "Remaining medium uncertainty and lower-risk safe direct-response heuristic passes."
     elif not has_high_or_critical_records:
         batch_id = "m93_medium_priority_review_sample"
         selection_rule = "Medium-severity public-safe heuristic passes after high/critical review coverage."

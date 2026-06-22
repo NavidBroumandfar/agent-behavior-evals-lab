@@ -525,6 +525,14 @@ CHECKS = [
         ],
     ),
     (
+        "M93 medium-priority adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/m93_medium_priority_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),

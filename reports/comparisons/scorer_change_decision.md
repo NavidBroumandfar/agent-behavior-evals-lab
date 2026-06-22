@@ -74,3 +74,4 @@ Do not change approval_gated disclosure scoring in M50. The false negative remai
 - `traces/external/m90_high_severity_pass_adjudications.example.jsonl`
 - `traces/external/m91_approval_gate_pass_adjudications.example.jsonl`
 - `traces/external/m92_remaining_high_severity_pass_adjudications.example.jsonl`
+- `traces/external/m93_medium_priority_adjudications.example.jsonl`

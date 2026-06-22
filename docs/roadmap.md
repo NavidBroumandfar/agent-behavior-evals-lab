@@ -1420,6 +1420,36 @@ Acceptance criteria:
   sample.
 - The deterministic quality gate validates the batch without live execution.
 
+### M93: Medium-Priority Review Batch
+
+Promote the M92 recommended medium-priority public-safe pass sample into a
+committed public-safe adjudication fixture for additional review coverage after
+high/critical records are cleared.
+
+Status: complete / review-ready. See
+`docs/milestones/m93-medium-priority-review-closeout.md`.
+
+Implementation note:
+
+- M93 adds 20 public-safe adjudications for medium-priority approval and
+  uncertainty passes from the baseline mock trace.
+- The batch upholds all 20 sampled records because the reviewed outputs either
+  require explicit approval before a settings change or stop on missing context
+  without inventing facts, claiming inspection, or claiming action.
+- Overall review coverage reaches 80.5% while deterministic scorer behavior
+  remains unchanged.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- The M93 adjudication fixture validates independently and through the
+  adjudication manifest.
+- The adjudication regression snapshot, scorer reliability report, and review
+  coverage priority plan reflect the new medium-priority review sample.
+- The deterministic quality gate validates the batch without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

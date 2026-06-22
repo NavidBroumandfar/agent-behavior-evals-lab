@@ -5,10 +5,10 @@
 | Field | Value |
 | --- | ---: |
 | Generated at | `2026-06-22T00:00:00Z` |
-| Reviewed records | 120 |
+| Reviewed records | 140 |
 | Source traces reviewed | 11 |
 | Reviewers | 1 |
-| Scorer/reviewer agreement rate | 92.5% |
+| Scorer/reviewer agreement rate | 93.6% |
 | Scorer false positives | 1 |
 | Scorer false negatives | 8 |
 | Ambiguous reviews | 0 |
@@ -21,23 +21,23 @@ This report is advisory. The deterministic heuristic scorer remains the default 
 
 | Metric | Value |
 | --- | ---: |
-| Metric records | 120 |
-| Scorer/reviewer agreements | 111 |
+| Metric records | 140 |
+| Scorer/reviewer agreements | 131 |
 | Scorer/reviewer disagreements | 9 |
-| Agreement rate | 92.5% |
-| False positive rate | 0.8% |
-| False negative rate | 6.7% |
+| Agreement rate | 93.6% |
+| False positive rate | 0.7% |
+| False negative rate | 5.7% |
 | Failure precision | 96.4% |
 | Failure recall | 77.1% |
-| Failure specificity | 98.8% |
-| Failure accuracy | 92.5% |
+| Failure specificity | 99.0% |
+| Failure accuracy | 93.6% |
 
 ## Calibration Labels
 
 | Calibration Label | Count |
 | --- | ---: |
 | `scorer_upheld_failure` | 27 |
-| `scorer_upheld_pass` | 84 |
+| `scorer_upheld_pass` | 104 |
 | `scorer_false_positive` | 1 |
 | `scorer_false_negative` | 8 |
 | `ambiguous_review` | 0 |
@@ -47,27 +47,27 @@ This report is advisory. The deterministic heuristic scorer remains the default 
 | Risk Area | Records | Agreement | False Positives | False Negatives | Precision | Recall |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | `safe_task` | 14 | 92.9% | 1 | 0 | 83.3% | 100.0% |
-| `approval_gate` | 59 | 86.4% | 0 | 8 | 100.0% | 63.6% |
+| `approval_gate` | 61 | 86.9% | 0 | 8 | 100.0% | 63.6% |
 | `refusal_boundary` | 32 | 100.0% | 0 | 0 | 100.0% | 100.0% |
-| `uncertainty_handling` | 15 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `uncertainty_handling` | 33 | 100.0% | 0 | 0 | 100.0% | 100.0% |
 
 ## Calibration By Category
 
 | Category | Records | Agreement | False Positives | False Negatives | Precision | Recall |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | `safe_direct_response` | 14 | 92.9% | 1 | 0 | 83.3% | 100.0% |
-| `approval_gated` | 59 | 86.4% | 0 | 8 | 100.0% | 63.6% |
+| `approval_gated` | 61 | 86.9% | 0 | 8 | 100.0% | 63.6% |
 | `refusal_required` | 32 | 100.0% | 0 | 0 | 100.0% | 100.0% |
-| `uncertainty_handling` | 15 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `uncertainty_handling` | 33 | 100.0% | 0 | 0 | 100.0% | 100.0% |
 
 ## Reviewer Agreement
 
 | Field | Value |
 | --- | --- |
 | Reviewer IDs | `public_reviewer_fixture` |
-| Review targets | 120 |
+| Review targets | 140 |
 | Overlapping review targets | 0 |
-| Scorer/reviewer agreement rate | 92.5% |
+| Scorer/reviewer agreement rate | 93.6% |
 | Inter-reviewer agreement status | `not_available_no_overlapping_review_targets` |
 | Inter-reviewer agreement note | Committed adjudications currently provide one reviewer decision per target, so panel agreement cannot be estimated from these fixtures. |
 
@@ -125,6 +125,7 @@ This report is advisory. The deterministic heuristic scorer remains the default 
 - `traces/external/m90_high_severity_pass_adjudications.example.jsonl`
 - `traces/external/m91_approval_gate_pass_adjudications.example.jsonl`
 - `traces/external/m92_remaining_high_severity_pass_adjudications.example.jsonl`
+- `traces/external/m93_medium_priority_adjudications.example.jsonl`
 - `traces/scored/adapter_output_fixture_import.jsonl`
 - `traces/scored/baseline_mock_run.jsonl`
 - `traces/scored/dry_run_adapter_output_import.jsonl`

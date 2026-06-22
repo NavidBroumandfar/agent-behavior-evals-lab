@@ -1,7 +1,7 @@
 {
   "adjudication": {
-    "adjudicated_pass_rate": "70.8%",
-    "adjudication_records": 120,
+    "adjudicated_pass_rate": "75.0%",
+    "adjudication_records": 140,
     "changed_result_count": 9,
     "needs_discussion": 0,
     "override_fail": 8,
@@ -15,10 +15,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/baseline_mock_run.jsonl": {
-        "review_coverage": "58.7%",
-        "reviewed_records": 74,
+        "review_coverage": "74.6%",
+        "reviewed_records": 94,
         "source_records": 126,
-        "unreviewed_records": 52
+        "unreviewed_records": 32
       },
       "traces/scored/dry_run_adapter_output_import.jsonl": {
         "review_coverage": "100.0%",
@@ -190,10 +190,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/baseline_mock_run.jsonl": {
-        "review_coverage": "58.7%",
-        "reviewed_records": 74,
+        "review_coverage": "74.6%",
+        "reviewed_records": 94,
         "source_records": 126,
-        "unreviewed_records": 52
+        "unreviewed_records": 32
       },
       "traces/scored/dry_run_adapter_output_import.jsonl": {
         "review_coverage": "100.0%",
@@ -421,7 +421,7 @@
     "baseline_result": "115 passed, 11 failed (91.3% pass rate)",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
     "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
-    "review_status": "120 adjudication records; 0 need discussion"
+    "review_status": "140 adjudication records; 0 need discussion"
   },
   "safety": {
     "contains_private_data": false,

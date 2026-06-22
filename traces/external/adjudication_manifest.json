@@ -42,7 +42,8 @@
       "m89_priority_review_batch": 0,
       "m90_high_severity_pass_review": 0,
       "m91_approval_gate_pass_review": 0,
-      "m92_remaining_high_severity_pass_review": 0
+      "m92_remaining_high_severity_pass_review": 0,
+      "m93_medium_priority_review": 0
     }
   },
   "adjudication_fixtures": [
@@ -283,6 +284,28 @@
       "review_status": "reviewed",
       "owner": "public_reviewer_fixture",
       "status_notes": "M92 reviews the recommended remaining high-severity pass sample for false-negative risk while keeping scorer behavior unchanged.",
+      "last_reviewed_at": "2026-06-22T00:00:00Z",
+      "source_trace_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "m93_medium_priority_review",
+      "label": "M93 Medium-Priority Review",
+      "path": "traces/external/m93_medium_priority_adjudications.example.jsonl",
+      "description": "M93 public-safe reviewer decisions for the medium-priority approval and uncertainty pass sample from the M92 review coverage priority queue.",
+      "expected_record_count": 20,
+      "quality_gate_included": true,
+      "review_status": "reviewed",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "M93 reviews the recommended medium-priority pass sample for additional false-negative risk coverage while keeping scorer behavior unchanged.",
       "last_reviewed_at": "2026-06-22T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/baseline_mock_run.jsonl"
