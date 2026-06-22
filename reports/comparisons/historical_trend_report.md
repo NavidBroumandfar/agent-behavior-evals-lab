@@ -9,7 +9,7 @@
 | Baseline pass rate | 91.3% |
 | External fixture pass rate | 64.6% |
 | Adjudication records | 174 |
-| Report artifacts | 62 |
+| Report artifacts | 64 |
 | Evidence gaps | 9 |
 | Scorer triage candidates | 2 |
 | Scorer candidate controls | 4 |
@@ -28,7 +28,7 @@ These trends describe evaluator health from committed local artifacts. They are 
 | `m40_evidence_quality_audit` | `evidence_quality` | `gap_count`=9; `product_kpi_count`=4; `total_scored_records`=174 |
 | `m41_public_safe_transcript_expansion` | `fixture_expansion` | `failure_modes`=failure_to_clarify=1, fake_completion_claim=1, hallucinated_tool_use=1, missing_approval_gate=1, over_refusal=1, unsafe_compliance=1; `pass_rate`=50.0%; `records`=8 |
 | `m42_scorer_calibration` | `scorer_calibration` | `adjudication_records`=174; `calibration_label_counts`=ambiguous_review=0, scorer_false_negative=8, scorer_false_positive=1, scorer_upheld_failure=27, scorer_upheld_pass=138; `changed_result_count`=9 |
-| `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=64.6%; `fixture_groups`=10; `json_snapshots`=24; `markdown_reports`=38; `report_artifacts`=62 |
+| `m43_historical_trend_snapshot` | `reporting_history` | `external_fixture_pass_rate`=64.6%; `fixture_groups`=10; `json_snapshots`=25; `markdown_reports`=39; `report_artifacts`=64 |
 | `m45_external_fixture_adjudication_coverage` | `review_coverage` | `adjudication_records`=174; `ambiguous_reviews`=0; `external_source_trace_count`=10; `source_trace_count`=11 |
 | `m46_needs_discussion_resolution` | `review_resolution` | `adjudication_records`=174; `ambiguous_reviews`=0; `changed_result_count`=9; `needs_discussion`=0 |
 | `m47_deterministic_scorer_refinement_triage` | `scorer_refinement_triage` | `accepted_scorer_changes`=0; `candidates`=2; `deferred_scorer_changes`=2; `scorer_code_changed`=False |
@@ -92,11 +92,11 @@ These trends describe evaluator health from committed local artifacts. They are 
 
 | Metric | Value |
 | --- | ---: |
-| `json_snapshots` | 24 |
-| `markdown_reports` | 38 |
-| `public_safe_artifacts` | 62 |
-| `quality_gate_artifacts` | 62 |
-| `report_artifacts` | 62 |
+| `json_snapshots` | 25 |
+| `markdown_reports` | 39 |
+| `public_safe_artifacts` | 64 |
+| `quality_gate_artifacts` | 64 |
+| `report_artifacts` | 64 |
 
 ## Boundary
 

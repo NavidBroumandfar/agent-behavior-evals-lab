@@ -53,12 +53,14 @@ python3 scripts/dev.py test
 python3 scripts/dev.py check
 agent-evals scorer-reliability
 agent-evals review-coverage-priority
+agent-evals review-coverage-completion
 agent-evals scorer-review-contract
 ```
 
 `test` runs the unit test suite. `check` runs the full deterministic local quality gate through `scripts/check_all.py`.
 `scorer-reliability` regenerates deterministic scorer reliability reporting.
 `review-coverage-priority` regenerates deterministic public-safe review coverage planning.
+`review-coverage-completion` regenerates the deterministic post-M95 completion gate.
 `scorer-review-contract` prints the explicit non-gated review contract stub and
 does not run a model judge.
 

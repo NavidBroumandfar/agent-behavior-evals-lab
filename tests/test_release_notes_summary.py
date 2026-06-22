@@ -30,9 +30,9 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 48)
         self.assertEqual(release_notes["dashboard_snapshot"]["harness_bridge_decision"], "defer_harness_integration")
         self.assertEqual(release_notes["dashboard_snapshot"]["review_needs_discussion"], 0)
-        self.assertEqual(len(release_notes["milestones"]), 36)
-        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M70-M76")
-        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 62)
+        self.assertEqual(len(release_notes["milestones"]), 37)
+        self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M96")
+        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 64)
 
     def test_generate_markdown_contains_release_sections(self):
         markdown = generate_markdown(build_release_notes())
@@ -72,6 +72,7 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertIn("Private Audit Reports", markdown)
         self.assertIn("Retention Consent Access", markdown)
         self.assertIn("Real Model Proof Path", markdown)
+        self.assertIn("Review Coverage Completion", markdown)
         self.assertIn("No live provider APIs", markdown)
 
     def test_milestone_summary_extracts_title_status_and_date(self):

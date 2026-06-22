@@ -54,6 +54,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Scorer Promotion Decision](concepts/scorer_promotion_decision.md)
 - [Scorer Reliability Reporting](concepts/scorer_reliability_reporting.md)
 - [Review Coverage Priority Plan](concepts/review_coverage_priority_plan.md)
+- [Review Coverage Completion Gate](concepts/review_coverage_completion_gate.md)
 - [Benchmark Claim Charter](concepts/benchmark_claim_charter.md)
 - [Local Public Benchmark Corpus](concepts/local_public_benchmark_corpus.md)
 - [Local Adapter Registry](concepts/local_adapter_registry.md)
@@ -134,6 +135,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Scorer promotion decision: `src/scorer_promotion_decision.py`, `reports/comparisons/scorer_promotion_decision.json`, and `reports/comparisons/scorer_promotion_decision.md`
 - Scorer reliability reporting: `src/scorer_reliability_report.py`, `src/scorer_review_contract.py`, `reports/comparisons/scorer_reliability_report.json`, and `reports/comparisons/scorer_reliability_report.md`
 - Review coverage priority plan: `src/review_coverage_priority_plan.py`, `reports/comparisons/review_coverage_priority_plan.json`, and `reports/comparisons/review_coverage_priority_plan.md`
+- Review coverage completion gate: `src/review_coverage_completion_gate.py`, `reports/comparisons/review_coverage_completion_gate.json`, and `reports/comparisons/review_coverage_completion_gate.md`
 - Benchmark claim charter: `benchmarks/evidence_class_charter.json`, `schemas/benchmark_claim_charter.schema.json`, and `src/validate_benchmark_claim_charter.py`
 - Local public benchmark corpus: `evals/benchmarks/local_public_v1/cases.jsonl`, `evals/benchmarks/local_public_v1/manifest.json`, and `src/validate_local_benchmark_corpus.py`
 - Local adapter registry: `targets/adapters/local_adapter_registry.json`, `schemas/local_adapter_registry.schema.json`, and `src/validate_local_adapter_registry.py`
@@ -249,6 +251,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 93 closeout: `docs/milestones/m93-medium-priority-review-closeout.md`
 - Milestone 94 closeout: `docs/milestones/m94-remaining-medium-and-safe-review-closeout.md`
 - Milestone 95 closeout: `docs/milestones/m95-remaining-safe-direct-response-review-closeout.md`
+- Milestone 96 closeout: `docs/milestones/m96-review-coverage-completion-gate-closeout.md`
 
 ## Reading Order
 

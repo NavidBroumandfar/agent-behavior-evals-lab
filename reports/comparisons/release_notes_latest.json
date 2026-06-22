@@ -158,6 +158,10 @@
     {
       "area": "Real Model Proof Path",
       "summary": "Added review-summary, reviewed-ledger, real metric aggregation, hosted metadata, and CLI runbook contracts for the next controlled opt-in local model benchmark."
+    },
+    {
+      "area": "Review Coverage Completion",
+      "summary": "Added a deterministic post-M95 completion gate that fails on stale coverage, non-empty priority queues, or recommended reviewer batches."
     }
   ],
   "milestones": [
@@ -412,15 +416,22 @@
       "path": "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md",
       "status": "Complete / public-safe real-model proof path ready for manual opt-in runs",
       "title": "Milestone 70-M76 - Real Model Proof Roadmap"
+    },
+    {
+      "date": "",
+      "milestone_id": "M96",
+      "path": "docs/milestones/m96-review-coverage-completion-gate-closeout.md",
+      "status": "complete / review-ready.",
+      "title": "Milestone 96 - Review Coverage Completion Gate"
     }
   ],
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 24,
+    "json_snapshots": 25,
     "live_execution": false,
-    "markdown_reports": 38,
-    "report_artifacts_indexed": 62
+    "markdown_reports": 39,
+    "report_artifacts_indexed": 64
   },
   "release_id": "release_notes_latest",
   "release_readiness": {
@@ -474,7 +485,8 @@
     "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
     "docs/milestones/m68-private-audit-reports-closeout.md",
     "docs/milestones/m69-retention-consent-access-controls-closeout.md",
-    "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md"
+    "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md",
+    "docs/milestones/m96-review-coverage-completion-gate-closeout.md"
   ],
   "title": "Agent Behavior Evals Lab Release Notes"
 }

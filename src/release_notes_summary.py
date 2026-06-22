@@ -60,6 +60,7 @@ MILESTONE_PATHS = [
     REPO_ROOT / "docs/milestones/m68-private-audit-reports-closeout.md",
     REPO_ROOT / "docs/milestones/m69-retention-consent-access-controls-closeout.md",
     REPO_ROOT / "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md",
+    REPO_ROOT / "docs/milestones/m96-review-coverage-completion-gate-closeout.md",
 ]
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/release_notes_latest.json"
@@ -418,6 +419,13 @@ def release_highlights(
             {
                 "area": "Real Model Proof Path",
                 "summary": "Added review-summary, reviewed-ledger, real metric aggregation, hosted metadata, and CLI runbook contracts for the next controlled opt-in local model benchmark.",
+            }
+        )
+    if any(milestone["milestone_id"] == "M96" for milestone in milestones):
+        highlights.append(
+            {
+                "area": "Review Coverage Completion",
+                "summary": "Added a deterministic post-M95 completion gate that fails on stale coverage, non-empty priority queues, or recommended reviewer batches.",
             }
         )
     return highlights

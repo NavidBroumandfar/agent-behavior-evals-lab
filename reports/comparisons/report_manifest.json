@@ -1,6 +1,6 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.15.0",
+  "version": "0.16.0",
   "generated_at": "2026-06-22T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
@@ -780,6 +780,58 @@
       ],
       "quality_gate_included": true,
       "notes": "Reader-facing M88 review coverage priority plan with deterministic public-safe review queue guidance.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "review_coverage_completion_gate_snapshot",
+      "label": "Review Coverage Completion Gate JSON",
+      "path": "reports/comparisons/review_coverage_completion_gate.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/review_coverage_completion_gate.py",
+      "input_paths": [
+        "reports/comparisons/review_coverage_priority_plan.json",
+        "reports/comparisons/review_coverage_priority_plan.md",
+        "reports/comparisons/scorer_reliability_report.json",
+        "reports/comparisons/scorer_reliability_report.md",
+        "reports/comparisons/adjudication_regression_snapshot.json",
+        "traces/external/adjudication_manifest.json",
+        "docs/wiki/concepts/v0_scorer_limitations.md"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/review_coverage_priority_plan.json",
+        "reports/comparisons/scorer_reliability_report.json",
+        "reports/comparisons/adjudication_regression_snapshot.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Deterministic M96 post-M95 completion gate that locks 100.0% scoped public-safe review coverage.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "review_coverage_completion_gate",
+      "label": "Review Coverage Completion Gate",
+      "path": "reports/comparisons/review_coverage_completion_gate.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/review_coverage_completion_gate.py",
+      "input_paths": [
+        "reports/comparisons/review_coverage_completion_gate.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/review_coverage_completion_gate.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M96 completion gate with next-phase guidance after the M89-M95 review queue was cleared.",
       "safety_assertions": {
         "public_safe": true,
         "live_execution": false,
@@ -1580,7 +1632,8 @@
         "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
         "docs/milestones/m68-private-audit-reports-closeout.md",
         "docs/milestones/m69-retention-consent-access-controls-closeout.md",
-        "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md"
+        "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md",
+        "docs/milestones/m96-review-coverage-completion-gate-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/reporting_product_summary.json"
@@ -1639,7 +1692,9 @@
         "docs/milestones/m66-private-evidence-vault-closeout.md",
         "docs/milestones/m67-redaction-promotion-pipeline-closeout.md",
         "docs/milestones/m68-private-audit-reports-closeout.md",
-        "docs/milestones/m69-retention-consent-access-controls-closeout.md"
+        "docs/milestones/m69-retention-consent-access-controls-closeout.md",
+        "docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md",
+        "docs/milestones/m96-review-coverage-completion-gate-closeout.md"
       ],
       "snapshot_dependency_paths": [
         "reports/comparisons/release_notes_latest.json"

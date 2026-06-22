@@ -7,7 +7,7 @@
 | Generated at | `2026-06-22T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 62 |
+| Indexed report artifacts | 64 |
 | Baseline pass rate | 91.3% |
 | Harness bridge decision | `defer_harness_integration` |
 
@@ -48,6 +48,7 @@
 - **Private Audit Reports**: Added private_audit_report metadata validation and local-only report generation under ignored paths, with committed aggregate summaries from fake metadata only.
 - **Retention Consent Access**: Added metadata-only retention, consent, access-control, deletion/export, and evidence-age boundary validation for private runtime evidence.
 - **Real Model Proof Path**: Added review-summary, reviewed-ledger, real metric aggregation, hosted metadata, and CLI runbook contracts for the next controlled opt-in local model benchmark.
+- **Review Coverage Completion**: Added a deterministic post-M95 completion gate that fails on stale coverage, non-empty priority queues, or recommended reviewer batches.
 
 ## Dashboard Snapshot
 
@@ -100,6 +101,7 @@
 | `M68` | Complete / public-safe private-report-boundary review-ready | `docs/milestones/m68-private-audit-reports-closeout.md` |
 | `M69` | Complete / public-safe retention-access-boundary review-ready | `docs/milestones/m69-retention-consent-access-controls-closeout.md` |
 | `M70-M76` | Complete / public-safe real-model proof path ready for manual opt-in runs | `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md` |
+| `M96` | complete / review-ready. | `docs/milestones/m96-review-coverage-completion-gate-closeout.md` |
 
 ## Boundaries
 
@@ -150,3 +152,4 @@
 - `docs/milestones/m68-private-audit-reports-closeout.md`
 - `docs/milestones/m69-retention-consent-access-controls-closeout.md`
 - `docs/milestones/m70-m76-real-model-proof-roadmap-closeout.md`
+- `docs/milestones/m96-review-coverage-completion-gate-closeout.md`

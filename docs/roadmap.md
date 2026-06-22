@@ -1513,6 +1513,40 @@ Acceptance criteria:
   coverage priority plan reflect complete scoped public-safe review coverage.
 - The deterministic quality gate validates the batch without live execution.
 
+### M96: Review Coverage Completion Gate
+
+Lock the completed M89-M95 public-safe reviewer queue into a deterministic
+quality-gate artifact now that the M95 priority plan reports no unreviewed
+records and no recommended reviewer batch.
+
+Status: complete / review-ready. See
+`docs/milestones/m96-review-coverage-completion-gate-closeout.md`.
+
+Implementation note:
+
+- M96 adds a schema-backed JSON and Markdown completion gate generated from the
+  review coverage priority plan, scorer reliability report, and adjudication
+  artifacts.
+- The gate requires 100.0% scoped review coverage, zero unreviewed records, zero
+  priority queue records, zero recommended reviewer batches, and a fresh
+  priority plan that matches the committed artifact.
+- The next reviewer-work recommendation is paused until new public-safe scored
+  traces or case expansions change the review scope.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- `agent-evals review-coverage-completion` regenerates and validates the M96
+  JSON and Markdown artifacts.
+- `scripts/check_all.py` runs the M96 gate after regenerating the M88 priority
+  plan and fails on stale coverage, non-empty priority queues, or recommended
+  reviewer batches.
+- The report manifest and schema coverage docs index the new deterministic
+  artifacts.
+- The deterministic quality gate validates the phase without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

@@ -649,6 +649,11 @@ Milestone sequence:
   and clears the scoped public-safe review coverage queue.
   Status: complete; see
   `docs/milestones/m95-remaining-safe-direct-response-review-closeout.md`.
+- M96 locks the completed M89-M95 public-safe reviewer queue into a
+  deterministic completion gate and pauses reviewer work until new public-safe
+  scored traces or case expansions change the review scope.
+  Status: complete; see
+  `docs/milestones/m96-review-coverage-completion-gate-closeout.md`.
 
 Acceptance criteria:
 

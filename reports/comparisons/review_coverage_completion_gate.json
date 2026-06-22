@@ -1,0 +1,174 @@
+{
+  "boundary": [
+    "This gate validates completed public-safe reviewer coverage only.",
+    "The deterministic heuristic scorer remains the quality-gate scorer.",
+    "A passing gate does not accept scorer changes, rewrite traces, or publish new rankings.",
+    "Optional model-assisted or local-model review remains non-gated and is not used by this report.",
+    "No live provider calls, local model calls, OpenClaw or Hermes execution, credentials, browser/email actions, production actions, or external actions are introduced."
+  ],
+  "completion_summary": {
+    "adjudication_records": 174,
+    "priority_queue_records": 0,
+    "recommended_batches": 0,
+    "review_coverage": "100.0%",
+    "review_sources": 11,
+    "reviewed_records": 174,
+    "scored_records": 174,
+    "scorer_false_negative_count": 8,
+    "scorer_false_positive_count": 1,
+    "scorer_review_agreement_rate": "94.8%",
+    "scorer_review_agreements": 165,
+    "scorer_review_disagreements": 9,
+    "unreviewed_heuristic_failures": 0,
+    "unreviewed_high_or_critical_records": 0,
+    "unreviewed_records": 0
+  },
+  "gate_id": "m96_review_coverage_completion_gate",
+  "gate_status": {
+    "blocking_findings": [],
+    "gate_passed": true,
+    "required_priority_queue_records": 0,
+    "required_recommended_batches": 0,
+    "required_review_coverage": "100.0%",
+    "required_unreviewed_records": 0,
+    "stale_priority_plan": false
+  },
+  "generated_at": "2026-06-22T00:00:00Z",
+  "next_phase_recommendation": {
+    "phase_id": "new_public_safe_scored_trace_or_case_expansion",
+    "rationale": "The M89-M95 reviewer queue is exhausted for the current 174 scoped scored records. The next roadmap phase should add new public-safe scored evidence or case coverage before starting another reviewer batch.",
+    "recommended_next_steps": [
+      "Maintain this completion gate so stale review coverage or unexpected recommended batches fail locally.",
+      "Start new reviewer work only after a public-safe scored-trace or case-corpus expansion changes the scope.",
+      "Keep the deterministic heuristic scorer as the quality-gate scorer; model-assisted review stays optional and non-gated."
+    ],
+    "reviewer_work_status": "paused_until_new_scope"
+  },
+  "quality_gate_scorer": {
+    "accepted_scorer_changes": 0,
+    "default_scorer": "deterministic_heuristic",
+    "model_assisted_judging_in_quality_gate": false,
+    "quality_gate_behavior_changed": false,
+    "scored_trace_regeneration_required": false
+  },
+  "safety": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "scope": "Deterministic post-M95 gate over committed public-safe scored traces, adjudications, review coverage priority planning, and scorer reliability reporting.",
+  "source_completion": [
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 126,
+      "scored_records": 126,
+      "scored_trace_path": "traces/scored/baseline_mock_run.jsonl",
+      "source_id": "baseline_mock_run",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 4,
+      "scored_records": 4,
+      "scored_trace_path": "traces/scored/manual_output_eval.jsonl",
+      "source_id": "manual_outputs",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 6,
+      "scored_records": 6,
+      "scored_trace_path": "traces/scored/openclaw_manual_eval.jsonl",
+      "source_id": "sanitized_openclaw_style_manual_samples",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 6,
+      "scored_records": 6,
+      "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
+      "source_id": "focused_scorer_evidence",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 5,
+      "scored_records": 5,
+      "scored_trace_path": "traces/scored/saved_transcript_replay_eval.jsonl",
+      "source_id": "saved_transcript_replay",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 3,
+      "scored_records": 3,
+      "scored_trace_path": "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
+      "source_id": "openclaw_saved_transcript_pilot",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 8,
+      "scored_records": 8,
+      "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
+      "source_id": "public_safe_transcript_expansion",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 2,
+      "scored_records": 2,
+      "scored_trace_path": "traces/scored/hermes_long_running_agent_eval.jsonl",
+      "source_id": "hermes_long_running_agent",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 6,
+      "scored_records": 6,
+      "scored_trace_path": "traces/scored/production_policy_scenario_eval.jsonl",
+      "source_id": "production_policy_scenarios",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 4,
+      "scored_records": 4,
+      "scored_trace_path": "traces/scored/adapter_output_fixture_import.jsonl",
+      "source_id": "normalized_adapter_outputs",
+      "unreviewed_records": 0
+    },
+    {
+      "recommended_action": "maintain_existing_review_coverage",
+      "review_coverage": "100.0%",
+      "reviewed_records": 4,
+      "scored_records": 4,
+      "scored_trace_path": "traces/scored/dry_run_adapter_output_import.jsonl",
+      "source_id": "dry_run_adapter_outputs",
+      "unreviewed_records": 0
+    }
+  ],
+  "source_paths": [
+    "reports/comparisons/review_coverage_priority_plan.json",
+    "reports/comparisons/review_coverage_priority_plan.md",
+    "reports/comparisons/scorer_reliability_report.json",
+    "reports/comparisons/scorer_reliability_report.md",
+    "reports/comparisons/adjudication_regression_snapshot.json",
+    "traces/external/adjudication_manifest.json",
+    "docs/wiki/concepts/v0_scorer_limitations.md"
+  ],
+  "status": "complete_coverage_locked",
+  "version": "0.1.0"
+}

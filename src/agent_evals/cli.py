@@ -45,6 +45,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         "report",
         "scorer-reliability",
         "review-coverage-priority",
+        "review-coverage-completion",
         "version",
     ]:
         subparsers.add_parser(name)
@@ -81,11 +82,16 @@ def main(argv: list[str] | None = None) -> int:
         reliability_status = run_command([sys.executable, "src/scorer_reliability_report.py"])
         if reliability_status != 0:
             return reliability_status
-        return run_command([sys.executable, "src/review_coverage_priority_plan.py"])
+        priority_status = run_command([sys.executable, "src/review_coverage_priority_plan.py"])
+        if priority_status != 0:
+            return priority_status
+        return run_command([sys.executable, "src/review_coverage_completion_gate.py"])
     if args.command == "scorer-reliability":
         return run_command([sys.executable, "src/scorer_reliability_report.py"])
     if args.command == "review-coverage-priority":
         return run_command([sys.executable, "src/review_coverage_priority_plan.py"])
+    if args.command == "review-coverage-completion":
+        return run_command([sys.executable, "src/review_coverage_completion_gate.py"])
     if args.command == "scorer-review-contract":
         command = [sys.executable, "src/scorer_review_contract.py"]
         if args.input is not None:

@@ -169,6 +169,8 @@ SCORER_RELIABILITY_JSON_PATH = REPO_ROOT / "reports/comparisons/scorer_reliabili
 SCORER_RELIABILITY_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_reliability_report.md"
 REVIEW_COVERAGE_PRIORITY_JSON_PATH = REPO_ROOT / "reports/comparisons/review_coverage_priority_plan.json"
 REVIEW_COVERAGE_PRIORITY_REPORT_PATH = REPO_ROOT / "reports/comparisons/review_coverage_priority_plan.md"
+REVIEW_COVERAGE_COMPLETION_JSON_PATH = REPO_ROOT / "reports/comparisons/review_coverage_completion_gate.json"
+REVIEW_COVERAGE_COMPLETION_REPORT_PATH = REPO_ROOT / "reports/comparisons/review_coverage_completion_gate.md"
 OPENCLAW_MANUAL_REPORT_CONTEXT = (
     "This public-safe sample treats sanitized OpenClaw-inspired outputs as one system under test. "
     "The records are fictional examples based on behavior principles such as approval gates, safe stopping, "
@@ -602,6 +604,10 @@ CHECKS = [
         ["python3", "src/review_coverage_priority_plan.py"],
     ),
     (
+        "review coverage completion gate generation",
+        ["python3", "src/review_coverage_completion_gate.py"],
+    ),
+    (
         "baseline self trace comparison",
         [
             "python3",
@@ -827,6 +833,7 @@ CHECKS = [
             "src/scorer_reliability_report.py",
             "src/scorer_review_contract.py",
             "src/review_coverage_priority_plan.py",
+            "src/review_coverage_completion_gate.py",
             "src/compare_scored_traces.py",
             "src/reporting_product_summary.py",
             "src/evidence_quality_audit.py",
@@ -960,6 +967,9 @@ def main() -> int:
             if name == "review coverage priority plan generation":
                 verify_report_exists(REVIEW_COVERAGE_PRIORITY_JSON_PATH)
                 verify_report_exists(REVIEW_COVERAGE_PRIORITY_REPORT_PATH)
+            if name == "review coverage completion gate generation":
+                verify_report_exists(REVIEW_COVERAGE_COMPLETION_JSON_PATH)
+                verify_report_exists(REVIEW_COVERAGE_COMPLETION_REPORT_PATH)
             if name == "baseline self trace comparison":
                 verify_report_exists(BASELINE_SELF_COMPARISON_REPORT_PATH)
             if name == "reporting product summary generation":

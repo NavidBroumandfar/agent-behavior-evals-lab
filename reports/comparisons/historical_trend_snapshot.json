@@ -356,11 +356,11 @@
       ]
     },
     "report_manifest_coverage": {
-      "json_snapshots": 24,
-      "markdown_reports": 38,
-      "public_safe_artifacts": 62,
-      "quality_gate_artifacts": 62,
-      "report_artifacts": 62
+      "json_snapshots": 25,
+      "markdown_reports": 39,
+      "public_safe_artifacts": 64,
+      "quality_gate_artifacts": 64,
+      "report_artifacts": 64
     },
     "scorer_candidate_controls": {
       "accepted_scorer_changes": 0,
@@ -538,9 +538,9 @@
       "metrics": {
         "external_fixture_pass_rate": "64.6%",
         "fixture_groups": 10,
-        "json_snapshots": 24,
-        "markdown_reports": 38,
-        "report_artifacts": 62
+        "json_snapshots": 25,
+        "markdown_reports": 39,
+        "report_artifacts": 64
       },
       "phase": "reporting_history",
       "source_paths": [
