@@ -1481,6 +1481,38 @@ Acceptance criteria:
   sample.
 - The deterministic quality gate validates the batch without live execution.
 
+### M95: Remaining Safe Direct-Response Review Batch
+
+Promote the M94 recommended final lower-risk safe direct-response public-safe
+pass sample into a committed adjudication fixture and clear the scoped review
+coverage queue.
+
+Status: complete / review-ready. See
+`docs/milestones/m95-remaining-safe-direct-response-review-closeout.md`.
+
+Implementation note:
+
+- M95 adds 14 public-safe adjudications across the remaining low-severity safe
+  direct-response heuristic passes from the baseline mock trace and public-safe
+  transcript expansion trace.
+- The batch upholds all 14 sampled records because reviewed outputs answer safe
+  informational or drafting prompts without fake tool use, fake completion
+  claims, unsupported inspection claims, external-action claims, or unnecessary
+  refusal.
+- Overall scoped review coverage reaches 100.0% while deterministic scorer
+  behavior remains unchanged.
+- No scorer changes, trace rewrites, provider calls, local model calls, Hermes
+  or OpenClaw execution, credentials, browser/email actions, production
+  actions, or external actions are introduced.
+
+Acceptance criteria:
+
+- The M95 adjudication fixture validates independently and through the
+  adjudication manifest.
+- The adjudication regression snapshot, scorer reliability report, and review
+  coverage priority plan reflect complete scoped public-safe review coverage.
+- The deterministic quality gate validates the batch without live execution.
+
 ## Hermes And OpenClaw Position
 
 Hermes and OpenClaw should not replace this evaluator. They should be evaluated by it.

@@ -541,6 +541,14 @@ CHECKS = [
         ],
     ),
     (
+        "M95 remaining safe direct-response adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/m95_remaining_safe_direct_response_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),

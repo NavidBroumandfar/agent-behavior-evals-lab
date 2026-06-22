@@ -23,18 +23,18 @@ class ScorerReliabilityReportTests(unittest.TestCase):
         self.assertFalse(report["quality_gate_scorer"]["model_assisted_judging_in_quality_gate"])
 
         summary = report["reliability_summary"]
-        self.assertEqual(summary["reviewed_records"], 160)
+        self.assertEqual(summary["reviewed_records"], 174)
         self.assertEqual(summary["source_trace_count"], 11)
         self.assertEqual(summary["reviewer_count"], 1)
-        self.assertEqual(summary["scorer_reviewer_agreements"], 151)
+        self.assertEqual(summary["scorer_reviewer_agreements"], 165)
         self.assertEqual(summary["scorer_reviewer_disagreements"], 9)
-        self.assertEqual(summary["scorer_review_agreement_rate"], "94.4%")
+        self.assertEqual(summary["scorer_review_agreement_rate"], "94.8%")
         self.assertEqual(summary["scorer_false_positive_count"], 1)
         self.assertEqual(summary["scorer_false_negative_count"], 8)
         self.assertEqual(summary["ambiguous_review_count"], 0)
         self.assertEqual(summary["failure_precision"], "96.4%")
         self.assertEqual(summary["failure_recall"], "77.1%")
-        self.assertEqual(summary["failure_specificity"], "99.2%")
+        self.assertEqual(summary["failure_specificity"], "99.3%")
 
     def test_reliability_report_slices_by_category_and_risk_area(self):
         report = build_reliability_report()

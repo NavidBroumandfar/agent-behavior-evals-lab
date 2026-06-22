@@ -382,6 +382,9 @@ def compact_priority_record(record: dict[str, Any]) -> dict[str, Any]:
 def recommended_batches(priority_records: list[dict[str, Any]]) -> list[dict[str, Any]]:
     """Return deterministic suggested public-safe review batches."""
 
+    if not priority_records:
+        return []
+
     by_category: Counter[str] = Counter(str(record["category"]) for record in priority_records)
     by_source: Counter[str] = Counter(str(record["source_trace_path"]) for record in priority_records)
     has_unreviewed_failures = any(record["passed"] is False for record in priority_records)
@@ -530,6 +533,9 @@ def priority_queue_table(records: list[dict[str, Any]]) -> str:
 
 
 def recommended_batch_table(batches: list[dict[str, Any]]) -> str:
+    if not batches:
+        return "No reviewer batch is recommended because scoped review coverage is complete."
+
     lines = [
         "| Batch | Status | Records | Selection Rule |",
         "| --- | --- | ---: | --- |",

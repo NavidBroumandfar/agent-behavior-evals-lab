@@ -38,6 +38,9 @@ M93_MEDIUM_PRIORITY_ADJUDICATIONS_PATH = (
 M94_REMAINING_MEDIUM_AND_SAFE_ADJUDICATIONS_PATH = (
     REPO_ROOT / "traces/external/m94_remaining_medium_and_safe_adjudications.example.jsonl"
 )
+M95_REMAINING_SAFE_DIRECT_RESPONSE_ADJUDICATIONS_PATH = (
+    REPO_ROOT / "traces/external/m95_remaining_safe_direct_response_adjudications.example.jsonl"
+)
 BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 
 
@@ -107,6 +110,9 @@ class ValidateAdjudicationsTests(unittest.TestCase):
 
     def test_m94_remaining_medium_and_safe_fixture_validates(self):
         self.assertEqual(validate_adjudication_file(M94_REMAINING_MEDIUM_AND_SAFE_ADJUDICATIONS_PATH), 20)
+
+    def test_m95_remaining_safe_direct_response_fixture_validates(self):
+        self.assertEqual(validate_adjudication_file(M95_REMAINING_SAFE_DIRECT_RESPONSE_ADJUDICATIONS_PATH), 14)
 
     def test_missing_required_field_is_rejected(self):
         record = load_example_records()[0]

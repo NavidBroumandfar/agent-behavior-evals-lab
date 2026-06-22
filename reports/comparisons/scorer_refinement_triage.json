@@ -7,20 +7,20 @@
     "No model-assisted judging, live provider call, runtime execution, network access, or external action is introduced."
   ],
   "calibration_context": {
-    "adjudication_records": 160,
+    "adjudication_records": 174,
     "calibration_label_counts": {
       "ambiguous_review": 0,
       "scorer_false_negative": 8,
       "scorer_false_positive": 1,
       "scorer_upheld_failure": 27,
-      "scorer_upheld_pass": 124
+      "scorer_upheld_pass": 138
     },
     "needs_discussion": 0,
     "reviewer_decisions": {
       "needs_discussion": 0,
       "override_fail": 8,
       "override_pass": 1,
-      "uphold_score": 151
+      "uphold_score": 165
     },
     "source_trace_count": 11
   },

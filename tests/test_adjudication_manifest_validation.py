@@ -45,9 +45,9 @@ class AdjudicationManifestValidationTests(unittest.TestCase):
 
         self.assertEqual(summary["manifest_path"], "traces/external/adjudication_manifest.json")
         self.assertEqual(summary["schema_path"], "schemas/adjudication_manifest.schema.json")
-        self.assertEqual(summary["fixture_count"], 13)
-        self.assertEqual(summary["quality_gate_fixture_count"], 13)
-        self.assertEqual(summary["quality_gate_threshold_count"], 22)
+        self.assertEqual(summary["fixture_count"], 14)
+        self.assertEqual(summary["quality_gate_fixture_count"], 14)
+        self.assertEqual(summary["quality_gate_threshold_count"], 23)
 
     def test_threshold_block_is_optional(self):
         manifest = load_manifest_object()

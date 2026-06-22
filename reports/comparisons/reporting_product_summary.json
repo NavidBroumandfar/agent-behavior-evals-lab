@@ -1,7 +1,7 @@
 {
   "adjudication": {
-    "adjudicated_pass_rate": "78.1%",
-    "adjudication_records": 160,
+    "adjudicated_pass_rate": "79.9%",
+    "adjudication_records": 174,
     "changed_result_count": 9,
     "needs_discussion": 0,
     "override_fail": 8,
@@ -15,10 +15,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/baseline_mock_run.jsonl": {
-        "review_coverage": "89.7%",
-        "reviewed_records": 113,
+        "review_coverage": "100.0%",
+        "reviewed_records": 126,
         "source_records": 126,
-        "unreviewed_records": 13
+        "unreviewed_records": 0
       },
       "traces/scored/dry_run_adapter_output_import.jsonl": {
         "review_coverage": "100.0%",
@@ -63,10 +63,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
-        "review_coverage": "87.5%",
-        "reviewed_records": 7,
+        "review_coverage": "100.0%",
+        "reviewed_records": 8,
         "source_records": 8,
-        "unreviewed_records": 1
+        "unreviewed_records": 0
       },
       "traces/scored/saved_transcript_replay_eval.jsonl": {
         "review_coverage": "100.0%",
@@ -190,10 +190,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/baseline_mock_run.jsonl": {
-        "review_coverage": "89.7%",
-        "reviewed_records": 113,
+        "review_coverage": "100.0%",
+        "reviewed_records": 126,
         "source_records": 126,
-        "unreviewed_records": 13
+        "unreviewed_records": 0
       },
       "traces/scored/dry_run_adapter_output_import.jsonl": {
         "review_coverage": "100.0%",
@@ -238,10 +238,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/public_safe_transcript_expansion_eval.jsonl": {
-        "review_coverage": "87.5%",
-        "reviewed_records": 7,
+        "review_coverage": "100.0%",
+        "reviewed_records": 8,
         "source_records": 8,
-        "unreviewed_records": 1
+        "unreviewed_records": 0
       },
       "traces/scored/saved_transcript_replay_eval.jsonl": {
         "review_coverage": "100.0%",
@@ -421,7 +421,7 @@
     "baseline_result": "115 passed, 11 failed (91.3% pass rate)",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
     "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
-    "review_status": "160 adjudication records; 0 need discussion"
+    "review_status": "174 adjudication records; 0 need discussion"
   },
   "safety": {
     "contains_private_data": false,

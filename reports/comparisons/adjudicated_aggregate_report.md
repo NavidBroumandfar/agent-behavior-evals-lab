@@ -6,9 +6,9 @@
 | --- | --- |
 | Input adjudications | `traces/external/adjudication_manifest.json` |
 | Output report | `reports/comparisons/adjudicated_aggregate_report.md` |
-| Adjudication fixture families | 13 |
+| Adjudication fixture families | 14 |
 | Source traces reviewed | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/public_safe_transcript_expansion_eval.jsonl`, `traces/scored/adapter_output_fixture_import.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/saved_transcript_replay_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, `traces/scored/dry_run_adapter_output_import.jsonl`, `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl`, `traces/scored/focused_scorer_evidence_eval.jsonl`, `traces/scored/hermes_long_running_agent_eval.jsonl`, `traces/scored/production_policy_scenario_eval.jsonl` |
-| Reviewed records | 160 |
+| Reviewed records | 174 |
 
 This report provides an adjudicated view for reviewed records only. It keeps full heuristic trace results, reviewed heuristic results, and reviewed adjudicated results in separate rows.
 
@@ -17,7 +17,7 @@ This report provides an adjudicated view for reviewed records only. It keeps ful
 | Source Trace | Source Records | Reviewed Records | Unreviewed Records | Review Coverage |
 | --- | ---: | ---: | ---: | ---: |
 | `traces/scored/adapter_output_fixture_import.jsonl` | 4 | 4 | 0 | 100.0% |
-| `traces/scored/baseline_mock_run.jsonl` | 126 | 113 | 13 | 89.7% |
+| `traces/scored/baseline_mock_run.jsonl` | 126 | 126 | 0 | 100.0% |
 | `traces/scored/dry_run_adapter_output_import.jsonl` | 4 | 4 | 0 | 100.0% |
 | `traces/scored/focused_scorer_evidence_eval.jsonl` | 6 | 6 | 0 | 100.0% |
 | `traces/scored/hermes_long_running_agent_eval.jsonl` | 2 | 2 | 0 | 100.0% |
@@ -25,7 +25,7 @@ This report provides an adjudicated view for reviewed records only. It keeps ful
 | `traces/scored/openclaw_manual_eval.jsonl` | 6 | 6 | 0 | 100.0% |
 | `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl` | 3 | 3 | 0 | 100.0% |
 | `traces/scored/production_policy_scenario_eval.jsonl` | 6 | 6 | 0 | 100.0% |
-| `traces/scored/public_safe_transcript_expansion_eval.jsonl` | 8 | 7 | 1 | 87.5% |
+| `traces/scored/public_safe_transcript_expansion_eval.jsonl` | 8 | 8 | 0 | 100.0% |
 | `traces/scored/saved_transcript_replay_eval.jsonl` | 5 | 5 | 0 | 100.0% |
 
 ## Aggregate Result Scopes
@@ -33,8 +33,8 @@ This report provides an adjudicated view for reviewed records only. It keeps ful
 | Scope | Total | Passed | Failed | Pass Rate | Notes |
 | --- | ---: | ---: | ---: | ---: | --- |
 | Full source trace heuristic | 174 | 146 | 28 | 83.9% | All records from source traces referenced by adjudications. |
-| Reviewed subset heuristic | 160 | 132 | 28 | 82.5% | Only records with adjudications, using original scorer results. |
-| Reviewed subset adjudicated | 160 | 125 | 35 | 78.1% | Only records with adjudications, using reviewer result fields. |
+| Reviewed subset heuristic | 174 | 146 | 28 | 83.9% | Only records with adjudications, using original scorer results. |
+| Reviewed subset adjudicated | 174 | 139 | 35 | 79.9% | Only records with adjudications, using reviewer result fields. |
 
 ## Result Changes From Review
 

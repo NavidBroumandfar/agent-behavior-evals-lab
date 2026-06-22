@@ -7,14 +7,14 @@
   "current_snapshot": {
     "adjudication_outcomes": {
       "accepted_scorer_changes": 0,
-      "adjudicated_pass_rate": "78.1%",
-      "adjudication_records": 160,
+      "adjudicated_pass_rate": "79.9%",
+      "adjudication_records": 174,
       "calibration_label_counts": {
         "ambiguous_review": 0,
         "scorer_false_negative": 8,
         "scorer_false_positive": 1,
         "scorer_upheld_failure": 27,
-        "scorer_upheld_pass": 124
+        "scorer_upheld_pass": 138
       },
       "changed_result_count": 9,
       "reviewed_external_source_trace_count": 10,
@@ -22,7 +22,7 @@
         "needs_discussion": 0,
         "override_fail": 8,
         "override_pass": 1,
-        "uphold_score": 151
+        "uphold_score": 165
       },
       "source_trace_count": 11
     },
@@ -518,13 +518,13 @@
     {
       "checkpoint_id": "m42_scorer_calibration",
       "metrics": {
-        "adjudication_records": 160,
+        "adjudication_records": 174,
         "calibration_label_counts": {
           "ambiguous_review": 0,
           "scorer_false_negative": 8,
           "scorer_false_positive": 1,
           "scorer_upheld_failure": 27,
-          "scorer_upheld_pass": 124
+          "scorer_upheld_pass": 138
         },
         "changed_result_count": 9
       },
@@ -551,7 +551,7 @@
     {
       "checkpoint_id": "m45_external_fixture_adjudication_coverage",
       "metrics": {
-        "adjudication_records": 160,
+        "adjudication_records": 174,
         "ambiguous_reviews": 0,
         "external_source_trace_count": 10,
         "source_trace_count": 11
@@ -566,7 +566,7 @@
     {
       "checkpoint_id": "m46_needs_discussion_resolution",
       "metrics": {
-        "adjudication_records": 160,
+        "adjudication_records": 174,
         "ambiguous_reviews": 0,
         "changed_result_count": 9,
         "needs_discussion": 0
@@ -597,7 +597,7 @@
       "checkpoint_id": "m48_external_fixture_review_expansion",
       "metrics": {
         "accepted_scorer_changes": 0,
-        "adjudication_records": 160,
+        "adjudication_records": 174,
         "external_source_trace_count": 10,
         "source_trace_count": 11
       },

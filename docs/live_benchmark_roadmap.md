@@ -645,6 +645,10 @@ Milestone sequence:
   the final safe-response cleanup queue.
   Status: complete; see
   `docs/milestones/m94-remaining-medium-and-safe-review-closeout.md`.
+- M95 reviews the final remaining lower-risk safe direct-response pass sample
+  and clears the scoped public-safe review coverage queue.
+  Status: complete; see
+  `docs/milestones/m95-remaining-safe-direct-response-review-closeout.md`.
 
 Acceptance criteria:
 
