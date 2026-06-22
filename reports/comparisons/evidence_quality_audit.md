@@ -7,7 +7,7 @@
 | Eval cases | 42 |
 | Total scored records | 174 |
 | External fixture records | 48 |
-| Adjudication records | 80 |
+| Adjudication records | 100 |
 | Evidence gaps | 9 |
 
 This is an audit of committed local evidence. It is not a live model benchmark, leaderboard, or real-world agent quality claim.
@@ -50,7 +50,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Coverage area | Reviewed | Source records | Coverage |
 | --- | ---: | ---: | ---: |
 | `traces/scored/adapter_output_fixture_import.jsonl` | 4 | 4 | 100.0% |
-| `traces/scored/baseline_mock_run.jsonl` | 34 | 126 | 27.0% |
+| `traces/scored/baseline_mock_run.jsonl` | 54 | 126 | 42.9% |
 | `traces/scored/dry_run_adapter_output_import.jsonl` | 4 | 4 | 100.0% |
 | `traces/scored/focused_scorer_evidence_eval.jsonl` | 6 | 6 | 100.0% |
 | `traces/scored/hermes_long_running_agent_eval.jsonl` | 2 | 2 | 100.0% |
@@ -60,7 +60,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | `traces/scored/production_policy_scenario_eval.jsonl` | 6 | 6 | 100.0% |
 | `traces/scored/public_safe_transcript_expansion_eval.jsonl` | 6 | 8 | 75.0% |
 | `traces/scored/saved_transcript_replay_eval.jsonl` | 5 | 5 | 100.0% |
-| category `approval_gated` | 28 | 61 | 45.9% |
+| category `approval_gated` | 48 | 61 | 78.7% |
 | category `refusal_required` | 26 | 32 | 81.2% |
 | category `safe_direct_response` | 14 | 46 | 30.4% |
 | category `uncertainty_handling` | 12 | 35 | 34.3% |
@@ -89,7 +89,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | Gap | Severity | Summary | Sources |
 | --- | --- | --- | --- |
 | `heuristic_scorer_not_semantic_judge` | high | The v0 scorer uses deterministic phrase and pattern checks, so scores are triage signals rather than ground truth. | `src/scorers.py`, `docs/wiki/concepts/v0_scorer_limitations.md` |
-| `limited_adjudication_calibration_set` | medium | 80 adjudications cover 11 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. M53 records decision `rubric_only_update_no_scorer_change` with 1 accepted rubric updates and 0 accepted scorer promotions. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json`, `reports/comparisons/scorer_refinement_triage.json`, +5 more |
+| `limited_adjudication_calibration_set` | medium | 100 adjudications cover 11 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. M53 records decision `rubric_only_update_no_scorer_change` with 1 accepted rubric updates and 0 accepted scorer promotions. | `traces/external/adjudication_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json`, `reports/comparisons/scorer_refinement_triage.json`, +5 more |
 | `failure_modes_are_taxonomy_bound` | medium | Current scored traces surface this fixed failure-mode set: failure_to_clarify, fake_completion_claim, hallucinated_tool_use, incomplete_risk_disclosure, missing_approval_gate, over_refusal, unsafe_compliance, unsupported_claim; semantic variants still require review. | `traces/scored/baseline_mock_run.jsonl`, `traces/scored/manual_output_eval.jsonl`, `traces/scored/openclaw_manual_eval.jsonl`, +8 more |
 
 ### Reporting Weakness
@@ -98,7 +98,7 @@ This is an audit of committed local evidence. It is not a live model benchmark, 
 | --- | --- | --- | --- |
 | `trend_snapshots_are_descriptive_not_gates` | low | Historical trend snapshots are present, but they describe evaluator health and do not prove model performance. | `reports/comparisons/historical_trend_snapshot.json`, `reports/comparisons/historical_trend_report.md`, `reports/comparisons/report_manifest.json` |
 | `audit_findings_are_not_gate_thresholds` | low | M40 recommendations are descriptive evidence gaps; they do not automatically fail or rewrite scored traces. | `reports/comparisons/report_manifest.json`, `reports/comparisons/evidence_quality_audit.json` |
-| `report_artifacts_outpace_review_depth` | low | 62 report artifacts are indexed, while 80 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
+| `report_artifacts_outpace_review_depth` | low | 62 report artifacts are indexed, while 100 adjudication records exist. | `reports/comparisons/report_manifest.json`, `reports/comparisons/adjudication_regression_snapshot.json` |
 
 ## Recommendations
 

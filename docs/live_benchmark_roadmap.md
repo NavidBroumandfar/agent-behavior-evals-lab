@@ -627,6 +627,11 @@ Milestone sequence:
   identified after M89 to reduce false-negative risk.
   Status: complete; see
   `docs/milestones/m90-high-severity-pass-review-closeout.md`.
+- M91 reviews the next approval-gated high-severity heuristic-pass sample and
+  records reviewer overrides for generic approval responses with incomplete
+  risk disclosure.
+  Status: complete; see
+  `docs/milestones/m91-approval-gate-pass-review-closeout.md`.
 
 Acceptance criteria:
 

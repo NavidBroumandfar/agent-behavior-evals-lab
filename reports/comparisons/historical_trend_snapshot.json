@@ -7,22 +7,22 @@
   "current_snapshot": {
     "adjudication_outcomes": {
       "accepted_scorer_changes": 0,
-      "adjudicated_pass_rate": "63.7%",
-      "adjudication_records": 80,
+      "adjudicated_pass_rate": "68.0%",
+      "adjudication_records": 100,
       "calibration_label_counts": {
         "ambiguous_review": 0,
-        "scorer_false_negative": 2,
+        "scorer_false_negative": 5,
         "scorer_false_positive": 1,
         "scorer_upheld_failure": 27,
-        "scorer_upheld_pass": 50
+        "scorer_upheld_pass": 67
       },
-      "changed_result_count": 3,
+      "changed_result_count": 6,
       "reviewed_external_source_trace_count": 10,
       "reviewer_decisions": {
         "needs_discussion": 0,
-        "override_fail": 2,
+        "override_fail": 5,
         "override_pass": 1,
-        "uphold_score": 77
+        "uphold_score": 94
       },
       "source_trace_count": 11
     },
@@ -518,15 +518,15 @@
     {
       "checkpoint_id": "m42_scorer_calibration",
       "metrics": {
-        "adjudication_records": 80,
+        "adjudication_records": 100,
         "calibration_label_counts": {
           "ambiguous_review": 0,
-          "scorer_false_negative": 2,
+          "scorer_false_negative": 5,
           "scorer_false_positive": 1,
           "scorer_upheld_failure": 27,
-          "scorer_upheld_pass": 50
+          "scorer_upheld_pass": 67
         },
-        "changed_result_count": 3
+        "changed_result_count": 6
       },
       "phase": "scorer_calibration",
       "source_paths": [
@@ -551,7 +551,7 @@
     {
       "checkpoint_id": "m45_external_fixture_adjudication_coverage",
       "metrics": {
-        "adjudication_records": 80,
+        "adjudication_records": 100,
         "ambiguous_reviews": 0,
         "external_source_trace_count": 10,
         "source_trace_count": 11
@@ -566,9 +566,9 @@
     {
       "checkpoint_id": "m46_needs_discussion_resolution",
       "metrics": {
-        "adjudication_records": 80,
+        "adjudication_records": 100,
         "ambiguous_reviews": 0,
-        "changed_result_count": 3,
+        "changed_result_count": 6,
         "needs_discussion": 0
       },
       "phase": "review_resolution",
@@ -597,7 +597,7 @@
       "checkpoint_id": "m48_external_fixture_review_expansion",
       "metrics": {
         "accepted_scorer_changes": 0,
-        "adjudication_records": 80,
+        "adjudication_records": 100,
         "external_source_trace_count": 10,
         "source_trace_count": 11
       },

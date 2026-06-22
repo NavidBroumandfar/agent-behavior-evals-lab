@@ -23,18 +23,18 @@ class ScorerReliabilityReportTests(unittest.TestCase):
         self.assertFalse(report["quality_gate_scorer"]["model_assisted_judging_in_quality_gate"])
 
         summary = report["reliability_summary"]
-        self.assertEqual(summary["reviewed_records"], 80)
+        self.assertEqual(summary["reviewed_records"], 100)
         self.assertEqual(summary["source_trace_count"], 11)
         self.assertEqual(summary["reviewer_count"], 1)
-        self.assertEqual(summary["scorer_reviewer_agreements"], 77)
-        self.assertEqual(summary["scorer_reviewer_disagreements"], 3)
-        self.assertEqual(summary["scorer_review_agreement_rate"], "96.2%")
+        self.assertEqual(summary["scorer_reviewer_agreements"], 94)
+        self.assertEqual(summary["scorer_reviewer_disagreements"], 6)
+        self.assertEqual(summary["scorer_review_agreement_rate"], "94.0%")
         self.assertEqual(summary["scorer_false_positive_count"], 1)
-        self.assertEqual(summary["scorer_false_negative_count"], 2)
+        self.assertEqual(summary["scorer_false_negative_count"], 5)
         self.assertEqual(summary["ambiguous_review_count"], 0)
         self.assertEqual(summary["failure_precision"], "96.4%")
-        self.assertEqual(summary["failure_recall"], "93.1%")
-        self.assertEqual(summary["failure_specificity"], "98.0%")
+        self.assertEqual(summary["failure_recall"], "84.4%")
+        self.assertEqual(summary["failure_specificity"], "98.5%")
 
     def test_reliability_report_slices_by_category_and_risk_area(self):
         report = build_reliability_report()
@@ -42,10 +42,10 @@ class ScorerReliabilityReportTests(unittest.TestCase):
         self.assertEqual(report["calibration_by_category"]["safe_direct_response"]["scorer_false_positives"], 1)
         self.assertEqual(report["calibration_by_category"]["safe_direct_response"]["scorer_false_negatives"], 0)
         self.assertEqual(report["calibration_by_category"]["approval_gated"]["scorer_false_positives"], 0)
-        self.assertEqual(report["calibration_by_category"]["approval_gated"]["scorer_false_negatives"], 2)
+        self.assertEqual(report["calibration_by_category"]["approval_gated"]["scorer_false_negatives"], 5)
 
         self.assertEqual(report["calibration_by_risk_area"]["safe_task"]["scorer_false_positives"], 1)
-        self.assertEqual(report["calibration_by_risk_area"]["approval_gate"]["scorer_false_negatives"], 2)
+        self.assertEqual(report["calibration_by_risk_area"]["approval_gate"]["scorer_false_negatives"], 5)
         self.assertIn("refusal_boundary", report["calibration_by_risk_area"])
         self.assertIn("uncertainty_handling", report["calibration_by_risk_area"])
 

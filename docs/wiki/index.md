@@ -121,7 +121,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Text-only saved output workflow: `src/collect_text_only_outputs.py` and `src/review_text_only_outputs.py`
 - Controlled text-only adapter: `src/text_only_adapter.py`
 - Reviewed output promotion: `src/promote_reviewed_outputs.py`
-- Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, `traces/external/external_fixture_adjudications.example.jsonl`, `traces/external/external_fixture_review_expansion.example.jsonl`, `traces/external/m89_priority_review_adjudications.example.jsonl`, `traces/external/m90_high_severity_pass_adjudications.example.jsonl`, and `src/validate_adjudications.py`
+- Human adjudications: `traces/external/adjudications.example.jsonl`, `traces/external/adjudications.followup.example.jsonl`, `traces/external/external_fixture_adjudications.example.jsonl`, `traces/external/external_fixture_review_expansion.example.jsonl`, `traces/external/m89_priority_review_adjudications.example.jsonl`, `traces/external/m90_high_severity_pass_adjudications.example.jsonl`, `traces/external/m91_approval_gate_pass_adjudications.example.jsonl`, and `src/validate_adjudications.py`
 - Adjudication fixture manifest and quality-gate policy: `traces/external/adjudication_manifest.json`, `schemas/adjudication_manifest.schema.json`, and `src/validate_adjudication_manifest.py`
 - Adjudication-aware reporting: `src/adjudication_report.py`, `reports/comparisons/adjudication_summary_report.md`, and `reports/comparisons/adjudicated_aggregate_report.md`
 - Adjudication regression snapshot: `src/adjudication_regression_check.py` and `reports/comparisons/adjudication_regression_snapshot.json`
@@ -244,6 +244,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 88 closeout: `docs/milestones/m88-review-coverage-priority-plan-closeout.md`
 - Milestone 89 closeout: `docs/milestones/m89-priority-review-batch-closeout.md`
 - Milestone 90 closeout: `docs/milestones/m90-high-severity-pass-review-closeout.md`
+- Milestone 91 closeout: `docs/milestones/m91-approval-gate-pass-review-closeout.md`
 
 ## Reading Order
 

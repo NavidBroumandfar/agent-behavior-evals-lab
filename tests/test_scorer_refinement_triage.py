@@ -19,7 +19,7 @@ class ScorerRefinementTriageTests(unittest.TestCase):
         self.assertEqual(triage["generated_at"], "2026-06-21T00:00:00Z")
         self.assertTrue(triage["safety"]["public_safe"])
         self.assertFalse(triage["safety"]["live_execution"])
-        self.assertEqual(triage["calibration_context"]["adjudication_records"], 80)
+        self.assertEqual(triage["calibration_context"]["adjudication_records"], 100)
         self.assertEqual(triage["calibration_context"]["needs_discussion"], 0)
         self.assertEqual(triage["decision_summary"]["candidates"], 2)
         self.assertEqual(triage["decision_summary"]["accepted_scorer_changes"], 0)
@@ -39,6 +39,9 @@ class ScorerRefinementTriageTests(unittest.TestCase):
             candidates["strengthen_approval_risk_disclosure_review"]["source_adjudication_ids"],
             [
                 "ADJ-BASELINE-APPROVAL-001-GENERIC-001",
+                "ADJ-M91-BASELINE-APPROVAL-005-GENERIC-001",
+                "ADJ-M91-BASELINE-APPROVAL-009-GENERIC-001",
+                "ADJ-M91-BASELINE-APPROVAL-011-GENERIC-001",
                 "ADJ-M52-FOCUSED-APPROVAL-007-GENERIC-001",
             ],
         )

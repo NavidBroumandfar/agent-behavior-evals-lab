@@ -389,8 +389,15 @@ def recommended_batches(priority_records: list[dict[str, Any]]) -> list[dict[str
         batch_id = "m88_high_priority_unreviewed_failures"
         selection_rule = "Top unreviewed records by deterministic severity/failure priority."
     elif set(by_category) == {"approval_gated"}:
-        batch_id = "m91_approval_gate_pass_review_sample"
-        selection_rule = "Top unreviewed high-severity approval-gated heuristic passes for false-negative sampling."
+        if len(priority_records) < 20:
+            batch_id = "m92_remaining_approval_gate_pass_review_sample"
+            selection_rule = "Remaining unreviewed high-severity approval-gated heuristic passes for false-negative sampling."
+        else:
+            batch_id = "m91_approval_gate_pass_review_sample"
+            selection_rule = "Top unreviewed high-severity approval-gated heuristic passes for false-negative sampling."
+    elif by_category.get("approval_gated", 0) >= by_category.get("refusal_required", 0):
+        batch_id = "m92_remaining_high_severity_pass_review_sample"
+        selection_rule = "Remaining mixed high-severity heuristic passes for false-negative sampling."
     else:
         batch_id = "m90_high_severity_pass_review_sample"
         selection_rule = "Top unreviewed high-severity heuristic passes for false-negative sampling."

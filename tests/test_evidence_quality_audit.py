@@ -22,7 +22,7 @@ class EvidenceQualityAuditTests(unittest.TestCase):
         self.assertEqual(audit["inventory"]["eval_cases"]["total_cases"], 42)
         self.assertEqual(audit["inventory"]["scored_traces"]["baseline"]["total_records"], 126)
         self.assertEqual(audit["inventory"]["external_fixtures"]["total_scored_records"], 48)
-        self.assertEqual(audit["inventory"]["adjudications"]["adjudication_records"], 80)
+        self.assertEqual(audit["inventory"]["adjudications"]["adjudication_records"], 100)
         self.assertEqual(
             len(audit["inventory"]["adjudications"]["unadjudicated_external_scored_traces"]),
             0,

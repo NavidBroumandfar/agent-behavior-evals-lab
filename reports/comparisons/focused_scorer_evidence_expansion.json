@@ -116,8 +116,8 @@
     }
   ],
   "decision_context": {
-    "current_calibration_records": 80,
-    "current_changed_results": 3,
+    "current_calibration_records": 100,
+    "current_changed_results": 6,
     "m50_accepted_scorer_changes": 0,
     "m50_decision": "rubric_only_no_scorer_change",
     "m51_historical_context_supported": true

@@ -71,7 +71,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "62 report artifacts are indexed, while 80 adjudication records exist."
+        "summary": "62 report artifacts are indexed, while 100 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -97,7 +97,7 @@
           "reports/comparisons/focused_scorer_evidence_expansion.json",
           "reports/comparisons/scorer_promotion_decision.json"
         ],
-        "summary": "80 adjudications cover 11 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. M53 records decision `rubric_only_update_no_scorer_change` with 1 accepted rubric updates and 0 accepted scorer promotions."
+        "summary": "100 adjudications cover 11 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 0 accepted scorer changes. M50 records decision `rubric_only_no_scorer_change` with 0 accepted scorer changes. M51 historical scorer context support is true. M52 adds 6 focused controls with decision `evidence_expanded_no_scorer_change`. M53 records decision `rubric_only_update_no_scorer_change` with 1 accepted rubric updates and 0 accepted scorer promotions."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -119,7 +119,7 @@
       }
     ],
     "summary": {
-      "adjudication_records": 80,
+      "adjudication_records": 100,
       "case_count": 42,
       "external_fixture_records": 48,
       "gap_count": 9,
@@ -129,14 +129,14 @@
   "generated_at": "2026-06-21T00:00:00Z",
   "inventory": {
     "adjudications": {
-      "adjudication_fixture_count": 9,
-      "adjudication_records": 80,
+      "adjudication_fixture_count": 10,
+      "adjudication_records": 100,
       "category_coverage": {
         "approval_gated": {
-          "review_coverage": "45.9%",
-          "reviewed_records": 28,
+          "review_coverage": "78.7%",
+          "reviewed_records": 48,
           "source_records": 61,
-          "unreviewed_records": 33
+          "unreviewed_records": 13
         },
         "refusal_required": {
           "review_coverage": "81.2%",
@@ -158,14 +158,14 @@
         }
       },
       "needs_discussion": 0,
-      "override_fail": 2,
+      "override_fail": 5,
       "override_pass": 1,
       "profile_coverage": {
         "generic_assistant": {
-          "review_coverage": "53.4%",
-          "reviewed_records": 31,
+          "review_coverage": "58.6%",
+          "reviewed_records": 34,
           "source_records": 58,
-          "unreviewed_records": 27
+          "unreviewed_records": 24
         },
         "hermes_long_running_agent": {
           "review_coverage": "100.0%",
@@ -174,16 +174,16 @@
           "unreviewed_records": 0
         },
         "openclaw_reference_agent": {
-          "review_coverage": "36.8%",
-          "reviewed_records": 21,
+          "review_coverage": "50.9%",
+          "reviewed_records": 29,
           "source_records": 57,
-          "unreviewed_records": 36
+          "unreviewed_records": 28
         },
         "strict_approval_agent": {
-          "review_coverage": "45.6%",
-          "reviewed_records": 26,
+          "review_coverage": "61.4%",
+          "reviewed_records": 35,
           "source_records": 57,
-          "unreviewed_records": 31
+          "unreviewed_records": 22
         }
       },
       "reviewer_count": 1,
@@ -196,10 +196,10 @@
           "unreviewed_records": 0
         },
         "traces/scored/baseline_mock_run.jsonl": {
-          "review_coverage": "27.0%",
-          "reviewed_records": 34,
+          "review_coverage": "42.9%",
+          "reviewed_records": 54,
           "source_records": 126,
-          "unreviewed_records": 92
+          "unreviewed_records": 72
         },
         "traces/scored/dry_run_adapter_output_import.jsonl": {
           "review_coverage": "100.0%",

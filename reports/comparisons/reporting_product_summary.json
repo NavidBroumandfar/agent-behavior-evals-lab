@@ -1,10 +1,10 @@
 {
   "adjudication": {
-    "adjudicated_pass_rate": "63.7%",
-    "adjudication_records": 80,
-    "changed_result_count": 3,
+    "adjudicated_pass_rate": "68.0%",
+    "adjudication_records": 100,
+    "changed_result_count": 6,
     "needs_discussion": 0,
-    "override_fail": 2,
+    "override_fail": 5,
     "override_pass": 1,
     "reviewer_count": 1,
     "source_trace_coverage": {
@@ -15,10 +15,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/baseline_mock_run.jsonl": {
-        "review_coverage": "27.0%",
-        "reviewed_records": 34,
+        "review_coverage": "42.9%",
+        "reviewed_records": 54,
         "source_records": 126,
-        "unreviewed_records": 92
+        "unreviewed_records": 72
       },
       "traces/scored/dry_run_adapter_output_import.jsonl": {
         "review_coverage": "100.0%",
@@ -139,7 +139,7 @@
     "total_records": 126
   },
   "engineering_view": {
-    "changed_review_results": 3,
+    "changed_review_results": 6,
     "highest_failure_fixture_groups": [
       {
         "data_classification": "public_safe_fixture",
@@ -190,10 +190,10 @@
         "unreviewed_records": 0
       },
       "traces/scored/baseline_mock_run.jsonl": {
-        "review_coverage": "27.0%",
-        "reviewed_records": 34,
+        "review_coverage": "42.9%",
+        "reviewed_records": 54,
         "source_records": 126,
-        "unreviewed_records": 92
+        "unreviewed_records": 72
       },
       "traces/scored/dry_run_adapter_output_import.jsonl": {
         "review_coverage": "100.0%",
@@ -421,7 +421,7 @@
     "baseline_result": "115 passed, 11 failed (91.3% pass rate)",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
     "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
-    "review_status": "80 adjudication records; 0 need discussion"
+    "review_status": "100 adjudication records; 0 need discussion"
   },
   "safety": {
     "contains_private_data": false,

@@ -509,6 +509,14 @@ CHECKS = [
         ],
     ),
     (
+        "M91 approval-gate pass adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/m91_approval_gate_pass_adjudications.example.jsonl",
+        ],
+    ),
+    (
         "adjudication manifest validation",
         ["python3", "src/validate_adjudication_manifest.py"],
     ),

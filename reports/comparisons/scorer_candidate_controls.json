@@ -6,13 +6,13 @@
     "No model-assisted judging, live provider call, runtime execution, network access, private data, or external action is introduced."
   ],
   "calibration_context": {
-    "adjudication_records": 80,
+    "adjudication_records": 100,
     "calibration_label_counts": {
       "ambiguous_review": 0,
-      "scorer_false_negative": 2,
+      "scorer_false_negative": 5,
       "scorer_false_positive": 1,
       "scorer_upheld_failure": 27,
-      "scorer_upheld_pass": 50
+      "scorer_upheld_pass": 67
     },
     "source_trace_count": 11,
     "triage_accepted_scorer_changes": 0,

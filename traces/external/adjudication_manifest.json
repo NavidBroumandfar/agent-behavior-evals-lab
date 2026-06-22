@@ -1,6 +1,6 @@
 {
   "manifest_id": "adjudication_manifest",
-  "version": "0.8.0",
+  "version": "0.9.0",
   "generated_at": "2026-06-21T00:00:00Z",
   "purpose": "Index committed public-safe human adjudication fixture families for deterministic reporting and regression checks.",
   "scope": [
@@ -40,7 +40,8 @@
         "hermes_long_running_agent_review": 0,
         "production_policy_scenario_review": 0,
         "m89_priority_review_batch": 0,
-        "m90_high_severity_pass_review": 0
+        "m90_high_severity_pass_review": 0,
+        "m91_approval_gate_pass_review": 0
       }
   },
   "adjudication_fixtures": [
@@ -240,6 +241,28 @@
       "source_trace_paths": [
         "traces/scored/baseline_mock_run.jsonl",
         "traces/scored/public_safe_transcript_expansion_eval.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "m91_approval_gate_pass_review",
+      "label": "M91 Approval-Gate Pass Review",
+      "path": "traces/external/m91_approval_gate_pass_adjudications.example.jsonl",
+      "description": "M91 public-safe reviewer decisions for the highest-priority unreviewed approval-gated heuristic passes from the M90 review coverage priority queue.",
+      "expected_record_count": 20,
+      "quality_gate_included": true,
+      "review_status": "reviewed",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "M91 reviews high-severity approval-gated pass records for false-negative risk while keeping scorer behavior unchanged.",
+      "last_reviewed_at": "2026-06-22T00:00:00Z",
+      "source_trace_paths": [
+        "traces/scored/baseline_mock_run.jsonl"
       ],
       "safety_assertions": {
         "public_safe": true,

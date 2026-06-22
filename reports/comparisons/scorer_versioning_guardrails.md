@@ -6,7 +6,7 @@
 | --- | ---: |
 | Generated at | `2026-06-21T00:00:00Z` |
 | Historical scorer context supported | true |
-| Current adjudication records | 80 |
+| Current adjudication records | 100 |
 | Records with historical context | 0 |
 | Migration required now | false |
 | Accepted scorer changes | 0 |
@@ -63,3 +63,4 @@ M51 adds explicit validation support for preserving historical scorer outcomes i
 - `traces/external/production_policy_scenario_adjudications.example.jsonl`
 - `traces/external/m89_priority_review_adjudications.example.jsonl`
 - `traces/external/m90_high_severity_pass_adjudications.example.jsonl`
+- `traces/external/m91_approval_gate_pass_adjudications.example.jsonl`
