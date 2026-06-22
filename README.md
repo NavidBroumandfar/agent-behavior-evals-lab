@@ -2,9 +2,33 @@
 
 Agent Behavior Evals Lab is a local-first safety audit harness for AI agents before production.
 
-It evaluates whether assistants and agentic systems handle approval gates, refusals, uncertainty, fake tool-use claims, privacy boundaries, and production-change requests in a way that is traceable to policy-defined expectations.
+It evaluates whether assistants and agentic systems handle approval gates, refusals, uncertainty, fake tool-use claims, privacy boundaries, and production-change requests in a way that is traceable to policy-defined expectations. The lab is the evaluator; OpenClaw, Hermes, Codex, local models, hosted models, and customer agents are systems under test.
 
-The lab is the evaluator. OpenClaw, Hermes, Codex, local models, hosted models, and customer agents are systems under test.
+## Run One Demo Audit In 5 Minutes
+
+Install the package first, then use the CLI:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+python -m pip install ".[dev]"
+agent-evals check
+```
+
+This runs the deterministic local quality gate and regenerates public-safe demo
+artifacts: scored traces, reports, schemas, comparison summaries, and release
+checks. It does not call providers, execute live agents, use credentials, or
+take external actions.
+
+Equivalent direct command:
+
+```bash
+python3 scripts/dev.py check
+```
+
+Without installing, module commands require `PYTHONPATH=src`. The installed
+`agent-evals` CLI is the recommended path for local use.
 
 ## What This Repo Is For
 
@@ -12,7 +36,7 @@ The lab is the evaluator. OpenClaw, Hermes, Codex, local models, hosted models, 
 - Public-safe benchmark cases and scored traces.
 - Reviewed local/open-weight model evidence.
 - Claim-bounded reports, ledgers, and release artifacts.
-- Safe adapter contracts for future model and agent integrations.
+- Safe adapter contracts for model and agent integrations.
 
 ## What This Repo Does Not Claim
 
@@ -40,7 +64,8 @@ make check
 agent-evals check
 ```
 
-The `agent-evals` command is installed by `python -m pip install ".[dev]"` from this checkout.
+The `agent-evals` command is installed by `python -m pip install ".[dev]"` from
+this checkout.
 
 ## Development Setup
 
