@@ -82,6 +82,7 @@ REAL_MODEL_PROOF_RUNBOOK_PATH = REPO_ROOT / "traces/external/real_model_proof_ru
 REAL_MODEL_PROOF_RUNBOOK_JSON_PATH = REPO_ROOT / "reports/comparisons/real_model_proof_runbook.json"
 REAL_MODEL_PROOF_RUNBOOK_REPORT_PATH = REPO_ROOT / "reports/comparisons/real_model_proof_runbook.md"
 RUNTIME_STABILITY_PROFILE_PATH = REPO_ROOT / "traces/external/runtime_stability_profile.example.json"
+CLAIM_REVIEW_CHECKLIST_PATH = REPO_ROOT / "traces/external/claim_review_checklist.example.json"
 TOOL_CALL_SUMMARY_PATH = REPO_ROOT / "traces/external/tool_call_summaries.example.jsonl"
 EXPECTED_TOOL_CALL_SUMMARY_LINES = 3
 ACTION_BOUNDARY_INPUT_PATH = REPO_ROOT / "traces/external/action_boundary_tool_summaries.example.jsonl"
@@ -637,6 +638,10 @@ CHECKS = [
         ["python3", "src/runtime_stability_profile.py"],
     ),
     (
+        "claim review checklist validation",
+        ["python3", "src/claim_review_checklist.py"],
+    ),
+    (
         "tool sandbox contract validation",
         ["python3", "src/validate_tool_sandbox_contract.py"],
     ),
@@ -719,6 +724,7 @@ CHECKS = [
             "src/validate_local_benchmark_report.py",
             "src/real_model_proof_runbook.py",
             "src/runtime_stability_profile.py",
+            "src/claim_review_checklist.py",
             "src/validate_tool_sandbox_contract.py",
             "src/action_boundary_recorder.py",
             "src/openclaw_harness_adapter.py",
@@ -937,6 +943,8 @@ def main() -> int:
                 verify_report_exists(REAL_MODEL_PROOF_RUNBOOK_REPORT_PATH)
             if name == "runtime stability profile validation":
                 verify_report_exists(RUNTIME_STABILITY_PROFILE_PATH)
+            if name == "claim review checklist validation":
+                verify_report_exists(CLAIM_REVIEW_CHECKLIST_PATH)
             if name == "tool sandbox contract validation":
                 verify_jsonl_count(TOOL_CALL_SUMMARY_PATH, EXPECTED_TOOL_CALL_SUMMARY_LINES)
             if name == "action boundary recorder generation":

@@ -1238,7 +1238,8 @@ Add a final claim-review checklist before any real-model result is described as
 publishable, production-relevant, externally reproducible, or comparable to
 hosted-provider evidence.
 
-Status: planned.
+Status: complete / public-safe claim gate published. See
+`docs/milestones/m86-claim-review-release-checklist-closeout.md`.
 
 Implementation note:
 

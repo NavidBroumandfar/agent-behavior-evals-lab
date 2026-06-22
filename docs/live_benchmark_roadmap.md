@@ -564,8 +564,9 @@ Acceptance criteria:
 Turn the M77 technical proof into publishable local/open-weight evidence only
 through explicit review, ledger, second-target, reproducibility, and claim gates.
 
-Status: active / M85 runtime stability metadata published after the M83
-local-open-weight ranking and M84 reproducibility packet.
+Status: complete / M86 claim-review gate published after the M83
+local-open-weight ranking, M84 reproducibility packet, and M85 runtime
+stability metadata.
 
 Milestone sequence:
 
@@ -606,6 +607,8 @@ Milestone sequence:
 - M86 adds a claim-review and release checklist before any result is described
   as publishable, production-relevant, externally reproducible, or comparable to
   hosted-provider evidence.
+  Status: complete; see
+  `docs/milestones/m86-claim-review-release-checklist-closeout.md`.
 
 Acceptance criteria:
 

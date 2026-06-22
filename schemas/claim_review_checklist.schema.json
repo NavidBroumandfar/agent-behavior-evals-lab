@@ -1,0 +1,485 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Claim Review And Release Checklist",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "checklist_id",
+    "version",
+    "generated_at",
+    "status",
+    "purpose",
+    "reviewed_report",
+    "ranked_targets",
+    "reviewed_sources",
+    "release_checks",
+    "claim_outcomes",
+    "blocked_gates",
+    "release_gate",
+    "quality_gate",
+    "safety_assertions",
+    "source_paths"
+  ],
+  "properties": {
+    "checklist_id": {
+      "type": "string",
+      "const": "m86_claim_review_release_checklist"
+    },
+    "version": {
+      "type": "string",
+      "minLength": 1
+    },
+    "generated_at": {
+      "type": "string",
+      "pattern": "^\\d{4}-\\d{2}-\\d{2}T\\d{2}:\\d{2}:\\d{2}Z$"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "public_safe_claim_review_gate"
+      ]
+    },
+    "purpose": {
+      "type": "string",
+      "minLength": 1
+    },
+    "reviewed_report": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "snapshot_id",
+        "report_status",
+        "evidence_class",
+        "ranking_claim_allowed",
+        "eligible_ranked_targets",
+        "allowed_claim_label",
+        "required_scope_label"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "const": "reports/comparisons/local_open_weight_benchmark_v1.json"
+        },
+        "snapshot_id": {
+          "type": "string",
+          "const": "local_open_weight_benchmark_report_v1"
+        },
+        "report_status": {
+          "type": "string",
+          "const": "published_local_ranking"
+        },
+        "evidence_class": {
+          "type": "string",
+          "const": "local_public_benchmark"
+        },
+        "ranking_claim_allowed": {
+          "type": "boolean"
+        },
+        "eligible_ranked_targets": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "allowed_claim_label": {
+          "type": "string",
+          "const": "public_safe_local_open_weight_ranking"
+        },
+        "required_scope_label": {
+          "type": "string",
+          "const": "local/open-weight"
+        }
+      }
+    },
+    "ranked_targets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "model",
+          "runtime",
+          "benchmark_split",
+          "sample_size",
+          "ledger_entry_id",
+          "ranking_eligible",
+          "claim_scope"
+        ],
+        "properties": {
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "runtime": {
+            "type": "string",
+            "const": "ollama"
+          },
+          "benchmark_split": {
+            "type": "string",
+            "const": "extended"
+          },
+          "sample_size": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "ledger_entry_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ranking_eligible": {
+            "type": "boolean"
+          },
+          "claim_scope": {
+            "type": "string",
+            "const": "current_local_open_weight_ranking"
+          }
+        }
+      }
+    },
+    "reviewed_sources": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "path",
+          "role",
+          "required_status"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "claim_boundary_rules",
+              "published_report",
+              "publication_gate",
+              "resource_stop_criteria",
+              "provider_boundary",
+              "reproducibility_boundary"
+            ]
+          },
+          "required_status": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "release_checks": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "check_id",
+          "category",
+          "requirement",
+          "status",
+          "blocker_id",
+          "notes"
+        ],
+        "properties": {
+          "check_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "category": {
+            "type": "string",
+            "enum": [
+              "evidence_class",
+              "reviewed_ledger_status",
+              "model_target_status",
+              "provider_boundary",
+              "private_evidence_boundary",
+              "report_status",
+              "reproducibility_boundary",
+              "release_wording"
+            ]
+          },
+          "requirement": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pass",
+              "blocked"
+            ]
+          },
+          "blocker_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "notes": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "claim_outcomes": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "claim_id",
+          "claim_family",
+          "outcome",
+          "allowed",
+          "required_evidence",
+          "current_evidence",
+          "boundary",
+          "blocker_id"
+        ],
+        "properties": {
+          "claim_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_family": {
+            "type": "string",
+            "enum": [
+              "local_open_weight_ranking",
+              "cloud_model_ranking",
+              "hosted_provider_comparison",
+              "production_safety",
+              "third_party_reproducibility",
+              "private_audit",
+              "smoke_control_ranking",
+              "deferred_target_ranking",
+              "raw_output_publication"
+            ]
+          },
+          "outcome": {
+            "type": "string",
+            "enum": [
+              "allowed",
+              "blocked"
+            ]
+          },
+          "allowed": {
+            "type": "boolean"
+          },
+          "required_evidence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "current_evidence": {
+            "type": "string",
+            "minLength": 1
+          },
+          "boundary": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocker_id": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "blocked_gates": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "blocker_id",
+          "claim_id",
+          "blocker_scope",
+          "concrete_blocker",
+          "required_unlock",
+          "blocks_current_allowed_release"
+        ],
+        "properties": {
+          "blocker_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "claim_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocker_scope": {
+            "type": "string",
+            "enum": [
+              "cloud",
+              "hosted_provider",
+              "production",
+              "reproducibility",
+              "private",
+              "smoke_control",
+              "deferred_target",
+              "raw_output"
+            ]
+          },
+          "concrete_blocker": {
+            "type": "string",
+            "minLength": 1
+          },
+          "required_unlock": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocks_current_allowed_release": {
+            "type": "boolean"
+          }
+        }
+      }
+    },
+    "release_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "release_allowed",
+        "release_label",
+        "allowed_summary",
+        "blocked_claims_must_be_named",
+        "overclaim_release_allowed"
+      ],
+      "properties": {
+        "release_allowed": {
+          "type": "boolean"
+        },
+        "release_label": {
+          "type": "string",
+          "const": "public_safe_local_open_weight_ranking"
+        },
+        "allowed_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocked_claims_must_be_named": {
+          "type": "boolean"
+        },
+        "overclaim_release_allowed": {
+          "type": "boolean"
+        }
+      }
+    },
+    "quality_gate": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "checklist_validation_in_quality_gate",
+        "live_local_execution_in_quality_gate",
+        "runtime_probe_in_quality_gate",
+        "raw_output_read_in_quality_gate",
+        "provider_calls_in_quality_gate",
+        "hosted_provider_submission_in_quality_gate",
+        "private_evidence_read_in_quality_gate",
+        "external_actions_in_quality_gate"
+      ],
+      "properties": {
+        "checklist_validation_in_quality_gate": {
+          "type": "boolean"
+        },
+        "live_local_execution_in_quality_gate": {
+          "type": "boolean"
+        },
+        "runtime_probe_in_quality_gate": {
+          "type": "boolean"
+        },
+        "raw_output_read_in_quality_gate": {
+          "type": "boolean"
+        },
+        "provider_calls_in_quality_gate": {
+          "type": "boolean"
+        },
+        "hosted_provider_submission_in_quality_gate": {
+          "type": "boolean"
+        },
+        "private_evidence_read_in_quality_gate": {
+          "type": "boolean"
+        },
+        "external_actions_in_quality_gate": {
+          "type": "boolean"
+        }
+      }
+    },
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "metadata_only",
+        "contains_private_data",
+        "contains_raw_outputs",
+        "contains_credentials_or_secrets",
+        "live_execution",
+        "provider_calls",
+        "cloud_ranking_claim",
+        "production_safety_claim",
+        "hosted_provider_comparison_claim",
+        "third_party_reproducibility_claim",
+        "private_audit_claim",
+        "unsupported_claims_released"
+      ],
+      "properties": {
+        "public_safe": {
+          "type": "boolean"
+        },
+        "metadata_only": {
+          "type": "boolean"
+        },
+        "contains_private_data": {
+          "type": "boolean"
+        },
+        "contains_raw_outputs": {
+          "type": "boolean"
+        },
+        "contains_credentials_or_secrets": {
+          "type": "boolean"
+        },
+        "live_execution": {
+          "type": "boolean"
+        },
+        "provider_calls": {
+          "type": "boolean"
+        },
+        "cloud_ranking_claim": {
+          "type": "boolean"
+        },
+        "production_safety_claim": {
+          "type": "boolean"
+        },
+        "hosted_provider_comparison_claim": {
+          "type": "boolean"
+        },
+        "third_party_reproducibility_claim": {
+          "type": "boolean"
+        },
+        "private_audit_claim": {
+          "type": "boolean"
+        },
+        "unsupported_claims_released": {
+          "type": "boolean"
+        }
+      }
+    },
+    "source_paths": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    }
+  }
+}

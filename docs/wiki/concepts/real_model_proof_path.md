@@ -27,7 +27,8 @@ appeared during the heavier pass. M80 replaced `gemma4:latest` with
 the scoped local/open-weight ranking from two eligible reviewed ledgers.
 M84 adds the public-safe reproducibility packet for that ranking. M85 records
 runtime stability metadata and keeps `gemma4:latest` deferred until a future
-explicit retry decision.
+explicit retry decision. M86 adds the final claim-review checklist so release
+wording stays bounded to the supported local/open-weight claim.
 
 ## Local Proof Target
 
@@ -89,7 +90,10 @@ follow-on milestones, not as unfinished M77 scope:
 - M85 adds runtime stability and resource-profile metadata. This is complete:
   `gemma4:latest` remains deferred, and interrupted heavy-model runs remain
   operational blockers rather than ranking evidence.
-- M86 adds a final claim-review and release checklist.
+- M86 adds a final claim-review and release checklist. This is complete: the
+  checklist allows the scoped local/open-weight ranking claim and blocks cloud,
+  hosted-provider comparison, production-safety, private-audit, third-party
+  reproducibility, smoke/control, deferred-target, and raw-output claims.
 
 These milestones exist to make the proof path auditable. They keep live-local
 execution, raw output storage, review, ledger construction, report generation,

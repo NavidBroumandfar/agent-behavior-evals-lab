@@ -36,6 +36,10 @@ A local ranking requires:
 
 M84 adds the public-safe reproducibility packet for the current published
 ranking at `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`.
+M86 adds the claim-review checklist at
+`traces/external/claim_review_checklist.example.json`; it keeps release wording
+bounded to the local/open-weight ranking and names concrete blockers for
+unsupported claim families.
 
 ## Boundary
 

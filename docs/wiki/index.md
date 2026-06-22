@@ -61,6 +61,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - [Local/Open-Weight Benchmark Report](concepts/local_open_weight_benchmark_report.md)
 - [Public-Safe Reproducibility Packet](concepts/public_safe_reproducibility_packet.md)
 - [Runtime Stability And Resource Profile](concepts/runtime_stability_resource_profile.md)
+- [Claim Review And Release Checklist](concepts/claim_review_release_checklist.md)
 - [Scored Trace Comparison](concepts/scored_trace_comparison.md)
 - [Reporting Regression Snapshots](concepts/reporting_regression_snapshots.md)
 - [Report Artifact Manifest](concepts/report_artifact_manifest.md)
@@ -139,6 +140,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Real-model proof runbook: `traces/external/real_model_proof_runbook.example.json`, `schemas/real_model_proof_runbook.schema.json`, `src/real_model_proof_runbook.py`, `reports/comparisons/real_model_proof_runbook.json`, and `reports/comparisons/real_model_proof_runbook.md`
 - Public-safe reproducibility packet: `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md` and `docs/wiki/concepts/public_safe_reproducibility_packet.md`
 - Runtime stability and resource profile: `traces/external/runtime_stability_profile.example.json`, `schemas/runtime_stability_profile.schema.json`, `src/runtime_stability_profile.py`, and `docs/wiki/concepts/runtime_stability_resource_profile.md`
+- Claim review and release checklist: `traces/external/claim_review_checklist.example.json`, `schemas/claim_review_checklist.schema.json`, `src/claim_review_checklist.py`, and `docs/wiki/concepts/claim_review_release_checklist.md`
 - Hosted provider Batch metadata: `traces/external/hosted_provider_batch_metadata.example.json`, `schemas/hosted_provider_batch.schema.json`, `src/hosted_provider_batch.py`, `reports/comparisons/hosted_provider_batch_summary.json`, and `reports/comparisons/hosted_provider_batch_summary.md`
 - Real model proof path concept: `docs/wiki/concepts/real_model_proof_path.md`
 - Report artifact manifest: `reports/comparisons/report_manifest.json`, `schemas/report_manifest.schema.json`, and `src/validate_report_manifest.py`
@@ -231,6 +233,7 @@ Milestone 1 is a deterministic mock evaluation harness. The current pipeline loa
 - Milestone 83 closeout: `docs/milestones/m83-two-model-report-unlock-closeout.md`
 - Milestone 84 closeout: `docs/milestones/m84-public-safe-reproducibility-packet-closeout.md`
 - Milestone 85 closeout: `docs/milestones/m85-runtime-stability-resource-profile-closeout.md`
+- Milestone 86 closeout: `docs/milestones/m86-claim-review-release-checklist-closeout.md`
 
 ## Reading Order
 
