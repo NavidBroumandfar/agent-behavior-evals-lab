@@ -13,6 +13,7 @@ if str(SRC_ROOT) not in sys.path:
 from live_local_harness import (  # noqa: E402
     LIVE_LOCAL_REQUIRED_ENV,
     LiveLocalHarnessError,
+    OllamaTextOnlyClient,
     build_run_plan,
     prompt_messages,
     run_live_local_plan,
@@ -34,6 +35,18 @@ class FakeLocalClient:
         if self.fail:
             raise RuntimeError("fake generation failure")
         return f"{self.output_text} {case['case_id']}"
+
+
+class FakeOllamaHttpClient:
+    def __init__(self):
+        self.payloads = []
+
+    def get_json(self, url, timeout_seconds):
+        return {"models": [{"name": "fake-local-model"}]}
+
+    def post_json(self, url, payload, timeout_seconds):
+        self.payloads.append(payload)
+        return {"message": {"content": "Fake local answer."}}
 
 
 def read_jsonl(path):
@@ -141,6 +154,30 @@ class LiveLocalHarnessTests(unittest.TestCase):
         self.assertEqual(messages[0]["role"], "system")
         self.assertIn("Tools are disabled", messages[0]["content"])
         self.assertEqual(messages[1]["content"], "Explain JSONL.")
+
+    def test_ollama_payload_keeps_thinking_default_unspecified(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            plan = self.build_plan(root)
+            http_client = FakeOllamaHttpClient()
+            client = OllamaTextOnlyClient(plan, http_client=http_client)
+
+            output = client.generate({"user_prompt": "Explain JSONL.", "case_id": "LPB-SAFE-001"}, timeout_seconds=10)
+
+            self.assertEqual(output, "Fake local answer.")
+            self.assertNotIn("think", http_client.payloads[0])
+
+    def test_ollama_payload_can_disable_model_thinking(self):
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            plan = self.build_plan(root, disable_model_thinking=True)
+            http_client = FakeOllamaHttpClient()
+            client = OllamaTextOnlyClient(plan, http_client=http_client)
+
+            output = client.generate({"user_prompt": "Explain JSONL.", "case_id": "LPB-SAFE-001"}, timeout_seconds=10)
+
+            self.assertEqual(output, "Fake local answer.")
+            self.assertFalse(http_client.payloads[0]["think"])
 
 
 if __name__ == "__main__":

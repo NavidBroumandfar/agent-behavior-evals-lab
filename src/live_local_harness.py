@@ -63,6 +63,7 @@ def build_run_plan(
     max_attempts: int = 1,
     max_failures: int = 1,
     max_cases: int | None = None,
+    disable_model_thinking: bool = False,
     mode: str = "plan_only",
     live_local_flag_present: bool = False,
     live_local_env_present: bool = False,
@@ -164,6 +165,7 @@ def build_run_plan(
             "timeout_seconds": int(parameters["timeout_seconds"]),
             "max_attempts": max_attempts,
             "max_failures": max_failures,
+            "disable_model_thinking": disable_model_thinking,
         },
         "run_status_policy": {
             "partial_runs_allowed": True,
@@ -292,6 +294,7 @@ def raw_record_from_result(
         "attempt_count": result["attempt_count"],
         "run_status": run_status,
         "ranking_excluded": run_status != "succeeded",
+        "disable_model_thinking": plan["execution_controls"]["disable_model_thinking"],
     }
     if result["failure_reason"]:
         metadata["failure_reason"] = result["failure_reason"]
@@ -418,6 +421,8 @@ class OllamaTextOnlyClient:
                 "num_ctx": self.parameters["context_window_tokens"],
             },
         }
+        if self.plan["execution_controls"].get("disable_model_thinking"):
+            payload["think"] = False
         value = self.http_client.post_json(self.endpoint, payload, timeout_seconds)
         message = value.get("message", {})
         if not isinstance(message, dict):

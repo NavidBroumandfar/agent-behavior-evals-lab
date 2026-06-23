@@ -56,6 +56,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--max-attempts", type=int, default=1, help="Generation attempts per case.")
     parser.add_argument("--max-failures", type=int, default=1, help="Abort after this many failed cases.")
     parser.add_argument("--max-cases", type=int, help="Optional local cap for ad hoc runs.")
+    parser.add_argument(
+        "--disable-model-thinking",
+        action="store_true",
+        help="Request final-answer-only mode from local runtimes that support disabling thinking traces.",
+    )
     parser.add_argument("--run-id", help="Optional stable run id.")
     parser.add_argument("--created-at", help="Optional UTC timestamp for deterministic plan metadata.")
     return parser.parse_args(argv)
@@ -79,6 +84,7 @@ def main(argv: list[str] | None = None) -> int:
             max_attempts=args.max_attempts,
             max_failures=args.max_failures,
             max_cases=args.max_cases,
+            disable_model_thinking=args.disable_model_thinking,
             mode="live_local" if args.live_local else "plan_only",
             live_local_flag_present=args.live_local,
             live_local_env_present=live_env_present,
@@ -126,6 +132,7 @@ def print_plan_summary(plan: dict[str, object], plan_output: Path | None) -> Non
     print(f"run metadata path: {outputs['run_metadata_path']}")
     print(f"live-local required flag: {controls['live_local_required_flag']}")
     print(f"live-local required env: {controls['live_local_required_env']}")
+    print(f"disable model thinking: {controls['disable_model_thinking']}")
     if plan_output:
         print(f"plan output path: {display_path(plan_output)}")
     else:
