@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
-from reporting_utils import compare_nested_values, display_path, load_json_object, write_json_object, write_text
+from reporting_utils import compare_nested_values, display_path, load_json_object, percent, write_json_object, write_text
 from review_coverage_priority_plan import build_review_coverage_priority_plan
 from schema_validation_utils import load_json_object as load_schema_object
 from schema_validation_utils import validate_schema_value
@@ -46,15 +46,18 @@ def build_review_coverage_completion_gate() -> dict[str, Any]:
     stale_differences = compare_nested_values(current_plan, committed_plan)
     scorer_reliability = load_json_object(SCORER_RELIABILITY_PATH)
 
-    coverage = committed_plan["coverage_summary"]
+    coverage = completion_scope_summary(committed_plan)
     reliability = scorer_reliability["reliability_summary"]
-    priority_queue_records = len(committed_plan.get("priority_queue", []))
-    recommended_batch_count = len(committed_plan.get("recommended_batches", []))
+    completion_priority_records = completion_scope_priority_records(committed_plan)
+    priority_queue_records = len(completion_priority_records)
+    recommended_batch_count = 0 if not completion_priority_records else len(committed_plan.get("recommended_batches", []))
+    additional_review_scopes = additional_review_scope_rows(committed_plan)
     blocking_findings = blocking_findings_for_plan(
         coverage,
         committed_plan,
         scorer_reliability,
         stale_differences,
+        additional_review_scopes,
     )
 
     gate = {
@@ -99,6 +102,7 @@ def build_review_coverage_completion_gate() -> dict[str, Any]:
             "scorer_false_negative_count": int(reliability["scorer_false_negative_count"]),
         },
         "source_completion": source_completion_rows(committed_plan),
+        "additional_review_scopes": additional_review_scopes,
         "gate_status": {
             "gate_passed": not blocking_findings,
             "required_review_coverage": "100.0%",
@@ -109,16 +113,16 @@ def build_review_coverage_completion_gate() -> dict[str, Any]:
             "blocking_findings": blocking_findings,
         },
         "next_phase_recommendation": {
-            "phase_id": "new_public_safe_scored_trace_or_case_expansion",
-            "reviewer_work_status": "paused_until_new_scope",
+            "phase_id": "m101a_sandbox_or_future_public_safe_review_expansion",
+            "reviewer_work_status": "completion_scope_locked_m101a_sample_met",
             "rationale": (
-                "The M89-M95 reviewer queue is exhausted for the current 174 scoped scored records. "
-                "The next roadmap phase should add new public-safe scored evidence or case coverage before "
-                "starting another reviewer batch."
+                f"The M89-M95 reviewer queue is exhausted for the current {coverage['scored_records']} "
+                "completion-scoped scored records. M101A sandbox dry-run evidence has its separate minimum "
+                "review sample met; remaining sandbox records stay advisory rather than blocking the M96 lock."
             ),
             "recommended_next_steps": [
                 "Maintain this completion gate so stale review coverage or unexpected recommended batches fail locally.",
-                "Start new reviewer work only after a public-safe scored-trace or case-corpus expansion changes the scope.",
+                "Expand sandbox review coverage in future phases when the M101A sample should move from minimum evidence to full reviewed coverage.",
                 "Keep the deterministic heuristic scorer as the quality-gate scorer; model-assisted review stays optional and non-gated.",
             ],
         },
@@ -138,7 +142,7 @@ def source_completion_rows(plan: dict[str, Any]) -> list[dict[str, Any]]:
     """Return compact per-source completion rows."""
 
     rows = []
-    for source in plan["coverage_by_source"]:
+    for source in completion_scope_source_rows(plan):
         rows.append(
             {
                 "source_id": str(source["source_id"]),
@@ -153,11 +157,86 @@ def source_completion_rows(plan: dict[str, Any]) -> list[dict[str, Any]]:
     return rows
 
 
+def completion_scope_source_rows(plan: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return source rows that remain under the M96 full-review completion lock."""
+
+    return [
+        source
+        for source in plan["coverage_by_source"]
+        if source.get("completion_gate_required", True) is True
+    ]
+
+
+def additional_review_scope_source_rows(plan: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return source rows with a review requirement outside the M96 completion lock."""
+
+    return [
+        source
+        for source in plan["coverage_by_source"]
+        if source.get("completion_gate_required", True) is not True
+    ]
+
+
+def completion_scope_summary(plan: dict[str, Any]) -> dict[str, Any]:
+    """Aggregate completion metrics for full-review locked sources only."""
+
+    rows = completion_scope_source_rows(plan)
+    scored_records = sum(int(row["scored_records"]) for row in rows)
+    reviewed_records = sum(int(row["reviewed_records"]) for row in rows)
+    unreviewed_records = sum(int(row["unreviewed_records"]) for row in rows)
+    unreviewed_heuristic_failures = sum(int(row["unreviewed_heuristic_failures"]) for row in rows)
+    unreviewed_high_or_critical_records = sum(int(row["unreviewed_high_or_critical_records"]) for row in rows)
+    return {
+        "review_sources": len(rows),
+        "scored_records": scored_records,
+        "reviewed_records": reviewed_records,
+        "adjudication_records": reviewed_records,
+        "review_coverage": percent(reviewed_records, scored_records),
+        "unreviewed_records": unreviewed_records,
+        "unreviewed_heuristic_failures": unreviewed_heuristic_failures,
+        "unreviewed_high_or_critical_records": unreviewed_high_or_critical_records,
+    }
+
+
+def completion_scope_priority_records(plan: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return priority records that still belong to full-review locked sources."""
+
+    return [
+        record
+        for record in plan.get("priority_queue", [])
+        if record.get("completion_gate_required", True) is True
+    ]
+
+
+def additional_review_scope_rows(plan: dict[str, Any]) -> list[dict[str, Any]]:
+    """Return compact rows for new review scopes that are not completion blockers."""
+
+    rows = []
+    for source in additional_review_scope_source_rows(plan):
+        rows.append(
+            {
+                "source_id": str(source["source_id"]),
+                "review_requirement_id": str(source["review_requirement_id"]),
+                "scored_trace_path": str(source["scored_trace_path"]),
+                "scored_records": int(source["scored_records"]),
+                "reviewed_records": int(source["reviewed_records"]),
+                "required_reviewed_records": int(source["required_reviewed_records"]),
+                "review_coverage": str(source["review_coverage"]),
+                "review_requirement_met": bool(source["review_requirement_met"]),
+                "unreviewed_records": int(source["unreviewed_records"]),
+                "unreviewed_heuristic_failures": int(source["unreviewed_heuristic_failures"]),
+                "recommended_action": str(source["recommended_action"]),
+            }
+        )
+    return rows
+
+
 def blocking_findings_for_plan(
     coverage: dict[str, Any],
     priority_plan: dict[str, Any],
     scorer_reliability: dict[str, Any],
     stale_differences: list[str],
+    additional_review_scopes: list[dict[str, Any]],
 ) -> list[str]:
     """Return deterministic blockers for the completion gate."""
 
@@ -176,10 +255,11 @@ def blocking_findings_for_plan(
         findings.append("unreviewed heuristic failures remain in scope")
     if int(coverage.get("unreviewed_high_or_critical_records", 0)) != 0:
         findings.append("unreviewed high/critical records remain in scope")
-    if priority_plan.get("priority_queue"):
-        findings.append("priority queue is not empty")
-    if priority_plan.get("recommended_batches"):
-        findings.append("review coverage priority plan still recommends a reviewer batch")
+    if completion_scope_priority_records(priority_plan):
+        findings.append("completion-scope priority queue is not empty")
+    for scope in additional_review_scopes:
+        if scope["review_requirement_met"] is not True:
+            findings.append(f"{scope['source_id']} minimum review requirement is not met")
 
     quality_gate_scorer = priority_plan.get("quality_gate_scorer", {})
     if quality_gate_scorer.get("default_scorer") != "deterministic_heuristic":
@@ -190,8 +270,9 @@ def blocking_findings_for_plan(
         findings.append("quality-gate scorer behavior changed")
 
     reliability_summary = scorer_reliability.get("reliability_summary", {})
-    if int(reliability_summary.get("reviewed_records", 0)) != int(coverage.get("reviewed_records", -1)):
-        findings.append("scorer reliability reviewed count does not match coverage summary")
+    full_scope_coverage = priority_plan.get("coverage_summary", {})
+    if int(reliability_summary.get("reviewed_records", 0)) != int(full_scope_coverage.get("reviewed_records", -1)):
+        findings.append("scorer reliability reviewed count does not match full review plan summary")
     return findings
 
 
@@ -240,6 +321,12 @@ def validate_completion_gate(gate: dict[str, Any]) -> dict[str, Any]:
             raise ReviewCoverageCompletionGateError(f"{row['source_id']} has unreviewed records")
         if row["recommended_action"] != "maintain_existing_review_coverage":
             raise ReviewCoverageCompletionGateError(f"{row['source_id']} has unexpected recommended action")
+
+    for row in gate["additional_review_scopes"]:
+        if row["reviewed_records"] < row["required_reviewed_records"]:
+            raise ReviewCoverageCompletionGateError(f"{row['source_id']} has too few reviewed records")
+        if row["review_requirement_met"] is not True:
+            raise ReviewCoverageCompletionGateError(f"{row['source_id']} review requirement is not met")
 
     status = gate["gate_status"]
     if status["blocking_findings"]:
@@ -304,11 +391,15 @@ def generate_markdown(gate: dict[str, Any]) -> str:
         f"| Scorer agreement | {summary['scorer_review_agreement_rate']} |",
         f"| False positives / false negatives | {summary['scorer_false_positive_count']} / {summary['scorer_false_negative_count']} |",
         "",
-        "M96 locks the completed M89-M95 public-safe reviewer queue into a deterministic quality-gate artifact.",
+        "M96 locks the completed M89-M95 public-safe reviewer queue into a deterministic quality-gate artifact. New M101A sandbox dry-run evidence is reported as a separate review scope with a minimum reviewed-record threshold.",
         "",
         "## Source Completion",
         "",
         source_completion_table(gate["source_completion"]),
+        "",
+        "## Additional Review Scopes",
+        "",
+        additional_review_scope_table(gate["additional_review_scopes"]),
         "",
         "## Completion Requirements",
         "",
@@ -351,6 +442,22 @@ def source_completion_table(rows: list[dict[str, Any]]) -> str:
         lines.append(
             f"| `{row['source_id']}` | {row['scored_records']} | {row['reviewed_records']} | "
             f"{row['review_coverage']} | `{row['recommended_action']}` |"
+        )
+    return "\n".join(lines)
+
+
+def additional_review_scope_table(rows: list[dict[str, Any]]) -> str:
+    if not rows:
+        return "No additional review scopes are present."
+    lines = [
+        "| Source | Requirement | Scored | Reviewed | Required | Coverage | Requirement Met | Unreviewed failures |",
+        "| --- | --- | ---: | ---: | ---: | ---: | --- | ---: |",
+    ]
+    for row in rows:
+        lines.append(
+            f"| `{row['source_id']}` | `{row['review_requirement_id']}` | {row['scored_records']} | "
+            f"{row['reviewed_records']} | {row['required_reviewed_records']} | {row['review_coverage']} | "
+            f"{str(row['review_requirement_met']).lower()} | {row['unreviewed_heuristic_failures']} |"
         )
     return "\n".join(lines)
 

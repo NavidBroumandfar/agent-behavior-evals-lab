@@ -4,8 +4,8 @@
 
 | Field | Value |
 | --- | ---: |
-| Adjudication records | 178 |
-| Source traces reviewed | 11 |
+| Adjudication records | 190 |
+| Source traces reviewed | 12 |
 | Candidates triaged | 2 |
 | Accepted scorer changes | 1 |
 | Deferred scorer changes | 1 |

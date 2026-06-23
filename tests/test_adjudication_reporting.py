@@ -49,7 +49,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         report = generate_summary_report(context)
 
         self.assertIn("# Adjudication Summary Report", report)
-        self.assertIn("| `uphold_score` | 177 |", report)
+        self.assertIn("| `uphold_score` | 189 |", report)
         self.assertIn("| `override_pass` | 1 |", report)
         self.assertNotIn("| `override_fail` |", report.split("## Adjudication Fixture Families")[0])
         self.assertIn("baseline_followup_review_queue", report)
@@ -58,6 +58,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("focused_scorer_evidence_review", report)
         self.assertIn("hermes_long_running_agent_review", report)
         self.assertIn("production_policy_scenario_review", report)
+        self.assertIn("sandbox_agent_benchmark_review", report)
         self.assertIn("m90_high_severity_pass_review", report)
         self.assertIn("m91_approval_gate_pass_review", report)
         self.assertIn("m92_remaining_high_severity_pass_review", report)
@@ -72,6 +73,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertIn("| `focused_scorer_evidence_review` | Focused Scorer Evidence Review |", report)
         self.assertIn("| `hermes_long_running_agent_review` | Hermes Long-Running Agent Review |", report)
         self.assertIn("| `production_policy_scenario_review` | Production-Policy Scenario Review |", report)
+        self.assertIn("| `sandbox_agent_benchmark_review` | Sandbox Agent Benchmark Review |", report)
         self.assertIn("| `m90_high_severity_pass_review` | M90 High-Severity Pass Review |", report)
         self.assertIn("| `m91_approval_gate_pass_review` | M91 Approval-Gate Pass Review |", report)
         self.assertIn("| `m92_remaining_high_severity_pass_review` | M92 Remaining High-Severity Pass Review |", report)
@@ -106,6 +108,7 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "focused_scorer_evidence_review",
                 "hermes_long_running_agent_review",
                 "production_policy_scenario_review",
+                "sandbox_agent_benchmark_review",
                 "m89_priority_review_batch",
                 "m90_high_severity_pass_review",
                 "m91_approval_gate_pass_review",
@@ -132,11 +135,12 @@ class AdjudicationReportingTests(unittest.TestCase):
                 "reviewed",
                 "reviewed",
                 "reviewed",
+                "reviewed",
             ],
         )
         self.assertEqual(fixtures[0].owner, "public_reviewer_fixture")
         self.assertEqual(fixtures[0].last_reviewed_at, "2026-06-20T00:00:00Z")
-        self.assertEqual(len(context.adjudications), 178)
+        self.assertEqual(len(context.adjudications), 190)
         self.assertEqual(context.fixture_by_adjudication_id["ADJ-FOLLOWUP-SAFE-009-STRICT-001"].fixture_id, "baseline_followup_review_queue")
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-EXTERNAL-ADAPTER-REFUSAL-003-OPENCLAW-001"].fixture_id,
@@ -157,6 +161,10 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-M65-PROD-POLICY-DATABASE-001"].fixture_id,
             "production_policy_scenario_review",
+        )
+        self.assertEqual(
+            context.fixture_by_adjudication_id["ADJ-M101A-SANDBOX-001"].fixture_id,
+            "sandbox_agent_benchmark_review",
         )
         self.assertEqual(
             context.fixture_by_adjudication_id["ADJ-M89-BASELINE-APPROVAL-006-GENERIC-001"].fixture_id,
@@ -191,8 +199,12 @@ class AdjudicationReportingTests(unittest.TestCase):
         manifest = load_adjudication_manifest_data(ADJUDICATION_MANIFEST_PATH)
         thresholds = manifest.quality_gate_thresholds
 
-        self.assertEqual(thresholds.min_review_coverage, 5.0)
+        self.assertEqual(thresholds.min_review_coverage, 95.0)
         self.assertEqual(thresholds.max_needs_discussion, 0)
+        self.assertEqual(
+            thresholds.min_source_review_coverage,
+            {"traces/scored/sandbox_agent_benchmark_eval.jsonl": 50.0},
+        )
         self.assertEqual(
             thresholds.min_profile_review_coverage,
             {
@@ -209,6 +221,7 @@ class AdjudicationReportingTests(unittest.TestCase):
         self.assertEqual(thresholds.max_fixture_needs_discussion["focused_scorer_evidence_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["hermes_long_running_agent_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["production_policy_scenario_review"], 0)
+        self.assertEqual(thresholds.max_fixture_needs_discussion["sandbox_agent_benchmark_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["m89_priority_review_batch"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["m90_high_severity_pass_review"], 0)
         self.assertEqual(thresholds.max_fixture_needs_discussion["m91_approval_gate_pass_review"], 0)

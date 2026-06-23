@@ -60,6 +60,7 @@ class AdjudicationFixture:
 class AdjudicationQualityGateThresholds:
     min_review_coverage: float | None = None
     max_needs_discussion: int | None = None
+    min_source_review_coverage: dict[str, float] = field(default_factory=dict)
     min_profile_review_coverage: dict[str, float] = field(default_factory=dict)
     min_category_review_coverage: dict[str, float] = field(default_factory=dict)
     max_fixture_needs_discussion: dict[str, int] = field(default_factory=dict)
@@ -279,6 +280,9 @@ def load_manifest_quality_gate_thresholds(value: Any) -> AdjudicationQualityGate
     return AdjudicationQualityGateThresholds(
         min_review_coverage=min_review_coverage,
         max_needs_discussion=max_needs_discussion,
+        min_source_review_coverage=float_threshold_map(
+            threshold_values.get("min_source_review_coverage", {}),
+        ),
         min_profile_review_coverage=float_threshold_map(
             threshold_values.get("min_profile_review_coverage", {}),
         ),

@@ -7,12 +7,12 @@
     "No leaderboard or production benchmark claims."
   ],
   "dashboard_snapshot": {
-    "adjudication_records": 178,
+    "adjudication_records": 190,
     "baseline_failed": 18,
     "baseline_pass_rate": "85.7%",
     "baseline_records": 126,
-    "external_fixture_groups": 10,
-    "external_fixture_records": 52,
+    "external_fixture_groups": 11,
+    "external_fixture_records": 76,
     "harness_bridge_decision": "defer_harness_integration",
     "review_needs_discussion": 0,
     "runtime_native_state_required": false
@@ -25,7 +25,7 @@
     },
     {
       "area": "Quality Gate",
-      "summary": "Local deterministic gate remains stable; no live runtime integration is enabled."
+      "summary": "Local deterministic gate remains stable; sandbox dry-run evidence is now separated from fixture and ledger evidence."
     },
     {
       "area": "Harness Boundary",
@@ -33,7 +33,7 @@
     },
     {
       "area": "Review",
-      "summary": "178 adjudication records are tracked; 0 still need discussion."
+      "summary": "190 adjudication records are tracked; 0 still need discussion."
     },
     {
       "area": "Evidence Quality",
@@ -428,10 +428,10 @@
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 25,
+    "json_snapshots": 26,
     "live_execution": false,
-    "markdown_reports": 39,
-    "report_artifacts_indexed": 64
+    "markdown_reports": 40,
+    "report_artifacts_indexed": 66
   },
   "release_id": "release_notes_latest",
   "release_readiness": {

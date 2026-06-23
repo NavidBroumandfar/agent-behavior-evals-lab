@@ -48,6 +48,9 @@ SEVERITY_ORDER = [
     "unknown",
 ]
 SEVERITY_RANK = {severity: index for index, severity in enumerate(SEVERITY_ORDER)}
+FULL_REVIEW_REQUIREMENT_ID = "m96_full_review_completion_lock"
+SANDBOX_REVIEW_REQUIREMENT_ID = "m101a_sandbox_minimum_review_sample"
+SANDBOX_MIN_REVIEWED_RECORDS = 12
 
 
 @dataclass(frozen=True)
@@ -59,6 +62,9 @@ class ReviewSource:
     source_type: str
     provenance_class: str
     quality_gate_included: bool
+    completion_gate_required: bool
+    review_requirement_id: str
+    minimum_reviewed_records: int | None
 
 
 class ReviewCoveragePriorityPlanError(Exception):
@@ -136,9 +142,13 @@ def review_sources() -> list[ReviewSource]:
             source_type="deterministic_mock_baseline",
             provenance_class="deterministic_mock",
             quality_gate_included=True,
+            completion_gate_required=True,
+            review_requirement_id=FULL_REVIEW_REQUIREMENT_ID,
+            minimum_reviewed_records=None,
         )
     ]
     for fixture in manifest.sources:
+        review_requirement = review_requirement_for_fixture(fixture.source_type, fixture.provenance_class)
         sources.append(
             ReviewSource(
                 source_id=fixture.key,
@@ -148,9 +158,28 @@ def review_sources() -> list[ReviewSource]:
                 source_type=fixture.source_type,
                 provenance_class=fixture.provenance_class,
                 quality_gate_included=fixture.quality_gate_included,
+                completion_gate_required=review_requirement["completion_gate_required"],
+                review_requirement_id=review_requirement["review_requirement_id"],
+                minimum_reviewed_records=review_requirement["minimum_reviewed_records"],
             )
         )
     return sources
+
+
+def review_requirement_for_fixture(source_type: str, provenance_class: str) -> dict[str, Any]:
+    """Return the review requirement that applies to one fixture source."""
+
+    if source_type == "sandbox_agent_run" and provenance_class == "sandbox_dry_run":
+        return {
+            "completion_gate_required": False,
+            "review_requirement_id": SANDBOX_REVIEW_REQUIREMENT_ID,
+            "minimum_reviewed_records": SANDBOX_MIN_REVIEWED_RECORDS,
+        }
+    return {
+        "completion_gate_required": True,
+        "review_requirement_id": FULL_REVIEW_REQUIREMENT_ID,
+        "minimum_reviewed_records": None,
+    }
 
 
 def load_scored_trace(path: Path) -> list[dict[str, Any]]:
@@ -210,6 +239,8 @@ def enriched_record(source: ReviewSource, record: dict[str, Any], reviewed_keys:
         "passed": passed,
         "failure_modes": failure_modes,
         "reviewed": reviewed,
+        "completion_gate_required": source.completion_gate_required,
+        "review_requirement_id": source.review_requirement_id,
         "review_priority": review_priority(passed, severity, failure_modes),
         "priority_rationale": priority_rationale(passed, severity, failure_modes),
     }
@@ -260,6 +291,7 @@ def summarize_source(
         for record in unreviewed
         if record["severity"] in {"critical", "high"}
     ]
+    required_reviewed_records = required_reviewed_record_count(source, len(enriched))
     top_priority = max((record["review_priority"] for record in unreviewed), default=0)
     return {
         "source_id": source.source_id,
@@ -269,6 +301,11 @@ def summarize_source(
         "scored_trace_path": display_path(source.scored_trace_path, REPO_ROOT),
         "source_path": source.source_path,
         "quality_gate_included": source.quality_gate_included,
+        "completion_gate_required": source.completion_gate_required,
+        "review_requirement_id": source.review_requirement_id,
+        "required_reviewed_records": required_reviewed_records,
+        "review_requirement_met": len(reviewed) >= required_reviewed_records,
+        "remaining_required_reviews": max(0, required_reviewed_records - len(reviewed)),
         "scored_records": len(enriched),
         "reviewed_records": len(reviewed),
         "unreviewed_records": len(unreviewed),
@@ -279,6 +316,12 @@ def summarize_source(
         "top_unreviewed_priority": top_priority,
         "recommended_action": recommended_action(len(unreviewed), len(unreviewed_failed), len(high_severity_unreviewed)),
     }
+
+
+def required_reviewed_record_count(source: ReviewSource, scored_records: int) -> int:
+    if source.minimum_reviewed_records is None:
+        return scored_records
+    return min(source.minimum_reviewed_records, scored_records)
 
 
 def recommended_action(unreviewed: int, unreviewed_failed: int, high_severity_unreviewed: int) -> str:
@@ -367,6 +410,7 @@ def priority_queue(unreviewed_records: list[dict[str, Any]], limit: int = 20) ->
 def compact_priority_record(record: dict[str, Any]) -> dict[str, Any]:
     return {
         "source_trace_path": record["source_trace_path"],
+        "source_id": record["source_id"],
         "run_id": record["run_id"],
         "case_id": record["case_id"],
         "profile_name": record["profile_name"],
@@ -374,6 +418,8 @@ def compact_priority_record(record: dict[str, Any]) -> dict[str, Any]:
         "severity": record["severity"],
         "passed": record["passed"],
         "failure_modes": record["failure_modes"],
+        "completion_gate_required": record["completion_gate_required"],
+        "review_requirement_id": record["review_requirement_id"],
         "review_priority": record["review_priority"],
         "priority_rationale": record["priority_rationale"],
     }
@@ -458,7 +504,7 @@ def generate_markdown(plan: dict[str, Any]) -> str:
         f"| Unreviewed heuristic failures | {summary['unreviewed_heuristic_failures']} |",
         f"| Unreviewed high/critical records | {summary['unreviewed_high_or_critical_records']} |",
         "",
-        "This plan is advisory reviewer-work planning over committed public-safe artifacts. It keeps the deterministic heuristic scorer unchanged.",
+        "This plan is advisory reviewer-work planning over committed public-safe artifacts. It keeps the deterministic heuristic scorer unchanged. Sources marked with the M96 full-review requirement remain completion-gate locked; M101A sandbox dry-run sources have a separate minimum reviewed-record threshold.",
         "",
         "## Coverage By Source",
         "",
@@ -490,12 +536,13 @@ def generate_markdown(plan: dict[str, Any]) -> str:
 
 def coverage_by_source_table(rows: list[dict[str, Any]]) -> str:
     lines = [
-        "| Source | Scored | Reviewed | Coverage | Unreviewed failures | Action |",
-        "| --- | ---: | ---: | ---: | ---: | --- |",
+        "| Source | Requirement | Scored | Reviewed | Required | Coverage | Unreviewed failures | Action |",
+        "| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |",
     ]
     for row in rows:
         lines.append(
-            f"| `{row['source_id']}` | {row['scored_records']} | {row['reviewed_records']} | "
+            f"| `{row['source_id']}` | `{row['review_requirement_id']}` | "
+            f"{row['scored_records']} | {row['reviewed_records']} | {row['required_reviewed_records']} | "
             f"{row['review_coverage']} | {row['unreviewed_heuristic_failures']} | "
             f"`{row['recommended_action']}` |"
         )
@@ -519,13 +566,14 @@ def priority_queue_table(records: list[dict[str, Any]]) -> str:
     if not records:
         return "No unreviewed records remain in scope."
     lines = [
-        "| Priority | Source | Case | Profile | Category | Severity | Passed | Failure Modes |",
-        "| ---: | --- | --- | --- | --- | --- | --- | --- |",
+        "| Priority | Source | Requirement | Case | Profile | Category | Severity | Passed | Failure Modes |",
+        "| ---: | --- | --- | --- | --- | --- | --- | --- | --- |",
     ]
     for record in records:
         failure_modes = ", ".join(f"`{mode}`" for mode in record["failure_modes"]) or "`none`"
         lines.append(
-            f"| {record['review_priority']} | `{record['source_trace_path']}` | `{record['case_id']}` | "
+            f"| {record['review_priority']} | `{record['source_trace_path']}` | "
+            f"`{record['review_requirement_id']}` | `{record['case_id']}` | "
             f"`{record['profile_name']}` | `{record['category']}` | `{record['severity']}` | "
             f"{str(record['passed']).lower()} | {failure_modes} |"
         )

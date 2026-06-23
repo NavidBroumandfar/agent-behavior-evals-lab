@@ -5,14 +5,14 @@
 | Field | Value |
 | --- | ---: |
 | Generated at | `2026-06-22T00:00:00Z` |
-| Reviewed records | 178 |
-| Source traces reviewed | 11 |
+| Reviewed records | 190 |
+| Source traces reviewed | 12 |
 | Reviewers | 1 |
-| Scorer/reviewer agreement rate | 99.4% |
+| Scorer/reviewer agreement rate | 99.5% |
 | Scorer false positives | 1 |
 | Scorer false negatives | 0 |
 | Ambiguous reviews | 0 |
-| Failure precision | 97.4% |
+| Failure precision | 97.7% |
 | Failure recall | 100.0% |
 
 This report is advisory. The deterministic heuristic scorer remains the default quality-gate scorer.
@@ -21,23 +21,23 @@ This report is advisory. The deterministic heuristic scorer remains the default 
 
 | Metric | Value |
 | --- | ---: |
-| Metric records | 178 |
-| Scorer/reviewer agreements | 177 |
+| Metric records | 190 |
+| Scorer/reviewer agreements | 189 |
 | Scorer/reviewer disagreements | 1 |
-| Agreement rate | 99.4% |
-| False positive rate | 0.6% |
+| Agreement rate | 99.5% |
+| False positive rate | 0.5% |
 | False negative rate | 0.0% |
-| Failure precision | 97.4% |
+| Failure precision | 97.7% |
 | Failure recall | 100.0% |
 | Failure specificity | 99.3% |
-| Failure accuracy | 99.4% |
+| Failure accuracy | 99.5% |
 
 ## Calibration Labels
 
 | Calibration Label | Count |
 | --- | ---: |
-| `scorer_upheld_failure` | 37 |
-| `scorer_upheld_pass` | 140 |
+| `scorer_upheld_failure` | 43 |
+| `scorer_upheld_pass` | 146 |
 | `scorer_false_positive` | 1 |
 | `scorer_false_negative` | 0 |
 | `ambiguous_review` | 0 |
@@ -47,27 +47,27 @@ This report is advisory. The deterministic heuristic scorer remains the default 
 | Risk Area | Records | Agreement | False Positives | False Negatives | Precision | Recall |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | `safe_task` | 46 | 97.8% | 1 | 0 | 83.3% | 100.0% |
-| `approval_gate` | 65 | 100.0% | 0 | 0 | 100.0% | 100.0% |
-| `refusal_boundary` | 32 | 100.0% | 0 | 0 | 100.0% | 100.0% |
-| `uncertainty_handling` | 35 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `approval_gate` | 74 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `refusal_boundary` | 34 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `uncertainty_handling` | 36 | 100.0% | 0 | 0 | 100.0% | 100.0% |
 
 ## Calibration By Category
 
 | Category | Records | Agreement | False Positives | False Negatives | Precision | Recall |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
 | `safe_direct_response` | 46 | 97.8% | 1 | 0 | 83.3% | 100.0% |
-| `approval_gated` | 65 | 100.0% | 0 | 0 | 100.0% | 100.0% |
-| `refusal_required` | 32 | 100.0% | 0 | 0 | 100.0% | 100.0% |
-| `uncertainty_handling` | 35 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `approval_gated` | 74 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `refusal_required` | 34 | 100.0% | 0 | 0 | 100.0% | 100.0% |
+| `uncertainty_handling` | 36 | 100.0% | 0 | 0 | 100.0% | 100.0% |
 
 ## Reviewer Agreement
 
 | Field | Value |
 | --- | --- |
 | Reviewer IDs | `public_reviewer_fixture` |
-| Review targets | 178 |
+| Review targets | 190 |
 | Overlapping review targets | 0 |
-| Scorer/reviewer agreement rate | 99.4% |
+| Scorer/reviewer agreement rate | 99.5% |
 | Inter-reviewer agreement status | `not_available_no_overlapping_review_targets` |
 | Inter-reviewer agreement note | Committed adjudications currently provide one reviewer decision per target, so panel agreement cannot be estimated from these fixtures. |
 
@@ -113,6 +113,7 @@ This report is advisory. The deterministic heuristic scorer remains the default 
 - `traces/external/focused_scorer_evidence_adjudications.example.jsonl`
 - `traces/external/hermes_long_running_adjudications.example.jsonl`
 - `traces/external/production_policy_scenario_adjudications.example.jsonl`
+- `traces/external/sandbox_agent_benchmark_adjudications.example.jsonl`
 - `traces/external/m89_priority_review_adjudications.example.jsonl`
 - `traces/external/m90_high_severity_pass_adjudications.example.jsonl`
 - `traces/external/m91_approval_gate_pass_adjudications.example.jsonl`
@@ -130,4 +131,5 @@ This report is advisory. The deterministic heuristic scorer remains the default 
 - `traces/scored/openclaw_saved_transcript_pilot_eval.jsonl`
 - `traces/scored/production_policy_scenario_eval.jsonl`
 - `traces/scored/public_safe_transcript_expansion_eval.jsonl`
+- `traces/scored/sandbox_agent_benchmark_eval.jsonl`
 - `traces/scored/saved_transcript_replay_eval.jsonl`

@@ -58,6 +58,14 @@
           "type": "integer",
           "minimum": 0
         },
+        "min_source_review_coverage": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100
+          }
+        },
         "min_profile_review_coverage": {
           "type": "object",
           "additionalProperties": {

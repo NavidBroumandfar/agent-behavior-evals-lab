@@ -122,6 +122,16 @@ EXPECTED_PRODUCTION_POLICY_SCENARIO_CHECK_LINES = 6
 PRODUCTION_POLICY_SCENARIO_TRACE_PATH = REPO_ROOT / "traces/scored/production_policy_scenario_eval.jsonl"
 EXPECTED_PRODUCTION_POLICY_SCENARIO_TRACE_LINES = 6
 PRODUCTION_POLICY_SCENARIO_REPORT_PATH = REPO_ROOT / "reports/comparisons/production_policy_scenario_report.md"
+SANDBOX_AGENT_RUN_PATH = REPO_ROOT / "traces/external/sandbox_agent_runs.example.jsonl"
+EXPECTED_SANDBOX_AGENT_RUN_LINES = 24
+SANDBOX_ACTION_EVENT_PATH = REPO_ROOT / "traces/external/sandbox_action_events.example.jsonl"
+EXPECTED_SANDBOX_ACTION_EVENT_LINES = 24
+SANDBOX_AGENT_TRACE_PATH = REPO_ROOT / "traces/scored/sandbox_agent_benchmark_eval.jsonl"
+EXPECTED_SANDBOX_AGENT_TRACE_LINES = 24
+SANDBOX_AGENT_ADJUDICATION_PATH = REPO_ROOT / "traces/external/sandbox_agent_benchmark_adjudications.example.jsonl"
+EXPECTED_SANDBOX_AGENT_ADJUDICATION_LINES = 12
+SANDBOX_AGENT_REPORT_JSON_PATH = REPO_ROOT / "reports/comparisons/sandbox_agent_benchmark_report.json"
+SANDBOX_AGENT_REPORT_PATH = REPO_ROOT / "reports/comparisons/sandbox_agent_benchmark_report.md"
 PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH = REPO_ROOT / "traces/external/private_evidence_vault_manifest.example.json"
 PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.json"
 PRIVATE_EVIDENCE_VAULT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.md"
@@ -405,6 +415,10 @@ CHECKS = [
         ],
     ),
     (
+        "sandbox agent benchmark generation",
+        ["python3", "src/sandbox_agent_benchmark.py"],
+    ),
+    (
         "private evidence vault validation",
         ["python3", "src/private_evidence_vault.py"],
     ),
@@ -492,6 +506,14 @@ CHECKS = [
             "python3",
             "src/validate_adjudications.py",
             "traces/external/production_policy_scenario_adjudications.example.jsonl",
+        ],
+    ),
+    (
+        "sandbox agent benchmark adjudication validation",
+        [
+            "python3",
+            "src/validate_adjudications.py",
+            "traces/external/sandbox_agent_benchmark_adjudications.example.jsonl",
         ],
     ),
     (
@@ -821,6 +843,7 @@ CHECKS = [
             "src/private_audit_report.py",
             "src/retention_consent_access.py",
             "src/hosted_provider_batch.py",
+            "src/sandbox_agent_benchmark.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -1095,6 +1118,13 @@ def main() -> int:
                     EXPECTED_PRODUCTION_POLICY_SCENARIO_TRACE_LINES,
                 )
                 verify_report_exists(PRODUCTION_POLICY_SCENARIO_REPORT_PATH)
+            if name == "sandbox agent benchmark generation":
+                verify_jsonl_count(SANDBOX_AGENT_RUN_PATH, EXPECTED_SANDBOX_AGENT_RUN_LINES)
+                verify_jsonl_count(SANDBOX_ACTION_EVENT_PATH, EXPECTED_SANDBOX_ACTION_EVENT_LINES)
+                verify_trace_count(SANDBOX_AGENT_TRACE_PATH, EXPECTED_SANDBOX_AGENT_TRACE_LINES)
+                verify_jsonl_count(SANDBOX_AGENT_ADJUDICATION_PATH, EXPECTED_SANDBOX_AGENT_ADJUDICATION_LINES)
+                verify_report_exists(SANDBOX_AGENT_REPORT_JSON_PATH)
+                verify_report_exists(SANDBOX_AGENT_REPORT_PATH)
             if name == "private evidence vault validation":
                 verify_report_exists(PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH)
                 verify_report_exists(PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH)

@@ -29,10 +29,11 @@
           "traces/external/public_safe_transcript_expansion.example.jsonl",
           "traces/external/hermes_long_running_transcripts.example.jsonl",
           "traces/external/production_policy_scenario_transcripts.example.jsonl",
+          "traces/external/sandbox_agent_runs.example.jsonl",
           "traces/external/adapter_outputs.example.jsonl",
           "traces/external/dry_run_adapter_outputs.jsonl"
         ],
-        "summary": "External fixture groups contain 2-10 scored records each (52 total), so they validate paths but are not representative samples."
+        "summary": "External fixture groups contain 2-24 scored records each (76 total), so they validate paths but are not representative samples."
       },
       {
         "gap_id": "refusal_required_review_gap",
@@ -41,7 +42,7 @@
           "reports/comparisons/adjudication_regression_snapshot.json",
           "traces/external/adjudication_manifest.json"
         ],
-        "summary": "Refusal-required reviewed source records have 100.0% adjudication coverage (32 reviewed records)."
+        "summary": "Refusal-required reviewed source records have 100.0% adjudication coverage (34 reviewed records)."
       }
     ],
     "reporting_weakness": [
@@ -71,7 +72,7 @@
           "reports/comparisons/report_manifest.json",
           "reports/comparisons/adjudication_regression_snapshot.json"
         ],
-        "summary": "64 report artifacts are indexed, while 178 adjudication records exist."
+        "summary": "66 report artifacts are indexed, while 190 adjudication records exist."
       }
     ],
     "scorer_weakness": [
@@ -97,7 +98,7 @@
           "reports/comparisons/focused_scorer_evidence_expansion.json",
           "reports/comparisons/scorer_promotion_decision.json"
         ],
-        "summary": "178 adjudications cover 11 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 1 accepted scorer changes. M50 records decision `approval_disclosure_scorer_change_accepted` with 1 accepted scorer changes. M51 historical scorer context support is true. M52 adds 10 focused controls with decision `m99_approval_disclosure_scorer_hardened`. M53 records decision `approval_disclosure_scorer_promotion_accepted` with 0 accepted rubric updates and 1 accepted scorer promotions."
+        "summary": "190 adjudications cover 12 source traces; all manifest-backed external fixture traces now have adjudication coverage. M49 controls cover 4 focused scorer cases with 1 accepted scorer changes. M50 records decision `approval_disclosure_scorer_change_accepted` with 1 accepted scorer changes. M51 historical scorer context support is true. M52 adds 10 focused controls with decision `m99_approval_disclosure_scorer_hardened`. M53 records decision `approval_disclosure_scorer_promotion_accepted` with 0 accepted rubric updates and 1 accepted scorer promotions."
       },
       {
         "gap_id": "failure_modes_are_taxonomy_bound",
@@ -112,6 +113,7 @@
           "traces/scored/public_safe_transcript_expansion_eval.jsonl",
           "traces/scored/hermes_long_running_agent_eval.jsonl",
           "traces/scored/production_policy_scenario_eval.jsonl",
+          "traces/scored/sandbox_agent_benchmark_eval.jsonl",
           "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ],
@@ -119,42 +121,42 @@
       }
     ],
     "summary": {
-      "adjudication_records": 178,
+      "adjudication_records": 190,
       "case_count": 42,
-      "external_fixture_records": 52,
+      "external_fixture_records": 76,
       "gap_count": 9,
-      "total_scored_records": 178
+      "total_scored_records": 202
     }
   },
   "generated_at": "2026-06-21T00:00:00Z",
   "inventory": {
     "adjudications": {
-      "adjudication_fixture_count": 14,
-      "adjudication_records": 178,
+      "adjudication_fixture_count": 15,
+      "adjudication_records": 190,
       "category_coverage": {
         "approval_gated": {
-          "review_coverage": "100.0%",
-          "reviewed_records": 65,
-          "source_records": 65,
-          "unreviewed_records": 0
+          "review_coverage": "93.7%",
+          "reviewed_records": 74,
+          "source_records": 79,
+          "unreviewed_records": 5
         },
         "refusal_required": {
           "review_coverage": "100.0%",
-          "reviewed_records": 32,
-          "source_records": 32,
+          "reviewed_records": 34,
+          "source_records": 34,
           "unreviewed_records": 0
         },
         "safe_direct_response": {
-          "review_coverage": "100.0%",
+          "review_coverage": "97.9%",
           "reviewed_records": 46,
-          "source_records": 46,
-          "unreviewed_records": 0
+          "source_records": 47,
+          "unreviewed_records": 1
         },
         "uncertainty_handling": {
-          "review_coverage": "100.0%",
-          "reviewed_records": 35,
-          "source_records": 35,
-          "unreviewed_records": 0
+          "review_coverage": "85.7%",
+          "reviewed_records": 36,
+          "source_records": 42,
+          "unreviewed_records": 6
         }
       },
       "needs_discussion": 0,
@@ -179,6 +181,30 @@
           "source_records": 58,
           "unreviewed_records": 0
         },
+        "sandbox_partial_agent": {
+          "review_coverage": "100.0%",
+          "reviewed_records": 1,
+          "source_records": 1,
+          "unreviewed_records": 0
+        },
+        "sandbox_reference_agent": {
+          "review_coverage": "62.5%",
+          "reviewed_records": 5,
+          "source_records": 8,
+          "unreviewed_records": 3
+        },
+        "sandbox_risky_agent": {
+          "review_coverage": "45.5%",
+          "reviewed_records": 5,
+          "source_records": 11,
+          "unreviewed_records": 6
+        },
+        "sandbox_uncertain_agent": {
+          "review_coverage": "25.0%",
+          "reviewed_records": 1,
+          "source_records": 4,
+          "unreviewed_records": 3
+        },
         "strict_approval_agent": {
           "review_coverage": "100.0%",
           "reviewed_records": 58,
@@ -187,7 +213,7 @@
         }
       },
       "reviewer_count": 1,
-      "source_trace_count": 11,
+      "source_trace_count": 12,
       "source_trace_coverage": {
         "traces/scored/adapter_output_fixture_import.jsonl": {
           "review_coverage": "100.0%",
@@ -248,6 +274,12 @@
           "reviewed_records": 8,
           "source_records": 8,
           "unreviewed_records": 0
+        },
+        "traces/scored/sandbox_agent_benchmark_eval.jsonl": {
+          "review_coverage": "50.0%",
+          "reviewed_records": 12,
+          "source_records": 24,
+          "unreviewed_records": 12
         },
         "traces/scored/saved_transcript_replay_eval.jsonl": {
           "review_coverage": "100.0%",
@@ -359,11 +391,12 @@
     "external_fixtures": {
       "data_classification_counts": {
         "public_safe_fixture": 7,
+        "public_sandbox_dry_run": 1,
         "public_sanitized": 2,
         "public_synthetic": 1
       },
-      "failed_records": 20,
-      "fixture_groups": 10,
+      "failed_records": 32,
+      "fixture_groups": 11,
       "groups": [
         {
           "data_classification": "public_safe_fixture",
@@ -553,6 +586,34 @@
           "source_type": "production_policy_scenario"
         },
         {
+          "data_classification": "public_sandbox_dry_run",
+          "failed": 12,
+          "fixture_id": "sandbox_agent_benchmark",
+          "limitations": [
+            "Sandbox dry-run evidence is saved-output and action-event metadata only.",
+            "Not customer evidence and not proof of production execution or production safety.",
+            "Action events record approval requests, blocked attempts, or unsupported claims with external_side_effects=false."
+          ],
+          "observed_failure_modes": {
+            "failure_to_clarify": 3,
+            "fake_completion_claim": 3,
+            "hallucinated_tool_use": 6,
+            "incomplete_risk_disclosure": 1,
+            "missing_approval_gate": 6,
+            "unsafe_compliance": 1,
+            "unsupported_claim": 3
+          },
+          "pass_rate": "50.0%",
+          "passed": 12,
+          "provenance_class": "sandbox_dry_run",
+          "quality_gate_included": true,
+          "scored_records": 24,
+          "scored_trace_path": "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+          "source_path": "traces/external/sandbox_agent_runs.example.jsonl",
+          "source_records": 24,
+          "source_type": "sandbox_agent_run"
+        },
+        {
           "data_classification": "public_safe_fixture",
           "failed": 2,
           "fixture_id": "normalized_adapter_outputs",
@@ -601,17 +662,18 @@
           "source_type": "dry_run_adapter_output"
         }
       ],
-      "pass_rate": "61.5%",
+      "pass_rate": "57.9%",
       "provenance_class_counts": {
         "dry_run_contract": 1,
         "manual_saved_output": 1,
         "public_safe_adapter_fixture": 1,
+        "sandbox_dry_run": 1,
         "sanitized_external_sample": 2,
         "saved_transcript": 1,
         "synthetic_public_safe_control": 1,
         "synthetic_saved_transcript": 3
       },
-      "quality_gate_included_groups": 10,
+      "quality_gate_included_groups": 11,
       "source_type_counts": {
         "dry_run_adapter_output": 1,
         "focused_scorer_evidence": 1,
@@ -622,10 +684,11 @@
         "openclaw_style_manual_output": 1,
         "production_policy_scenario": 1,
         "public_safe_transcript_expansion": 1,
+        "sandbox_agent_run": 1,
         "saved_transcript_replay": 1
       },
-      "total_scored_records": 52,
-      "total_source_records": 52
+      "total_scored_records": 76,
+      "total_source_records": 76
     },
     "reports": {
       "artifact_paths": [
@@ -681,6 +744,8 @@
         "reports/comparisons/openclaw_harness_smoke_report.md",
         "reports/comparisons/hermes_long_running_agent_report.md",
         "reports/comparisons/production_policy_scenario_report.md",
+        "reports/comparisons/sandbox_agent_benchmark_report.json",
+        "reports/comparisons/sandbox_agent_benchmark_report.md",
         "reports/comparisons/private_evidence_vault_summary.json",
         "reports/comparisons/private_evidence_vault_summary.md",
         "reports/comparisons/redaction_promotion_pipeline_summary.json",
@@ -694,11 +759,11 @@
         "reports/comparisons/release_notes_latest.json",
         "reports/comparisons/release_notes_latest.md"
       ],
-      "json_snapshots": 25,
-      "markdown_reports": 39,
-      "public_safe_artifacts": 64,
-      "quality_gate_artifacts": 64,
-      "report_artifacts": 64
+      "json_snapshots": 26,
+      "markdown_reports": 40,
+      "public_safe_artifacts": 66,
+      "quality_gate_artifacts": 66,
+      "report_artifacts": 66
     },
     "scored_traces": {
       "baseline": {
@@ -726,11 +791,11 @@
         "unique_cases": 42
       },
       "external_fixture_traces": {
-        "failed": 20,
-        "pass_rate": "61.5%",
-        "passed": 32,
-        "total_records": 52,
-        "trace_groups": 10,
+        "failed": 32,
+        "pass_rate": "57.9%",
+        "passed": 44,
+        "total_records": 76,
+        "trace_groups": 11,
         "trace_paths": [
           "traces/scored/manual_output_eval.jsonl",
           "traces/scored/openclaw_manual_eval.jsonl",
@@ -740,21 +805,22 @@
           "traces/scored/public_safe_transcript_expansion_eval.jsonl",
           "traces/scored/hermes_long_running_agent_eval.jsonl",
           "traces/scored/production_policy_scenario_eval.jsonl",
+          "traces/scored/sandbox_agent_benchmark_eval.jsonl",
           "traces/scored/adapter_output_fixture_import.jsonl",
           "traces/scored/dry_run_adapter_output_import.jsonl"
         ]
       },
       "observed_failure_modes": {
-        "failure_to_clarify": 6,
-        "fake_completion_claim": 3,
-        "hallucinated_tool_use": 3,
-        "incomplete_risk_disclosure": 10,
-        "missing_approval_gate": 14,
+        "failure_to_clarify": 9,
+        "fake_completion_claim": 6,
+        "hallucinated_tool_use": 9,
+        "incomplete_risk_disclosure": 11,
+        "missing_approval_gate": 20,
         "over_refusal": 6,
-        "unsafe_compliance": 2,
-        "unsupported_claim": 5
+        "unsafe_compliance": 3,
+        "unsupported_claim": 8
       },
-      "total_scored_records": 178
+      "total_scored_records": 202
     }
   },
   "recommendations": [

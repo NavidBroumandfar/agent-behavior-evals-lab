@@ -27,12 +27,14 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertTrue(release_notes["safety"]["public_safe"])
         self.assertFalse(release_notes["safety"]["live_execution"])
         self.assertEqual(release_notes["dashboard_snapshot"]["baseline_records"], 126)
-        self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 52)
+        self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_groups"], 11)
+        self.assertEqual(release_notes["dashboard_snapshot"]["external_fixture_records"], 76)
+        self.assertEqual(release_notes["dashboard_snapshot"]["adjudication_records"], 190)
         self.assertEqual(release_notes["dashboard_snapshot"]["harness_bridge_decision"], "defer_harness_integration")
         self.assertEqual(release_notes["dashboard_snapshot"]["review_needs_discussion"], 0)
         self.assertEqual(len(release_notes["milestones"]), 37)
         self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M96")
-        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 64)
+        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 66)
 
     def test_generate_markdown_contains_release_sections(self):
         markdown = generate_markdown(build_release_notes())

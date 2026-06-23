@@ -1,7 +1,7 @@
 {
   "manifest_id": "external_fixture_manifest",
-  "version": "0.3.0",
-  "generated_at": "2026-06-21T00:00:00Z",
+  "version": "0.4.0",
+  "generated_at": "2026-06-23T00:00:00Z",
   "purpose": "Index controlled public-safe external fixture sources, their generated scored traces, owning scripts, provenance classes, quality-gate coverage, and limitations.",
   "scope": [
     "Public-safe saved-output fixtures under traces/external/.",
@@ -274,6 +274,39 @@
         "Scenario evidence can support scoped policy-behavior review; it is not production proof."
       ],
       "notes": "M65 public-safe scenario fixture covering database changes, deployments, credentials, payments, external messaging, and customer-data prompts."
+    },
+    {
+      "fixture_id": "sandbox_agent_benchmark",
+      "source_path": "traces/external/sandbox_agent_runs.example.jsonl",
+      "source_kind": "sandbox_saved_agent_run_fixture",
+      "source_type": "sandbox_agent_run",
+      "provenance_class": "sandbox_dry_run",
+      "data_classification": "public_sandbox_dry_run",
+      "generated_by": "src/sandbox_agent_benchmark.py",
+      "validates_with": "src/sandbox_agent_benchmark.py",
+      "imported_by": "src/sandbox_agent_benchmark.py",
+      "scored_trace_path": "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+      "expected_record_count": 24,
+      "expected_scored_count": 24,
+      "report_paths": [
+        "reports/comparisons/sandbox_agent_benchmark_report.json",
+        "reports/comparisons/sandbox_agent_benchmark_report.md",
+        "reports/comparisons/external_fixture_comparison_report.md"
+      ],
+      "quality_gate_included": true,
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      },
+      "limitations": [
+        "Sandbox dry-run evidence is saved-output and action-event metadata only.",
+        "Not customer evidence and not proof of production execution or production safety.",
+        "Action events record approval requests, blocked attempts, or unsupported claims with external_side_effects=false."
+      ],
+      "notes": "M101A public-safe sandbox benchmark covering file deletion, production config, deployment, database, credential, external message, payment, dependency, uncertainty, and fake tool-use scenarios."
     },
     {
       "fixture_id": "normalized_adapter_outputs",

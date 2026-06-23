@@ -1,7 +1,7 @@
 {
   "adjudication": {
-    "adjudicated_pass_rate": "79.2%",
-    "adjudication_records": 178,
+    "adjudicated_pass_rate": "77.4%",
+    "adjudication_records": 190,
     "changed_result_count": 1,
     "needs_discussion": 0,
     "override_fail": 0,
@@ -67,6 +67,12 @@
         "reviewed_records": 8,
         "source_records": 8,
         "unreviewed_records": 0
+      },
+      "traces/scored/sandbox_agent_benchmark_eval.jsonl": {
+        "review_coverage": "50.0%",
+        "reviewed_records": 12,
+        "source_records": 24,
+        "unreviewed_records": 12
       },
       "traces/scored/saved_transcript_replay_eval.jsonl": {
         "review_coverage": "100.0%",
@@ -143,11 +149,25 @@
     "changed_review_results": 1,
     "highest_failure_fixture_groups": [
       {
+        "data_classification": "public_sandbox_dry_run",
+        "failed": 12,
+        "fixture_id": "sandbox_agent_benchmark",
+        "pass_rate": "50.0%",
+        "passed": 12,
+        "provenance_class": "sandbox_dry_run",
+        "quality_gate_included": true,
+        "scored_records": 24,
+        "scored_trace_path": "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+        "source_path": "traces/external/sandbox_agent_runs.example.jsonl",
+        "source_type": "sandbox_agent_run"
+      },
+      {
         "data_classification": "public_safe_fixture",
         "failed": 6,
         "fixture_id": "focused_scorer_evidence",
         "pass_rate": "40.0%",
         "passed": 4,
+        "provenance_class": "synthetic_public_safe_control",
         "quality_gate_included": true,
         "scored_records": 10,
         "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
@@ -160,23 +180,12 @@
         "fixture_id": "public_safe_transcript_expansion",
         "pass_rate": "50.0%",
         "passed": 4,
+        "provenance_class": "synthetic_saved_transcript",
         "quality_gate_included": true,
         "scored_records": 8,
         "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
         "source_path": "traces/external/public_safe_transcript_expansion.example.jsonl",
         "source_type": "public_safe_transcript_expansion"
-      },
-      {
-        "data_classification": "public_synthetic",
-        "failed": 2,
-        "fixture_id": "dry_run_adapter_outputs",
-        "pass_rate": "50.0%",
-        "passed": 2,
-        "quality_gate_included": true,
-        "scored_records": 4,
-        "scored_trace_path": "traces/scored/dry_run_adapter_output_import.jsonl",
-        "source_path": "traces/external/dry_run_adapter_outputs.jsonl",
-        "source_type": "dry_run_adapter_output"
       }
     ],
     "primary_failure_modes": {
@@ -245,6 +254,12 @@
         "source_records": 8,
         "unreviewed_records": 0
       },
+      "traces/scored/sandbox_agent_benchmark_eval.jsonl": {
+        "review_coverage": "50.0%",
+        "reviewed_records": 12,
+        "source_records": 24,
+        "unreviewed_records": 12
+      },
       "traces/scored/saved_transcript_replay_eval.jsonl": {
         "review_coverage": "100.0%",
         "reviewed_records": 5,
@@ -253,9 +268,50 @@
       }
     }
   },
+  "evidence_class_coverage": {
+    "classes": {
+      "hand_authored_fixture": {
+        "boundary": "Synthetic and saved public-safe fixtures for evaluator coverage.",
+        "fixture_groups": 10,
+        "scored_records": 52
+      },
+      "human_reviewed_adjudication": {
+        "boundary": "Reviewer decisions remain separate from deterministic scored traces.",
+        "reviewed_records": 190,
+        "reviewer_count": 1
+      },
+      "local_open_weight_run_ledger": {
+        "boundary": "Reviewed local/open-weight ledgers; not broad model rankings outside the claim process.",
+        "ledger_count": 2,
+        "reviewed_records": 420
+      },
+      "real_format_saved_transcript": {
+        "boundary": "Saved transcript or adapter-shaped evidence; not live production proof.",
+        "fixture_groups": 6,
+        "scored_records": 28
+      },
+      "sandbox_dry_run": {
+        "boundary": "No-side-effect saved agent outputs with action-event metadata.",
+        "fixture_groups": 1,
+        "pass_rate": "50.0%",
+        "reviewed_records": 12,
+        "scored_records": 24
+      }
+    },
+    "summary": {
+      "approval_gate_false_negatives": "0",
+      "fixture_count": 52,
+      "human_reviewed_adjudication_count": 190,
+      "real_format_transcript_count": 28,
+      "reviewed_local_open_weight_ledger_count": 2,
+      "reviewed_local_open_weight_records": 420,
+      "sandbox_scenario_count": 24,
+      "scorer_reviewer_agreement": "99.5%"
+    }
+  },
   "external_fixtures": {
-    "failed_records": 20,
-    "fixture_groups": 10,
+    "failed_records": 32,
+    "fixture_groups": 11,
     "groups": [
       {
         "data_classification": "public_safe_fixture",
@@ -263,6 +319,7 @@
         "fixture_id": "manual_outputs",
         "pass_rate": "50.0%",
         "passed": 2,
+        "provenance_class": "manual_saved_output",
         "quality_gate_included": true,
         "scored_records": 4,
         "scored_trace_path": "traces/scored/manual_output_eval.jsonl",
@@ -275,6 +332,7 @@
         "fixture_id": "sanitized_openclaw_style_manual_samples",
         "pass_rate": "66.7%",
         "passed": 4,
+        "provenance_class": "sanitized_external_sample",
         "quality_gate_included": true,
         "scored_records": 6,
         "scored_trace_path": "traces/scored/openclaw_manual_eval.jsonl",
@@ -287,6 +345,7 @@
         "fixture_id": "focused_scorer_evidence",
         "pass_rate": "40.0%",
         "passed": 4,
+        "provenance_class": "synthetic_public_safe_control",
         "quality_gate_included": true,
         "scored_records": 10,
         "scored_trace_path": "traces/scored/focused_scorer_evidence_eval.jsonl",
@@ -299,6 +358,7 @@
         "fixture_id": "saved_transcript_replay",
         "pass_rate": "60.0%",
         "passed": 3,
+        "provenance_class": "saved_transcript",
         "quality_gate_included": true,
         "scored_records": 5,
         "scored_trace_path": "traces/scored/saved_transcript_replay_eval.jsonl",
@@ -311,6 +371,7 @@
         "fixture_id": "openclaw_saved_transcript_pilot",
         "pass_rate": "100.0%",
         "passed": 3,
+        "provenance_class": "sanitized_external_sample",
         "quality_gate_included": true,
         "scored_records": 3,
         "scored_trace_path": "traces/scored/openclaw_saved_transcript_pilot_eval.jsonl",
@@ -323,6 +384,7 @@
         "fixture_id": "public_safe_transcript_expansion",
         "pass_rate": "50.0%",
         "passed": 4,
+        "provenance_class": "synthetic_saved_transcript",
         "quality_gate_included": true,
         "scored_records": 8,
         "scored_trace_path": "traces/scored/public_safe_transcript_expansion_eval.jsonl",
@@ -335,6 +397,7 @@
         "fixture_id": "hermes_long_running_agent",
         "pass_rate": "100.0%",
         "passed": 2,
+        "provenance_class": "synthetic_saved_transcript",
         "quality_gate_included": true,
         "scored_records": 2,
         "scored_trace_path": "traces/scored/hermes_long_running_agent_eval.jsonl",
@@ -347,6 +410,7 @@
         "fixture_id": "production_policy_scenarios",
         "pass_rate": "100.0%",
         "passed": 6,
+        "provenance_class": "synthetic_saved_transcript",
         "quality_gate_included": true,
         "scored_records": 6,
         "scored_trace_path": "traces/scored/production_policy_scenario_eval.jsonl",
@@ -354,11 +418,25 @@
         "source_type": "production_policy_scenario"
       },
       {
+        "data_classification": "public_sandbox_dry_run",
+        "failed": 12,
+        "fixture_id": "sandbox_agent_benchmark",
+        "pass_rate": "50.0%",
+        "passed": 12,
+        "provenance_class": "sandbox_dry_run",
+        "quality_gate_included": true,
+        "scored_records": 24,
+        "scored_trace_path": "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+        "source_path": "traces/external/sandbox_agent_runs.example.jsonl",
+        "source_type": "sandbox_agent_run"
+      },
+      {
         "data_classification": "public_safe_fixture",
         "failed": 2,
         "fixture_id": "normalized_adapter_outputs",
         "pass_rate": "50.0%",
         "passed": 2,
+        "provenance_class": "public_safe_adapter_fixture",
         "quality_gate_included": true,
         "scored_records": 4,
         "scored_trace_path": "traces/scored/adapter_output_fixture_import.jsonl",
@@ -371,6 +449,7 @@
         "fixture_id": "dry_run_adapter_outputs",
         "pass_rate": "50.0%",
         "passed": 2,
+        "provenance_class": "dry_run_contract",
         "quality_gate_included": true,
         "scored_records": 4,
         "scored_trace_path": "traces/scored/dry_run_adapter_output_import.jsonl",
@@ -378,7 +457,11 @@
         "source_type": "dry_run_adapter_output"
       }
     ],
-    "total_scored_records": 52
+    "pass_rate": "57.9%",
+    "passed_records": 44,
+    "sandbox_pass_rate": "50.0%",
+    "sandbox_scenario_count": 24,
+    "total_scored_records": 76
   },
   "generated_at": "2026-06-21T00:00:00Z",
   "harness_bridge": {
@@ -401,10 +484,22 @@
       "value": "85.7%"
     },
     {
-      "detail": "32 passed of 52 scored fixture records",
+      "detail": "44 passed of 76 scored fixture records",
       "label": "External Fixture Pass Rate",
       "metric_id": "external_fixture_pass_rate",
-      "value": "61.5%"
+      "value": "57.9%"
+    },
+    {
+      "detail": "24 sandbox scenarios scored with no external side effects",
+      "label": "Sandbox Dry-Run Pass Rate",
+      "metric_id": "sandbox_dry_run_pass_rate",
+      "value": "50.0%"
+    },
+    {
+      "detail": "24 sandbox, 28 transcript-shaped, 2 reviewed local/open-weight ledgers",
+      "label": "Evidence Class Coverage",
+      "metric_id": "evidence_class_coverage",
+      "value": 5
     },
     {
       "detail": "Reviewer decisions still marked needs_discussion",
@@ -421,9 +516,10 @@
   ],
   "release_view": {
     "baseline_result": "108 passed, 18 failed (85.7% pass rate)",
+    "evidence_status": "24 sandbox scenarios, 28 transcript-shaped records, 2 reviewed local/open-weight ledgers",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
-    "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
-    "review_status": "178 adjudication records; 0 need discussion"
+    "headline": "Local deterministic gate remains stable; sandbox dry-run evidence is now separated from fixture and ledger evidence.",
+    "review_status": "190 adjudication records; 0 need discussion"
   },
   "safety": {
     "contains_private_data": false,
@@ -437,7 +533,9 @@
     "traces/scored/baseline_mock_run.jsonl",
     "traces/external/fixture_manifest.json",
     "reports/comparisons/adjudication_regression_snapshot.json",
-    "traces/external/harness_bridge_plan.example.json"
+    "traces/external/harness_bridge_plan.example.json",
+    "reports/comparisons/local_open_weight_benchmark_v1.json",
+    "reports/comparisons/scorer_reliability_report.json"
   ],
   "summary_id": "m38_reporting_product_summary"
 }

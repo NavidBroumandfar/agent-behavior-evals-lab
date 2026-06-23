@@ -37,14 +37,25 @@ class ReviewCoverageCompletionGateTests(unittest.TestCase):
         self.assertEqual(summary["unreviewed_records"], 0)
         self.assertEqual(summary["priority_queue_records"], 0)
         self.assertEqual(summary["recommended_batches"], 0)
-        self.assertEqual(summary["scorer_review_agreement_rate"], "99.4%")
+        self.assertEqual(summary["scorer_review_agreement_rate"], "99.5%")
         self.assertEqual(summary["scorer_false_positive_count"], 1)
         self.assertEqual(summary["scorer_false_negative_count"], 0)
+
+        self.assertEqual(len(gate["additional_review_scopes"]), 1)
+        sandbox_scope = gate["additional_review_scopes"][0]
+        self.assertEqual(sandbox_scope["source_id"], "sandbox_agent_benchmark")
+        self.assertEqual(sandbox_scope["scored_records"], 24)
+        self.assertEqual(sandbox_scope["reviewed_records"], 12)
+        self.assertEqual(sandbox_scope["required_reviewed_records"], 12)
+        self.assertTrue(sandbox_scope["review_requirement_met"])
 
         self.assertTrue(gate["gate_status"]["gate_passed"])
         self.assertFalse(gate["gate_status"]["stale_priority_plan"])
         self.assertEqual(gate["gate_status"]["blocking_findings"], [])
-        self.assertEqual(gate["next_phase_recommendation"]["reviewer_work_status"], "paused_until_new_scope")
+        self.assertEqual(
+            gate["next_phase_recommendation"]["reviewer_work_status"],
+            "completion_scope_locked_m101a_sample_met",
+        )
 
     def test_validate_completion_gate_rejects_incomplete_coverage(self):
         gate = build_review_coverage_completion_gate()
@@ -62,6 +73,14 @@ class ReviewCoverageCompletionGateTests(unittest.TestCase):
         with self.assertRaisesRegex(ReviewCoverageCompletionGateError, "unexpected recommended action"):
             validate_completion_gate(broken)
 
+    def test_validate_completion_gate_rejects_additional_scope_below_minimum(self):
+        gate = build_review_coverage_completion_gate()
+        broken = copy.deepcopy(gate)
+        broken["additional_review_scopes"][0]["reviewed_records"] = 11
+
+        with self.assertRaisesRegex(ReviewCoverageCompletionGateError, "too few reviewed records"):
+            validate_completion_gate(broken)
+
     def test_validate_completion_gate_rejects_blocking_findings(self):
         gate = build_review_coverage_completion_gate()
         broken = copy.deepcopy(gate)
@@ -76,8 +95,9 @@ class ReviewCoverageCompletionGateTests(unittest.TestCase):
 
         self.assertIn("# Review Coverage Completion Gate", markdown)
         self.assertIn("## Source Completion", markdown)
+        self.assertIn("## Additional Review Scopes", markdown)
         self.assertIn("No blocking findings.", markdown)
-        self.assertIn("new_public_safe_scored_trace_or_case_expansion", markdown)
+        self.assertIn("m101a_sandbox_minimum_review_sample", markdown)
         self.assertIn("The deterministic heuristic scorer remains the quality-gate scorer.", markdown)
 
 

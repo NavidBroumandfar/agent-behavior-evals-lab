@@ -23,6 +23,8 @@ BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 FIXTURE_MANIFEST_PATH = REPO_ROOT / "traces/external/fixture_manifest.json"
 ADJUDICATION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"
 HARNESS_BRIDGE_PLAN_PATH = REPO_ROOT / "traces/external/harness_bridge_plan.example.json"
+LOCAL_BENCHMARK_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.json"
+SCORER_RELIABILITY_REPORT_PATH = REPO_ROOT / "reports/comparisons/scorer_reliability_report.json"
 
 JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
 MARKDOWN_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.md"
@@ -56,6 +58,15 @@ def build_summary() -> dict[str, Any]:
     baseline_summary = trace_summary(baseline_records)
     adjudication_summary = summarize_adjudication(adjudication_snapshot)
     harness_summary = summarize_harness_plan(harness_plan)
+    local_benchmark_report = load_optional_json_object(LOCAL_BENCHMARK_REPORT_PATH)
+    scorer_reliability_report = load_optional_json_object(SCORER_RELIABILITY_REPORT_PATH)
+    evidence_coverage = evidence_class_coverage(
+        fixture_summaries,
+        adjudication_summary,
+        local_benchmark_report,
+        scorer_reliability_report,
+    )
+    external_summary = external_fixture_summary(fixture_summaries)
 
     return {
         "summary_id": "m38_reporting_product_summary",
@@ -66,6 +77,8 @@ def build_summary() -> dict[str, Any]:
             display_path(FIXTURE_MANIFEST_PATH),
             display_path(ADJUDICATION_SNAPSHOT_PATH),
             display_path(HARNESS_BRIDGE_PLAN_PATH),
+            display_path(LOCAL_BENCHMARK_REPORT_PATH),
+            display_path(SCORER_RELIABILITY_REPORT_PATH),
         ],
         "safety": {
             "public_safe": True,
@@ -75,16 +88,18 @@ def build_summary() -> dict[str, Any]:
             "credentials_required": False,
         },
         "baseline": baseline_summary,
-        "external_fixtures": {
-            "fixture_groups": len(fixture_summaries),
-            "total_scored_records": sum(item["scored_records"] for item in fixture_summaries),
-            "failed_records": sum(item["failed"] for item in fixture_summaries),
-            "groups": fixture_summaries,
-        },
+        "external_fixtures": external_summary,
         "adjudication": adjudication_summary,
         "harness_bridge": harness_summary,
-        "product_kpis": product_kpis(baseline_summary, fixture_summaries, adjudication_summary, harness_summary),
-        "release_view": release_view(baseline_summary, adjudication_summary, harness_summary),
+        "evidence_class_coverage": evidence_coverage,
+        "product_kpis": product_kpis(
+            baseline_summary,
+            external_summary,
+            adjudication_summary,
+            harness_summary,
+            evidence_coverage,
+        ),
+        "release_view": release_view(baseline_summary, adjudication_summary, harness_summary, evidence_coverage),
         "engineering_view": engineering_view(baseline_summary, fixture_summaries, adjudication_summary),
     }
 
@@ -137,9 +152,119 @@ def fixture_group_summaries(fixture_manifest: dict[str, Any]) -> list[dict[str, 
                 "failed": total - passed,
                 "pass_rate": percent(passed, total),
                 "data_classification": str(fixture["data_classification"]),
+                "provenance_class": str(fixture["provenance_class"]),
             }
         )
     return summaries
+
+
+def external_fixture_summary(fixture_summaries: list[dict[str, Any]]) -> dict[str, Any]:
+    """Return aggregate external-fixture counts with a pass rate."""
+
+    total_records = sum(item["scored_records"] for item in fixture_summaries)
+    failed_records = sum(item["failed"] for item in fixture_summaries)
+    passed_records = total_records - failed_records
+    sandbox_groups = [item for item in fixture_summaries if item["source_type"] == "sandbox_agent_run"]
+    return {
+        "fixture_groups": len(fixture_summaries),
+        "total_scored_records": total_records,
+        "passed_records": passed_records,
+        "failed_records": failed_records,
+        "pass_rate": percent(passed_records, total_records),
+        "sandbox_scenario_count": sum(item["scored_records"] for item in sandbox_groups),
+        "sandbox_pass_rate": percent(
+            sum(item["passed"] for item in sandbox_groups),
+            sum(item["scored_records"] for item in sandbox_groups),
+        ),
+        "groups": fixture_summaries,
+    }
+
+
+def evidence_class_coverage(
+    fixture_summaries: list[dict[str, Any]],
+    adjudication_summary: dict[str, Any],
+    local_benchmark_report: dict[str, Any],
+    scorer_reliability_report: dict[str, Any],
+) -> dict[str, Any]:
+    """Summarize buyer-facing evidence classes without changing scoring."""
+
+    sandbox_groups = [item for item in fixture_summaries if item["source_type"] == "sandbox_agent_run"]
+    real_format_groups = [
+        item
+        for item in fixture_summaries
+        if item["source_type"]
+        in {
+            "saved_transcript_replay",
+            "openclaw_saved_transcript_pilot",
+            "public_safe_transcript_expansion",
+            "hermes_long_running_agent",
+            "production_policy_scenario",
+            "normalized_adapter_output",
+        }
+    ]
+    synthetic_fixture_groups = [
+        item
+        for item in fixture_summaries
+        if item["source_type"] != "sandbox_agent_run"
+    ]
+    rankings = local_benchmark_report.get("rankings", []) if isinstance(local_benchmark_report, dict) else []
+    reviewed_local_records = sum(
+        int(item.get("review_counts", {}).get("records_reviewed", 0))
+        for item in rankings
+        if isinstance(item, dict)
+    )
+    reliability_summary = scorer_reliability_report.get("reliability_summary", {})
+    approval_gate = scorer_reliability_report.get("calibration_by_risk_area", {}).get("approval_gate", {})
+    sandbox_review_coverage = adjudication_summary["source_trace_coverage"].get(
+        "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+        {},
+    )
+    return {
+        "summary": {
+            "fixture_count": sum(item["scored_records"] for item in synthetic_fixture_groups),
+            "sandbox_scenario_count": sum(item["scored_records"] for item in sandbox_groups),
+            "real_format_transcript_count": sum(item["scored_records"] for item in real_format_groups),
+            "reviewed_local_open_weight_ledger_count": len(rankings),
+            "reviewed_local_open_weight_records": reviewed_local_records,
+            "human_reviewed_adjudication_count": adjudication_summary["adjudication_records"],
+            "scorer_reviewer_agreement": str(
+                reliability_summary.get("scorer_review_agreement_rate", "not available")
+            ),
+            "approval_gate_false_negatives": str(approval_gate.get("scorer_false_negatives", "not available")),
+        },
+        "classes": {
+            "hand_authored_fixture": {
+                "fixture_groups": len(synthetic_fixture_groups),
+                "scored_records": sum(item["scored_records"] for item in synthetic_fixture_groups),
+                "boundary": "Synthetic and saved public-safe fixtures for evaluator coverage.",
+            },
+            "real_format_saved_transcript": {
+                "fixture_groups": len(real_format_groups),
+                "scored_records": sum(item["scored_records"] for item in real_format_groups),
+                "boundary": "Saved transcript or adapter-shaped evidence; not live production proof.",
+            },
+            "sandbox_dry_run": {
+                "fixture_groups": len(sandbox_groups),
+                "scored_records": sum(item["scored_records"] for item in sandbox_groups),
+                "reviewed_records": int(sandbox_review_coverage.get("reviewed_records", 0) or 0),
+                "pass_rate": percent(
+                    sum(item["passed"] for item in sandbox_groups),
+                    sum(item["scored_records"] for item in sandbox_groups),
+                ),
+                "boundary": "No-side-effect saved agent outputs with action-event metadata.",
+            },
+            "local_open_weight_run_ledger": {
+                "ledger_count": len(rankings),
+                "reviewed_records": reviewed_local_records,
+                "boundary": "Reviewed local/open-weight ledgers; not broad model rankings outside the claim process.",
+            },
+            "human_reviewed_adjudication": {
+                "reviewed_records": adjudication_summary["adjudication_records"],
+                "reviewer_count": adjudication_summary["reviewer_count"],
+                "boundary": "Reviewer decisions remain separate from deterministic scored traces.",
+            },
+        },
+    }
 
 
 def summarize_adjudication(snapshot: dict[str, Any]) -> dict[str, Any]:
@@ -176,14 +301,16 @@ def summarize_harness_plan(plan: dict[str, Any]) -> dict[str, Any]:
 
 def product_kpis(
     baseline_summary: dict[str, Any],
-    fixture_summaries: list[dict[str, Any]],
+    external_summary: dict[str, Any],
     adjudication_summary: dict[str, Any],
     harness_summary: dict[str, Any],
+    evidence_coverage: dict[str, Any],
 ) -> list[dict[str, Any]]:
     """Return compact dashboard KPI rows."""
 
-    total_fixture_records = sum(item["scored_records"] for item in fixture_summaries)
-    failed_fixture_records = sum(item["failed"] for item in fixture_summaries)
+    total_fixture_records = int(external_summary["total_scored_records"])
+    failed_fixture_records = int(external_summary["failed_records"])
+    evidence_summary = evidence_coverage["summary"]
     return [
         {
             "metric_id": "baseline_pass_rate",
@@ -196,6 +323,22 @@ def product_kpis(
             "label": "External Fixture Pass Rate",
             "value": percent(total_fixture_records - failed_fixture_records, total_fixture_records),
             "detail": f"{total_fixture_records - failed_fixture_records} passed of {total_fixture_records} scored fixture records",
+        },
+        {
+            "metric_id": "sandbox_dry_run_pass_rate",
+            "label": "Sandbox Dry-Run Pass Rate",
+            "value": external_summary["sandbox_pass_rate"],
+            "detail": f"{external_summary['sandbox_scenario_count']} sandbox scenarios scored with no external side effects",
+        },
+        {
+            "metric_id": "evidence_class_coverage",
+            "label": "Evidence Class Coverage",
+            "value": len(evidence_coverage["classes"]),
+            "detail": (
+                f"{evidence_summary['sandbox_scenario_count']} sandbox, "
+                f"{evidence_summary['real_format_transcript_count']} transcript-shaped, "
+                f"{evidence_summary['reviewed_local_open_weight_ledger_count']} reviewed local/open-weight ledgers"
+            ),
         },
         {
             "metric_id": "review_needs_discussion",
@@ -217,11 +360,13 @@ def release_view(
     baseline_summary: dict[str, Any],
     adjudication_summary: dict[str, Any],
     harness_summary: dict[str, Any],
+    evidence_coverage: dict[str, Any],
 ) -> dict[str, Any]:
     """Return release-oriented decision context."""
 
+    evidence_summary = evidence_coverage["summary"]
     return {
-        "headline": "Local deterministic gate remains stable; no live runtime integration is enabled.",
+        "headline": "Local deterministic gate remains stable; sandbox dry-run evidence is now separated from fixture and ledger evidence.",
         "baseline_result": (
             f"{baseline_summary['passed']} passed, {baseline_summary['failed']} failed "
             f"({baseline_summary['pass_rate']} pass rate)"
@@ -233,6 +378,11 @@ def release_view(
         "harness_status": (
             f"{harness_summary['decision']} for {harness_summary['target_runtime']}; "
             "harness execution remains outside the quality gate"
+        ),
+        "evidence_status": (
+            f"{evidence_summary['sandbox_scenario_count']} sandbox scenarios, "
+            f"{evidence_summary['real_format_transcript_count']} transcript-shaped records, "
+            f"{evidence_summary['reviewed_local_open_weight_ledger_count']} reviewed local/open-weight ledgers"
         ),
     }
 
@@ -263,6 +413,7 @@ def generate_markdown(summary: dict[str, Any]) -> str:
     external = summary["external_fixtures"]
     adjudication = summary["adjudication"]
     harness = summary["harness_bridge"]
+    evidence = summary["evidence_class_coverage"]
     release = summary["release_view"]
 
     lines = [
@@ -275,8 +426,10 @@ def generate_markdown(summary: dict[str, Any]) -> str:
         f"| Generated at | `{summary['generated_at']}` |",
         f"| Baseline result | {release['baseline_result']} |",
         f"| External fixture records | {external['total_scored_records']} scored records across {external['fixture_groups']} groups |",
+        f"| Sandbox dry-run records | {external['sandbox_scenario_count']} scored records at {external['sandbox_pass_rate']} pass rate |",
         f"| Review status | {release['review_status']} |",
         f"| Harness status | {release['harness_status']} |",
+        f"| Evidence status | {release['evidence_status']} |",
         "",
         "This report is generated from committed local artifacts. It is a product-oriented summary for repeated development decisions, not a live model benchmark.",
         "",
@@ -295,6 +448,10 @@ def generate_markdown(summary: dict[str, Any]) -> str:
         "## External Fixture Groups",
         "",
         _fixture_table(external["groups"]),
+        "",
+        "## Evidence Class Coverage",
+        "",
+        _evidence_class_table(evidence["classes"]),
         "",
         "## Engineering View",
         "",
@@ -347,6 +504,18 @@ def _fixture_table(groups: list[dict[str, Any]]) -> str:
     return "\n".join(lines)
 
 
+def _evidence_class_table(classes: dict[str, dict[str, Any]]) -> str:
+    lines = [
+        "| Evidence Class | Count | Reviewed | Boundary |",
+        "| --- | ---: | ---: | --- |",
+    ]
+    for class_id, value in classes.items():
+        count = value.get("scored_records", value.get("ledger_count", value.get("reviewed_records", 0)))
+        reviewed = value.get("reviewed_records", "n/a")
+        lines.append(f"| `{class_id}` | {count} | {reviewed} | {value['boundary']} |")
+    return "\n".join(lines)
+
+
 def group_summary(records: list[dict[str, Any]], key: str, preferred_order: list[str]) -> dict[str, dict[str, Any]]:
     """Return pass/fail summary for a field."""
 
@@ -388,6 +557,15 @@ def load_required_jsonl(path: Path) -> list[dict[str, Any]]:
     if not records:
         raise ReportingProductSummaryError(f"{display_path(path)} must not be empty")
     return records
+
+
+def load_optional_json_object(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {}
+    try:
+        return load_json_object(path)
+    except (OSError, ValueError):
+        return {}
 
 
 def count_passed(records: list[dict[str, Any]]) -> int:

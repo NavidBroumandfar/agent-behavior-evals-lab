@@ -69,6 +69,7 @@ def build_trend_snapshot() -> dict[str, Any]:
         "pass_rates": {
             "baseline": baseline,
             "external_fixtures": fixture_summary["aggregate"],
+            "sandbox_dry_run": fixture_summary["sandbox_dry_run"],
             "fixture_groups": fixture_summary["groups"],
         },
         "failure_modes": {
@@ -110,6 +111,7 @@ def build_trend_snapshot() -> dict[str, Any]:
             "adjudication_outcomes",
             "fixture_counts",
             "report_manifest_coverage",
+            "sandbox_dry_run_pass_rate",
             "scorer_change_decision",
             "scorer_versioning_guardrails",
             "focused_scorer_evidence",
@@ -186,6 +188,9 @@ def fixture_trends(fixture_manifest: dict[str, Any]) -> dict[str, Any]:
             quality_gate_included_groups += 1
 
     failed_records = scored_records - passed_records
+    sandbox_groups = [group for group in groups if group["source_type"] == "sandbox_agent_run"]
+    sandbox_records = sum(int(group["records"]) for group in sandbox_groups)
+    sandbox_passed = sum(int(group["passed"]) for group in sandbox_groups)
     return {
         "aggregate": {
             "trend_id": "external_fixtures_all",
@@ -194,12 +199,20 @@ def fixture_trends(fixture_manifest: dict[str, Any]) -> dict[str, Any]:
             "failed": failed_records,
             "pass_rate": percent(passed_records, scored_records),
         },
+        "sandbox_dry_run": {
+            "trend_id": "sandbox_dry_run",
+            "records": sandbox_records,
+            "passed": sandbox_passed,
+            "failed": sandbox_records - sandbox_passed,
+            "pass_rate": percent(sandbox_passed, sandbox_records),
+        },
         "aggregate_failure_modes": sorted_dict(aggregate_failure_modes),
         "counts": {
             "fixture_groups": len(groups),
             "quality_gate_included_groups": quality_gate_included_groups,
             "source_records": source_records,
             "scored_records": scored_records,
+            "sandbox_scored_records": sandbox_records,
             "source_type_counts": sorted_dict(source_type_counts),
             "data_classification_counts": sorted_dict(data_classification_counts),
         },
@@ -706,7 +719,12 @@ def _pass_rate_table(pass_rates: dict[str, Any]) -> str:
     ]
     baseline = pass_rates["baseline"]
     external = pass_rates["external_fixtures"]
-    for point in [baseline, external, *pass_rates["fixture_groups"]]:
+    sandbox = pass_rates.get("sandbox_dry_run")
+    points = [baseline, external]
+    if isinstance(sandbox, dict):
+        points.append(sandbox)
+    points.extend(pass_rates["fixture_groups"])
+    for point in points:
         lines.append(
             f"| `{point['trend_id']}` | {point['records']} | {point['passed']} | "
             f"{point['failed']} | {point['pass_rate']} |"

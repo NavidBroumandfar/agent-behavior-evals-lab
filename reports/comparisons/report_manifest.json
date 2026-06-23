@@ -1,7 +1,7 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.16.0",
-  "generated_at": "2026-06-22T00:00:00Z",
+  "version": "0.17.0",
+  "generated_at": "2026-06-23T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
     "Committed generated Markdown reports under reports/.",
@@ -1351,6 +1351,53 @@
       "snapshot_dependency_paths": [],
       "quality_gate_included": true,
       "notes": "Reader-facing M65 report for public-safe production-policy scenario evidence. It is scenario evidence, not production proof; no production system is touched.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "sandbox_agent_benchmark_snapshot",
+      "label": "Sandbox Agent Benchmark JSON",
+      "path": "reports/comparisons/sandbox_agent_benchmark_report.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/sandbox_agent_benchmark.py",
+      "input_paths": [
+        "schemas/sandbox_agent_run.schema.json",
+        "schemas/sandbox_action_event.schema.json",
+        "traces/external/sandbox_agent_runs.example.jsonl",
+        "traces/external/sandbox_action_events.example.jsonl",
+        "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+        "traces/external/sandbox_agent_benchmark_adjudications.example.jsonl"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "M101A public-safe sandbox dry-run benchmark snapshot with saved outputs and no-side-effect action events.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "sandbox_agent_benchmark_report",
+      "label": "Sandbox Agent Benchmark Report",
+      "path": "reports/comparisons/sandbox_agent_benchmark_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/sandbox_agent_benchmark.py",
+      "input_paths": [
+        "reports/comparisons/sandbox_agent_benchmark_report.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/sandbox_agent_benchmark_report.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M101A sandbox dry-run benchmark report. It is not customer evidence or production execution proof.",
       "safety_assertions": {
         "public_safe": true,
         "live_execution": false,

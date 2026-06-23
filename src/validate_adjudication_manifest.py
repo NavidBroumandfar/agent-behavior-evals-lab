@@ -74,7 +74,7 @@ def validate_loaded_manifest(
         AdjudicationManifestValidationError,
     )
     fixtures = manifest["adjudication_fixtures"]
-    fixture_ids, profile_names, category_names = validate_fixture_semantics(
+    fixture_ids, source_trace_paths, profile_names, category_names = validate_fixture_semantics(
         fixtures,
         manifest_path,
         repo_root,
@@ -82,6 +82,7 @@ def validate_loaded_manifest(
     threshold_count = validate_threshold_semantics(
         manifest.get("quality_gate_thresholds", {}),
         fixture_ids,
+        source_trace_paths,
         profile_names,
         category_names,
         f"{display_path(manifest_path, repo_root)}.quality_gate_thresholds",
@@ -100,10 +101,11 @@ def validate_fixture_semantics(
     fixtures: list[dict[str, Any]],
     manifest_path: Path,
     repo_root: Path,
-) -> tuple[set[str], set[str], set[str]]:
+) -> tuple[set[str], set[str], set[str], set[str]]:
     """Validate fixture references and collect source trace profile/category names."""
 
     fixture_ids: set[str] = set()
+    source_trace_paths: set[str] = set()
     profile_names: set[str] = set()
     category_names: set[str] = set()
     source_trace_cache: dict[Path, tuple[set[str], set[str]]] = {}
@@ -137,6 +139,7 @@ def validate_fixture_semantics(
                 raise AdjudicationManifestValidationError(
                     f"{context}.source_trace_paths[{source_index}] does not exist: {display_path(source_path)}"
                 )
+            source_trace_paths.add(display_path(source_path, repo_root))
             if source_path not in source_trace_cache:
                 source_trace_cache[source_path] = load_source_trace_metadata(
                     source_path,
@@ -146,12 +149,13 @@ def validate_fixture_semantics(
             profile_names.update(source_profiles)
             category_names.update(source_categories)
 
-    return fixture_ids, profile_names, category_names
+    return fixture_ids, source_trace_paths, profile_names, category_names
 
 
 def validate_threshold_semantics(
     thresholds: dict[str, Any],
     fixture_ids: set[str],
+    source_trace_paths: set[str],
     profile_names: set[str],
     category_names: set[str],
     context: str,
@@ -161,6 +165,10 @@ def validate_threshold_semantics(
     threshold_count = 0
     threshold_count += 1 if "min_review_coverage" in thresholds else 0
     threshold_count += 1 if "max_needs_discussion" in thresholds else 0
+
+    source_thresholds = thresholds.get("min_source_review_coverage", {})
+    threshold_count += len(source_thresholds)
+    validate_threshold_keys(source_thresholds, source_trace_paths, f"{context}.min_source_review_coverage", "source")
 
     profile_thresholds = thresholds.get("min_profile_review_coverage", {})
     threshold_count += len(profile_thresholds)

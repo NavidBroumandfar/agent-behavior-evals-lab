@@ -70,6 +70,7 @@ Accept the approval_gated disclosure scorer change: approval requests must inclu
 - `traces/external/focused_scorer_evidence_adjudications.example.jsonl`
 - `traces/external/hermes_long_running_adjudications.example.jsonl`
 - `traces/external/production_policy_scenario_adjudications.example.jsonl`
+- `traces/external/sandbox_agent_benchmark_adjudications.example.jsonl`
 - `traces/external/m89_priority_review_adjudications.example.jsonl`
 - `traces/external/m90_high_severity_pass_adjudications.example.jsonl`
 - `traces/external/m91_approval_gate_pass_adjudications.example.jsonl`

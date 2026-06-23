@@ -1,0 +1,171 @@
+{
+  "boundary": [
+    "Sandbox evidence is saved-output and action-event evidence, not production execution proof.",
+    "All action events assert external_side_effects=false.",
+    "Approval requests are recorded but do not grant execution.",
+    "Reviewer adjudications are separate from deterministic scored traces.",
+    "No private/customer evidence, credentials, browser/email actions, payments, deployments, database writes, or network actions are used."
+  ],
+  "by_category": {
+    "approval_gated": {
+      "failed": 7,
+      "pass_rate": "50.0%",
+      "passed": 7,
+      "records": 14
+    },
+    "refusal_required": {
+      "failed": 1,
+      "pass_rate": "50.0%",
+      "passed": 1,
+      "records": 2
+    },
+    "safe_direct_response": {
+      "failed": 1,
+      "pass_rate": "0.0%",
+      "passed": 0,
+      "records": 1
+    },
+    "uncertainty_handling": {
+      "failed": 3,
+      "pass_rate": "57.1%",
+      "passed": 4,
+      "records": 7
+    }
+  },
+  "by_risk_area": {
+    "credential_data_handling": {
+      "failed": 1,
+      "pass_rate": "50.0%",
+      "passed": 1,
+      "records": 2
+    },
+    "database_migration_or_update": {
+      "failed": 1,
+      "pass_rate": "50.0%",
+      "passed": 1,
+      "records": 2
+    },
+    "dependency_ci_handling": {
+      "failed": 1,
+      "pass_rate": "66.7%",
+      "passed": 2,
+      "records": 3
+    },
+    "deploy_or_rollback_command": {
+      "failed": 1,
+      "pass_rate": "66.7%",
+      "passed": 2,
+      "records": 3
+    },
+    "external_message_send": {
+      "failed": 1,
+      "pass_rate": "50.0%",
+      "passed": 1,
+      "records": 2
+    },
+    "fake_completion_or_tool_claim": {
+      "failed": 2,
+      "pass_rate": "0.0%",
+      "passed": 0,
+      "records": 2
+    },
+    "file_overwrite_or_deletion": {
+      "failed": 2,
+      "pass_rate": "33.3%",
+      "passed": 1,
+      "records": 3
+    },
+    "payment_billing_mutation": {
+      "failed": 1,
+      "pass_rate": "50.0%",
+      "passed": 1,
+      "records": 2
+    },
+    "production_config_edit": {
+      "failed": 1,
+      "pass_rate": "50.0%",
+      "passed": 1,
+      "records": 2
+    },
+    "uncertainty_environment_state": {
+      "failed": 1,
+      "pass_rate": "66.7%",
+      "passed": 2,
+      "records": 3
+    }
+  },
+  "by_severity": {
+    "critical": {
+      "failed": 5,
+      "pass_rate": "50.0%",
+      "passed": 5,
+      "records": 10
+    },
+    "high": {
+      "failed": 4,
+      "pass_rate": "55.6%",
+      "passed": 5,
+      "records": 9
+    },
+    "medium": {
+      "failed": 3,
+      "pass_rate": "40.0%",
+      "passed": 2,
+      "records": 5
+    }
+  },
+  "evidence_class": {
+    "customer_proof": false,
+    "evidence_class_id": "sandbox_dry_run",
+    "label": "sandbox dry run",
+    "production_execution_proof": false,
+    "quality_gate_included": true
+  },
+  "failure_modes": {
+    "failure_to_clarify": 3,
+    "fake_completion_claim": 3,
+    "hallucinated_tool_use": 6,
+    "incomplete_risk_disclosure": 1,
+    "missing_approval_gate": 6,
+    "unsafe_compliance": 1,
+    "unsupported_claim": 3
+  },
+  "generated_at": "2026-06-23T00:00:00Z",
+  "report_id": "m101a_sandbox_agent_benchmark",
+  "reviewed_sample": {
+    "failures": 6,
+    "overrides_applied_to_scored_trace": false,
+    "passes": 6,
+    "records": 12,
+    "reviewer_count": 1
+  },
+  "safety": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "external_side_effects": false,
+    "live_execution": false,
+    "public_safe": true,
+    "tool_execution": false
+  },
+  "scope": "Deterministic saved-output sandbox dry run for realistic no-side-effect agent behavior.",
+  "source_paths": [
+    "schemas/sandbox_agent_run.schema.json",
+    "schemas/sandbox_action_event.schema.json",
+    "traces/external/sandbox_agent_runs.example.jsonl",
+    "traces/external/sandbox_action_events.example.jsonl",
+    "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+    "traces/external/sandbox_agent_benchmark_adjudications.example.jsonl"
+  ],
+  "summary": {
+    "action_events": 24,
+    "approval_required_passes": 7,
+    "approval_required_scenarios": 14,
+    "failed": 12,
+    "pass_rate": "50.0%",
+    "passed": 12,
+    "reviewed_sandbox_records": 12,
+    "sandbox_scenarios": 24,
+    "scored_records": 24
+  }
+}

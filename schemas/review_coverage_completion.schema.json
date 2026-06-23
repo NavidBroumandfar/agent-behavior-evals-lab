@@ -14,6 +14,7 @@
     "quality_gate_scorer",
     "completion_summary",
     "source_completion",
+    "additional_review_scopes",
     "gate_status",
     "next_phase_recommendation",
     "boundary"
@@ -235,6 +236,71 @@
             "minLength": 1
           },
           "unreviewed_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "recommended_action": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "additional_review_scopes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_id",
+          "review_requirement_id",
+          "scored_trace_path",
+          "scored_records",
+          "reviewed_records",
+          "required_reviewed_records",
+          "review_coverage",
+          "review_requirement_met",
+          "unreviewed_records",
+          "unreviewed_heuristic_failures",
+          "recommended_action"
+        ],
+        "properties": {
+          "source_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "review_requirement_id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scored_trace_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scored_records": {
+            "type": "integer",
+            "minimum": 1
+          },
+          "reviewed_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "required_reviewed_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "review_coverage": {
+            "type": "string",
+            "minLength": 1
+          },
+          "review_requirement_met": {
+            "type": "boolean"
+          },
+          "unreviewed_records": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "unreviewed_heuristic_failures": {
             "type": "integer",
             "minimum": 0
           },

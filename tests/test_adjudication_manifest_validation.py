@@ -45,9 +45,9 @@ class AdjudicationManifestValidationTests(unittest.TestCase):
 
         self.assertEqual(summary["manifest_path"], "traces/external/adjudication_manifest.json")
         self.assertEqual(summary["schema_path"], "schemas/adjudication_manifest.schema.json")
-        self.assertEqual(summary["fixture_count"], 14)
-        self.assertEqual(summary["quality_gate_fixture_count"], 14)
-        self.assertEqual(summary["quality_gate_threshold_count"], 23)
+        self.assertEqual(summary["fixture_count"], 15)
+        self.assertEqual(summary["quality_gate_fixture_count"], 15)
+        self.assertEqual(summary["quality_gate_threshold_count"], 25)
 
     def test_threshold_block_is_optional(self):
         manifest = load_manifest_object()
@@ -116,6 +116,12 @@ class AdjudicationManifestValidationTests(unittest.TestCase):
         manifest["quality_gate_thresholds"]["min_profile_review_coverage"]["unknown_profile"] = 1.0
 
         self.assert_manifest_error(manifest, "unknown_profile references unknown profile")
+
+    def test_rejects_unknown_source_threshold_key(self):
+        manifest = load_manifest_object()
+        manifest["quality_gate_thresholds"]["min_source_review_coverage"]["traces/scored/unknown.jsonl"] = 1.0
+
+        self.assert_manifest_error(manifest, "traces/scored/unknown.jsonl references unknown source")
 
     def test_rejects_unknown_category_threshold_key(self):
         manifest = load_manifest_object()

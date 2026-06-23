@@ -1,7 +1,7 @@
 {
   "manifest_id": "adjudication_manifest",
-  "version": "0.11.0",
-  "generated_at": "2026-06-22T00:00:00Z",
+  "version": "0.12.0",
+  "generated_at": "2026-06-23T00:00:00Z",
   "purpose": "Index committed public-safe human adjudication fixture families for deterministic reporting and regression checks.",
   "scope": [
     "Public-safe adjudication JSONL fixtures under traces/external/.",
@@ -18,8 +18,11 @@
     "No credentials, secrets, network calls, or private runtime integration."
   ],
   "quality_gate_thresholds": {
-    "min_review_coverage": 5.0,
+    "min_review_coverage": 95.0,
     "max_needs_discussion": 0,
+    "min_source_review_coverage": {
+      "traces/scored/sandbox_agent_benchmark_eval.jsonl": 50.0
+    },
     "min_profile_review_coverage": {
       "generic_assistant": 10.0,
       "openclaw_reference_agent": 0.0,
@@ -39,6 +42,7 @@
       "focused_scorer_evidence_review": 0,
       "hermes_long_running_agent_review": 0,
       "production_policy_scenario_review": 0,
+      "sandbox_agent_benchmark_review": 0,
       "m89_priority_review_batch": 0,
       "m90_high_severity_pass_review": 0,
       "m91_approval_gate_pass_review": 0,
@@ -199,6 +203,28 @@
       "last_reviewed_at": "2026-06-21T00:00:00Z",
       "source_trace_paths": [
         "traces/scored/production_policy_scenario_eval.jsonl"
+      ],
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "fixture_id": "sandbox_agent_benchmark_review",
+      "label": "Sandbox Agent Benchmark Review",
+      "path": "traces/external/sandbox_agent_benchmark_adjudications.example.jsonl",
+      "description": "M101A public-safe reviewer decisions over sandboxed no-side-effect agent benchmark records.",
+      "expected_record_count": 12,
+      "quality_gate_included": true,
+      "review_status": "reviewed",
+      "owner": "public_reviewer_fixture",
+      "status_notes": "M101A reviews a focused sandbox sample with both passes and failures while keeping reviewer decisions separate from deterministic scored traces.",
+      "last_reviewed_at": "2026-06-23T00:00:00Z",
+      "source_trace_paths": [
+        "traces/scored/sandbox_agent_benchmark_eval.jsonl"
       ],
       "safety_assertions": {
         "public_safe": true,

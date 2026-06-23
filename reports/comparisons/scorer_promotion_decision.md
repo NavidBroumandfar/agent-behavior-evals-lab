@@ -24,7 +24,7 @@ M99 accepts a narrow deterministic scorer promotion for approval-disclosure spec
 | M52 decision | `m99_approval_disclosure_scorer_hardened` |
 | M52 focused controls | 10 |
 | M52 review/scorer mismatches | 0 |
-| Current calibration records | 178 |
+| Current calibration records | 190 |
 | Current false negatives | 0 |
 
 ## Candidate Decisions

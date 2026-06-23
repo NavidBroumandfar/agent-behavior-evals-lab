@@ -1,7 +1,7 @@
 {
-  "adjudication_fixture_count": 14,
+  "adjudication_fixture_count": 15,
   "adjudication_fixture_statuses": {
-    "reviewed": 14
+    "reviewed": 15
   },
   "adjudication_fixtures": {
     "baseline_followup_review_queue": {
@@ -227,66 +227,82 @@
         "uphold_score": 6
       },
       "status_notes": "M65 adds public-safe adjudications for database, deployment, credential, payment, external messaging, and customer-data scenario evidence without live production-system access."
+    },
+    "sandbox_agent_benchmark_review": {
+      "label": "Sandbox Agent Benchmark Review",
+      "last_reviewed_at": "2026-06-23T00:00:00Z",
+      "owner": "public_reviewer_fixture",
+      "path": "traces/external/sandbox_agent_benchmark_adjudications.example.jsonl",
+      "quality_gate_included": true,
+      "records": 12,
+      "review_status": "reviewed",
+      "reviewer_decisions": {
+        "needs_discussion": 0,
+        "override_fail": 0,
+        "override_pass": 0,
+        "uphold_score": 12
+      },
+      "status_notes": "M101A reviews a focused sandbox sample with both passes and failures while keeping reviewer decisions separate from deterministic scored traces."
     }
   },
   "adjudication_input": "traces/external/adjudication_manifest.json",
-  "adjudication_records": 178,
+  "adjudication_records": 190,
   "failure_mode_distribution": {
     "adjudicated": {
       "failure_to_clarify": 6,
-      "fake_completion_claim": 3,
-      "hallucinated_tool_use": 3,
-      "incomplete_risk_disclosure": 10,
-      "missing_approval_gate": 14,
+      "fake_completion_claim": 4,
+      "hallucinated_tool_use": 5,
+      "incomplete_risk_disclosure": 11,
+      "missing_approval_gate": 18,
       "over_refusal": 5,
-      "unsafe_compliance": 2,
+      "unsafe_compliance": 3,
       "unsupported_claim": 5
     },
     "original": {
       "failure_to_clarify": 6,
-      "fake_completion_claim": 3,
-      "hallucinated_tool_use": 3,
-      "incomplete_risk_disclosure": 10,
-      "missing_approval_gate": 14,
+      "fake_completion_claim": 4,
+      "hallucinated_tool_use": 5,
+      "incomplete_risk_disclosure": 11,
+      "missing_approval_gate": 18,
       "over_refusal": 6,
-      "unsafe_compliance": 2,
+      "unsafe_compliance": 3,
       "unsupported_claim": 5
     }
   },
   "result_summary": {
-    "adjudicated_failed": 37,
-    "adjudicated_pass_rate": "79.2%",
-    "adjudicated_passed": 141,
+    "adjudicated_failed": 43,
+    "adjudicated_pass_rate": "77.4%",
+    "adjudicated_passed": 147,
     "changed_failure_modes_count": 1,
     "changed_result_count": 1,
-    "original_failed": 38,
-    "original_pass_rate": "78.7%",
-    "original_passed": 140
+    "original_failed": 44,
+    "original_pass_rate": "76.8%",
+    "original_passed": 146
   },
   "review_coverage_by_category": {
     "approval_gated": {
-      "review_coverage": "100.0%",
-      "reviewed_records": 65,
-      "source_records": 65,
-      "unreviewed_records": 0
+      "review_coverage": "93.7%",
+      "reviewed_records": 74,
+      "source_records": 79,
+      "unreviewed_records": 5
     },
     "refusal_required": {
       "review_coverage": "100.0%",
-      "reviewed_records": 32,
-      "source_records": 32,
+      "reviewed_records": 34,
+      "source_records": 34,
       "unreviewed_records": 0
     },
     "safe_direct_response": {
-      "review_coverage": "100.0%",
+      "review_coverage": "97.9%",
       "reviewed_records": 46,
-      "source_records": 46,
-      "unreviewed_records": 0
+      "source_records": 47,
+      "unreviewed_records": 1
     },
     "uncertainty_handling": {
-      "review_coverage": "100.0%",
-      "reviewed_records": 35,
-      "source_records": 35,
-      "unreviewed_records": 0
+      "review_coverage": "85.7%",
+      "reviewed_records": 36,
+      "source_records": 42,
+      "unreviewed_records": 6
     }
   },
   "review_coverage_by_profile": {
@@ -307,6 +323,30 @@
       "reviewed_records": 58,
       "source_records": 58,
       "unreviewed_records": 0
+    },
+    "sandbox_partial_agent": {
+      "review_coverage": "100.0%",
+      "reviewed_records": 1,
+      "source_records": 1,
+      "unreviewed_records": 0
+    },
+    "sandbox_reference_agent": {
+      "review_coverage": "62.5%",
+      "reviewed_records": 5,
+      "source_records": 8,
+      "unreviewed_records": 3
+    },
+    "sandbox_risky_agent": {
+      "review_coverage": "45.5%",
+      "reviewed_records": 5,
+      "source_records": 11,
+      "unreviewed_records": 6
+    },
+    "sandbox_uncertain_agent": {
+      "review_coverage": "25.0%",
+      "reviewed_records": 1,
+      "source_records": 4,
+      "unreviewed_records": 3
     },
     "strict_approval_agent": {
       "review_coverage": "100.0%",
@@ -376,6 +416,12 @@
       "source_records": 8,
       "unreviewed_records": 0
     },
+    "traces/scored/sandbox_agent_benchmark_eval.jsonl": {
+      "review_coverage": "50.0%",
+      "reviewed_records": 12,
+      "source_records": 24,
+      "unreviewed_records": 12
+    },
     "traces/scored/saved_transcript_replay_eval.jsonl": {
       "review_coverage": "100.0%",
       "reviewed_records": 5,
@@ -385,18 +431,18 @@
   },
   "reviewed_by_category": {
     "approval_gated": {
-      "adjudicated_failed": 24,
+      "adjudicated_failed": 29,
       "needs_discussion": 0,
-      "original_failed": 24,
+      "original_failed": 29,
       "overrides": 0,
-      "reviewed": 65
+      "reviewed": 74
     },
     "refusal_required": {
-      "adjudicated_failed": 2,
+      "adjudicated_failed": 3,
       "needs_discussion": 0,
-      "original_failed": 2,
+      "original_failed": 3,
       "overrides": 0,
-      "reviewed": 32
+      "reviewed": 34
     },
     "safe_direct_response": {
       "adjudicated_failed": 5,
@@ -410,7 +456,7 @@
       "needs_discussion": 0,
       "original_failed": 6,
       "overrides": 0,
-      "reviewed": 35
+      "reviewed": 36
     }
   },
   "reviewed_by_profile": {
@@ -435,6 +481,34 @@
       "overrides": 0,
       "reviewed": 58
     },
+    "sandbox_partial_agent": {
+      "adjudicated_failed": 1,
+      "needs_discussion": 0,
+      "original_failed": 1,
+      "overrides": 0,
+      "reviewed": 1
+    },
+    "sandbox_reference_agent": {
+      "adjudicated_failed": 0,
+      "needs_discussion": 0,
+      "original_failed": 0,
+      "overrides": 0,
+      "reviewed": 5
+    },
+    "sandbox_risky_agent": {
+      "adjudicated_failed": 5,
+      "needs_discussion": 0,
+      "original_failed": 5,
+      "overrides": 0,
+      "reviewed": 5
+    },
+    "sandbox_uncertain_agent": {
+      "adjudicated_failed": 0,
+      "needs_discussion": 0,
+      "original_failed": 0,
+      "overrides": 0,
+      "reviewed": 1
+    },
     "strict_approval_agent": {
       "adjudicated_failed": 6,
       "needs_discussion": 0,
@@ -448,8 +522,8 @@
     "needs_discussion": 0,
     "override_fail": 0,
     "override_pass": 1,
-    "uphold_score": 177
+    "uphold_score": 189
   },
-  "source_trace_count": 11,
-  "source_trace_records": 178
+  "source_trace_count": 12,
+  "source_trace_records": 202
 }

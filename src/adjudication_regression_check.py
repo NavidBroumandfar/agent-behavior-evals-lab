@@ -90,6 +90,7 @@ def check_snapshot(
     min_review_coverage: float | None = None,
     max_needs_discussion: int | None = None,
     manifest_path: Path | None = None,
+    min_source_review_coverage: dict[str, float] | None = None,
     min_profile_review_coverage: dict[str, float] | None = None,
     min_category_review_coverage: dict[str, float] | None = None,
     max_fixture_needs_discussion: dict[str, int] | None = None,
@@ -101,6 +102,7 @@ def check_snapshot(
         manifest_thresholds,
         min_review_coverage=min_review_coverage,
         max_needs_discussion=max_needs_discussion,
+        min_source_review_coverage=min_source_review_coverage,
         min_profile_review_coverage=min_profile_review_coverage,
         min_category_review_coverage=min_category_review_coverage,
         max_fixture_needs_discussion=max_fixture_needs_discussion,
@@ -113,6 +115,7 @@ def check_snapshot(
             current,
             effective_thresholds.min_review_coverage,
             effective_thresholds.max_needs_discussion,
+            effective_thresholds.min_source_review_coverage,
             effective_thresholds.min_profile_review_coverage,
             effective_thresholds.min_category_review_coverage,
             effective_thresholds.max_fixture_needs_discussion,
@@ -156,6 +159,7 @@ def quality_gate_thresholds_with_overrides(
     manifest_thresholds: AdjudicationQualityGateThresholds,
     min_review_coverage: float | None = None,
     max_needs_discussion: int | None = None,
+    min_source_review_coverage: dict[str, float] | None = None,
     min_profile_review_coverage: dict[str, float] | None = None,
     min_category_review_coverage: dict[str, float] | None = None,
     max_fixture_needs_discussion: dict[str, int] | None = None,
@@ -173,6 +177,10 @@ def quality_gate_thresholds_with_overrides(
             if max_needs_discussion is None
             else max_needs_discussion
         ),
+        min_source_review_coverage={
+            **manifest_thresholds.min_source_review_coverage,
+            **(min_source_review_coverage or {}),
+        },
         min_profile_review_coverage={
             **manifest_thresholds.min_profile_review_coverage,
             **(min_profile_review_coverage or {}),
@@ -207,6 +215,7 @@ def threshold_violations(
     snapshot: dict[str, Any],
     min_review_coverage: float | None = None,
     max_needs_discussion: int | None = None,
+    min_source_review_coverage: dict[str, float] | None = None,
     min_profile_review_coverage: dict[str, float] | None = None,
     min_category_review_coverage: dict[str, float] | None = None,
     max_fixture_needs_discussion: dict[str, int] | None = None,
@@ -214,17 +223,20 @@ def threshold_violations(
     """Return review threshold violations for optional quality gates."""
 
     violations: list[str] = []
-    if min_review_coverage is not None:
+    if min_review_coverage is not None or min_source_review_coverage:
         coverage_by_source = snapshot.get("review_coverage_by_source_trace", {})
         if not isinstance(coverage_by_source, dict):
             raise AdjudicationRegressionError("review_coverage_by_source_trace must be an object")
         for source_trace, coverage in sorted(coverage_by_source.items()):
             if not isinstance(coverage, dict):
                 raise AdjudicationRegressionError(f"{source_trace}.review_coverage must be an object")
+            threshold = (min_source_review_coverage or {}).get(source_trace, min_review_coverage)
+            if threshold is None:
+                continue
             actual = _parse_percent(str(coverage.get("review_coverage", "0.0%")))
-            if actual < min_review_coverage:
+            if actual < threshold:
                 violations.append(
-                    f"{source_trace}.review_coverage: expected at least {min_review_coverage:.1f}%, found {actual:.1f}%"
+                    f"{source_trace}.review_coverage: expected at least {threshold:.1f}%, found {actual:.1f}%"
                 )
 
     if max_needs_discussion is not None:
@@ -598,6 +610,13 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         help="Override or add a minimum reviewed-record coverage percentage for a specific profile. Repeatable.",
     )
     parser.add_argument(
+        "--min-source-review-coverage",
+        action="append",
+        default=[],
+        metavar="SOURCE_TRACE=PERCENT",
+        help="Override or add a minimum reviewed-record coverage percentage for a specific source trace. Repeatable.",
+    )
+    parser.add_argument(
         "--min-category-review-coverage",
         action="append",
         default=[],
@@ -633,6 +652,10 @@ def main(argv: list[str] | None = None) -> int:
             args.min_profile_review_coverage,
             "--min-profile-review-coverage",
         )
+        min_source_review_coverage = parse_percent_thresholds(
+            args.min_source_review_coverage,
+            "--min-source-review-coverage",
+        )
         min_category_review_coverage = parse_percent_thresholds(
             args.min_category_review_coverage,
             "--min-category-review-coverage",
@@ -653,6 +676,7 @@ def main(argv: list[str] | None = None) -> int:
             min_review_coverage,
             max_needs_discussion,
             manifest_path,
+            min_source_review_coverage=min_source_review_coverage,
             min_profile_review_coverage=min_profile_review_coverage,
             min_category_review_coverage=min_category_review_coverage,
             max_fixture_needs_discussion=max_fixture_needs_discussion,

@@ -1,4 +1,19 @@
 {
+  "additional_review_scopes": [
+    {
+      "recommended_action": "review_unreviewed_heuristic_failures_first",
+      "required_reviewed_records": 12,
+      "review_coverage": "50.0%",
+      "review_requirement_id": "m101a_sandbox_minimum_review_sample",
+      "review_requirement_met": true,
+      "reviewed_records": 12,
+      "scored_records": 24,
+      "scored_trace_path": "traces/scored/sandbox_agent_benchmark_eval.jsonl",
+      "source_id": "sandbox_agent_benchmark",
+      "unreviewed_heuristic_failures": 6,
+      "unreviewed_records": 12
+    }
+  ],
   "boundary": [
     "This gate validates completed public-safe reviewer coverage only.",
     "The deterministic heuristic scorer remains the quality-gate scorer.",
@@ -16,8 +31,8 @@
     "scored_records": 178,
     "scorer_false_negative_count": 0,
     "scorer_false_positive_count": 1,
-    "scorer_review_agreement_rate": "99.4%",
-    "scorer_review_agreements": 177,
+    "scorer_review_agreement_rate": "99.5%",
+    "scorer_review_agreements": 189,
     "scorer_review_disagreements": 1,
     "unreviewed_heuristic_failures": 0,
     "unreviewed_high_or_critical_records": 0,
@@ -35,14 +50,14 @@
   },
   "generated_at": "2026-06-22T00:00:00Z",
   "next_phase_recommendation": {
-    "phase_id": "new_public_safe_scored_trace_or_case_expansion",
-    "rationale": "The M89-M95 reviewer queue is exhausted for the current 174 scoped scored records. The next roadmap phase should add new public-safe scored evidence or case coverage before starting another reviewer batch.",
+    "phase_id": "m101a_sandbox_or_future_public_safe_review_expansion",
+    "rationale": "The M89-M95 reviewer queue is exhausted for the current 178 completion-scoped scored records. M101A sandbox dry-run evidence has its separate minimum review sample met; remaining sandbox records stay advisory rather than blocking the M96 lock.",
     "recommended_next_steps": [
       "Maintain this completion gate so stale review coverage or unexpected recommended batches fail locally.",
-      "Start new reviewer work only after a public-safe scored-trace or case-corpus expansion changes the scope.",
+      "Expand sandbox review coverage in future phases when the M101A sample should move from minimum evidence to full reviewed coverage.",
       "Keep the deterministic heuristic scorer as the quality-gate scorer; model-assisted review stays optional and non-gated."
     ],
-    "reviewer_work_status": "paused_until_new_scope"
+    "reviewer_work_status": "completion_scope_locked_m101a_sample_met"
   },
   "quality_gate_scorer": {
     "accepted_scorer_changes": 0,

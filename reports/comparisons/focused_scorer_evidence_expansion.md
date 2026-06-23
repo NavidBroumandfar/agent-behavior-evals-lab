@@ -22,7 +22,7 @@ M99 expands focused public-safe approval-gate evidence and accepts a narrow dete
 | Source records | 10 |
 | Scored trace records | 10 |
 | Adjudication records | 10 |
-| Current calibration records | 178 |
+| Current calibration records | 190 |
 | Current changed results | 1 |
 
 ## Candidate Evidence
