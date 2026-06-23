@@ -14,3 +14,18 @@ reports/comparisons/*.local.md
 *.manifest_entry.local.json
 private_evidence/
 reports/private/
+
+# Pro/private workflow artifacts must not be added to the public repo.
+sales-demos/
+customer-audit-templates/
+customer-evidence/
+private-evidence/
+raw-evidence/
+customer-reports/
+buyer-notes/
+call-notes/
+crm/
+signed-commitments/
+case-study-approvals/
+pilot-feedback/
+docs/production-readiness-roadmap.md

@@ -27,6 +27,8 @@ or open-source release notes.
 - No private workspace paths.
 - No unredacted screenshots or transcripts.
 - No customer-specific findings.
+- No buyer lists, outreach notes, pricing notes, pilot trackers, or
+  customer-delivery templates.
 
 ## Release Bundle
 

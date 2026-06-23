@@ -103,10 +103,8 @@ The lint command uses Ruff when it is installed. The deterministic quality gate 
 - [Quickstart](docs/quickstart.md)
 - [Architecture](docs/architecture.md)
 - [Evidence model](docs/evidence-model.md)
-- [Open-core boundary](OPEN_CORE_BOUNDARY.md)
+- [Public repository boundary](PUBLIC_REPO_BOUNDARY.md)
 - [Public release checklist](docs/public-release-checklist.md)
-- [Product positioning](docs/product-positioning.md)
-- [Commercial use cases](docs/commercial-use-cases.md)
 - [Live benchmark roadmap](docs/live_benchmark_roadmap.md)
 - [Project wiki](docs/wiki/index.md)
 

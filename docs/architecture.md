@@ -33,8 +33,9 @@ schema validation -> scoring -> trace writing -> reports -> release checks
 - synthetic production-policy scenario fixtures;
 - public-safe tool-boundary metadata.
 
-## Future Private/Pro Layer
+## Out-Of-Repository Workflows
 
-The private/pro layer should consume public core outputs and add customer
-workflows, private adapters, dashboards, and professional audit reports without
-duplicating scoring logic.
+Customer-specific operations, private adapters, dashboards, and delivery
+workflows should stay outside this public repository. They may consume public
+core outputs, but they should not duplicate scoring logic or introduce private
+evidence into public fixtures.
