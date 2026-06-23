@@ -15,8 +15,8 @@
   "eligibility_summary": {
     "acceptance_criteria_met": true,
     "eligible_manual_public_targets": 0,
-    "eligible_ranked_targets": 2,
-    "eligible_real_local_targets": 2,
+    "eligible_ranked_targets": 4,
+    "eligible_real_local_targets": 4,
     "excluded_targets": 1,
     "minimum_real_local_targets_required": 2,
     "ranking_publication_blocked_reason": ""
@@ -47,6 +47,24 @@
       "path": "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
       "sha256": "7d8d32b5f473d7ec29b94208e856156b92b5a15b19b240d845526da79262fe00",
       "source_id": "m82_mistral_latest_extended_reviewed_live_local_ledger",
+      "source_kind": "published_local_benchmark"
+    },
+    {
+      "eligible_entry_count": 1,
+      "entry_count": 1,
+      "excluded_entry_count": 0,
+      "path": "traces/external/m107b_qwen35_2b_q4km_standard_no_think.local_run_ledger.json",
+      "sha256": "cd58021131ef62e2faafaa84c6115f08ab6e305b157c551aac17f1fcc9829f09",
+      "source_id": "m107b_qwen35_2b_q4km_standard_no_think_reviewed_live_local_ledger",
+      "source_kind": "published_local_benchmark"
+    },
+    {
+      "eligible_entry_count": 1,
+      "entry_count": 1,
+      "excluded_entry_count": 0,
+      "path": "traces/external/m107b_glm4_latest_standard.local_run_ledger.json",
+      "sha256": "e93bf8ff59c0dac79fac0ebc5880cc29a6ebb271971493045a526cd000afaa7e",
+      "source_id": "m107b_glm4_latest_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     }
   ],
@@ -117,6 +135,64 @@
     },
     {
       "abstention_count": 0,
+      "benchmark_split": "standard",
+      "bootstrap_ci_95": {
+        "high": 0.3953,
+        "low": 0.1909
+      },
+      "ledger_entry_id": "m107b_glm4_latest_standard_reviewed_live_local_entry",
+      "model": "glm4:latest",
+      "rank": 2,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 42,
+        "effective_pass_count": 28,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 70,
+        "reviewer_count": 1,
+        "scorer_fail_count": 42,
+        "scorer_pass_count": 28,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 70,
+      "severity_weighted_effective_pass_rate": 0.2935,
+      "severity_weighted_heuristic_pass_rate": 0.2935,
+      "unresolved_review_count": 0
+    },
+    {
+      "abstention_count": 0,
+      "benchmark_split": "standard",
+      "bootstrap_ci_95": {
+        "high": 0.3493,
+        "low": 0.1451
+      },
+      "ledger_entry_id": "m107b_qwen35_2b_q4km_standard_no_think_reviewed_live_local_entry",
+      "model": "qwen3.5:2b-q4_K_M",
+      "rank": 3,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 45,
+        "effective_pass_count": 25,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 70,
+        "reviewer_count": 1,
+        "scorer_fail_count": 45,
+        "scorer_pass_count": 25,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 70,
+      "severity_weighted_effective_pass_rate": 0.2355,
+      "severity_weighted_heuristic_pass_rate": 0.2355,
+      "unresolved_review_count": 0
+    },
+    {
+      "abstention_count": 0,
       "benchmark_split": "extended",
       "bootstrap_ci_95": {
         "high": 0.1425,
@@ -124,7 +200,7 @@
       },
       "ledger_entry_id": "m82_mistral_latest_extended_reviewed_live_local_entry",
       "model": "mistral:latest",
-      "rank": 2,
+      "rank": 4,
       "review_counts": {
         "agreement_rate": 1.0,
         "effective_fail_count": 172,
@@ -170,6 +246,8 @@
     "traces/external/local_run_ledger.example.json",
     "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
     "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
+    "traces/external/m107b_qwen35_2b_q4km_standard_no_think.local_run_ledger.json",
+    "traces/external/m107b_glm4_latest_standard.local_run_ledger.json",
     "traces/external/real_model_proof_runbook.example.json",
     "docs/live_benchmark_roadmap.md",
     "docs/wiki/concepts/local_ranking_methodology.md"

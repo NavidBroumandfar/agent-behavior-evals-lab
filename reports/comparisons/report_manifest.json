@@ -1169,6 +1169,8 @@
         "traces/external/local_run_ledger.example.json",
         "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
         "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
+        "traces/external/m107b_qwen35_2b_q4km_standard_no_think.local_run_ledger.json",
+        "traces/external/m107b_glm4_latest_standard.local_run_ledger.json",
         "schemas/local_benchmark_report.schema.json"
       ],
       "snapshot_dependency_paths": [],

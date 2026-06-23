@@ -81,6 +81,13 @@ M107B_QWEN_RUN_LEDGER_PATH = REPO_ROOT / "traces/external/m107b_qwen35_2b_q4km_s
 M107B_QWEN_SCORED_TRACE_PATH = REPO_ROOT / "traces/scored/m107b_qwen35_2b_q4km_standard_no_think.reviewed_live_local_eval.jsonl"
 EXPECTED_M107B_QWEN_REVIEWED_LINES = 70
 EXPECTED_M107B_QWEN_SCORED_TRACE_LINES = 70
+M107B_GLM_REVIEWED_OUTPUT_PATH = REPO_ROOT / "traces/external/m107b_glm4_latest_standard.reviewed_live_local_outputs.jsonl"
+M107B_GLM_REVIEW_SUMMARY_PATH = REPO_ROOT / "traces/external/m107b_glm4_latest_standard.review_summary.json"
+M107B_GLM_RUN_METADATA_PATH = REPO_ROOT / "traces/external/m107b_glm4_latest_standard.run_metadata.json"
+M107B_GLM_RUN_LEDGER_PATH = REPO_ROOT / "traces/external/m107b_glm4_latest_standard.local_run_ledger.json"
+M107B_GLM_SCORED_TRACE_PATH = REPO_ROOT / "traces/scored/m107b_glm4_latest_standard.reviewed_live_local_eval.jsonl"
+EXPECTED_M107B_GLM_REVIEWED_LINES = 70
+EXPECTED_M107B_GLM_SCORED_TRACE_LINES = 70
 LOCAL_RANKING_METHODOLOGY_PATH = REPO_ROOT / "benchmarks/local_ranking_methodology.json"
 LOCAL_RANKING_METHODOLOGY_INPUT_PATH = REPO_ROOT / "traces/external/local_ranking_methodology_inputs.example.json"
 LOCAL_RANKING_METHODOLOGY_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/local_ranking_methodology_example.json"
@@ -736,6 +743,18 @@ CHECKS = [
         ],
     ),
     (
+        "M107B GLM reviewed live-local ledger generation",
+        ["python3", "src/m107b_glm_reviewed_ledger.py"],
+    ),
+    (
+        "M107B GLM reviewed live-local ledger validation",
+        [
+            "python3",
+            "src/validate_local_run_ledger.py",
+            "traces/external/m107b_glm4_latest_standard.local_run_ledger.json",
+        ],
+    ),
+    (
         "local ranking methodology generation",
         ["python3", "src/local_ranking_methodology.py"],
     ),
@@ -846,6 +865,7 @@ CHECKS = [
             "src/m79_llama3_2_reviewed_ledger.py",
             "src/m82_mistral_reviewed_ledger.py",
             "src/m107b_qwen_reviewed_ledger.py",
+            "src/m107b_glm_reviewed_ledger.py",
             "src/local_ranking_methodology.py",
             "src/validate_local_ranking_methodology.py",
             "src/local_benchmark_report.py",
@@ -1077,6 +1097,14 @@ def main() -> int:
                 verify_trace_count(M107B_QWEN_SCORED_TRACE_PATH, EXPECTED_M107B_QWEN_SCORED_TRACE_LINES)
             if name == "M107B Qwen reviewed live-local ledger validation":
                 verify_report_exists(M107B_QWEN_RUN_LEDGER_PATH)
+            if name == "M107B GLM reviewed live-local ledger generation":
+                verify_jsonl_count(M107B_GLM_REVIEWED_OUTPUT_PATH, EXPECTED_M107B_GLM_REVIEWED_LINES)
+                verify_report_exists(M107B_GLM_REVIEW_SUMMARY_PATH)
+                verify_report_exists(M107B_GLM_RUN_METADATA_PATH)
+                verify_report_exists(M107B_GLM_RUN_LEDGER_PATH)
+                verify_trace_count(M107B_GLM_SCORED_TRACE_PATH, EXPECTED_M107B_GLM_SCORED_TRACE_LINES)
+            if name == "M107B GLM reviewed live-local ledger validation":
+                verify_report_exists(M107B_GLM_RUN_LEDGER_PATH)
             if name == "local ranking methodology generation":
                 verify_report_exists(LOCAL_RANKING_METHODOLOGY_PATH)
                 verify_report_exists(LOCAL_RANKING_METHODOLOGY_INPUT_PATH)
