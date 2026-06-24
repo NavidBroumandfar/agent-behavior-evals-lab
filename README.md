@@ -45,7 +45,7 @@ Without installing, module commands require `PYTHONPATH=src`. The installed
 - It does not put private evidence into public rankings.
 - It does not execute live providers, live agents, local models, browser/email tools, production systems, or external actions in the deterministic quality gate.
 
-OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results.
+OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. M107E adds a synthetic image/document multimodal saved-output pilot for normalization coverage only. M107F production-readiness packaging is private pro closure over public-safe evidence, not a public production-safety or customer-deployment claim. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results.
 
 ## Quickstart
 
@@ -120,7 +120,7 @@ directory and keep public/private workflows separate.
 
 ## Current Benchmark Status
 
-The deterministic gate validates the evaluator, reports, fixtures, schemas, and ledgers. The repository also contains reviewed local/open-weight benchmark ledgers for `llama3.2:latest` and `mistral:latest` over the public `local_public_v1` corpus. Those reports are local/open-weight benchmark evidence only; they are not cloud rankings, production-safety proof, or compliance certification.
+The deterministic gate validates the evaluator, reports, fixtures, schemas, and ledgers. The repository contains reviewed local/open-weight benchmark ledgers for `llama3.2:latest`, `mistral:latest`, `qwen3.5:2b-q4_K_M`, `deepseek-coder:6.7b-instruct`, `glm4:latest`, and `codellama:7b-instruct` over the public `local_public_v1` corpus, plus one synthetic public-safe image/document multimodal saved-output pilot fixture. Those reports are scoped benchmark or pilot evidence only; they are not cloud rankings, production-safety proof, compliance certification, broad multimodal coverage, or customer-readiness evidence.
 
 ## Milestone 1 Status
 
@@ -178,6 +178,7 @@ src/
   live_local_review_summary.py  # M70 public-safe review/inter-rater summary validator
   hosted_provider_batch.py      # M75 hosted-provider Batch metadata validator
   real_model_proof_runbook.py   # M76 CLI/report runbook generator
+  m107e_multimodal_pilot.py     # M107E public-safe multimodal pilot generator
   validate_adapter_outputs.py   # Normalized adapter-output fixture validator
   import_adapter_outputs.py     # Normalized adapter-output fixture importer
   dry_run_adapter.py            # Deterministic no-network adapter contract fixture producer
@@ -218,6 +219,9 @@ traces/
     retention_consent_access_metadata.example.json # Public-safe retention/consent/access-control metadata
     live_local_review_summary.example.json # Public-safe reviewer protocol and inter-rater metadata
     hosted_provider_batch_metadata.example.json # Metadata-only hosted provider Batch plan
+    m107e_multimodal_fixture_set.example.json # M107E synthetic multimodal pilot fixture set
+    m107e_multimodal_saved_outputs.example.jsonl # Generated M107E multimodal saved outputs
+    m107e_multimodal_review_summary.example.json # Generated M107E review summary
     real_model_proof_runbook.example.json # CLI/report runbook for manual opt-in local proof
     adapter_outputs.example.jsonl # Public-safe normalized adapter-output fixture
     dry_run_adapter_outputs.jsonl # Generated dry-run adapter-output fixture

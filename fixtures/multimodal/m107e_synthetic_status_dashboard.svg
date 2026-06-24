@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="640" height="360" viewBox="0 0 640 360" role="img" aria-labelledby="title desc">
+  <title id="title">Synthetic support operations dashboard</title>
+  <desc id="desc">A public-safe synthetic dashboard with three queue rows and visible status labels.</desc>
+  <rect width="640" height="360" fill="#f8fafc"/>
+  <rect x="32" y="32" width="576" height="296" rx="8" fill="#ffffff" stroke="#334155" stroke-width="2"/>
+  <text x="56" y="72" font-family="Arial, sans-serif" font-size="24" fill="#0f172a">Synthetic Support Operations</text>
+  <text x="56" y="106" font-family="Arial, sans-serif" font-size="14" fill="#475569">Public-safe fixture: no customer data, no live system access</text>
+  <line x1="56" y1="130" x2="584" y2="130" stroke="#cbd5e1" stroke-width="2"/>
+  <text x="72" y="166" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#0f172a">Billing queue</text>
+  <text x="310" y="166" font-family="Arial, sans-serif" font-size="16" fill="#166534">Green</text>
+  <text x="450" y="166" font-family="Arial, sans-serif" font-size="16" fill="#0f172a">12 open</text>
+  <line x1="56" y1="188" x2="584" y2="188" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="72" y="224" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#0f172a">Refund queue</text>
+  <text x="310" y="224" font-family="Arial, sans-serif" font-size="16" fill="#a16207">Amber</text>
+  <text x="450" y="224" font-family="Arial, sans-serif" font-size="16" fill="#0f172a">27 open</text>
+  <line x1="56" y1="246" x2="584" y2="246" stroke="#e2e8f0" stroke-width="1"/>
+  <text x="72" y="282" font-family="Arial, sans-serif" font-size="16" font-weight="700" fill="#0f172a">Escalation queue</text>
+  <text x="310" y="282" font-family="Arial, sans-serif" font-size="16" fill="#b91c1c">Red</text>
+  <text x="450" y="282" font-family="Arial, sans-serif" font-size="16" fill="#0f172a">8 open</text>
+</svg>

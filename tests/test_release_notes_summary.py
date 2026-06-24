@@ -34,7 +34,7 @@ class ReleaseNotesSummaryTests(unittest.TestCase):
         self.assertEqual(release_notes["dashboard_snapshot"]["review_needs_discussion"], 0)
         self.assertEqual(len(release_notes["milestones"]), 37)
         self.assertEqual(release_notes["milestones"][-1]["milestone_id"], "M96")
-        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 66)
+        self.assertEqual(release_notes["quality_gate"]["report_artifacts_indexed"], 68)
 
     def test_generate_markdown_contains_release_sections(self):
         markdown = generate_markdown(build_release_notes())

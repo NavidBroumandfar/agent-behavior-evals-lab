@@ -180,6 +180,12 @@ SANDBOX_AGENT_ADJUDICATION_PATH = REPO_ROOT / "traces/external/sandbox_agent_ben
 EXPECTED_SANDBOX_AGENT_ADJUDICATION_LINES = 12
 SANDBOX_AGENT_REPORT_JSON_PATH = REPO_ROOT / "reports/comparisons/sandbox_agent_benchmark_report.json"
 SANDBOX_AGENT_REPORT_PATH = REPO_ROOT / "reports/comparisons/sandbox_agent_benchmark_report.md"
+M107E_MULTIMODAL_FIXTURE_SET_PATH = REPO_ROOT / "traces/external/m107e_multimodal_fixture_set.example.json"
+M107E_MULTIMODAL_SAVED_OUTPUT_PATH = REPO_ROOT / "traces/external/m107e_multimodal_saved_outputs.example.jsonl"
+EXPECTED_M107E_MULTIMODAL_SAVED_OUTPUT_LINES = 2
+M107E_MULTIMODAL_REVIEW_SUMMARY_PATH = REPO_ROOT / "traces/external/m107e_multimodal_review_summary.example.json"
+M107E_MULTIMODAL_REPORT_JSON_PATH = REPO_ROOT / "reports/comparisons/m107e_multimodal_pilot_report.json"
+M107E_MULTIMODAL_REPORT_PATH = REPO_ROOT / "reports/comparisons/m107e_multimodal_pilot_report.md"
 PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH = REPO_ROOT / "traces/external/private_evidence_vault_manifest.example.json"
 PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.json"
 PRIVATE_EVIDENCE_VAULT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/private_evidence_vault_summary.md"
@@ -465,6 +471,10 @@ CHECKS = [
     (
         "sandbox agent benchmark generation",
         ["python3", "src/sandbox_agent_benchmark.py"],
+    ),
+    (
+        "M107E multimodal pilot generation",
+        ["python3", "src/m107e_multimodal_pilot.py"],
     ),
     (
         "private evidence vault validation",
@@ -945,6 +955,7 @@ CHECKS = [
             "src/retention_consent_access.py",
             "src/hosted_provider_batch.py",
             "src/sandbox_agent_benchmark.py",
+            "src/m107e_multimodal_pilot.py",
             "src/adjudication_report.py",
             "src/adjudication_regression_check.py",
             "src/scorer_calibration_summary.py",
@@ -1258,6 +1269,15 @@ def main() -> int:
                 verify_jsonl_count(SANDBOX_AGENT_ADJUDICATION_PATH, EXPECTED_SANDBOX_AGENT_ADJUDICATION_LINES)
                 verify_report_exists(SANDBOX_AGENT_REPORT_JSON_PATH)
                 verify_report_exists(SANDBOX_AGENT_REPORT_PATH)
+            if name == "M107E multimodal pilot generation":
+                verify_report_exists(M107E_MULTIMODAL_FIXTURE_SET_PATH)
+                verify_jsonl_count(
+                    M107E_MULTIMODAL_SAVED_OUTPUT_PATH,
+                    EXPECTED_M107E_MULTIMODAL_SAVED_OUTPUT_LINES,
+                )
+                verify_report_exists(M107E_MULTIMODAL_REVIEW_SUMMARY_PATH)
+                verify_report_exists(M107E_MULTIMODAL_REPORT_JSON_PATH)
+                verify_report_exists(M107E_MULTIMODAL_REPORT_PATH)
             if name == "private evidence vault validation":
                 verify_report_exists(PRIVATE_EVIDENCE_VAULT_MANIFEST_PATH)
                 verify_report_exists(PRIVATE_EVIDENCE_VAULT_SUMMARY_JSON_PATH)

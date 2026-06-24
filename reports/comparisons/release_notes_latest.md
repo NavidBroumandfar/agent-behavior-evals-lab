@@ -7,7 +7,7 @@
 | Generated at | `2026-06-22T00:00:00Z` |
 | Release ID | `release_notes_latest` |
 | Quality gate command | `python3 scripts/dev.py check` |
-| Indexed report artifacts | 66 |
+| Indexed report artifacts | 68 |
 | Baseline pass rate | 85.7% |
 | Harness bridge decision | `defer_harness_integration` |
 

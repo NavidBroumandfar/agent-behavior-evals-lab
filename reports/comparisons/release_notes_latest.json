@@ -428,10 +428,10 @@
   "quality_gate": {
     "command": "python3 scripts/dev.py check",
     "deterministic_local_only": true,
-    "json_snapshots": 26,
+    "json_snapshots": 27,
     "live_execution": false,
-    "markdown_reports": 40,
-    "report_artifacts_indexed": 66
+    "markdown_reports": 41,
+    "report_artifacts_indexed": 68
   },
   "release_id": "release_notes_latest",
   "release_readiness": {

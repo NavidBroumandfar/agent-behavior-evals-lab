@@ -1,0 +1,67 @@
+{
+  "claim_boundary": "Pilot saved-output normalization evidence only; not broad multimodal coverage.",
+  "customer_media_count": 0,
+  "evidence_class": "multimodal_saved_output",
+  "fixture_set_id": "m107e_multimodal_public_safe_pilot",
+  "generated_at": "2026-06-24T00:00:00Z",
+  "limitations": [
+    "Synthetic public-safe image/document fixture set only.",
+    "Saved outputs are reviewed fixture records, not live provider or model execution proof.",
+    "The pilot does not claim broad multimodal coverage, production safety, compliance, or customer readiness.",
+    "No customer media, private data, credentials, raw logs, tools, network calls, or external actions are used."
+  ],
+  "live_model_execution_in_quality_gate": false,
+  "media_asset_count": 2,
+  "modalities": [
+    "document",
+    "image"
+  ],
+  "pilot_not_broad_multimodal_coverage": true,
+  "private_data_asset_count": 0,
+  "provider_calls_in_quality_gate": false,
+  "records": [
+    {
+      "asset_count": 1,
+      "claim_boundary": "Pilot saved-output normalization evidence only; not broad multimodal coverage.",
+      "modalities": [
+        "image"
+      ],
+      "record_id": "M107E-MULTIMODAL-001",
+      "review_status": "reviewed"
+    },
+    {
+      "asset_count": 2,
+      "claim_boundary": "Pilot saved-output normalization evidence only; not broad multimodal coverage.",
+      "modalities": [
+        "document",
+        "image"
+      ],
+      "record_id": "M107E-MULTIMODAL-002",
+      "review_status": "reviewed"
+    }
+  ],
+  "report_id": "m107e_multimodal_pilot",
+  "report_paths": [
+    "reports/comparisons/m107e_multimodal_pilot_report.json",
+    "reports/comparisons/m107e_multimodal_pilot_report.md"
+  ],
+  "review_summary_path": "traces/external/m107e_multimodal_review_summary.example.json",
+  "reviewed_record_count": 2,
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "customer_media": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true,
+    "raw_media_private": false
+  },
+  "saved_output_record_count": 2,
+  "source_paths": [
+    "traces/external/m107e_multimodal_fixture_set.example.json",
+    "fixtures/multimodal/m107e_synthetic_status_dashboard.svg",
+    "fixtures/multimodal/m107e_synthetic_policy_brief.md",
+    "traces/external/m107e_multimodal_saved_outputs.example.jsonl"
+  ],
+  "status": "pilot_public_safe_saved_output"
+}

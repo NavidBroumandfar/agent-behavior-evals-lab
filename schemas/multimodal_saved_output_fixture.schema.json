@@ -1,0 +1,162 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://agent-behavior-evals-lab.local/schemas/multimodal_saved_output_fixture.schema.json",
+  "title": "Multimodal Saved Output Fixture Set",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "fixture_set_id",
+    "created_at",
+    "fixture_version",
+    "evidence_class",
+    "status",
+    "pilot_not_broad_multimodal_coverage",
+    "public_safe_derivatives_committable",
+    "raw_customer_media_committable",
+    "live_model_execution_in_quality_gate",
+    "provider_calls_in_quality_gate",
+    "safety_assertions",
+    "outputs",
+    "media_assets",
+    "saved_output_records"
+  ],
+  "properties": {
+    "fixture_set_id": {"type": "string", "minLength": 1},
+    "created_at": {"type": "string", "minLength": 1},
+    "fixture_version": {"type": "string", "minLength": 1},
+    "evidence_class": {"const": "multimodal_saved_output"},
+    "status": {"const": "pilot_public_safe_saved_output"},
+    "pilot_not_broad_multimodal_coverage": {"const": true},
+    "public_safe_derivatives_committable": {"const": true},
+    "raw_customer_media_committable": {"const": false},
+    "live_model_execution_in_quality_gate": {"const": false},
+    "provider_calls_in_quality_gate": {"const": false},
+    "safety_assertions": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "public_safe",
+        "live_execution",
+        "external_actions",
+        "contains_private_data",
+        "credentials_required",
+        "customer_media",
+        "raw_media_private"
+      ],
+      "properties": {
+        "public_safe": {"const": true},
+        "live_execution": {"const": false},
+        "external_actions": {"const": false},
+        "contains_private_data": {"const": false},
+        "credentials_required": {"const": false},
+        "customer_media": {"const": false},
+        "raw_media_private": {"const": false}
+      }
+    },
+    "outputs": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "saved_outputs_path",
+        "review_summary_path",
+        "report_json_path",
+        "report_markdown_path"
+      ],
+      "properties": {
+        "saved_outputs_path": {"type": "string", "minLength": 1},
+        "review_summary_path": {"type": "string", "minLength": 1},
+        "report_json_path": {"type": "string", "minLength": 1},
+        "report_markdown_path": {"type": "string", "minLength": 1}
+      }
+    },
+    "media_assets": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "asset_id",
+          "modality",
+          "media_type",
+          "path",
+          "sha256",
+          "source_classification",
+          "generated_or_synthetic",
+          "customer_media",
+          "contains_private_data",
+          "description"
+        ],
+        "properties": {
+          "asset_id": {"type": "string", "minLength": 1},
+          "modality": {"enum": ["image", "document"]},
+          "media_type": {"type": "string", "minLength": 1},
+          "path": {"type": "string", "minLength": 1},
+          "sha256": {"type": "string", "pattern": "[a-f0-9]{64}"},
+          "source_classification": {"const": "synthetic_public_safe"},
+          "generated_or_synthetic": {"const": true},
+          "customer_media": {"const": false},
+          "contains_private_data": {"const": false},
+          "description": {"type": "string", "minLength": 1}
+        }
+      }
+    },
+    "saved_output_records": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "record_id",
+          "asset_ids",
+          "prompt",
+          "expected_behavior",
+          "saved_model_output",
+          "target_profile",
+          "source_label",
+          "review_status",
+          "review_notes",
+          "claim_boundary",
+          "provenance"
+        ],
+        "properties": {
+          "record_id": {"type": "string", "minLength": 1},
+          "asset_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "prompt": {"type": "string", "minLength": 1},
+          "expected_behavior": {"type": "string", "minLength": 1},
+          "saved_model_output": {"type": "string", "minLength": 1},
+          "target_profile": {"type": "string", "minLength": 1},
+          "source_label": {"type": "string", "minLength": 1},
+          "review_status": {"const": "reviewed"},
+          "review_notes": {"type": "string", "minLength": 1},
+          "claim_boundary": {"type": "string", "minLength": 1},
+          "provenance": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "public_safe",
+              "live_execution",
+              "external_actions",
+              "contains_private_data",
+              "credentials_required",
+              "customer_media"
+            ],
+            "properties": {
+              "public_safe": {"const": true},
+              "live_execution": {"const": false},
+              "external_actions": {"const": false},
+              "contains_private_data": {"const": false},
+              "credentials_required": {"const": false},
+              "customer_media": {"const": false}
+            }
+          }
+        }
+      }
+    }
+  }
+}

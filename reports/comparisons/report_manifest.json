@@ -1,7 +1,7 @@
 {
   "manifest_id": "report_manifest",
-  "version": "0.17.0",
-  "generated_at": "2026-06-23T00:00:00Z",
+  "version": "0.18.0",
+  "generated_at": "2026-06-24T00:00:00Z",
   "purpose": "Index generated local report and snapshot artifacts for deterministic quality-gate provenance checks.",
   "scope": [
     "Committed generated Markdown reports under reports/.",
@@ -1400,6 +1400,53 @@
       ],
       "quality_gate_included": true,
       "notes": "Reader-facing M101A sandbox dry-run benchmark report. It is not customer evidence or production execution proof.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "m107e_multimodal_pilot_snapshot",
+      "label": "M107E Multimodal Pilot JSON",
+      "path": "reports/comparisons/m107e_multimodal_pilot_report.json",
+      "artifact_type": "json_snapshot",
+      "generated_by": "src/m107e_multimodal_pilot.py",
+      "input_paths": [
+        "schemas/multimodal_saved_output_fixture.schema.json",
+        "traces/external/m107e_multimodal_fixture_set.example.json",
+        "fixtures/multimodal/m107e_synthetic_status_dashboard.svg",
+        "fixtures/multimodal/m107e_synthetic_policy_brief.md",
+        "traces/external/m107e_multimodal_saved_outputs.example.jsonl",
+        "traces/external/m107e_multimodal_review_summary.example.json"
+      ],
+      "snapshot_dependency_paths": [],
+      "quality_gate_included": true,
+      "notes": "M107E public-safe multimodal pilot snapshot for synthetic image/document saved-output normalization. It is pilot evidence only, not broad multimodal or production proof.",
+      "safety_assertions": {
+        "public_safe": true,
+        "live_execution": false,
+        "external_actions": false,
+        "contains_private_data": false,
+        "credentials_required": false
+      }
+    },
+    {
+      "artifact_id": "m107e_multimodal_pilot_report",
+      "label": "M107E Multimodal Pilot Report",
+      "path": "reports/comparisons/m107e_multimodal_pilot_report.md",
+      "artifact_type": "markdown_report",
+      "generated_by": "src/m107e_multimodal_pilot.py",
+      "input_paths": [
+        "reports/comparisons/m107e_multimodal_pilot_report.json"
+      ],
+      "snapshot_dependency_paths": [
+        "reports/comparisons/m107e_multimodal_pilot_report.json"
+      ],
+      "quality_gate_included": true,
+      "notes": "Reader-facing M107E report for public-safe synthetic image/document saved-output pilot coverage.",
       "safety_assertions": {
         "public_safe": true,
         "live_execution": false,

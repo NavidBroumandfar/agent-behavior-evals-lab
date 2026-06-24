@@ -81,6 +81,8 @@ EXPECTED_QUALITY_GATE_ARTIFACT_PATHS = {
     "reports/comparisons/production_policy_scenario_report.md",
     "reports/comparisons/sandbox_agent_benchmark_report.json",
     "reports/comparisons/sandbox_agent_benchmark_report.md",
+    "reports/comparisons/m107e_multimodal_pilot_report.json",
+    "reports/comparisons/m107e_multimodal_pilot_report.md",
     "reports/comparisons/private_evidence_vault_summary.json",
     "reports/comparisons/private_evidence_vault_summary.md",
     "reports/comparisons/redaction_promotion_pipeline_summary.json",
