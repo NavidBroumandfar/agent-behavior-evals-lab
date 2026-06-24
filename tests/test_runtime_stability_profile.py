@@ -34,7 +34,7 @@ class RuntimeStabilityProfileTests(unittest.TestCase):
         self.assertEqual(summary["schema_path"], "schemas/runtime_stability_profile.schema.json")
         self.assertEqual(summary["profile_id"], "m85_runtime_stability_profile")
         self.assertEqual(summary["runtime"], "ollama")
-        self.assertEqual(summary["model_count"], 5)
+        self.assertEqual(summary["model_count"], 7)
         self.assertEqual(summary["deferred_model"], "gemma4:latest")
         self.assertEqual(summary["deferred_model_status"], "deferred_after_swap_activity")
         self.assertFalse(summary["quality_gate_live_execution"])
@@ -58,12 +58,12 @@ class RuntimeStabilityProfileTests(unittest.TestCase):
 
         self.assert_profile_fails(profile, "ranking_eligible must be false")
 
-    def test_qwen_smoke_control_cannot_be_promoted(self):
+    def test_qwen_ranked_target_cannot_be_demoted(self):
         profile = load_valid_profile()
         qwen_profile = self.model_profile(profile, "qwen3.5:2b-q4_K_M")
-        qwen_profile["publication_use"] = "current_local_open_weight_ranking"
+        qwen_profile["ranking_eligible"] = False
 
-        self.assert_profile_fails(profile, "qwen as smoke/control only")
+        self.assert_profile_fails(profile, "ranking_eligible must be true for ranked model")
 
     def test_cloud_label_target_cannot_support_local_claim(self):
         profile = load_valid_profile()

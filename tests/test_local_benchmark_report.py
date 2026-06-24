@@ -76,7 +76,7 @@ class LocalBenchmarkReportTests(unittest.TestCase):
         self.assertEqual(summary["snapshot_id"], "local_open_weight_benchmark_report_v1")
         self.assertEqual(summary["report_status"], "published_local_ranking")
         self.assertTrue(summary["ranking_claim_allowed"])
-        self.assertEqual(summary["rankings"], 2)
+        self.assertEqual(summary["rankings"], 5)
         self.assertEqual(summary["excluded_evidence"], 1)
 
     def test_generator_can_write_public_safe_published_ranking_report_to_temp_paths(self):
@@ -89,7 +89,7 @@ class LocalBenchmarkReportTests(unittest.TestCase):
 
             self.assertEqual(summary["report_status"], "published_local_ranking")
             self.assertTrue(summary["ranking_claim_allowed"])
-            self.assertEqual(summary["rankings"], 2)
+            self.assertEqual(summary["rankings"], 5)
             self.assertEqual(summary["excluded_evidence"], 1)
             self.assertTrue((root / "local_report.json").exists())
             self.assertTrue((root / "local_report.md").exists())
@@ -98,14 +98,14 @@ class LocalBenchmarkReportTests(unittest.TestCase):
         self.assertTrue(DEFAULT_SNAPSHOT_PATH.exists())
         self.assertTrue(DEFAULT_REPORT_PATH.exists())
 
-    def test_snapshot_publishes_two_reviewed_ledgers_and_excludes_dry_run_evidence(self):
+    def test_snapshot_publishes_current_reviewed_ledgers_and_excludes_dry_run_evidence(self):
         snapshot = load_snapshot()
 
         self.assertEqual(snapshot["report_status"], "published_local_ranking")
         self.assertTrue(snapshot["ranking_claim_allowed"])
         self.assertTrue(snapshot["eligibility_summary"]["acceptance_criteria_met"])
-        self.assertEqual(snapshot["eligibility_summary"]["eligible_real_local_targets"], 2)
-        self.assertEqual(len(snapshot["rankings"]), 2)
+        self.assertEqual(snapshot["eligibility_summary"]["eligible_real_local_targets"], 5)
+        self.assertEqual(len(snapshot["rankings"]), 5)
         excluded = snapshot["excluded_evidence"][0]
         self.assertEqual(excluded["run_mode"], "dry_run_public_safe_example")
         self.assertIn("Evidence class is not local_public_benchmark.", excluded["exclusion_reasons"])

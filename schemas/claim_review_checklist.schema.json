@@ -116,7 +116,10 @@
           },
           "benchmark_split": {
             "type": "string",
-            "const": "extended"
+            "enum": [
+              "standard",
+              "extended"
+            ]
           },
           "sample_size": {
             "type": "integer",

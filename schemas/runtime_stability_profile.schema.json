@@ -173,6 +173,7 @@
             "type": "string",
             "enum": [
               "completed_reviewed_extended",
+              "completed_reviewed_standard",
               "smoke_control_only",
               "deferred_after_swap_activity",
               "excluded_from_local_claims"

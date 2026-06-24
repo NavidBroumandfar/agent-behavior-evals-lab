@@ -50,13 +50,21 @@ EXPECTED_SAFETY_ASSERTIONS = {
     "ranking_claim_from_interrupted_runs": False,
 }
 REQUIRED_MODELS = {
+    "deepseek-coder:6.7b-instruct",
     "llama3.2:latest",
+    "glm4:latest",
     "mistral:latest",
     "qwen3.5:2b-q4_K_M",
     "gemma4:latest",
     "gemma4:31b-cloud",
 }
-RANKED_MODELS = {"llama3.2:latest", "mistral:latest"}
+RANKED_MODELS = {
+    "deepseek-coder:6.7b-instruct",
+    "llama3.2:latest",
+    "glm4:latest",
+    "qwen3.5:2b-q4_K_M",
+    "mistral:latest",
+}
 REQUIRED_STOP_CRITERIA = {
     "memory_pressure_or_swap_activity",
     "thermal_or_power_instability",
@@ -139,8 +147,10 @@ def validate_model_profiles(values: list[dict[str, Any]], context: str) -> None:
         if model in RANKED_MODELS:
             if ranking_eligible is not True:
                 raise RuntimeStabilityProfileError(f"{item_context}.ranking_eligible must be true for ranked model")
-            if value["status"] != "completed_reviewed_extended":
-                raise RuntimeStabilityProfileError(f"{item_context}.status must be completed_reviewed_extended")
+            if value["status"] not in {"completed_reviewed_standard", "completed_reviewed_extended"}:
+                raise RuntimeStabilityProfileError(
+                    f"{item_context}.status must be completed_reviewed_standard or completed_reviewed_extended"
+                )
             if value["publication_use"] != "current_local_open_weight_ranking":
                 raise RuntimeStabilityProfileError(f"{item_context}.publication_use must be current local ranking")
             continue
@@ -148,8 +158,6 @@ def validate_model_profiles(values: list[dict[str, Any]], context: str) -> None:
         if ranking_eligible is not False:
             raise RuntimeStabilityProfileError(f"{item_context}.ranking_eligible must be false for excluded model")
 
-        if model == "qwen3.5:2b-q4_K_M" and value["publication_use"] != "operator_smoke_only":
-            raise RuntimeStabilityProfileError(f"{item_context}.publication_use must keep qwen as smoke/control only")
         if model == "gemma4:latest":
             if value["status"] != "deferred_after_swap_activity":
                 raise RuntimeStabilityProfileError(f"{item_context}.status must keep gemma4 deferred")

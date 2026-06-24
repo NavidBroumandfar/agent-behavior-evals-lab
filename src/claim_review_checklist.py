@@ -60,7 +60,7 @@ REQUIRED_SOURCE_IDS = {
 }
 REQUIRED_RELEASE_CHECKS = {
     "evidence_class_matches_report",
-    "two_reviewed_ledgers_present",
+    "current_ranked_ledgers_present",
     "only_ranked_targets_are_eligible",
     "hosted_provider_separation_enforced",
     "private_evidence_boundary_enforced",
@@ -75,12 +75,18 @@ REQUIRED_CLAIMS = {
     "production_safety",
     "third_party_reproducibility",
     "private_audit",
-    "qwen_smoke_control_ranking",
+    "smoke_control_ranking",
     "gemma4_deferred_target_ranking",
     "raw_output_publication",
 }
 ALLOWED_CLAIM_ID = "local_open_weight_ranking"
-RANKED_MODELS = {"llama3.2:latest", "mistral:latest"}
+RANKED_MODELS = {
+    "deepseek-coder:6.7b-instruct",
+    "llama3.2:latest",
+    "glm4:latest",
+    "qwen3.5:2b-q4_K_M",
+    "mistral:latest",
+}
 BLOCKED_MARKERS = [
     "/Users/",
     "\\Users\\",
@@ -281,7 +287,7 @@ def validate_report_state(
         for value in report["rankings"]
     }
     if set(report_targets) != RANKED_MODELS:
-        raise ClaimReviewChecklistError(f"{context} local report ranked models must match M83 ranking")
+        raise ClaimReviewChecklistError(f"{context} local report ranked models must match current ranking")
 
     checklist_targets = {str(value["model"]): value for value in ranked_targets}
     if set(checklist_targets) != RANKED_MODELS:
@@ -339,8 +345,9 @@ def validate_stability_state(stability: dict[str, Any], context: str) -> None:
         f"{context}.safety_assertions",
     )
     model_profiles = {value["model"]: value for value in stability["model_profiles"]}
-    if model_profiles["qwen3.5:2b-q4_K_M"]["ranking_eligible"] is not False:
-        raise ClaimReviewChecklistError(f"{context} must keep qwen smoke/control target ranking-ineligible")
+    for model in sorted(RANKED_MODELS):
+        if model_profiles[model]["ranking_eligible"] is not True:
+            raise ClaimReviewChecklistError(f"{context} must keep current ranked targets ranking-eligible")
     if model_profiles["gemma4:latest"]["status"] != "deferred_after_swap_activity":
         raise ClaimReviewChecklistError(f"{context} must keep gemma4:latest deferred")
 

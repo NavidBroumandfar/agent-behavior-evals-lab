@@ -3,46 +3,70 @@
     "Runtime stability metadata is operational metadata, not model-quality evidence.",
     "Interrupted or partial live-local runs are excluded from local/open-weight rankings.",
     "A deferred heavy local target can be retried only after explicit operator opt-in and updated stability metadata.",
-    "Smoke/control targets remain excluded from publication claims.",
+    "Only complete reviewed standard-or-extended ledgers can support publication claims.",
     "Cloud-labelled targets remain excluded from local/open-weight claims."
   ],
   "generated_at": "2026-06-22T00:00:00Z",
   "model_profiles": [
     {
       "allowed_splits": [
+        "standard"
+      ],
+      "model": "deepseek-coder:6.7b-instruct",
+      "notes": "Completed reviewed standard evidence and is part of the current local/open-weight ranking.",
+      "publication_use": "current_local_open_weight_ranking",
+      "ranking_eligible": true,
+      "resource_class": "observed_laptop_safe",
+      "role": "ranked_local_target",
+      "status": "completed_reviewed_standard"
+    },
+    {
+      "allowed_splits": [
         "extended"
       ],
       "model": "llama3.2:latest",
-      "notes": "Completed reviewed extended evidence in M79 and is part of the current local/open-weight ranking.",
+      "notes": "Completed reviewed extended evidence and is part of the current local/open-weight ranking.",
       "publication_use": "current_local_open_weight_ranking",
       "ranking_eligible": true,
       "resource_class": "observed_laptop_safe",
       "role": "ranked_local_target",
       "status": "completed_reviewed_extended"
+    },
+    {
+      "allowed_splits": [
+        "standard"
+      ],
+      "model": "glm4:latest",
+      "notes": "Completed reviewed standard evidence and is part of the current local/open-weight ranking.",
+      "publication_use": "current_local_open_weight_ranking",
+      "ranking_eligible": true,
+      "resource_class": "observed_laptop_safe",
+      "role": "ranked_local_target",
+      "status": "completed_reviewed_standard"
+    },
+    {
+      "allowed_splits": [
+        "standard"
+      ],
+      "model": "qwen3.5:2b-q4_K_M",
+      "notes": "Completed reviewed standard evidence and is part of the current local/open-weight ranking.",
+      "publication_use": "current_local_open_weight_ranking",
+      "ranking_eligible": true,
+      "resource_class": "observed_laptop_safe",
+      "role": "ranked_local_target",
+      "status": "completed_reviewed_standard"
     },
     {
       "allowed_splits": [
         "extended"
       ],
       "model": "mistral:latest",
-      "notes": "Completed reviewed extended evidence in M82 and is part of the current local/open-weight ranking.",
+      "notes": "Completed reviewed extended evidence and is part of the current local/open-weight ranking.",
       "publication_use": "current_local_open_weight_ranking",
       "ranking_eligible": true,
       "resource_class": "observed_laptop_safe",
       "role": "ranked_local_target",
       "status": "completed_reviewed_extended"
-    },
-    {
-      "allowed_splits": [
-        "smoke"
-      ],
-      "model": "qwen3.5:2b-q4_K_M",
-      "notes": "Reserved for quick operator smoke checks only; smoke/control evidence cannot unlock or change rankings.",
-      "publication_use": "operator_smoke_only",
-      "ranking_eligible": false,
-      "resource_class": "small_smoke_control",
-      "role": "smoke_control",
-      "status": "smoke_control_only"
     },
     {
       "allowed_splits": [

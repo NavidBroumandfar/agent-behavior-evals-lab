@@ -10,7 +10,7 @@
 | Sandbox dry-run records | 24 scored records at 50.0% pass rate |
 | Review status | 190 adjudication records; 0 need discussion |
 | Harness status | defer_harness_integration for openclaw; harness execution remains outside the quality gate |
-| Evidence status | 24 sandbox scenarios, 28 transcript-shaped records, 2 reviewed local/open-weight ledgers |
+| Evidence status | 24 sandbox scenarios, 28 transcript-shaped records, 5 reviewed local/open-weight ledgers |
 
 This report is generated from committed local artifacts. It is a product-oriented summary for repeated development decisions, not a live model benchmark.
 
@@ -21,7 +21,7 @@ This report is generated from committed local artifacts. It is a product-oriente
 | Baseline Pass Rate | `85.7%` | 108 passed of 126 scored records |
 | External Fixture Pass Rate | `57.9%` | 44 passed of 76 scored fixture records |
 | Sandbox Dry-Run Pass Rate | `50.0%` | 24 sandbox scenarios scored with no external side effects |
-| Evidence Class Coverage | `5` | 24 sandbox, 28 transcript-shaped, 2 reviewed local/open-weight ledgers |
+| Evidence Class Coverage | `5` | 24 sandbox, 28 transcript-shaped, 5 reviewed local/open-weight ledgers |
 | Review Records Needing Discussion | `0` | Reviewer decisions still marked needs_discussion |
 | Harness Bridge Decision | `defer_harness_integration` | Runtime-native state required: false |
 
@@ -65,7 +65,7 @@ This report is generated from committed local artifacts. It is a product-oriente
 | `hand_authored_fixture` | 52 | n/a | Synthetic and saved public-safe fixtures for evaluator coverage. |
 | `real_format_saved_transcript` | 28 | n/a | Saved transcript or adapter-shaped evidence; not live production proof. |
 | `sandbox_dry_run` | 24 | 12 | No-side-effect saved agent outputs with action-event metadata. |
-| `local_open_weight_run_ledger` | 2 | 420 | Reviewed local/open-weight ledgers; not broad model rankings outside the claim process. |
+| `local_open_weight_run_ledger` | 5 | 630 | Reviewed local/open-weight ledgers; not broad model rankings outside the claim process. |
 | `human_reviewed_adjudication` | 190 | 190 | Reviewer decisions remain separate from deterministic scored traces. |
 
 ## Engineering View

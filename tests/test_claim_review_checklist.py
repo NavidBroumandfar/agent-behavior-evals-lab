@@ -36,7 +36,7 @@ class ClaimReviewChecklistTests(unittest.TestCase):
         self.assertEqual(summary["status"], "public_safe_claim_review_gate")
         self.assertTrue(summary["release_allowed"])
         self.assertEqual(summary["release_label"], "public_safe_local_open_weight_ranking")
-        self.assertEqual(summary["ranked_targets"], 2)
+        self.assertEqual(summary["ranked_targets"], 5)
         self.assertEqual(summary["allowed_claims"], 1)
         self.assertEqual(summary["blocked_claims"], 8)
 
@@ -76,14 +76,14 @@ class ClaimReviewChecklistTests(unittest.TestCase):
 
         self.assert_checklist_fails(checklist, "must be concrete")
 
-    def test_qwen_smoke_control_cannot_become_ranked_target(self):
+    def test_deferred_gemma_target_cannot_become_ranked_target(self):
         checklist = load_valid_checklist()
         checklist["ranked_targets"].append(
             {
                 "benchmark_split": "extended",
                 "claim_scope": "current_local_open_weight_ranking",
-                "ledger_entry_id": "qwen_fake_entry",
-                "model": "qwen3.5:2b-q4_K_M",
+                "ledger_entry_id": "gemma_fake_entry",
+                "model": "gemma4:latest",
                 "ranking_eligible": True,
                 "runtime": "ollama",
                 "sample_size": 210,

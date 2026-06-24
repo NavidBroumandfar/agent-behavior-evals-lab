@@ -3,66 +3,66 @@
     {
       "blocker_id": "m86_block_cloud_ranking_no_cloud_evidence",
       "blocker_scope": "cloud",
+      "blocks_current_allowed_release": false,
       "claim_id": "cloud_model_ranking",
       "concrete_blocker": "The reviewed report contains local Ollama evidence only and no cloud_public_benchmark ledger.",
-      "required_unlock": "Collect and validate cloud_public_benchmark evidence under a separate cloud methodology.",
-      "blocks_current_allowed_release": false
+      "required_unlock": "Collect and validate cloud_public_benchmark evidence under a separate cloud methodology."
     },
     {
       "blocker_id": "m86_block_hosted_comparison_no_methodology",
       "blocker_scope": "hosted_provider",
+      "blocks_current_allowed_release": false,
       "claim_id": "hosted_provider_comparison",
       "concrete_blocker": "Hosted provider Batch metadata is not submitted, has no result file, and is marked separate from local rankings.",
-      "required_unlock": "Publish a hosted-provider methodology with submitted provider evidence before making comparisons.",
-      "blocks_current_allowed_release": false
+      "required_unlock": "Publish a hosted-provider methodology with submitted provider evidence before making comparisons."
     },
     {
       "blocker_id": "m86_block_production_no_production_evidence",
       "blocker_scope": "production",
+      "blocks_current_allowed_release": false,
       "claim_id": "production_safety",
       "concrete_blocker": "The current report evaluates public benchmark cases and does not access production systems or real customer data.",
-      "required_unlock": "Use a production evidence class with consent, access controls, and production-specific review.",
-      "blocks_current_allowed_release": false
+      "required_unlock": "Use a production evidence class with consent, access controls, and production-specific review."
     },
     {
       "blocker_id": "m86_block_third_party_repro_no_independent_rerun",
       "blocker_scope": "reproducibility",
+      "blocks_current_allowed_release": false,
       "claim_id": "third_party_reproducibility",
       "concrete_blocker": "The packet records public hashes and model tags, but no independent third-party rerun or immutable model content digest.",
-      "required_unlock": "Capture immutable model digests and an independent rerun record before claiming third-party output regeneration.",
-      "blocks_current_allowed_release": false
+      "required_unlock": "Capture immutable model digests and an independent rerun record before claiming third-party output regeneration."
     },
     {
       "blocker_id": "m86_block_private_audit_no_private_evidence",
       "blocker_scope": "private",
+      "blocks_current_allowed_release": false,
       "claim_id": "private_audit",
       "concrete_blocker": "The published ranking uses public-safe local benchmark evidence, not private_audit evidence.",
-      "required_unlock": "Create a private-audit report under the private evidence path and keep it separate from public rankings.",
-      "blocks_current_allowed_release": false
+      "required_unlock": "Create a private-audit report under the private evidence path and keep it separate from public rankings."
     },
     {
-      "blocker_id": "m86_block_qwen_smoke_only",
+      "blocker_id": "m86_block_smoke_control_not_ranked_evidence",
       "blocker_scope": "smoke_control",
-      "claim_id": "qwen_smoke_control_ranking",
-      "concrete_blocker": "qwen3.5:2b-q4_K_M is documented as smoke/control only and has no reviewed extended ledger.",
-      "required_unlock": "Run, review, score, and ledger a complete publishable split before considering ranking eligibility.",
-      "blocks_current_allowed_release": false
+      "blocks_current_allowed_release": false,
+      "claim_id": "smoke_control_ranking",
+      "concrete_blocker": "Smoke/control-only runs do not provide complete reviewed standard-or-extended ledger evidence.",
+      "required_unlock": "Run a complete publishable split, review outputs, score traces, and validate a ranking-eligible ledger."
     },
     {
       "blocker_id": "m86_block_gemma4_deferred",
       "blocker_scope": "deferred_target",
+      "blocks_current_allowed_release": false,
       "claim_id": "gemma4_deferred_target_ranking",
       "concrete_blocker": "gemma4:latest remains deferred after the M77 swap-activity blocker and has no eligible ledger.",
-      "required_unlock": "Make a separate explicit retry decision, satisfy stability criteria, then complete review and ledger gates.",
-      "blocks_current_allowed_release": false
+      "required_unlock": "Make a separate explicit retry decision, satisfy stability criteria, then complete review and ledger gates."
     },
     {
       "blocker_id": "m86_block_raw_output_publication",
       "blocker_scope": "raw_output",
+      "blocks_current_allowed_release": false,
       "claim_id": "raw_output_publication",
       "concrete_blocker": "Raw local outputs remain ignored local-only artifacts and are excluded from committed reports.",
-      "required_unlock": "Promote only reviewed public-safe derivatives; do not publish raw local outputs.",
-      "blocks_current_allowed_release": false
+      "required_unlock": "Promote only reviewed public-safe derivatives; do not publish raw local outputs."
     }
   ],
   "checklist_id": "m86_claim_review_release_checklist",
@@ -70,7 +70,7 @@
     {
       "allowed": true,
       "blocker_id": "none",
-      "boundary": "May be described only as a public-safe local/open-weight ranking over local_public_v1 extended split for the two reviewed local Ollama model tags.",
+      "boundary": "May be described only as a public-safe local/open-weight ranking over local_public_v1 standard/extended splits for the five reviewed local Ollama model tags.",
       "claim_family": "local_open_weight_ranking",
       "claim_id": "local_open_weight_ranking",
       "current_evidence": "Two eligible reviewed extended local_public_benchmark ledgers and a published local/open-weight report.",
@@ -129,10 +129,10 @@
     },
     {
       "allowed": false,
-      "blocker_id": "m86_block_qwen_smoke_only",
-      "boundary": "Smoke/control evidence cannot unlock or alter the published ranking.",
+      "blocker_id": "m86_block_smoke_control_not_ranked_evidence",
+      "boundary": "Smoke/control-only runs cannot be described as ranked local/open-weight model evidence.",
       "claim_family": "smoke_control_ranking",
-      "claim_id": "qwen_smoke_control_ranking",
+      "claim_id": "smoke_control_ranking",
       "current_evidence": "qwen3.5:2b-q4_K_M is smoke/control only",
       "outcome": "blocked",
       "required_evidence": "complete reviewed publishable split and eligible ledger"
@@ -172,6 +172,15 @@
   },
   "ranked_targets": [
     {
+      "benchmark_split": "standard",
+      "claim_scope": "current_local_open_weight_ranking",
+      "ledger_entry_id": "m107b_deepseek_coder_6_7b_instruct_standard_reviewed_live_local_entry",
+      "model": "deepseek-coder:6.7b-instruct",
+      "ranking_eligible": true,
+      "runtime": "ollama",
+      "sample_size": 70
+    },
+    {
       "benchmark_split": "extended",
       "claim_scope": "current_local_open_weight_ranking",
       "ledger_entry_id": "m79_llama3_2_latest_extended_reviewed_live_local_entry",
@@ -179,6 +188,24 @@
       "ranking_eligible": true,
       "runtime": "ollama",
       "sample_size": 210
+    },
+    {
+      "benchmark_split": "standard",
+      "claim_scope": "current_local_open_weight_ranking",
+      "ledger_entry_id": "m107b_glm4_latest_standard_reviewed_live_local_entry",
+      "model": "glm4:latest",
+      "ranking_eligible": true,
+      "runtime": "ollama",
+      "sample_size": 70
+    },
+    {
+      "benchmark_split": "standard",
+      "claim_scope": "current_local_open_weight_ranking",
+      "ledger_entry_id": "m107b_qwen35_2b_q4km_standard_no_think_reviewed_live_local_entry",
+      "model": "qwen3.5:2b-q4_K_M",
+      "ranking_eligible": true,
+      "runtime": "ollama",
+      "sample_size": 70
     },
     {
       "benchmark_split": "extended",
@@ -202,16 +229,16 @@
     {
       "blocker_id": "none",
       "category": "reviewed_ledger_status",
-      "check_id": "two_reviewed_ledgers_present",
-      "notes": "The report lists two eligible ranked targets with 210 reviewed records each.",
-      "requirement": "A ranking claim requires at least two eligible reviewed local ledgers.",
+      "check_id": "current_ranked_ledgers_present",
+      "notes": "The current report ranks five reviewed local Ollama targets across standard and extended splits.",
+      "requirement": "Every currently ranked target has a reviewed, validated, ranking-eligible ledger.",
       "status": "pass"
     },
     {
       "blocker_id": "none",
       "category": "model_target_status",
       "check_id": "only_ranked_targets_are_eligible",
-      "notes": "llama3.2:latest and mistral:latest are eligible; qwen smoke/control and gemma4 deferred targets are blocked.",
+      "notes": "Ranked targets mirror the published report; deferred and cloud-labelled targets remain excluded.",
       "requirement": "Only reviewed extended local targets may be described as ranked.",
       "status": "pass"
     },
@@ -257,7 +284,7 @@
     }
   ],
   "release_gate": {
-    "allowed_summary": "Release wording may describe a public-safe local/open-weight ranking for llama3.2:latest and mistral:latest over local_public_v1 extended split.",
+    "allowed_summary": "Release wording may describe a public-safe local/open-weight ranking for deepseek-coder:6.7b-instruct, llama3.2:latest, glm4:latest, qwen3.5:2b-q4_K_M, and mistral:latest over local_public_v1 standard/extended splits.",
     "blocked_claims_must_be_named": true,
     "overclaim_release_allowed": false,
     "release_allowed": true,
@@ -265,7 +292,7 @@
   },
   "reviewed_report": {
     "allowed_claim_label": "public_safe_local_open_weight_ranking",
-    "eligible_ranked_targets": 2,
+    "eligible_ranked_targets": 5,
     "evidence_class": "local_public_benchmark",
     "path": "reports/comparisons/local_open_weight_benchmark_v1.json",
     "ranking_claim_allowed": true,

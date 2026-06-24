@@ -89,7 +89,7 @@
         },
         "split": {
           "type": "string",
-          "const": "extended"
+          "const": "standard_or_extended"
         },
         "release_allowed": {
           "type": "boolean"

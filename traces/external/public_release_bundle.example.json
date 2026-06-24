@@ -2,7 +2,7 @@
   "approved_release_statement": {
     "headline": "Public-safe local/open-weight ranking for llama3.2:latest and mistral:latest",
     "required_qualifier": "This is not a cloud-model ranking, hosted-provider comparison, production-safety proof, private-audit proof, or third-party output-regeneration claim.",
-    "summary": "The committed report may be described as a public-safe local/open-weight ranking for llama3.2:latest and mistral:latest over the local_public_v1 extended split, backed by two reviewed local Ollama ledgers."
+    "summary": "The committed report may be described as a public-safe local/open-weight ranking for deepseek-coder:6.7b-instruct, llama3.2:latest, glm4:latest, qwen3.5:2b-q4_K_M, and mistral:latest over the local_public_v1 standard/extended splits, backed by five reviewed local Ollama ledgers."
   },
   "blocked_claims": [
     {
@@ -36,9 +36,9 @@
       "required_unlock": "Create a private-audit report under the private evidence path and keep it separate from public rankings."
     },
     {
-      "blocker_id": "m86_block_qwen_smoke_only",
-      "claim_id": "qwen_smoke_control_ranking",
-      "release_instruction": "Do not treat qwen3.5:2b-q4_K_M smoke/control evidence as ranked evidence.",
+      "blocker_id": "m86_block_smoke_control_not_ranked_evidence",
+      "claim_id": "smoke_control_ranking",
+      "release_instruction": "Do not describe smoke/control-only runs as ranked local/open-weight model evidence.",
       "required_unlock": "Run, review, score, and ledger a complete publishable split before considering ranking eligibility."
     },
     {
@@ -107,17 +107,41 @@
   },
   "ranking_rows": [
     {
+      "ci_95": "0.2727-0.5230",
+      "model": "deepseek-coder:6.7b-instruct",
+      "rank": 1,
+      "runtime": "ollama",
+      "sample_size": 70,
+      "weighted_effective": 0.3839
+    },
+    {
       "ci_95": "0.2860-0.4158",
       "model": "llama3.2:latest",
-      "rank": 1,
+      "rank": 2,
       "runtime": "ollama",
       "sample_size": 210,
       "weighted_effective": 0.3484
     },
     {
+      "ci_95": "0.1909-0.3953",
+      "model": "glm4:latest",
+      "rank": 3,
+      "runtime": "ollama",
+      "sample_size": 70,
+      "weighted_effective": 0.2935
+    },
+    {
+      "ci_95": "0.1451-0.3493",
+      "model": "qwen3.5:2b-q4_K_M",
+      "rank": 4,
+      "runtime": "ollama",
+      "sample_size": 70,
+      "weighted_effective": 0.2355
+    },
+    {
       "ci_95": "0.0708-0.1425",
       "model": "mistral:latest",
-      "rank": 2,
+      "rank": 5,
       "runtime": "ollama",
       "sample_size": 210,
       "weighted_effective": 0.1065
@@ -191,7 +215,7 @@
     "release_label": "public_safe_local_open_weight_ranking",
     "source_checklist_path": "traces/external/claim_review_checklist.example.json",
     "source_report_path": "reports/comparisons/local_open_weight_benchmark_v1.json",
-    "split": "extended"
+    "split": "standard_or_extended"
   },
   "safety_assertions": {
     "cloud_ranking_claim": false,

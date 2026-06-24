@@ -57,7 +57,7 @@ EXPECTED_RELEASE_SCOPE = {
     "evidence_class": "local_public_benchmark",
     "case_set_id": "local_public_v1",
     "case_set_version": "1.0.0",
-    "split": "extended",
+    "split": "standard_or_extended",
     "release_allowed": True,
     "ranking_claim_allowed": True,
 }
@@ -78,13 +78,22 @@ REQUIRED_RELEASE_ARTIFACTS = {
     "real_model_proof_runbook",
     "public_release_bundle",
 }
-EXPECTED_RANKED_MODELS = {"llama3.2:latest", "mistral:latest"}
+EXPECTED_RANKED_MODELS = {
+    "deepseek-coder:6.7b-instruct",
+    "llama3.2:latest",
+    "glm4:latest",
+    "qwen3.5:2b-q4_K_M",
+    "mistral:latest",
+}
 EXPECTED_STATEMENT_SNIPPETS = [
     "public-safe local/open-weight ranking",
+    "deepseek-coder:6.7b-instruct",
     "llama3.2:latest",
+    "glm4:latest",
+    "qwen3.5:2b-q4_K_M",
     "mistral:latest",
-    "local_public_v1 extended split",
-    "two reviewed local Ollama ledgers",
+    "local_public_v1 standard/extended splits",
+    "five reviewed local Ollama ledgers",
 ]
 EXPECTED_QUALIFIER_SNIPPETS = [
     "not a cloud-model ranking",
