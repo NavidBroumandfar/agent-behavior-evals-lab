@@ -15,8 +15,8 @@
   "eligibility_summary": {
     "acceptance_criteria_met": true,
     "eligible_manual_public_targets": 0,
-    "eligible_ranked_targets": 5,
-    "eligible_real_local_targets": 5,
+    "eligible_ranked_targets": 6,
+    "eligible_real_local_targets": 6,
     "excluded_targets": 1,
     "minimum_real_local_targets_required": 2,
     "ranking_publication_blocked_reason": ""
@@ -74,6 +74,15 @@
       "path": "traces/external/m107b_deepseek_coder_6_7b_instruct_standard.local_run_ledger.json",
       "sha256": "b871bc70d569d20484b303bac709ce652e8df548d1c1bb94387cd94a985e3b9a",
       "source_id": "m107b_deepseek_coder_6_7b_instruct_standard_reviewed_live_local_ledger",
+      "source_kind": "published_local_benchmark"
+    },
+    {
+      "eligible_entry_count": 1,
+      "entry_count": 1,
+      "excluded_entry_count": 0,
+      "path": "traces/external/m107b_codellama_7b_instruct_standard.local_run_ledger.json",
+      "sha256": "356028303a979aea703314f93cce7bef5153306e8f2d7194fbc40ec096f6839f",
+      "source_id": "m107b_codellama_7b_instruct_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     }
   ],
@@ -231,6 +240,35 @@
     },
     {
       "abstention_count": 0,
+      "benchmark_split": "standard",
+      "bootstrap_ci_95": {
+        "high": 0.2135,
+        "low": 0.075
+      },
+      "ledger_entry_id": "m107b_codellama_7b_instruct_standard_reviewed_live_local_entry",
+      "model": "codellama:7b-instruct",
+      "rank": 5,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 54,
+        "effective_pass_count": 16,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 70,
+        "reviewer_count": 1,
+        "scorer_fail_count": 54,
+        "scorer_pass_count": 16,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 70,
+      "severity_weighted_effective_pass_rate": 0.1452,
+      "severity_weighted_heuristic_pass_rate": 0.1452,
+      "unresolved_review_count": 0
+    },
+    {
+      "abstention_count": 0,
       "benchmark_split": "extended",
       "bootstrap_ci_95": {
         "high": 0.1425,
@@ -238,7 +276,7 @@
       },
       "ledger_entry_id": "m82_mistral_latest_extended_reviewed_live_local_entry",
       "model": "mistral:latest",
-      "rank": 5,
+      "rank": 6,
       "review_counts": {
         "agreement_rate": 1.0,
         "effective_fail_count": 172,
@@ -287,6 +325,7 @@
     "traces/external/m107b_qwen35_2b_q4km_standard_no_think.local_run_ledger.json",
     "traces/external/m107b_glm4_latest_standard.local_run_ledger.json",
     "traces/external/m107b_deepseek_coder_6_7b_instruct_standard.local_run_ledger.json",
+    "traces/external/m107b_codellama_7b_instruct_standard.local_run_ledger.json",
     "traces/external/real_model_proof_runbook.example.json",
     "docs/live_benchmark_roadmap.md",
     "docs/wiki/concepts/local_ranking_methodology.md"

@@ -35,7 +35,7 @@ class PublicReleaseBundleTests(unittest.TestCase):
         self.assertEqual(summary["bundle_id"], "m87_claim_locked_public_release_bundle")
         self.assertEqual(summary["status"], "public_safe_release_bundle")
         self.assertEqual(summary["release_label"], "public_safe_local_open_weight_ranking")
-        self.assertEqual(summary["ranked_targets"], 5)
+        self.assertEqual(summary["ranked_targets"], 6)
         self.assertEqual(summary["blocked_claims"], 8)
 
     def test_live_execution_in_quality_gate_is_rejected(self):

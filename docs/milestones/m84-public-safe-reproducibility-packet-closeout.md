@@ -224,7 +224,9 @@ Explicit target boundaries:
 
 - `gemma4:latest` remains deferred; M85 records resource-stability metadata but
   does not authorize a retry or make it ranking-eligible.
-- `qwen3.5:2b-q4_K_M` remains smoke/control only.
+- `qwen3.5:2b-q4_K_M`, `glm4:latest`, `deepseek-coder:6.7b-instruct`, and
+  `codellama:7b-instruct` now rely on later M107B reviewed standard-split
+  ledgers; smoke/control-only runs remain excluded.
 - `gemma4:31b-cloud` remains excluded from local/open-weight claims.
 
 ## Validation

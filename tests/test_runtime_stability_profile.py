@@ -34,7 +34,7 @@ class RuntimeStabilityProfileTests(unittest.TestCase):
         self.assertEqual(summary["schema_path"], "schemas/runtime_stability_profile.schema.json")
         self.assertEqual(summary["profile_id"], "m85_runtime_stability_profile")
         self.assertEqual(summary["runtime"], "ollama")
-        self.assertEqual(summary["model_count"], 7)
+        self.assertEqual(summary["model_count"], 8)
         self.assertEqual(summary["deferred_model"], "gemma4:latest")
         self.assertEqual(summary["deferred_model_status"], "deferred_after_swap_activity")
         self.assertFalse(summary["quality_gate_live_execution"])

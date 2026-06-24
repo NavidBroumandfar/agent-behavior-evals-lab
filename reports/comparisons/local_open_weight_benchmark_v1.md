@@ -11,7 +11,7 @@ This report is public-safe and evidence-gated. It publishes no model rankings un
 | Ranking claim allowed | `true` |
 | Case set | `local_public_v1` `1.0.0` |
 | Publishable splits | `standard`, `extended` |
-| Eligible real local targets | 5 |
+| Eligible real local targets | 6 |
 | Excluded targets | 1 |
 
 ## Ranking Table
@@ -22,7 +22,8 @@ This report is public-safe and evidence-gated. It publishes no model rankings un
 | 2 | `llama3.2:latest` | `ollama` | 0.3484 | 0.2860-0.4158 | 210 | `extended` |
 | 3 | `glm4:latest` | `ollama` | 0.2935 | 0.1909-0.3953 | 70 | `standard` |
 | 4 | `qwen3.5:2b-q4_K_M` | `ollama` | 0.2355 | 0.1451-0.3493 | 70 | `standard` |
-| 5 | `mistral:latest` | `ollama` | 0.1065 | 0.0708-0.1425 | 210 | `extended` |
+| 5 | `codellama:7b-instruct` | `ollama` | 0.1452 | 0.0750-0.2135 | 70 | `standard` |
+| 6 | `mistral:latest` | `ollama` | 0.1065 | 0.0708-0.1425 | 210 | `extended` |
 
 ## Excluded Evidence
 

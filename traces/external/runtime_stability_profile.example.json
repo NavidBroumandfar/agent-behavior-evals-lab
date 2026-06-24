@@ -58,6 +58,18 @@
     },
     {
       "allowed_splits": [
+        "standard"
+      ],
+      "model": "codellama:7b-instruct",
+      "notes": "Completed reviewed standard evidence and is part of the current local/open-weight ranking.",
+      "publication_use": "current_local_open_weight_ranking",
+      "ranking_eligible": true,
+      "resource_class": "observed_laptop_safe",
+      "role": "ranked_local_target",
+      "status": "completed_reviewed_standard"
+    },
+    {
+      "allowed_splits": [
         "extended"
       ],
       "model": "mistral:latest",

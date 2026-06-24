@@ -36,7 +36,7 @@ class ClaimReviewChecklistTests(unittest.TestCase):
         self.assertEqual(summary["status"], "public_safe_claim_review_gate")
         self.assertTrue(summary["release_allowed"])
         self.assertEqual(summary["release_label"], "public_safe_local_open_weight_ranking")
-        self.assertEqual(summary["ranked_targets"], 5)
+        self.assertEqual(summary["ranked_targets"], 6)
         self.assertEqual(summary["allowed_claims"], 1)
         self.assertEqual(summary["blocked_claims"], 8)
 

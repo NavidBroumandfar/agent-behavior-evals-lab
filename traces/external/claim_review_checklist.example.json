@@ -70,10 +70,10 @@
     {
       "allowed": true,
       "blocker_id": "none",
-      "boundary": "May be described only as a public-safe local/open-weight ranking over local_public_v1 standard/extended splits for the five reviewed local Ollama model tags.",
+      "boundary": "May be described only as a public-safe local/open-weight ranking over local_public_v1 standard/extended splits for the six reviewed local Ollama model tags.",
       "claim_family": "local_open_weight_ranking",
       "claim_id": "local_open_weight_ranking",
-      "current_evidence": "Two eligible reviewed extended local_public_benchmark ledgers and a published local/open-weight report.",
+      "current_evidence": "Six eligible reviewed local_public_benchmark ledgers and a published local/open-weight report.",
       "outcome": "allowed",
       "required_evidence": "local_public_benchmark evidence with at least two eligible reviewed ledgers"
     },
@@ -133,7 +133,7 @@
       "boundary": "Smoke/control-only runs cannot be described as ranked local/open-weight model evidence.",
       "claim_family": "smoke_control_ranking",
       "claim_id": "smoke_control_ranking",
-      "current_evidence": "qwen3.5:2b-q4_K_M is smoke/control only",
+      "current_evidence": "No smoke/control-only run is treated as ranked evidence in the current report.",
       "outcome": "blocked",
       "required_evidence": "complete reviewed publishable split and eligible ledger"
     },
@@ -208,6 +208,15 @@
       "sample_size": 70
     },
     {
+      "benchmark_split": "standard",
+      "claim_scope": "current_local_open_weight_ranking",
+      "ledger_entry_id": "m107b_codellama_7b_instruct_standard_reviewed_live_local_entry",
+      "model": "codellama:7b-instruct",
+      "ranking_eligible": true,
+      "runtime": "ollama",
+      "sample_size": 70
+    },
+    {
       "benchmark_split": "extended",
       "claim_scope": "current_local_open_weight_ranking",
       "ledger_entry_id": "m82_mistral_latest_extended_reviewed_live_local_entry",
@@ -230,7 +239,7 @@
       "blocker_id": "none",
       "category": "reviewed_ledger_status",
       "check_id": "current_ranked_ledgers_present",
-      "notes": "The current report ranks five reviewed local Ollama targets across standard and extended splits.",
+      "notes": "The current report ranks six reviewed local Ollama targets across standard and extended splits.",
       "requirement": "Every currently ranked target has a reviewed, validated, ranking-eligible ledger.",
       "status": "pass"
     },
@@ -239,7 +248,7 @@
       "category": "model_target_status",
       "check_id": "only_ranked_targets_are_eligible",
       "notes": "Ranked targets mirror the published report; deferred and cloud-labelled targets remain excluded.",
-      "requirement": "Only reviewed extended local targets may be described as ranked.",
+      "requirement": "Only reviewed standard-or-extended local targets may be described as ranked.",
       "status": "pass"
     },
     {
@@ -292,7 +301,7 @@
   },
   "reviewed_report": {
     "allowed_claim_label": "public_safe_local_open_weight_ranking",
-    "eligible_ranked_targets": 5,
+    "eligible_ranked_targets": 6,
     "evidence_class": "local_public_benchmark",
     "path": "reports/comparisons/local_open_weight_benchmark_v1.json",
     "ranking_claim_allowed": true,

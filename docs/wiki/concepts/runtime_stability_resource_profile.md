@@ -20,15 +20,17 @@ The committed profile records:
 - operator controls such as one-model-at-a-time execution, plan-only preflight,
   ignored raw outputs, review-before-scoring, and stop-on-instability,
 - model-specific status for `llama3.2:latest`, `mistral:latest`,
-  `qwen3.5:2b-q4_K_M`, `gemma4:latest`, and `gemma4:31b-cloud`,
+  `qwen3.5:2b-q4_K_M`, `glm4:latest`, `deepseek-coder:6.7b-instruct`,
+  `codellama:7b-instruct`, `gemma4:latest`, and `gemma4:31b-cloud`,
 - the M77 `gemma4:latest` swap-activity blocker,
 - stop criteria for memory pressure, swap activity, thermal or power
   instability, model availability failures, and repeated timeouts.
 
 ## Current Target Status
 
-`llama3.2:latest` and `mistral:latest` remain the only ranked local targets in
-the current report. `qwen3.5:2b-q4_K_M` remains smoke/control only.
+The current report ranks reviewed local ledgers for `llama3.2:latest`,
+`mistral:latest`, `qwen3.5:2b-q4_K_M`, `glm4:latest`,
+`deepseek-coder:6.7b-instruct`, and `codellama:7b-instruct`.
 `gemma4:31b-cloud` remains excluded from local/open-weight claims.
 
 `gemma4:latest` remains deferred. M85 documents why it stopped and what must

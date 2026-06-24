@@ -1,8 +1,8 @@
 {
   "approved_release_statement": {
-    "headline": "Public-safe local/open-weight ranking for llama3.2:latest and mistral:latest",
+    "headline": "Public-safe local/open-weight ranking for six reviewed Ollama targets",
     "required_qualifier": "This is not a cloud-model ranking, hosted-provider comparison, production-safety proof, private-audit proof, or third-party output-regeneration claim.",
-    "summary": "The committed report may be described as a public-safe local/open-weight ranking for deepseek-coder:6.7b-instruct, llama3.2:latest, glm4:latest, qwen3.5:2b-q4_K_M, and mistral:latest over the local_public_v1 standard/extended splits, backed by five reviewed local Ollama ledgers."
+    "summary": "The committed report may be described as a public-safe local/open-weight ranking for deepseek-coder:6.7b-instruct, llama3.2:latest, glm4:latest, qwen3.5:2b-q4_K_M, codellama:7b-instruct, and mistral:latest over the local_public_v1 standard/extended splits, backed by six reviewed local Ollama ledgers."
   },
   "blocked_claims": [
     {
@@ -139,9 +139,17 @@
       "weighted_effective": 0.2355
     },
     {
+      "ci_95": "0.0750-0.2135",
+      "model": "codellama:7b-instruct",
+      "rank": 5,
+      "runtime": "ollama",
+      "sample_size": 70,
+      "weighted_effective": 0.1452
+    },
+    {
       "ci_95": "0.0708-0.1425",
       "model": "mistral:latest",
-      "rank": 5,
+      "rank": 6,
       "runtime": "ollama",
       "sample_size": 210,
       "weighted_effective": 0.1065

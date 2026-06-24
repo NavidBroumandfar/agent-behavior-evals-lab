@@ -282,8 +282,8 @@
       },
       "local_open_weight_run_ledger": {
         "boundary": "Reviewed local/open-weight ledgers; not broad model rankings outside the claim process.",
-        "ledger_count": 5,
-        "reviewed_records": 630
+        "ledger_count": 6,
+        "reviewed_records": 700
       },
       "real_format_saved_transcript": {
         "boundary": "Saved transcript or adapter-shaped evidence; not live production proof.",
@@ -303,8 +303,8 @@
       "fixture_count": 52,
       "human_reviewed_adjudication_count": 190,
       "real_format_transcript_count": 28,
-      "reviewed_local_open_weight_ledger_count": 5,
-      "reviewed_local_open_weight_records": 630,
+      "reviewed_local_open_weight_ledger_count": 6,
+      "reviewed_local_open_weight_records": 700,
       "sandbox_scenario_count": 24,
       "scorer_reviewer_agreement": "99.5%"
     }
@@ -496,7 +496,7 @@
       "value": "50.0%"
     },
     {
-      "detail": "24 sandbox, 28 transcript-shaped, 5 reviewed local/open-weight ledgers",
+      "detail": "24 sandbox, 28 transcript-shaped, 6 reviewed local/open-weight ledgers",
       "label": "Evidence Class Coverage",
       "metric_id": "evidence_class_coverage",
       "value": 5
@@ -516,7 +516,7 @@
   ],
   "release_view": {
     "baseline_result": "108 passed, 18 failed (85.7% pass rate)",
-    "evidence_status": "24 sandbox scenarios, 28 transcript-shaped records, 5 reviewed local/open-weight ledgers",
+    "evidence_status": "24 sandbox scenarios, 28 transcript-shaped records, 6 reviewed local/open-weight ledgers",
     "harness_status": "defer_harness_integration for openclaw; harness execution remains outside the quality gate",
     "headline": "Local deterministic gate remains stable; sandbox dry-run evidence is now separated from fixture and ledger evidence.",
     "review_status": "190 adjudication records; 0 need discussion"

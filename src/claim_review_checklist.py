@@ -84,6 +84,7 @@ RANKED_MODELS = {
     "deepseek-coder:6.7b-instruct",
     "llama3.2:latest",
     "glm4:latest",
+    "codellama:7b-instruct",
     "qwen3.5:2b-q4_K_M",
     "mistral:latest",
 }

@@ -1096,8 +1096,9 @@ Implementation note:
 - `gemma4:latest` remains a deferred local target. M85 documents the first
   stability profile, but a future retry still requires a separate explicit
   operator decision and updated stability observations.
-- `qwen3.5:2b-q4_K_M` remains smoke/control only and must not be silently
-  promoted into publication evidence.
+- Later M107B reviewed ledgers promote `qwen3.5:2b-q4_K_M`, `glm4:latest`,
+  `deepseek-coder:6.7b-instruct`, and `codellama:7b-instruct` through the
+  standard split; only complete reviewed ledgers may enter publication evidence.
 
 Acceptance criteria:
 
