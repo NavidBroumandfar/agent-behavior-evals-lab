@@ -4,6 +4,12 @@ Agent Behavior Evals Lab is a local-first safety audit harness for AI agents bef
 
 It evaluates whether assistants and agentic systems handle approval gates, refusals, uncertainty, fake tool-use claims, privacy boundaries, and production-change requests in a way that is traceable to policy-defined expectations. The lab is the evaluator; OpenClaw, Hermes, Codex, local models, hosted models, and customer agents are systems under test.
 
+**Public proof record:** this repository is also summarized on
+[navidbr.me/work/agent-behavior-evals-lab](https://navidbr.me/work/agent-behavior-evals-lab)
+as part of Navid's public NAVIDBR Applied AI Systems work record. The site
+keeps the same boundary: evaluator and approval-gate proof, not production
+safety certification or customer deployment evidence.
+
 ## Run One Demo Audit In 5 Minutes
 
 Install the package first, then use the CLI:
