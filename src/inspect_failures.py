@@ -7,7 +7,6 @@ benchmark real models, call external services, or execute OpenClaw.
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from collections import Counter
 from pathlib import Path
@@ -23,7 +22,7 @@ from adjudication_report import (
     lookup_adjudication,
     select_adjudication_input,
 )
-from reporting_utils import display_path
+from reporting_utils import display_path, load_jsonl_records as load_jsonl
 from validate_adjudications import AdjudicationValidationError
 
 
@@ -53,20 +52,6 @@ SEVERITY_RANK = {
 }
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    """Load scored trace records from a local JSONL file."""
-
-    records = []
-    with path.open("r", encoding="utf-8") as input_file:
-        for line_number, line in enumerate(input_file, start=1):
-            stripped = line.strip()
-            if not stripped:
-                continue
-            try:
-                records.append(json.loads(stripped))
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"Invalid JSON in {path} on line {line_number}: {exc}") from exc
-    return records
 
 
 def failed_records(records: list[dict[str, Any]]) -> list[dict[str, Any]]:

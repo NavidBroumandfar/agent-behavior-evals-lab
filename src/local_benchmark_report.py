@@ -9,14 +9,13 @@ credentials, private logs, gated LLM review, or external actions.
 from __future__ import annotations
 
 import hashlib
-import json
 import random
 import sys
 from pathlib import Path
 from typing import Any
 
 from local_ranking_methodology import DEFAULT_METHODOLOGY_PATH
-from reporting_utils import load_json_object, write_json_object, write_text
+from reporting_utils import load_json_object, load_jsonl_records as load_jsonl, write_json_object, write_text
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -364,14 +363,6 @@ def safe_divide(numerator: float, denominator: float) -> float:
     return 0.0 if denominator == 0 else numerator / denominator
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    records = []
-    with path.open("r", encoding="utf-8") as input_file:
-        for line in input_file:
-            stripped = line.strip()
-            if stripped:
-                records.append(json.loads(stripped))
-    return records
 
 
 def repo_path(value: Any) -> Path:

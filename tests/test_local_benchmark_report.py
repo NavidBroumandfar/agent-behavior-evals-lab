@@ -126,7 +126,7 @@ class LocalBenchmarkReportTests(unittest.TestCase):
         self.assertEqual(row["review_counts"]["needs_discussion_count"], 0)
 
     def test_one_reviewed_live_local_ledger_remains_blocked(self):
-        with tempfile.TemporaryDirectory(dir=REPO_ROOT / "reports" / "comparisons") as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             methodology = load_methodology()
             methodology["uncertainty_policy"]["minimum_sample_size_for_publication"] = 4
@@ -151,7 +151,7 @@ class LocalBenchmarkReportTests(unittest.TestCase):
             self.assertEqual(snapshot["rankings"], [])
 
     def test_two_reviewed_live_local_ledgers_unlock_fake_public_safe_report(self):
-        with tempfile.TemporaryDirectory(dir=REPO_ROOT / "reports" / "comparisons") as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
             methodology = load_methodology()
             methodology["uncertainty_policy"]["minimum_sample_size_for_publication"] = 4

@@ -24,5 +24,11 @@ jobs:
       - name: Lint
         run: ruff check .
 
+      # Non-blocking until the mypy baseline is verified locally; then remove
+      # continue-on-error to make type checking a hard gate.
+      - name: Type check
+        run: mypy
+        continue-on-error: true
+
       - name: Run deterministic local quality gate
         run: python scripts/dev.py check

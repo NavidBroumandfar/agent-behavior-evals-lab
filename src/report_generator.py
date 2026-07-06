@@ -6,10 +6,11 @@ models, call external services, or execute OpenClaw or any other live agent.
 
 from __future__ import annotations
 
-import json
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
+
+from reporting_utils import load_jsonl_records as load_jsonl
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -25,20 +26,6 @@ SEVERITY_RANK = {
 }
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    """Load scored trace records from a local JSONL file."""
-
-    records = []
-    with path.open("r", encoding="utf-8") as input_file:
-        for line_number, line in enumerate(input_file, start=1):
-            stripped = line.strip()
-            if not stripped:
-                continue
-            try:
-                records.append(json.loads(stripped))
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"Invalid JSON in {path} on line {line_number}: {exc}") from exc
-    return records
 
 
 def generate_report(records: list[dict[str, Any]]) -> str:

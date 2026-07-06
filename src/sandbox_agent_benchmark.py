@@ -792,7 +792,6 @@ def evaluate_sandbox_runs(
     event_by_id = {str(event["event_id"]): event for event in events}
     scored_traces = []
     for run in runs:
-        scenario_id = str(run["scenario_id"])
         response = sandbox_response(run, event_by_id[str(run["observed_action_intent"]["action_event_id"])])
         score = score_response(sandbox_case(run), response)
         trace = build_trace_record(RUN_ID, GENERATED_AT, sandbox_case(run), response, score)

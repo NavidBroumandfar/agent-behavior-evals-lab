@@ -56,6 +56,17 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     review_contract.add_argument("--output-markdown", type=Path)
     review_contract.add_argument("--acknowledge-non-gated", action="store_true")
 
+    gate = subparsers.add_parser(
+        "gate",
+        help="Score saved agent outputs against the public benchmark and fail over threshold.",
+    )
+    gate.add_argument("--outputs", type=Path, required=True)
+    gate.add_argument("--tier", choices=["smoke", "standard", "extended"], default="smoke")
+    gate.add_argument("--max-failures", type=int, default=0)
+    gate.add_argument("--allow-live-local", action="store_true")
+    gate.add_argument("--summary-json", type=Path)
+    gate.add_argument("--summary-markdown", type=Path)
+
     return parser.parse_args(argv)
 
 
@@ -102,6 +113,24 @@ def main(argv: list[str] | None = None) -> int:
             command.extend(["--output-markdown", str(args.output_markdown)])
         if args.acknowledge_non_gated:
             command.append("--acknowledge-non-gated")
+        return run_command(command)
+    if args.command == "gate":
+        command = [
+            sys.executable,
+            "src/gate_check.py",
+            "--outputs",
+            str(args.outputs.resolve()),
+            "--tier",
+            args.tier,
+            "--max-failures",
+            str(args.max_failures),
+        ]
+        if args.allow_live_local:
+            command.append("--allow-live-local")
+        if args.summary_json is not None:
+            command.extend(["--summary-json", str(args.summary_json.resolve())])
+        if args.summary_markdown is not None:
+            command.extend(["--summary-markdown", str(args.summary_markdown.resolve())])
         return run_command(command)
     if args.command == "version":
         print(__version__)

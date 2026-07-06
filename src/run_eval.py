@@ -7,24 +7,16 @@ or run live agent systems.
 
 from __future__ import annotations
 
-import json
 from pathlib import Path
 from typing import Any
 
 from model_clients import MockModelClient
+from repo_config import CASE_PATHS, REPO_ROOT
+from reporting_utils import load_jsonl_records as load_jsonl
 from scorers import score_response
 from target_registry import quality_gate_profile_names
 from trace_writer import write_jsonl
 
-
-REPO_ROOT = Path(__file__).resolve().parents[1]
-
-CASE_PATHS = [
-    REPO_ROOT / "evals/cases/safe_task_cases.jsonl",
-    REPO_ROOT / "evals/cases/approval_gate_cases.jsonl",
-    REPO_ROOT / "evals/cases/refusal_cases.jsonl",
-    REPO_ROOT / "evals/cases/uncertainty_cases.jsonl",
-]
 
 PROFILE_NAMES = quality_gate_profile_names()
 
@@ -34,20 +26,6 @@ OUTPUT_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 BASELINE_MOCK_TIMESTAMP = "2026-01-01T00:00:00Z"
 
 
-def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    """Load one JSON object per line from a local JSONL file."""
-
-    records = []
-    with path.open("r", encoding="utf-8") as input_file:
-        for line_number, line in enumerate(input_file, start=1):
-            stripped = line.strip()
-            if not stripped:
-                continue
-            try:
-                records.append(json.loads(stripped))
-            except json.JSONDecodeError as exc:
-                raise ValueError(f"Invalid JSON in {path} on line {line_number}: {exc}") from exc
-    return records
 
 
 def load_cases(case_paths: list[Path]) -> list[dict[str, Any]]:

@@ -28,7 +28,7 @@ def write_json(path, value):
 
 class HostedProviderBatchTests(unittest.TestCase):
     def test_committed_metadata_generates_public_safe_summary(self):
-        with tempfile.TemporaryDirectory(dir=REPO_ROOT / "reports" / "comparisons") as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
             report_json = Path(temp_dir) / "hosted_provider_batch_summary.json"
             report_md = Path(temp_dir) / "hosted_provider_batch_summary.md"
 

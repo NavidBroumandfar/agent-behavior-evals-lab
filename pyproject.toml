@@ -16,6 +16,7 @@ agent-evals = "agent_evals.cli:main"
 [project.optional-dependencies]
 dev = [
   "ruff>=0.13.0",
+  "mypy>=1.8",
 ]
 
 [tool.setuptools]
@@ -35,9 +36,22 @@ extend-exclude = [
 ]
 
 [tool.ruff.lint]
+# NOTE: expanding to select = ["E", "F", "W"] is planned; run `ruff check .`
+# locally first and fix findings before widening the CI lint gate.
 select = [
   "E9",
   "F63",
   "F7",
   "F82",
 ]
+
+[tool.mypy]
+# Permissive baseline: enforce that annotated code stays internally consistent
+# without requiring full strictness yet. Tighten incrementally.
+python_version = "3.10"
+files = ["src"]
+ignore_missing_imports = true
+check_untyped_defs = false
+warn_unused_ignores = false
+follow_imports = "silent"
+explicit_package_bases = true

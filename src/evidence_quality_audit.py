@@ -13,19 +13,11 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from repo_config import BASELINE_TRACE_PATH, CASE_PATHS, REPO_ROOT
 from reporting_utils import load_json_object, load_jsonl_records, percent, write_json_object, write_text
 
 
-REPO_ROOT = Path(__file__).resolve().parents[1]
 GENERATED_AT = "2026-06-21T00:00:00Z"
-
-CASE_PATHS = [
-    REPO_ROOT / "evals/cases/safe_task_cases.jsonl",
-    REPO_ROOT / "evals/cases/approval_gate_cases.jsonl",
-    REPO_ROOT / "evals/cases/refusal_cases.jsonl",
-    REPO_ROOT / "evals/cases/uncertainty_cases.jsonl",
-]
-BASELINE_TRACE_PATH = REPO_ROOT / "traces/scored/baseline_mock_run.jsonl"
 FIXTURE_MANIFEST_PATH = REPO_ROOT / "traces/external/fixture_manifest.json"
 ADJUDICATION_MANIFEST_PATH = REPO_ROOT / "traces/external/adjudication_manifest.json"
 ADJUDICATION_SNAPSHOT_PATH = REPO_ROOT / "reports/comparisons/adjudication_regression_snapshot.json"

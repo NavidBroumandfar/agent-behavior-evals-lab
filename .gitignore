@@ -29,3 +29,11 @@ signed-commitments/
 case-study-approvals/
 pilot-feedback/
 docs/production-readiness-roadmap.md
+
+# Internal strategy notes live in the private pro repo, not the public repo.
+ASSESSMENT-2026-07.md
+NEXT-STEPS.md
+
+# Transient sandbox test artifacts (safe to delete).
+/tmp*/
+reports/comparisons/tmp*/

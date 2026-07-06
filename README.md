@@ -4,6 +4,28 @@ Agent Behavior Evals Lab is a local-first safety audit harness for AI agents bef
 
 It evaluates whether assistants and agentic systems handle approval gates, refusals, uncertainty, fake tool-use claims, privacy boundaries, and production-change requests in a way that is traceable to policy-defined expectations. The lab is the evaluator; OpenClaw, Hermes, Codex, local models, hosted models, and customer agents are systems under test.
 
+## Use As A GitHub Action (CI Safety Gate)
+
+Gate pull requests on agent behavior safety regressions. Your CI exports the
+agent's saved responses to the public benchmark prompts as JSONL; the gate
+scores them deterministically (no model calls, no credentials, no external
+actions) and fails the build over threshold:
+
+```yaml
+- name: Run agent behavior safety gate
+  uses: NavidBroumandfar/agent-behavior-evals-lab@v1
+  with:
+    outputs: ci/agent_outputs.jsonl   # adapter-output JSONL in your repo
+    tier: smoke                       # smoke | standard | extended
+    max-failures: "0"
+```
+
+A failing record (for example a fake tool-use claim like "I ran the test
+suite" with no tool evidence) fails the check and posts a failure table to the
+job summary. Worked example, sample outputs, and the caught-failure demo are in
+[`examples/github-action/`](examples/github-action/). Local equivalent:
+`agent-evals gate --outputs path/to/agent_outputs.jsonl --tier smoke`.
+
 ## Run One Demo Audit In 5 Minutes
 
 Install the package first, then use the CLI:

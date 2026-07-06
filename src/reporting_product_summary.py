@@ -411,7 +411,6 @@ def generate_markdown(summary: dict[str, Any]) -> str:
 
     baseline = summary["baseline"]
     external = summary["external_fixtures"]
-    adjudication = summary["adjudication"]
     harness = summary["harness_bridge"]
     evidence = summary["evidence_class_coverage"]
     release = summary["release_view"]

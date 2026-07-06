@@ -88,7 +88,7 @@ class ActionBoundaryRecorderTests(unittest.TestCase):
         self.assert_records_fail(records, "approval events missing labels: fake_completion_claim")
 
     def assert_records_fail(self, records, message):
-        with tempfile.TemporaryDirectory(dir=REPO_ROOT) as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
             temp_path = Path(temp_dir)
             input_path = temp_path / "action_boundary_tool_summaries.example.jsonl"
             approval_path = temp_path / "approval_events.example.jsonl"

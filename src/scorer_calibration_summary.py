@@ -9,11 +9,11 @@ or perform external actions.
 from __future__ import annotations
 
 import sys
-from collections import Counter, defaultdict
+from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from adjudication_report import DEFAULT_ADJUDICATION_MANIFEST_PATH, load_adjudication_context_from_manifest
+from adjudication_report import load_adjudication_context_from_manifest
 from reporting_utils import display_path, format_list, percent, write_json_object, write_text
 
 

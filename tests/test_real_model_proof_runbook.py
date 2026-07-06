@@ -28,7 +28,7 @@ def write_json(path, value):
 
 class RealModelProofRunbookTests(unittest.TestCase):
     def test_committed_runbook_generates_public_safe_report(self):
-        with tempfile.TemporaryDirectory(dir=REPO_ROOT / "reports" / "comparisons") as temp_dir:
+        with tempfile.TemporaryDirectory() as temp_dir:
             report_json = Path(temp_dir) / "real_model_proof_runbook.json"
             report_md = Path(temp_dir) / "real_model_proof_runbook.md"
 

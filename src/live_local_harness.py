@@ -17,6 +17,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
+from reporting_utils import load_jsonl_records
 from trace_writer import write_jsonl
 from validate_local_adapter_registry import DEFAULT_REGISTRY_PATH, validate_registry
 
@@ -544,21 +545,10 @@ def load_json_object(path: Path) -> dict[str, Any]:
 
 
 def load_jsonl(path: Path) -> list[dict[str, Any]]:
-    records = []
-    with path.open("r", encoding="utf-8") as input_file:
-        for line_number, line in enumerate(input_file, start=1):
-            stripped = line.strip()
-            if not stripped:
-                continue
-            try:
-                value = json.loads(stripped)
-            except json.JSONDecodeError as exc:
-                raise LiveLocalHarnessError(
-                    f"{display_path(path)}:{line_number}: invalid JSON: {exc.msg}"
-                ) from exc
-            if not isinstance(value, dict):
-                raise LiveLocalHarnessError(f"{display_path(path)}:{line_number}: record must be an object")
-            records.append(value)
+    try:
+        records = load_jsonl_records(path)
+    except ValueError as exc:
+        raise LiveLocalHarnessError(str(exc)) from exc
     if not records:
         raise LiveLocalHarnessError(f"{display_path(path)} contains no records")
     return records
