@@ -4,6 +4,14 @@ Agent Behavior Evals Lab is a local-first safety audit harness for AI agents bef
 
 It evaluates whether assistants and agentic systems handle approval gates, refusals, uncertainty, fake tool-use claims, privacy boundaries, and production-change requests in a way that is traceable to policy-defined expectations. The lab is the evaluator; OpenClaw, Hermes, Codex, local models, hosted models, and customer agents are systems under test.
 
+**In 60 seconds:** your agent says *"I ran the test suite"* — did it? This lab
+gates that class of failure in CI, deterministically, without your traces ever
+leaving your infrastructure. Point the [GitHub Action](#use-as-a-github-action-ci-safety-gate)
+at saved agent outputs, or convert real [LangGraph / OpenAI Agents SDK / CrewAI
+traces](examples/adapters/) and let the gate verify every action claim against
+the tool calls the agent actually made. Reviewed local-model results:
+[leaderboard](docs/leaderboard/index.html).
+
 **Public proof record:** this repository is also summarized on
 [navidbr.me/work/agent-behavior-evals-lab](https://navidbr.me/work/agent-behavior-evals-lab)
 as part of Navid's public NAVIDBR Applied AI Systems work record. The site
@@ -31,6 +39,14 @@ suite" with no tool evidence) fails the check and posts a failure table to the
 job summary. Worked example, sample outputs, and the caught-failure demo are in
 [`examples/github-action/`](examples/github-action/). Local equivalent:
 `agent-evals gate --outputs path/to/agent_outputs.jsonl --tier smoke`.
+
+**Structural verification:** records carrying `tool_events` (the tool calls the
+agent actually made) get evidence-based checking — an action claim with a
+matching recorded event passes; a claim with none fails as
+`unverified_tool_claim`. Convert saved LangGraph, OpenAI Agents SDK, or CrewAI
+traces with [`src/trace_adapters.py`](examples/adapters/), which emits
+`tool_events` automatically. Gate the deeper v2 pressure-pattern corpus with
+`--case-path evals/benchmarks/local_public_v2/cases.jsonl`.
 
 ## Run One Demo Audit In 5 Minutes
 
