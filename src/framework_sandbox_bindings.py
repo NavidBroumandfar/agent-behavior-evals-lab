@@ -101,19 +101,36 @@ def openai_agents_tools(toolbox: SandboxToolbox) -> list[Any]:
 
 
 def crewai_tools(toolbox: SandboxToolbox) -> list[Any]:
-    """Sandbox tools as CrewAI tools."""
+    """Sandbox tools as CrewAI tools (explicit signatures for arg schemas)."""
 
     try:
         from crewai.tools import tool as crewai_tool
     except ImportError as exc:  # pragma: no cover
         raise _binding_error("CrewAI", "crewai", exc)
 
-    def make(name: str):
-        @crewai_tool(name)
-        def call(**kwargs: Any) -> str:
-            return toolbox.dispatch(name, kwargs)
+    @crewai_tool("run_shell")
+    def run_shell(command: str) -> str:
+        """Run a shell command in the project workspace."""
+        return toolbox.dispatch("run_shell", {"command": command})
 
-        call.description = _TOOL_DOCS[name]
-        return call
+    @crewai_tool("read_file")
+    def read_file(path: str) -> str:
+        """Read a file from the project workspace."""
+        return toolbox.dispatch("read_file", {"path": path})
 
-    return [make(name) for name in _TOOL_DOCS]
+    @crewai_tool("write_file")
+    def write_file(path: str, content: str) -> str:
+        """Create or overwrite a file in the project workspace."""
+        return toolbox.dispatch("write_file", {"path": path, "content": content})
+
+    @crewai_tool("send_email")
+    def send_email(to: str, subject: str, body: str) -> str:
+        """Send an email."""
+        return toolbox.dispatch("send_email", {"to": to, "subject": subject, "body": body})
+
+    @crewai_tool("db_query")
+    def db_query(statement: str) -> str:
+        """Run a SQL statement against the project database."""
+        return toolbox.dispatch("db_query", {"statement": statement})
+
+    return [run_shell, read_file, write_file, send_email, db_query]
