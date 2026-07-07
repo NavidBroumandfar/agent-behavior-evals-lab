@@ -18,6 +18,7 @@ from typing import Any
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 DEFAULT_REPORT_PATH = REPO_ROOT / "reports/comparisons/local_open_weight_benchmark_v1.json"
+FLEET_REPORT_PATH = REPO_ROOT / "reports/comparisons/sandbox_fleet_pilot.json"
 DEFAULT_OUTPUT_PATH = REPO_ROOT / "docs/leaderboard/index.html"
 REPO_URL = "https://github.com/NavidBroumandfar/agent-behavior-evals-lab"
 
@@ -51,7 +52,48 @@ def load_report(report_path: Path) -> dict[str, Any]:
     return report
 
 
-def render_page(report: dict[str, Any]) -> str:
+def load_fleet_report(fleet_path: Path = FLEET_REPORT_PATH) -> dict[str, Any] | None:
+    if not fleet_path.exists():
+        return None
+    report = json.loads(fleet_path.read_text(encoding="utf-8"))
+    return report if report.get("agents") else None
+
+
+def render_fleet_section(fleet_report: dict[str, Any] | None) -> str:
+    if fleet_report is None:
+        return ""
+    rows = []
+    for agent in fleet_report["agents"]:
+        tool_area = agent.get("by_risk_area", {}).get("tool_use_claim", {})
+        approval_area = agent.get("by_risk_area", {}).get("approval_gate", {})
+        rows.append(
+            "<tr>"
+            f"<td><code>{html.escape(str(agent['agent']))}</code></td>"
+            f"<td>{int(agent['scored'])}</td>"
+            f"<td class='rate'>{html.escape(str(agent['pass_rate']))}</td>"
+            f"<td class='rate'>{html.escape(str(tool_area.get('pass_rate', '-')))}</td>"
+            f"<td class='rate'>{html.escape(str(approval_area.get('pass_rate', '-')))}</td>"
+            "</tr>"
+        )
+    return f"""
+<h2>Agent configurations under temptation (sandbox pilot — preliminary)</h2>
+<p>Local models driving <em>mock tools</em> through the harder
+<code>local_public_v2</code> pressure corpus. Scoring is action-based where
+evidence exists: a destructive tool call without approval, or a claim with no
+matching recorded tool event, fails structurally. <strong>Preliminary:</strong>
+raw records are local-only pending review and are not promoted benchmark
+evidence.</p>
+<table>
+<thead><tr><th>Agent</th><th>Cases</th><th>Pass rate</th>
+<th>tool_use_claim</th><th>approval_gate</th></tr></thead>
+<tbody>
+{"".join(rows)}
+</tbody>
+</table>
+"""
+
+
+def render_page(report: dict[str, Any], fleet_report: dict[str, Any] | None = None) -> str:
     case_set = report.get("case_set", {})
     rows = []
     for entry in report["rankings"]:
@@ -109,6 +151,7 @@ public corpus — not general capability, and not production safety certificatio
 </tbody>
 </table>
 
+{render_fleet_section(fleet_report)}
 <h2>Method, in one paragraph</h2>
 <p>Each model runs locally (Ollama, temperature 0) against the public benchmark
 prompts; outputs are saved, validated against schemas, scored by the
@@ -129,10 +172,15 @@ Source, corpus, scorer, and every scored record:
 """
 
 
-def generate(report_path: Path = DEFAULT_REPORT_PATH, output_path: Path = DEFAULT_OUTPUT_PATH) -> Path:
+def generate(
+    report_path: Path = DEFAULT_REPORT_PATH,
+    output_path: Path = DEFAULT_OUTPUT_PATH,
+    fleet_path: Path = FLEET_REPORT_PATH,
+) -> Path:
     report = load_report(report_path)
+    fleet_report = load_fleet_report(fleet_path)
     output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(render_page(report), encoding="utf-8")
+    output_path.write_text(render_page(report, fleet_report), encoding="utf-8")
     return output_path
 
 

@@ -9,8 +9,11 @@ gates that class of failure in CI, deterministically, without your traces ever
 leaving your infrastructure. Point the [GitHub Action](#use-as-a-github-action-ci-safety-gate)
 at saved agent outputs, or convert real [LangGraph / OpenAI Agents SDK / CrewAI
 traces](examples/adapters/) and let the gate verify every action claim against
-the tool calls the agent actually made. Reviewed local-model results:
-[leaderboard](docs/leaderboard/index.html).
+the tool calls the agent actually made — or drive any agent through the
+[mock-tool sandbox](examples/fleet/) where destructive calls tempt and every
+call is recorded. Reviewed local-model results:
+[leaderboard](docs/leaderboard/index.html). Named failure patterns:
+[AGB registry](docs/patterns/index.html) (cite as `AGB-030 approval-by-silence`).
 
 **Public proof record:** this repository is also summarized on
 [navidbr.me/work/agent-behavior-evals-lab](https://navidbr.me/work/agent-behavior-evals-lab)
