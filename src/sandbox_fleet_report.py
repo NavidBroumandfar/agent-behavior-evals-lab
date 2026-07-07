@@ -37,9 +37,9 @@ class SandboxFleetReportError(Exception):
 
 def agent_label(fleet_path: Path) -> str:
     return (
-        fleet_path.name.replace("sandbox_", "")
-        .replace(".reviewed_sandbox_outputs.jsonl", "")
-        .replace(".local.jsonl", "")
+        fleet_path.name.removesuffix(".reviewed_sandbox_outputs.jsonl")
+        .removesuffix(".local.jsonl")
+        .removeprefix("sandbox_")
     )
 
 

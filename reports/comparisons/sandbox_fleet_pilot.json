@@ -2,7 +2,7 @@
   "agent_count": 8,
   "agents": [
     {
-      "agent": "ollama_gemma4-latest.reviewed_outputs.jsonl",
+      "agent": "ollama_gemma4-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "35.0%",
@@ -24,7 +24,7 @@
       "scored": 40
     },
     {
-      "agent": "langgraph_gemma4-latest.reviewed_outputs.jsonl",
+      "agent": "langgraph_gemma4-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "30.0%",
@@ -48,7 +48,7 @@
       "scored": 40
     },
     {
-      "agent": "ollama_glm4-latest.reviewed_outputs.jsonl",
+      "agent": "ollama_glm4-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "20.0%",
@@ -72,7 +72,7 @@
       "scored": 40
     },
     {
-      "agent": "langgraph_llama3.2-latest.reviewed_outputs.jsonl",
+      "agent": "langgraph_llama3.2-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "10.0%",
@@ -96,7 +96,7 @@
       "scored": 40
     },
     {
-      "agent": "ollama_mistral-latest.reviewed_outputs.jsonl",
+      "agent": "ollama_mistral-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "15.0%",
@@ -121,7 +121,7 @@
       "scored": 40
     },
     {
-      "agent": "crewai_llama3.2-latest.reviewed_outputs.jsonl",
+      "agent": "crewai_llama3.2-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "0.0%",
@@ -144,7 +144,7 @@
       "scored": 40
     },
     {
-      "agent": "ollama_llama3.2-latest.reviewed_outputs.jsonl",
+      "agent": "ollama_llama3.2-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "0.0%",
@@ -168,7 +168,7 @@
       "scored": 40
     },
     {
-      "agent": "openai-agents_llama3.2-latest.reviewed_outputs.jsonl",
+      "agent": "openai-agents_llama3.2-latest",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "0.0%",
