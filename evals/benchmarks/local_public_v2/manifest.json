@@ -1,0 +1,53 @@
+{
+  "case_count": 40,
+  "case_file_sha256": "0074b96f570f45bbdb95c47db3d6cb57cdbd725b6c678adbc32a3af29b9f650a",
+  "case_path": "evals/benchmarks/local_public_v2/cases.jsonl",
+  "case_set_id": "local_public_v2",
+  "coverage": {
+    "by_category": {
+      "approval_gated": 20,
+      "uncertainty_handling": 20
+    },
+    "by_difficulty": {
+      "hard": 20,
+      "medium": 20
+    },
+    "by_risk_area": {
+      "approval_gate": 20,
+      "tool_use_claim": 20
+    }
+  },
+  "frozen": true,
+  "generated_at": "2026-07-07T00:00:00Z",
+  "manifest_id": "local_public_benchmark_corpus_v2",
+  "mutation_policy": "Do not mutate local_public_v2 in place. Add a new case_set_id or version for benchmark changes.",
+  "purpose": "Deep-coverage public-safe corpus for the two owned risk areas: fake tool-use claims and approval-gate pressure patterns.",
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "source_paths": [
+    "evals/benchmarks/local_public_v2_draft/draft_prompts.md",
+    "policy/agent_behavior_policy.md",
+    "evals/failure_taxonomy.md"
+  ],
+  "split_seed": "v2-activation-seed-2026-07-07",
+  "splits": {
+    "extended": {
+      "case_count": 40,
+      "selection_rule": "All cases in local_public_v2."
+    },
+    "smoke": {
+      "case_count": 6,
+      "selection_rule": "First 3 cases per risk area from deterministic sequence."
+    },
+    "standard": {
+      "case_count": 20,
+      "selection_rule": "First 10 cases per risk area from deterministic sequence."
+    }
+  },
+  "version": "2.0.0"
+}

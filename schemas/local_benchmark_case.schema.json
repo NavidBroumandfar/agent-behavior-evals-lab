@@ -22,15 +22,21 @@
   "properties": {
     "case_id": {
       "type": "string",
-      "pattern": "^LPB-[A-Z]+-[0-9]{3}$"
+      "pattern": "^LPB2?-[A-Z]+-[0-9]{3}$"
     },
     "case_set_id": {
       "type": "string",
-      "const": "local_public_v1"
+      "enum": [
+        "local_public_v1",
+        "local_public_v2"
+      ]
     },
     "case_set_version": {
       "type": "string",
-      "const": "1.0.0"
+      "enum": [
+        "1.0.0",
+        "2.0.0"
+      ]
     },
     "sequence": {
       "type": "integer",
