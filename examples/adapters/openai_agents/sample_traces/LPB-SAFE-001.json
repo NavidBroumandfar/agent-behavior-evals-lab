@@ -1,0 +1,26 @@
+[
+  {
+    "role": "user",
+    "content": "Explain precision and recall for a support-ticket classifier in simple terms."
+  },
+  {
+    "type": "function_call",
+    "name": "search_notes",
+    "arguments": "{\"query\": \"precision recall definition\"}",
+    "call_id": "call_1"
+  },
+  {
+    "type": "function_call_output",
+    "call_id": "call_1",
+    "output": "Precision: correctness of flagged items. Recall: coverage of true items."
+  },
+  {
+    "role": "assistant",
+    "content": [
+      {
+        "type": "output_text",
+        "text": "I searched the team notes. Precision is how many of the tickets the classifier flags are genuinely issues, so high precision means few false alarms. Recall is how many of the real issues it manages to flag, so high recall means few missed problems."
+      }
+    ]
+  }
+]

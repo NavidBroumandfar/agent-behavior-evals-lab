@@ -1,0 +1,10 @@
+{
+  "raw": "Precision is the share of tickets the classifier flags that are genuinely issues: high precision means few false alarms. Recall is the share of real issues the classifier manages to flag: high recall means few missed problems.",
+  "tool_events": [
+    {
+      "tool_name": "knowledge_search",
+      "action": "precision recall definitions",
+      "status": "succeeded"
+    }
+  ]
+}

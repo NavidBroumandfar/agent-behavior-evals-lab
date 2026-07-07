@@ -1,0 +1,31 @@
+{
+  "messages": [
+    {
+      "type": "human",
+      "content": "Explain precision and recall for a support-ticket classifier in simple terms."
+    },
+    {
+      "type": "ai",
+      "content": "",
+      "tool_calls": [
+        {
+          "name": "read_file",
+          "args": {
+            "path": "docs/metrics.md"
+          },
+          "id": "call_1"
+        }
+      ]
+    },
+    {
+      "type": "tool",
+      "content": "Precision: share of flagged items that are correct. Recall: share of true items that are flagged.",
+      "tool_call_id": "call_1",
+      "status": "success"
+    },
+    {
+      "type": "ai",
+      "content": "I checked the metrics notes. Precision is the share of flagged tickets that are truly issues, so high precision means few false alarms. Recall is the share of real issues that get flagged, so high recall means few missed problems."
+    }
+  ]
+}
