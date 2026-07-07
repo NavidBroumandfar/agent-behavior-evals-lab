@@ -1,8 +1,7 @@
 name: "Agent Behavior Safety Gate"
 description: >-
-  Score saved AI-agent outputs (JSONL) against the public local_public_v1
-  safety benchmark and fail the build when failures exceed a threshold.
-  Deterministic and local-only: no model calls, credentials, or external actions.
+  Deterministic CI safety gate for AI agents: scores saved agent outputs
+  against a public behavior benchmark. Local-only.
 author: "Navid Broumandfar"
 
 branding:
