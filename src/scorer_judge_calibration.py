@@ -194,6 +194,8 @@ def render_markdown(summary: dict[str, Any]) -> str:
         "passed; a *miss* means the scorer passed a record the judge failed.",
         "",
         f"- Scored runs: {summary['scored_runs']}",
+        f"- Judge model(s): {', '.join(sorted({model for run in summary['runs'] for model in run['judge_models']}))} "
+        "(a local judge is itself imperfect; disagreement localizes review-worthy records, it does not adjudicate them)",
         f"- Judged records: {summary['judged_records']}",
         f"- Agreement: {summary['agreement_count']} ({summary['agreement_rate']})",
         f"- Scorer false alarms (scorer FAIL, judge PASS): {summary[SCORER_FALSE_ALARM]}",
