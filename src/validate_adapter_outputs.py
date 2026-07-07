@@ -32,6 +32,30 @@ LIVE_LOCAL_PROVENANCE_VALUES = {
     "data_classification": "public_safe_fixture",
     "action_evidence": "output_text_only",
 }
+# Sandbox live runs: a local model drives mock tools; every call is recorded,
+# nothing real executes.
+LIVE_SANDBOX_PROVENANCE_VALUES = {
+    "source_origin": "live_local_model",
+    "execution_mode": "live_local_sandbox_tools",
+    "data_classification": "public_safe_fixture",
+    "action_evidence": "trace_or_transcript_reference",
+}
+LIVE_LOCAL_SOURCE_METADATA = {
+    "harness_id": "live_local_text_only_harness",
+    "tools_enabled": False,
+    "external_actions_allowed": False,
+    "credentials_required": False,
+    "quality_gate_execution": False,
+    "run_status": "succeeded",
+}
+LIVE_SANDBOX_SOURCE_METADATA = {
+    "harness_id": "sandbox_tool_harness",
+    "tools_enabled": True,
+    "mock_tools_only": True,
+    "external_actions_allowed": False,
+    "quality_gate_execution": False,
+    "run_status": "succeeded",
+}
 
 BLOCKED_CURRENT_EXECUTION_MODES = {
     "future_live_execution_not_in_quality_gate",
@@ -197,12 +221,21 @@ def validate_live_local_detail_safety(
         raise AdapterOutputValidationError(path, line_number, "live-local adapter outputs must include provenance_details")
 
     details = record["provenance_details"]
-    for field_name, expected_value in LIVE_LOCAL_PROVENANCE_VALUES.items():
+    if details.get("execution_mode") == "live_local_sandbox_tools":
+        expected_details = LIVE_SANDBOX_PROVENANCE_VALUES
+        expected_metadata = LIVE_SANDBOX_SOURCE_METADATA
+        mode_label = "live-sandbox"
+    else:
+        expected_details = LIVE_LOCAL_PROVENANCE_VALUES
+        expected_metadata = LIVE_LOCAL_SOURCE_METADATA
+        mode_label = "live-local"
+
+    for field_name, expected_value in expected_details.items():
         if details[field_name] != expected_value:
             raise AdapterOutputValidationError(
                 path,
                 line_number,
-                f"provenance_details.{field_name} must be {expected_value} for live-local adapter outputs",
+                f"provenance_details.{field_name} must be {expected_value} for {mode_label} adapter outputs",
             )
 
     metadata = record.get("metadata", {})
@@ -212,20 +245,12 @@ def validate_live_local_detail_safety(
     if not isinstance(source_metadata, dict):
         raise AdapterOutputValidationError(path, line_number, "metadata.source_metadata must be an object")
 
-    expected_metadata = {
-        "harness_id": "live_local_text_only_harness",
-        "tools_enabled": False,
-        "external_actions_allowed": False,
-        "credentials_required": False,
-        "quality_gate_execution": False,
-        "run_status": "succeeded",
-    }
     for field_name, expected_value in expected_metadata.items():
         if source_metadata.get(field_name) != expected_value:
             raise AdapterOutputValidationError(
                 path,
                 line_number,
-                f"metadata.source_metadata.{field_name} must be {expected_value!r} for live-local adapter outputs",
+                f"metadata.source_metadata.{field_name} must be {expected_value!r} for {mode_label} adapter outputs",
             )
 
 

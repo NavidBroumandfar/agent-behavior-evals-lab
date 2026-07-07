@@ -116,9 +116,10 @@ class ReferenceAgentGateTest(unittest.TestCase):
 class ResolveAgentTest(unittest.TestCase):
     def test_reference_agents_resolve(self) -> None:
         for spec in ("reference-safe", "reference-unsafe"):
-            name, agent = resolve_agent(spec)
+            name, agent, live_model_execution = resolve_agent(spec)
             self.assertEqual(name, spec)
             self.assertTrue(callable(agent))
+            self.assertFalse(live_model_execution)
 
     def test_unknown_spec_raises(self) -> None:
         with self.assertRaises(SandboxRunnerError):
@@ -138,6 +139,51 @@ class ResolveAgentTest(unittest.TestCase):
         record = json.loads(output_path.read_text(encoding="utf-8").splitlines()[0])
         self.assertIn("sandbox_run", record["metadata"])
         self.assertIn("tool_events", record)
+
+
+class LiveSandboxProvenanceTest(unittest.TestCase):
+    """Live model runs must be marked live and gated behind --allow-live-local."""
+
+    def make_live_output(self) -> Path:
+        temp_dir = Path(tempfile.mkdtemp())
+        output_path = temp_dir / "outputs.jsonl"
+        run_sandbox_fleet(
+            reference_safe_agent,  # scripted stand-in; provenance marking is what's under test
+            agent_name="ollama-fake",
+            case_path=DEFAULT_CASE_PATH,
+            tier="smoke",
+            output_path=output_path,
+            created_at=FIXED_CREATED_AT,
+            live_model_execution=True,
+        )
+        return output_path
+
+    def test_live_records_carry_sandbox_provenance(self) -> None:
+        record = json.loads(self.make_live_output().read_text(encoding="utf-8").splitlines()[0])
+        self.assertTrue(record["provenance"]["live_execution"])
+        self.assertEqual(
+            record["provenance_details"]["execution_mode"], "live_local_sandbox_tools"
+        )
+        self.assertTrue(record["metadata"]["source_metadata"]["mock_tools_only"])
+
+    def test_live_records_need_allow_live_local(self) -> None:
+        from validate_adapter_outputs import AdapterOutputValidationError, validate_jsonl_file
+
+        output_path = self.make_live_output()
+        with self.assertRaises(AdapterOutputValidationError):
+            validate_jsonl_file(output_path)
+        self.assertEqual(validate_jsonl_file(output_path, allow_live_local=True), 6)
+
+    def test_gate_scores_live_sandbox_records_with_flag(self) -> None:
+        output_path = self.make_live_output()
+        summary = run_gate(
+            output_path,
+            tier="smoke",
+            max_failures=0,
+            case_path=DEFAULT_CASE_PATH,
+            allow_live_local=True,
+        )
+        self.assertTrue(summary["gate_passed"], summary["failures"])
 
 
 if __name__ == "__main__":

@@ -113,7 +113,8 @@
             "saved_output_only",
             "dry_run_only",
             "future_live_execution_not_in_quality_gate",
-            "live_local_text_only"
+            "live_local_text_only",
+            "live_local_sandbox_tools"
           ]
         },
         "data_classification": {

@@ -91,9 +91,15 @@ def run_sandbox_fleet(
     tier: str = "smoke",
     output_path: Path,
     created_at: str | None = None,
+    live_model_execution: bool = False,
     on_case: Callable[[str], None] | None = None,
 ) -> int:
-    """Run the agent over every tier case; write validated adapter-output JSONL."""
+    """Run the agent over every tier case; write validated adapter-output JSONL.
+
+    ``live_model_execution=True`` marks records honestly as live sandbox runs
+    (a real model executed against mock tools); such files validate only with
+    ``--allow-live-local``, like every live evidence artifact in this repo.
+    """
 
     cases = select_cases(case_path, tier)
     timestamp = created_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
@@ -119,7 +125,30 @@ def run_sandbox_fleet(
             "destructive_call_count": len(toolbox.destructive_calls),
             "tool_call_count": len(toolbox.tool_events),
         }
-        validate_adapter_output_record(record, output_path, len(records) + 1)
+        if live_model_execution:
+            record["provenance"]["live_execution"] = True
+            record["provenance_details"].update(
+                {
+                    "source_origin": "live_local_model",
+                    "execution_mode": "live_local_sandbox_tools",
+                    "action_evidence": "trace_or_transcript_reference",
+                    "notes": (
+                        "Live sandbox run: a model executed against mock tools only; "
+                        "every call recorded, no real actions, outside the quality gate."
+                    ),
+                }
+            )
+            record["metadata"]["source_metadata"] = {
+                "harness_id": "sandbox_tool_harness",
+                "tools_enabled": True,
+                "mock_tools_only": True,
+                "external_actions_allowed": False,
+                "quality_gate_execution": False,
+                "run_status": "succeeded",
+            }
+        validate_adapter_output_record(
+            record, output_path, len(records) + 1, allow_live_local=live_model_execution
+        )
         records.append(record)
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
@@ -129,11 +158,13 @@ def run_sandbox_fleet(
     return len(records)
 
 
-def resolve_agent(spec: str) -> tuple[str, SandboxAgent]:
+def resolve_agent(spec: str) -> tuple[str, SandboxAgent, bool]:
+    """Resolve an agent spec to (name, agent, live_model_execution)."""
+
     if spec == "reference-safe":
-        return "reference-safe", reference_safe_agent
+        return "reference-safe", reference_safe_agent, False
     if spec == "reference-unsafe":
-        return "reference-unsafe", reference_unsafe_agent
+        return "reference-unsafe", reference_unsafe_agent, False
     if spec.startswith("ollama:"):
         from ollama_tool_agent import OllamaToolAgent  # local import: optional runtime path
 
@@ -141,7 +172,7 @@ def resolve_agent(spec: str) -> tuple[str, SandboxAgent]:
         if not model:
             raise SandboxRunnerError("ollama agent spec needs a model: ollama:<model>")
         agent = OllamaToolAgent(model=model)
-        return f"ollama-{model.replace(':', '-').replace('/', '-')}", agent
+        return f"ollama-{model.replace(':', '-').replace('/', '-')}", agent, True
     if spec.startswith("openai-compatible:"):
         from openai_compatible_tool_agent import OpenAiCompatibleToolAgent  # optional path
 
@@ -149,7 +180,7 @@ def resolve_agent(spec: str) -> tuple[str, SandboxAgent]:
         if not model:
             raise SandboxRunnerError("openai-compatible agent spec needs a model")
         agent = OpenAiCompatibleToolAgent(model=model)
-        return f"hosted-{model.replace(':', '-').replace('/', '-')}", agent
+        return f"hosted-{model.replace(':', '-').replace('/', '-')}", agent, True
     raise SandboxRunnerError(
         f"unknown agent spec {spec!r}; expected reference-safe, reference-unsafe, "
         "ollama:<model>, or openai-compatible:<model>"
@@ -168,13 +199,14 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
     try:
-        agent_name, agent = resolve_agent(args.agent)
+        agent_name, agent, live_model_execution = resolve_agent(args.agent)
         count = run_sandbox_fleet(
             agent,
             agent_name=agent_name,
             case_path=args.case_path,
             tier=args.tier,
             output_path=args.output,
+            live_model_execution=live_model_execution,
             on_case=lambda case_id: print(f"case {case_id}", flush=True),
         )
     except (SandboxRunnerError, Exception) as exc:  # noqa: BLE001 - CLI boundary
