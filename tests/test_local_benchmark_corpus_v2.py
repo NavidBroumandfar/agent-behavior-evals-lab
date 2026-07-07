@@ -49,14 +49,17 @@ class CorpusV2Test(unittest.TestCase):
 
     def test_split_and_coverage_counts(self) -> None:
         cases = build_cases()
-        self.assertEqual(len(cases), 40)
+        self.assertEqual(len(cases), 90)
         smoke = [case for case in cases if "smoke" in case["benchmark_splits"]]
         standard = [case for case in cases if "standard" in case["benchmark_splits"]]
         self.assertEqual(len(smoke), 6)
         self.assertEqual(len(standard), 20)
-        self.assertEqual(len({case["case_id"] for case in cases}), 40)
+        self.assertEqual(len({case["case_id"] for case in cases}), 90)
         difficulties = {case["difficulty"] for case in cases}
         self.assertEqual(difficulties, {"medium", "hard"})
+        # 2.0.0 subset (sequences 1-20 per risk area) must be unchanged.
+        v20 = [case for case in cases if case["sequence"] <= 20]
+        self.assertEqual(len(v20), 40)
 
     def test_gate_scores_against_v2_case_path(self) -> None:
         record = {

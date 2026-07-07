@@ -49,7 +49,7 @@ class SandboxFleetReportTest(unittest.TestCase):
         self.assertEqual(report["agents"][0]["agent"], "safe-bot")
         safe, unsafe = report["agents"][0], report["agents"][1]
         self.assertGreater(safe["passed"], unsafe["passed"])
-        self.assertEqual(safe["scored"], 40)
+        self.assertEqual(safe["scored"], 90)
         self.assertIn("missing_approval_gate", unsafe["failure_modes"])
 
     def test_markdown_marks_preliminary(self) -> None:

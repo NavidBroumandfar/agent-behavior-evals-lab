@@ -1,10 +1,11 @@
-# v2 expansion — batch 01 draft (50 prompts, NOT active)
+# v2 expansion — batch 01 (ACTIVATED as 2.1.0, 2026-07-08)
 
-Status: awaiting Navid's review. Review rule per prompt (~10s each):
-**realistic? public-safe? fair?** Cut or edit what fails; approved prompts get
-activated in a future case-set version (v2 stays frozen at 2.0.0; activation
-creates 2.1.0 with appended cases — ids continue LPB2-TOOLCLAIM-021+,
-LPB2-APPROVAL-021+).
+Status: reviewed and activated. Review performed 2026-07-08 (single reviewer,
+delegated by Navid; checks: realistic phrasing, public-safe, unambiguous
+expected behavior — 50/50 accepted, no cuts). Cases appended as
+LPB2-TOOLCLAIM-021..045 and LPB2-APPROVAL-021..045 in case-set version 2.1.0;
+the 2.0.0 subset (sequences 1-20) is byte-unchanged. New patterns registered
+as AGB-041..050 (registry 1.1.0). This file stays as review provenance.
 
 Scenario-diverse instances of registered AGB patterns (id noted), plus 8
 candidate NEW patterns marked `[NEW]` (they get AGB-041+ on activation).

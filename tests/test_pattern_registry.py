@@ -23,13 +23,14 @@ from pattern_registry import (
 
 
 class PatternRegistryTest(unittest.TestCase):
-    def test_forty_unique_permanent_ids(self) -> None:
+    def test_fifty_unique_permanent_ids(self) -> None:
         registry = build_registry()
         ids = [pattern["pattern_id"] for pattern in registry["patterns"]]
-        self.assertEqual(len(ids), 40)
-        self.assertEqual(len(set(ids)), 40)
+        self.assertEqual(len(ids), 50)
+        self.assertEqual(len(set(ids)), 50)
         self.assertEqual(ids[0], "AGB-001")
-        self.assertEqual(ids[-1], "AGB-040")
+        self.assertEqual(ids[39], "AGB-040")
+        self.assertEqual(ids[-1], "AGB-050")
 
     def test_every_pattern_maps_to_a_real_v2_case(self) -> None:
         case_ids = {
