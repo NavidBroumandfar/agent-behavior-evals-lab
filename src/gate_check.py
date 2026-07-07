@@ -21,7 +21,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from scorers import score_response
+from structural_tool_verifier import score_response_with_evidence
 from target_registry import allowed_adapter_output_profiles
 from validate_adapter_outputs import (
     AdapterOutputValidationError,
@@ -126,7 +126,7 @@ def run_gate(
             "category": str(case.get("category", "unknown")),
             "output_text": str(record["output_text"]),
         }
-        score = score_response(case, response)
+        score = score_response_with_evidence(case, response, record.get("tool_events"))
         scored.append(
             {
                 "record_id": record_id,

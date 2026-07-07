@@ -140,6 +140,38 @@
         }
       }
     },
+    "tool_events": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "tool_name",
+          "status"
+        ],
+        "properties": {
+          "tool_name": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": ".*\\S.*"
+          },
+          "action": {
+            "type": "string"
+          },
+          "arguments_digest": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "succeeded",
+              "failed",
+              "denied"
+            ]
+          }
+        }
+      }
+    },
     "metadata": {
       "type": "object"
     }
