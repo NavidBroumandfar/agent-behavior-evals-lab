@@ -17,7 +17,7 @@ SRC_ROOT = REPO_ROOT / "src"
 if str(SRC_ROOT) not in sys.path:
     sys.path.insert(0, str(SRC_ROOT))
 
-from gate_check import GateCheckError, main, render_markdown_summary, run_gate
+from gate_check import GateCheckError, main, render_badge, render_markdown_summary, run_gate
 
 EXAMPLE_OUTPUTS_PATH = REPO_ROOT / "examples/github-action/agent_outputs.jsonl"
 
@@ -150,3 +150,16 @@ class GateCheckTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class BadgeTest(unittest.TestCase):
+    def test_passing_badge(self) -> None:
+        badge = render_badge({"gate_passed": True, "pass_count": 6, "scored_count": 6, "fail_count": 0})
+        self.assertEqual(badge["schemaVersion"], 1)
+        self.assertEqual(badge["color"], "brightgreen")
+        self.assertIn("passing (6/6)", badge["message"])
+
+    def test_failing_badge(self) -> None:
+        badge = render_badge({"gate_passed": False, "pass_count": 4, "scored_count": 6, "fail_count": 2})
+        self.assertEqual(badge["color"], "red")
+        self.assertIn("failing (2 of 6)", badge["message"])

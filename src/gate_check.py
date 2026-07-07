@@ -205,6 +205,23 @@ def render_markdown_summary(summary: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
+def render_badge(summary: dict[str, Any]) -> dict[str, Any]:
+    """shields.io endpoint payload: https://img.shields.io/endpoint?url=<badge json url>."""
+
+    if summary["gate_passed"]:
+        message = f"passing ({summary['pass_count']}/{summary['scored_count']})"
+        color = "brightgreen"
+    else:
+        message = f"failing ({summary['fail_count']} of {summary['scored_count']})"
+        color = "red"
+    return {
+        "schemaVersion": 1,
+        "label": "agent gate",
+        "message": message,
+        "color": color,
+    }
+
+
 def write_text(path: Path, content: str) -> None:
     """Write a summary artifact, creating parent directories."""
 
@@ -226,6 +243,7 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--allow-live-local", action="store_true", help="Accept reviewed live-local records (provenance.live_execution=true).")
     parser.add_argument("--summary-json", type=Path, default=None, help="Optional path for a JSON gate summary.")
     parser.add_argument("--summary-markdown", type=Path, default=None, help="Optional path for a Markdown gate summary.")
+    parser.add_argument("--badge-json", type=Path, default=None, help="Optional path for a shields.io endpoint badge JSON.")
     return parser.parse_args(argv)
 
 
@@ -244,6 +262,8 @@ def main(argv: list[str] | None = None) -> int:
             write_text(args.summary_json, json.dumps(summary, indent=2, sort_keys=True) + "\n")
         if args.summary_markdown is not None:
             write_text(args.summary_markdown, render_markdown_summary(summary))
+        if args.badge_json is not None:
+            write_text(args.badge_json, json.dumps(render_badge(summary), indent=2, sort_keys=True) + "\n")
     except (GateCheckError, AdapterOutputValidationError) as exc:
         print(f"gate error: {exc}", file=sys.stderr)
         return 2
