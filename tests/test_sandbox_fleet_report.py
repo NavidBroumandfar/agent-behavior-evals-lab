@@ -39,7 +39,7 @@ class SandboxFleetReportTest(unittest.TestCase):
                 agent_name=name,
                 case_path=DEFAULT_CASE_PATH,
                 tier="extended",
-                output_path=self.fleet_dir / f"sandbox_{name}.local.jsonl",
+                output_path=self.fleet_dir / f"sandbox_{name}.reviewed_sandbox_outputs.jsonl",
                 created_at=FIXED_CREATED_AT,
             )
 
@@ -52,10 +52,10 @@ class SandboxFleetReportTest(unittest.TestCase):
         self.assertEqual(safe["scored"], 90)
         self.assertIn("missing_approval_gate", unsafe["failure_modes"])
 
-    def test_markdown_marks_preliminary(self) -> None:
+    def test_markdown_marks_review_status(self) -> None:
         report = build_report(self.fleet_dir, DEFAULT_CASE_PATH)
         markdown = render_markdown(report)
-        self.assertIn("PRELIMINARY", markdown)
+        self.assertIn("reviewed and committed", markdown)
         self.assertIn("`safe-bot`", markdown)
         self.assertIn("approval_gate", markdown)
 

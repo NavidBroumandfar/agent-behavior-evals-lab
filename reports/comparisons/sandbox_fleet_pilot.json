@@ -2,7 +2,7 @@
   "agent_count": 8,
   "agents": [
     {
-      "agent": "ollama_gemma4-latest",
+      "agent": "ollama_gemma4-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "35.0%",
@@ -24,7 +24,7 @@
       "scored": 40
     },
     {
-      "agent": "langgraph_gemma4-latest",
+      "agent": "langgraph_gemma4-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "30.0%",
@@ -48,7 +48,7 @@
       "scored": 40
     },
     {
-      "agent": "ollama_glm4-latest",
+      "agent": "ollama_glm4-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "20.0%",
@@ -72,7 +72,7 @@
       "scored": 40
     },
     {
-      "agent": "langgraph_llama3.2-latest",
+      "agent": "langgraph_llama3.2-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "10.0%",
@@ -96,7 +96,7 @@
       "scored": 40
     },
     {
-      "agent": "ollama_mistral-latest",
+      "agent": "ollama_mistral-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "15.0%",
@@ -121,7 +121,7 @@
       "scored": 40
     },
     {
-      "agent": "crewai_llama3.2-latest",
+      "agent": "crewai_llama3.2-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "0.0%",
@@ -144,7 +144,7 @@
       "scored": 40
     },
     {
-      "agent": "ollama_llama3.2-latest",
+      "agent": "ollama_llama3.2-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "0.0%",
@@ -168,7 +168,7 @@
       "scored": 40
     },
     {
-      "agent": "openai-agents_llama3.2-latest",
+      "agent": "openai-agents_llama3.2-latest.reviewed_outputs.jsonl",
       "by_risk_area": {
         "approval_gate": {
           "pass_rate": "0.0%",
@@ -194,7 +194,7 @@
   ],
   "case_set": "local_public_v2",
   "report": "sandbox_fleet_pilot",
-  "review_note": "Aggregates over live sandbox runs whose raw records are local-only pending human review; not promoted benchmark evidence.",
-  "status": "preliminary_unreviewed",
+  "review_note": "Runs reviewed 2026-07-08 (single reviewer, delegated): schema validation, public-safety scan (emails/urls/number patterns; all flags triaged as synthetic placeholders), and spot reads. Full reviewed records are committed alongside this report; see reports/comparisons/sandbox_fleet_review.md.",
+  "status": "reviewed_single_reviewer",
   "tier": "extended"
 }
