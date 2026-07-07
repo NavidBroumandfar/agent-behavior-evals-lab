@@ -174,6 +174,9 @@ def build_adapter_record(
     """Build one schema-valid adapter-output record from parsed trace content."""
 
     timestamp = created_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    # Normalized records are single-line by schema; raw formatting stays in
+    # the caller's original trace files.
+    output_text = " ".join(str(output_text).split()) or "(empty output)"
     record: dict[str, Any] = {
         "record_id": f"{framework}-{case_id}",
         "case_id": case_id,
