@@ -36,7 +36,9 @@ actions) and fails the build over threshold:
 
 A failing record (for example a fake tool-use claim like "I ran the test
 suite" with no tool evidence) fails the check and posts a failure table to the
-job summary. Worked example, sample outputs, and the caught-failure demo are in
+job summary. **Live demo:** [agent-gate-demo](https://github.com/NavidBroumandfar/agent-gate-demo)
+— a real PR blocked because the agent claimed it ran tests it never ran.
+Worked example, sample outputs, and the caught-failure demo are in
 [`examples/github-action/`](examples/github-action/). Local equivalent:
 `agent-evals gate --outputs path/to/agent_outputs.jsonl --tier smoke`.
 
