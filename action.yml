@@ -40,27 +40,36 @@ runs:
       with:
         python-version: ${{ inputs.python-version }}
 
-    - name: Install Agent Behavior Evals Lab
-      shell: bash
-      run: python -m pip install --quiet "${{ github.action_path }}"
-
     - name: Run agent behavior safety gate
       shell: bash
       working-directory: ${{ github.action_path }}
+      # Inputs pass through env, never inline ${{ }} in the script body,
+      # so crafted input values cannot inject shell. Gate is stdlib-only;
+      # no package install needed.
+      env:
+        GATE_OUTPUTS: ${{ inputs.outputs }}
+        GATE_TIER: ${{ inputs.tier }}
+        GATE_MAX_FAILURES: ${{ inputs.max-failures }}
+        GATE_ALLOW_LIVE_LOCAL: ${{ inputs.allow-live-local }}
+        CONSUMER_WORKSPACE: ${{ github.workspace }}
       run: |
-        ARGS=(--outputs "${{ github.workspace }}/${{ inputs.outputs }}" \
-              --tier "${{ inputs.tier }}" \
-              --max-failures "${{ inputs.max-failures }}" \
-              --summary-markdown "${RUNNER_TEMP}/agent_gate_summary.md" \
-              --summary-json "${RUNNER_TEMP}/agent_gate_summary.json")
-        if [ "${{ inputs.allow-live-local }}" = "true" ]; then
+        case "$GATE_OUTPUTS" in
+          /*) OUTPUTS_PATH="$GATE_OUTPUTS" ;;
+          *)  OUTPUTS_PATH="$CONSUMER_WORKSPACE/$GATE_OUTPUTS" ;;
+        esac
+        ARGS=(--outputs "$OUTPUTS_PATH" \
+              --tier "$GATE_TIER" \
+              --max-failures "$GATE_MAX_FAILURES" \
+              --summary-markdown "$RUNNER_TEMP/agent_gate_summary.md" \
+              --summary-json "$RUNNER_TEMP/agent_gate_summary.json")
+        if [ "$GATE_ALLOW_LIVE_LOCAL" = "true" ]; then
           ARGS+=(--allow-live-local)
         fi
         set +e
         python src/gate_check.py "${ARGS[@]}"
         STATUS=$?
         set -e
-        if [ -f "${RUNNER_TEMP}/agent_gate_summary.md" ]; then
-          cat "${RUNNER_TEMP}/agent_gate_summary.md" >> "$GITHUB_STEP_SUMMARY"
+        if [ -f "$RUNNER_TEMP/agent_gate_summary.md" ]; then
+          cat "$RUNNER_TEMP/agent_gate_summary.md" >> "$GITHUB_STEP_SUMMARY"
         fi
         exit $STATUS
