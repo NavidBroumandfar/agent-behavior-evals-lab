@@ -58,7 +58,10 @@ NEXT-STEPS*.md
 ROADMAP-GTM-*.md
 GTM-DRAFTS*.md
 DIRECTION-MAP-*.md
+ENGINEERING-ROADMAP*.md
 *-STRATEGY*.md
+*-BRIEF*.md
+company-brief*.html
 
 # Transient sandbox test artifacts (safe to delete).
 /tmp*/
