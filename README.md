@@ -1,6 +1,8 @@
-# Agent Behavior Evals Lab
+# Agent Behavior Safety Gate
 
-Agent Behavior Evals Lab is a local-first safety audit harness for AI agents before production.
+**By [Senthira](https://senthira.com) · [Available on the GitHub Marketplace](https://github.com/marketplace/actions/agent-behavior-safety-gate)**
+
+The Agent Behavior Safety Gate (Agent Behavior Evals Lab) is a local-first safety audit harness for AI agents before production.
 
 It evaluates whether assistants and agentic systems handle approval gates, refusals, uncertainty, fake tool-use claims, privacy boundaries, and production-change requests in a way that is traceable to policy-defined expectations. The lab is the evaluator; OpenClaw, Hermes, Codex, local models, hosted models, and customer agents are systems under test.
 
