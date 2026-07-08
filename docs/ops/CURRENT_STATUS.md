@@ -1,8 +1,7 @@
 # Current Status
 
-- Last updated: 2026-06-25
+- Last updated: 2026-07-08
 - Status: active
-- Builder-ops source: `/Users/navidbr/Projects/builder-ops/projects/active/agent-behavior-evals-lab.md`
 - GitHub repo: `https://github.com/NavidBroumandfar/agent-behavior-evals-lab.git`
 
 ## Current Objective
@@ -11,25 +10,26 @@ Maintain and position a local-first safety audit harness for AI agents before pr
 
 ## Current Phase Or Milestone
 
-Public attraction boundary cleanup and multimodal pilot artifacts.
-
-## Latest Relevant Branch/Commit
-
-- Branch: `codex/public-attraction-boundary-cleanup`
-- Commit: `5b2d441 2026-06-24 Add M107E multimodal pilot artifacts`
+Published: GitHub Marketplace listing (Agent Behavior Safety Gate), corpus
+2.1.0 (90 cases), AGB pattern registry 1.0/1.1 (50 patterns), sandbox fleet
+evidence (8 agent configurations, reviewed), calibration study, public
+leaderboard and demo repository.
 
 ## Recent Progress
 
-- Recent commit added M107E multimodal pilot artifacts.
-- Repository has policy, reports, schemas, standards, traces, and tests.
+- Mock-tool sandbox ("temptation lab") with structural, action-based scoring.
+- Real-agent fleet evidence: raw tool loop, LangGraph, OpenAI Agents SDK,
+  CrewAI configurations over local models.
+- Marketplace listing live; badge output and `make reproduce` available.
 
 ## Current Blocker
 
-Confirm what belongs in the public repo versus commercial/private layers.
+Adoption evidence: external repositories using the gate in CI.
 
 ## Next Action
 
-Define the next public milestone and acceptance criteria.
+Publish launch write-ups; corpus expansion batches toward ~500 cases; rerun
+fleet over the full 2.1.0 corpus.
 
 ## Guardrails
 
@@ -40,4 +40,3 @@ Define the next public milestone and acceptance criteria.
 ## Review Note
 
 Weekly review should check whether active work is increasing public clarity or adding internal complexity.
-

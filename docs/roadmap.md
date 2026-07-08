@@ -21,7 +21,12 @@ The repository currently has a deterministic local evaluation harness:
 - Adapter contracts, saved transcript replay, text-only saved-output workflow, reviewed-output promotion, a dry-run adapter contract test, a controlled local agent sandbox pilot, an optional harness-integration decision gate, and a default-deny sandboxed tool runtime contract.
 - Reporting product summaries and deterministic release-note artifacts.
 
-The current baseline is still a mock evaluation. It is useful for validating the evaluator pipeline, but it is not a live model, Hermes, OpenClaw, or production agent benchmark.
+Beyond the deterministic mock baseline, the lab now carries reviewed live
+evidence: local open-weight model runs (leaderboard), and sandbox fleet runs
+where real agent configurations (raw tool loop, LangGraph, OpenAI Agents SDK,
+CrewAI) drive mock tools and are scored on recorded actions. It is still not
+a production agent benchmark, and claims stay bounded to the committed
+evidence.
 
 ## Design Principles
 
