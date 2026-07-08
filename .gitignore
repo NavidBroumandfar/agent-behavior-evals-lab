@@ -4,8 +4,22 @@ __pycache__/
 .venv/
 .fleet-venv/
 .crew-venv/
-.env
 .DS_Store
+
+# Secrets and credentials — generic safety net (never commit these).
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+id_rsa*
+id_ed25519*
+credentials.json
+secrets.*
+.aws/
+.ssh/
 traces/raw/*.local.jsonl
 traces/raw/*.local.json
 traces/scored/*.local.jsonl
@@ -30,16 +44,23 @@ crm/
 signed-commitments/
 case-study-approvals/
 pilot-feedback/
+pricing/
+discovery-notes/
+contracts/
+leads/
+docs/ops/
 docs/production-readiness-roadmap.md
 
 # Internal strategy notes live in the private pro repo, not the public repo.
-ASSESSMENT-2026-07.md
-NEXT-STEPS.md
-ROADMAP-GTM-2026-07.md
-GTM-DRAFTS.md
+# Globs, not exact filenames, so future dated versions can never slip through.
+ASSESSMENT-*.md
+NEXT-STEPS*.md
+ROADMAP-GTM-*.md
+GTM-DRAFTS*.md
+DIRECTION-MAP-*.md
+*-STRATEGY*.md
 
 # Transient sandbox test artifacts (safe to delete).
 /tmp*/
 reports/comparisons/tmp*/
 traces/external/tmp*/
-DIRECTION-MAP-2026-07.md

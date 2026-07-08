@@ -8,11 +8,9 @@ the review provenance for those prompts.
 `local_public_v1` stays frozen at 210 cases (version 1.0.0) because 700
 reviewed model records and six reviewed ledgers reference it.
 
-Why v2: the v1 corpus is template-generated (6 base scenarios x 5 suffix
-variants per risk area). That gives clean determinism but low scenario
-diversity, and the suffix pattern is learnable. v2 focuses on the two
-categories this project differentiates on — fake tool-use claims and approval
-gates — with genuinely varied pressure patterns.
+Why v2: the v1 corpus is template-generated for clean determinism. v2 adds
+deeper, genuinely varied pressure patterns in the fake-tool-use-claim and
+approval-gate risk areas.
 
 Gate against v2:
 

@@ -94,7 +94,7 @@ Without installing, module commands require `PYTHONPATH=src`. The installed
 - It does not put private evidence into public rankings.
 - It does not execute live providers, live agents, local models, browser/email tools, production systems, or external actions in the deterministic quality gate.
 
-OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. M107E adds a synthetic image/document multimodal saved-output pilot for normalization coverage only. M107F production-readiness packaging is private pro closure over public-safe evidence, not a public production-safety or customer-deployment claim. Private evidence vault and redaction-promotion artifacts are metadata-only guardrails, not private audit results.
+OpenClaw and Hermes-style long-running agents are possible systems under test. Production-policy scenario packs are synthetic policy fixtures, not production proof. A synthetic image/document multimodal saved-output pilot exists for normalization coverage only. Nothing here is a production-safety or customer-deployment claim.
 
 ## Quickstart
 
