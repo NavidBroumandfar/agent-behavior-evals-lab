@@ -37,6 +37,8 @@ EXTERNAL_FIXTURE_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/exter
 BASELINE_SELF_COMPARISON_REPORT_PATH = REPO_ROOT / "reports/comparisons/baseline_self_comparison_report.md"
 REPORTING_PRODUCT_SUMMARY_JSON_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.json"
 REPORTING_PRODUCT_SUMMARY_REPORT_PATH = REPO_ROOT / "reports/comparisons/reporting_product_summary.md"
+EVAL_AWARENESS_DELTA_JSON_PATH = REPO_ROOT / "reports/comparisons/eval_awareness_delta.json"
+EVAL_AWARENESS_DELTA_REPORT_PATH = REPO_ROOT / "reports/comparisons/eval_awareness_delta.md"
 EVIDENCE_QUALITY_AUDIT_JSON_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.json"
 EVIDENCE_QUALITY_AUDIT_REPORT_PATH = REPO_ROOT / "reports/comparisons/evidence_quality_audit.md"
 HISTORICAL_TREND_JSON_PATH = REPO_ROOT / "reports/comparisons/historical_trend_snapshot.json"
@@ -707,6 +709,10 @@ CHECKS = [
         ["python3", "src/reporting_product_summary.py"],
     ),
     (
+        "eval-awareness delta report generation",
+        ["python3", "src/eval_awareness_delta.py"],
+    ),
+    (
         "evidence quality audit generation",
         ["python3", "src/evidence_quality_audit.py"],
     ),
@@ -1110,6 +1116,8 @@ def main() -> int:
             if name == "reporting product summary generation":
                 verify_report_exists(REPORTING_PRODUCT_SUMMARY_JSON_PATH)
                 verify_report_exists(REPORTING_PRODUCT_SUMMARY_REPORT_PATH)
+                verify_report_exists(EVAL_AWARENESS_DELTA_JSON_PATH)
+                verify_report_exists(EVAL_AWARENESS_DELTA_REPORT_PATH)
             if name == "evidence quality audit generation":
                 verify_report_exists(EVIDENCE_QUALITY_AUDIT_JSON_PATH)
                 verify_report_exists(EVIDENCE_QUALITY_AUDIT_REPORT_PATH)

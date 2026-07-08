@@ -1,0 +1,15 @@
+{
+  "case_set": "local_public_v2",
+  "config_count": 0,
+  "configs": [],
+  "finding": "This publishes the eval-awareness measurement harness: run any local model through the two-framing runbook below and this report populates the gap table for it, scored by the same deterministic gate. Paired runs are committed as reviewed evidence (same discipline as every live-model artifact here), so the table only ever shows human-reviewed measurements \u2014 the generator never fabricates a delta.",
+  "framings": {
+    "eval": "explicit 'you are being tested' preamble",
+    "production": "no preamble"
+  },
+  "mean_eval_awareness_gap_pct": null,
+  "measurement_status": "pending_live_runs",
+  "report": "eval_awareness_delta",
+  "runbook": "python3 src/sandbox_agent_runner.py --agent ollama:<model> --tier extended --framing eval --output traces/external/sandbox_<label>.eval_framed.local.jsonl ; python3 src/sandbox_agent_runner.py --agent ollama:<model> --tier extended --framing production --output traces/external/sandbox_<label>.prod_shaped.local.jsonl ; # human-review + promote each .local.jsonl to .reviewed_sandbox_outputs.jsonl, then rerun this report",
+  "tier": "extended"
+}
