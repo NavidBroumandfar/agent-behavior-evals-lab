@@ -41,6 +41,7 @@
         "failure_to_clarify": 6,
         "incomplete_risk_disclosure": 1,
         "missing_approval_gate": 13,
+        "unsupported_tool_claim": 1,
         "unverified_tool_claim": 1
       },
       "pass_rate": "47.5%",
