@@ -56,10 +56,10 @@ def judged_path_for(scored_path: Path) -> Path:
     return scored_path.with_name(f"{stem}.judge.local.jsonl")
 
 
-def discover_scored_runs(scored_dir: Path) -> list[Path]:
-    runs = sorted(scored_dir.glob(SCORED_GLOB))
+def discover_scored_runs(scored_dir: Path, glob: str = SCORED_GLOB) -> list[Path]:
+    runs = sorted(scored_dir.glob(glob))
     if not runs:
-        raise CalibrationStudyError(f"no scored runs matching {SCORED_GLOB} in {scored_dir}")
+        raise CalibrationStudyError(f"no scored runs matching {glob} in {scored_dir}")
     return runs
 
 
@@ -73,11 +73,12 @@ def judge_all_runs(
     max_cases: int | None = None,
     max_failures: int = 50,
     transport: Any = None,
+    glob: str = SCORED_GLOB,
 ) -> list[dict[str, Any]]:
     """Run the LLM judge over every scored run; returns per-run judge summaries."""
 
     summaries = []
-    for scored_path in discover_scored_runs(scored_dir):
+    for scored_path in discover_scored_runs(scored_dir, glob):
         run_transport = transport or transport_for_provider(
             provider, model=model, env=env, endpoint=endpoint
         )
@@ -108,7 +109,7 @@ def load_jsonl(path: Path) -> list[dict[str, Any]]:
     return records
 
 
-def aggregate_calibration(scored_dir: Path) -> dict[str, Any]:
+def aggregate_calibration(scored_dir: Path, glob: str = SCORED_GLOB) -> dict[str, Any]:
     """Aggregate keyword-vs-judge agreement from judged .local.jsonl files."""
 
     runs: list[dict[str, Any]] = []
@@ -116,7 +117,7 @@ def aggregate_calibration(scored_dir: Path) -> dict[str, Any]:
     category_disagreements: Counter = Counter()
     disagreement_examples: list[dict[str, Any]] = []
 
-    for scored_path in discover_scored_runs(scored_dir):
+    for scored_path in discover_scored_runs(scored_dir, glob):
         judged_path = judged_path_for(scored_path)
         if not judged_path.exists():
             raise CalibrationStudyError(
@@ -127,7 +128,11 @@ def aggregate_calibration(scored_dir: Path) -> dict[str, Any]:
             raise CalibrationStudyError(f"{judged_path.name} contains no judged records")
 
         run_counts = Counter()
-        run_id = scored_path.name.replace(".reviewed_live_local_eval.jsonl", "")
+        run_id = scored_path.name
+        for suffix in (".reviewed_live_local_eval.jsonl", ".fleet_scored.local.jsonl", ".jsonl"):
+            if run_id.endswith(suffix):
+                run_id = run_id[: -len(suffix)]
+                break
         judge_models = {str(entry.get("judge_model", "unknown")) for entry in judged}
         for entry in judged:
             keyword_passed = entry.get("baseline_passed")
@@ -251,6 +256,9 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--model", default="llama3.2:latest", help="Judge model name.")
     parser.add_argument("--endpoint", default=DEFAULT_OLLAMA_ENDPOINT, help="Ollama endpoint (ollama provider only).")
     parser.add_argument("--scored-dir", type=Path, default=DEFAULT_SCORED_DIR, help="Directory of scored run JSONL files.")
+    parser.add_argument("--scored-glob", default=SCORED_GLOB, help="Glob selecting scored run files inside --scored-dir.")
+    parser.add_argument("--json-out", type=Path, default=JSON_OUTPUT_PATH, help="Aggregate report JSON output path.")
+    parser.add_argument("--md-out", type=Path, default=MARKDOWN_OUTPUT_PATH, help="Aggregate report Markdown output path.")
     parser.add_argument("--max-cases", type=int, default=None, help="Judge at most N records per run (smoke use).")
     parser.add_argument("--skip-report", action="store_true", help="Judge only; do not write the aggregate report.")
     return parser.parse_args(argv)
@@ -269,13 +277,14 @@ def main(argv: list[str] | None = None) -> int:
                 endpoint=args.endpoint,
                 env=dict(os.environ),
                 max_cases=args.max_cases,
+                glob=args.scored_glob,
             )
         if not args.skip_report:
-            summary = aggregate_calibration(args.scored_dir)
-            write_json_object(summary, JSON_OUTPUT_PATH)
-            write_text(render_markdown(summary), MARKDOWN_OUTPUT_PATH)
+            summary = aggregate_calibration(args.scored_dir, args.scored_glob)
+            write_json_object(summary, args.json_out)
+            write_text(render_markdown(summary), args.md_out)
             print(
-                f"calibration report written: {MARKDOWN_OUTPUT_PATH} "
+                f"calibration report written: {args.md_out} "
                 f"(agreement {summary['agreement_rate']} over {summary['judged_records']} records)"
             )
     except (CalibrationStudyError, LlmJudgeError) as exc:

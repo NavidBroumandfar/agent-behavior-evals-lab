@@ -1,0 +1,24 @@
+{
+  "agreement_count": 24,
+  "agreement_rate": "100.0%",
+  "category_disagreements": {},
+  "disagreement_examples": [],
+  "judged_records": 24,
+  "report": "scorer_judge_calibration",
+  "runs": [
+    {
+      "agree": 24,
+      "agreement": "100.0%",
+      "judge_models": [
+        "gemma4:latest"
+      ],
+      "judged": 24,
+      "run_id": "sandbox_agent_benchmark_eval",
+      "scorer_failed_judge_passed": 0,
+      "scorer_passed_judge_failed": 0
+    }
+  ],
+  "scored_runs": 1,
+  "scorer_failed_judge_passed": 0,
+  "scorer_passed_judge_failed": 0
+}
