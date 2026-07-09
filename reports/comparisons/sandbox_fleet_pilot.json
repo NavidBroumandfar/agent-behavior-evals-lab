@@ -10,17 +10,18 @@
           "scored": 20
         },
         "tool_use_claim": {
-          "pass_rate": "75.0%",
-          "passed": 15,
+          "pass_rate": "65.0%",
+          "passed": 13,
           "scored": 20
         }
       },
       "failure_modes": {
         "failure_to_clarify": 5,
-        "missing_approval_gate": 13
+        "missing_approval_gate": 13,
+        "unverified_tool_claim": 3
       },
-      "pass_rate": "55.0%",
-      "passed": 22,
+      "pass_rate": "50.0%",
+      "passed": 20,
       "scored": 40
     },
     {
@@ -57,8 +58,8 @@
           "scored": 20
         },
         "tool_use_claim": {
-          "pass_rate": "35.0%",
-          "passed": 7,
+          "pass_rate": "30.0%",
+          "passed": 6,
           "scored": 20
         }
       },
@@ -66,10 +67,10 @@
         "failure_to_clarify": 13,
         "incomplete_risk_disclosure": 3,
         "missing_approval_gate": 13,
-        "unverified_tool_claim": 2
+        "unverified_tool_claim": 3
       },
-      "pass_rate": "27.5%",
-      "passed": 11,
+      "pass_rate": "25.0%",
+      "passed": 10,
       "scored": 40
     },
     {
@@ -90,7 +91,7 @@
         "failure_to_clarify": 13,
         "incomplete_risk_disclosure": 1,
         "missing_approval_gate": 17,
-        "unverified_tool_claim": 1
+        "unverified_tool_claim": 2
       },
       "pass_rate": "22.5%",
       "passed": 9,
@@ -115,7 +116,7 @@
         "incomplete_risk_disclosure": 2,
         "missing_approval_gate": 15,
         "unsupported_claim": 1,
-        "unverified_tool_claim": 1
+        "unverified_tool_claim": 5
       },
       "pass_rate": "15.0%",
       "passed": 6,
@@ -162,7 +163,7 @@
         "failure_to_clarify": 17,
         "incomplete_risk_disclosure": 1,
         "missing_approval_gate": 19,
-        "unverified_tool_claim": 1
+        "unverified_tool_claim": 4
       },
       "pass_rate": "7.5%",
       "passed": 3,
@@ -186,7 +187,7 @@
         "failure_to_clarify": 18,
         "incomplete_risk_disclosure": 2,
         "missing_approval_gate": 18,
-        "unverified_tool_claim": 1
+        "unverified_tool_claim": 2
       },
       "pass_rate": "5.0%",
       "passed": 2,

@@ -74,6 +74,13 @@ call without approval or fabricated a tool claim — failures only the
 structural `tool_events` check caught. Text review misses these by
 construction; the recorded-action check does not.
 
+The verifier is red-teamed against its own adversarial corpus — passive
+voice, stateful assertions, markdown checklists, fabricated output blocks —
+with catch rates and known gaps published honestly in the
+[verifier evasion audit](reports/comparisons/verifier_evasion_audit.md).
+Who produces `tool_events` and why the log is trusted is stated in the
+[evidence trust model](docs/evidence-trust-model.md).
+
 ## Run One Demo Audit In 5 Minutes
 
 Install the package first, then use the CLI:
@@ -173,6 +180,7 @@ The lint command uses Ruff when it is installed. The deterministic quality gate 
 - [Quickstart](docs/quickstart.md)
 - [Architecture](docs/architecture.md)
 - [Evidence model](docs/evidence-model.md)
+- [Evidence trust model](docs/evidence-trust-model.md)
 - [Public repository boundary](PUBLIC_REPO_BOUNDARY.md)
 - [Public release checklist](docs/public-release-checklist.md)
 - [Live benchmark roadmap](docs/live_benchmark_roadmap.md)

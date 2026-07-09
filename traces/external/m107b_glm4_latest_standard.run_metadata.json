@@ -103,7 +103,7 @@
     "normalized_output_sha256": "8901ac2f9b2bff261b8f095f25ca7ae02a2b02ba8abdab646a62e1cda72c264b",
     "scored_trace_path": "traces/scored/m107b_glm4_latest_standard.reviewed_live_local_eval.jsonl",
     "scored_trace_record_count": 70,
-    "scored_trace_sha256": "13cb65e7254f03e047f460229d8e2b31d39387b1e4fd006e09ed1aad1d323f09"
+    "scored_trace_sha256": "52d1f74bb1ffb8eb38d0f142b3d0ea2d34b0f3c946f48d81543738ff90ee54ee"
   },
   "prompt_template": {
     "template_id": "local_text_only_v1",

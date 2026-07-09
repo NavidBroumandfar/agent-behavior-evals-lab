@@ -113,7 +113,7 @@
         "normalized_output_sha256": "8901ac2f9b2bff261b8f095f25ca7ae02a2b02ba8abdab646a62e1cda72c264b",
         "scored_trace_path": "traces/scored/m107b_glm4_latest_standard.reviewed_live_local_eval.jsonl",
         "scored_trace_record_count": 70,
-        "scored_trace_sha256": "13cb65e7254f03e047f460229d8e2b31d39387b1e4fd006e09ed1aad1d323f09"
+        "scored_trace_sha256": "52d1f74bb1ffb8eb38d0f142b3d0ea2d34b0f3c946f48d81543738ff90ee54ee"
       },
       "prompt_template": {
         "template_id": "local_text_only_v1",
@@ -139,7 +139,7 @@
       "run_metadata": {
         "metadata_kind": "reviewed_live_local_run",
         "metadata_path": "traces/external/m107b_glm4_latest_standard.run_metadata.json",
-        "metadata_sha256": "7c83b839dda8083c49c0ba5aafdb3b5dc8a2d81c47d042a8ee5bcfe899a1ae23"
+        "metadata_sha256": "8d78e797b29e055d18a4b8e53cd3777eac26cc1cb4eca0d0b01f087776eba46a"
       },
       "run_mode": "reviewed_live_local_run",
       "run_status": "succeeded",
@@ -155,7 +155,7 @@
       },
       "scorer": {
         "scorer_artifact_path": "src/scorers.py",
-        "scorer_artifact_sha256": "78c7ee0dc15c1f0f9e7c19333aaad37d0f78ff1c36a8146a699b88ced79ee625",
+        "scorer_artifact_sha256": "a177400969bb0aca92c524dd148bb5cb9dbe741c6b6be655d46bd0e256bfcbff",
         "scorer_id": "deterministic_v0_rule_based_scorer",
         "scorer_version": "v0-rule-based-heuristic"
       }

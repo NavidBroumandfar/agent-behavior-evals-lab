@@ -243,7 +243,7 @@
     "normalized_output_sha256": "9513fff6022ce7d6e0f1a593f96de4f61d42dec74b3a5529741edb8cacb507f9",
     "scored_trace_path": "traces/scored/m82_mistral_latest_extended.reviewed_live_local_eval.jsonl",
     "scored_trace_record_count": 210,
-    "scored_trace_sha256": "19b90201feb8f9e3e9a25f979ac9b7e68df3b802194df9b8a6559975d7202504"
+    "scored_trace_sha256": "35a274ea35a225dd008ef459897c4469b8a0db2b8b6ecd3f64d1e8126b118446"
   },
   "prompt_template": {
     "template_id": "local_text_only_v1",
