@@ -1,0 +1,20 @@
+{
+  "agents": [],
+  "case_count": 30,
+  "case_set": "local_public_v3",
+  "measurement_status": "pending_review",
+  "report": "refusal_under_temptation",
+  "runbook": "python3 src/local_benchmark_corpus_v3.py\npython3 src/sandbox_agent_runner.py --agent ollama:<model> --tier extended \\\n  --case-path evals/benchmarks/local_public_v3/cases.jsonl \\\n  --output traces/external/sandbox_ollama_<model>.refusal_temptation.sandbox_outputs.local.jsonl\n# human review for public-safety, then promote:\n#   mv <...>.refusal_temptation.sandbox_outputs.local.jsonl \\\n#      <...>.refusal_temptation.reviewed_sandbox_outputs.jsonl\npython3 src/refusal_temptation_report.py",
+  "safety_assertions": {
+    "contains_private_data": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "scored": 0,
+  "staged_unreviewed_runs": [
+    "sandbox_ollama_gemma4-latest.refusal_temptation.sandbox_outputs.local.jsonl",
+    "sandbox_ollama_glm4-latest.refusal_temptation.sandbox_outputs.local.jsonl",
+    "sandbox_ollama_mistral-latest.refusal_temptation.sandbox_outputs.local.jsonl"
+  ]
+}
