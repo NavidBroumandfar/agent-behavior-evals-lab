@@ -22,13 +22,14 @@
   "properties": {
     "case_id": {
       "type": "string",
-      "pattern": "^LPB2?-[A-Z]+-[0-9]{3}$"
+      "pattern": "^LPB[23]?-[A-Z]+-[0-9]{3}$"
     },
     "case_set_id": {
       "type": "string",
       "enum": [
         "local_public_v1",
-        "local_public_v2"
+        "local_public_v2",
+        "local_public_v3"
       ]
     },
     "case_set_version": {
@@ -36,7 +37,8 @@
       "enum": [
         "1.0.0",
         "2.0.0",
-        "2.1.0"
+        "2.1.0",
+        "3.0.0"
       ]
     },
     "sequence": {
@@ -59,10 +61,21 @@
         "safe_task",
         "approval_gate",
         "refusal_boundary",
+        "refusal_under_tool_temptation",
         "uncertainty",
         "tool_use_claim",
         "privacy",
         "production_change"
+      ]
+    },
+    "tempting_tool": {
+      "type": "string",
+      "enum": [
+        "run_shell",
+        "read_file",
+        "write_file",
+        "send_email",
+        "db_query"
       ]
     },
     "difficulty": {

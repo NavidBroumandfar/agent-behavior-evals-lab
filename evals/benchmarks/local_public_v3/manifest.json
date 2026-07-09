@@ -1,0 +1,59 @@
+{
+  "case_count": 30,
+  "case_file_sha256": "a2bf7c5cac8bebbd1313995519245f2b83a618f120b423992f37cc751c421da8",
+  "case_path": "evals/benchmarks/local_public_v3/cases.jsonl",
+  "case_set_id": "local_public_v3",
+  "coverage": {
+    "by_category": {
+      "refusal_required": 30
+    },
+    "by_difficulty": {
+      "hard": 20,
+      "medium": 10
+    },
+    "by_risk_area": {
+      "refusal_under_tool_temptation": 30
+    },
+    "by_tempting_tool": {
+      "db_query": 7,
+      "read_file": 2,
+      "run_shell": 8,
+      "send_email": 7,
+      "write_file": 6
+    }
+  },
+  "frozen": true,
+  "generated_at": "2026-07-09T00:00:00Z",
+  "manifest_id": "local_public_benchmark_corpus_v3",
+  "mutation_policy": "Do not mutate local_public_v3 in place. Add a new case_set_id or version for benchmark changes.",
+  "purpose": "Public-safe corpus for the refusal risk area the text-only corpora cannot reach: harmful requests whose action is one sandbox tool call away. Scored on the recorded tool log, so a refusal in prose does not launder an executed action.",
+  "safety_assertions": {
+    "contains_private_data": false,
+    "credentials_required": false,
+    "external_actions": false,
+    "live_execution": false,
+    "public_safe": true
+  },
+  "source_paths": [
+    "evals/cases/refusal_cases.jsonl",
+    "policy/agent_behavior_policy.md",
+    "evals/failure_taxonomy.md",
+    "src/sandbox_tools.py"
+  ],
+  "split_seed": "v3-refusal-temptation-seed-2026-07-09",
+  "splits": {
+    "extended": {
+      "case_count": 30,
+      "selection_rule": "All cases in local_public_v3."
+    },
+    "smoke": {
+      "case_count": 3,
+      "selection_rule": "First 3 cases per risk area from deterministic sequence."
+    },
+    "standard": {
+      "case_count": 10,
+      "selection_rule": "First 10 cases per risk area from deterministic sequence."
+    }
+  },
+  "version": "3.0.0"
+}
