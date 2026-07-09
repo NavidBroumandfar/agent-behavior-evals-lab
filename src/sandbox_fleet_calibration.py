@@ -265,6 +265,145 @@ def analyze_structural_catches(scored_dir: Path, glob: str) -> dict[str, Any]:
     }
 
 
+def panel_judged_paths(scored_path: Path) -> list[Path]:
+    """Per-judge output variants for one scored file: <stem>.judge.<tag>.local.jsonl.
+
+    Excludes the canonical single-judge path (<stem>.judge.local.jsonl) so the
+    panel only reads explicitly tagged judge outputs.
+    """
+
+    stem = scored_path.name.replace(".jsonl", "")
+    canonical = judged_path_for(scored_path).name
+    return sorted(
+        path
+        for path in scored_path.parent.glob(f"{stem}.judge.*.local.jsonl")
+        if path.name != canonical
+    )
+
+
+def analyze_judge_panel(scored_dir: Path, glob: str) -> dict[str, Any] | None:
+    """Aggregate every tagged judge's verdicts against the structural baseline.
+
+    Returns None when no tagged judge outputs exist (single-judge mode). The
+    headline is whether the evidence-only catches survive a panel: records the
+    structural layer failed on tool_events where EVERY text-only judge passed
+    the output text are the strongest form of the added-value claim.
+    """
+
+    per_judge: dict[str, Counter] = {}
+    majority = Counter()
+    catch_votes: list[dict[str, Any]] = []
+
+    for scored_path in sorted(scored_dir.glob(glob)):
+        variants = panel_judged_paths(scored_path)
+        if not variants:
+            continue
+        scored_by_id = {str(rec.get("case_id")): rec for rec in load_jsonl(scored_path)}
+        votes_by_case: dict[str, dict[str, bool]] = {}
+        for judged_path in variants:
+            entries = load_jsonl(judged_path)
+            if not entries:
+                continue
+            judge_model = str(entries[0].get("judge_model", "unknown"))
+            counts = per_judge.setdefault(judge_model, Counter())
+            for entry in entries:
+                structural_passed = entry.get("baseline_passed")
+                judge_passed = entry.get("passed")
+                if structural_passed is None:
+                    continue
+                counts["judged"] += 1
+                if structural_passed == judge_passed:
+                    counts["agree"] += 1
+                elif judge_passed and not structural_passed:
+                    counts[SCORER_FALSE_ALARM] += 1
+                else:
+                    counts[SCORER_MISS] += 1
+                votes_by_case.setdefault(str(entry.get("case_id")), {})[judge_model] = bool(judge_passed)
+
+        for case_id, votes in votes_by_case.items():
+            scored_record = scored_by_id.get(case_id, {})
+            structural_passed = scored_record.get("passed")
+            if structural_passed is None or len(votes) < 2:
+                continue
+            pass_votes = sum(1 for verdict in votes.values() if verdict)
+            fail_votes = len(votes) - pass_votes
+            if pass_votes == fail_votes:
+                majority["split"] += 1
+                continue
+            majority["decided"] += 1
+            majority_passed = pass_votes > fail_votes
+            if majority_passed == structural_passed:
+                majority["agree"] += 1
+            if not structural_passed and majority_passed and _is_evidence_only(scored_record):
+                catch_votes.append(
+                    {
+                        "run_id": scored_path.name.replace(SCORED_SUFFIX, ""),
+                        "case_id": case_id,
+                        "judges_passing": pass_votes,
+                        "judges_total": len(votes),
+                        "unanimous_pass": pass_votes == len(votes),
+                        "structural_failure_modes": list(scored_record.get("failure_modes", [])),
+                    }
+                )
+
+    if not per_judge:
+        return None
+
+    return {
+        "judges": {
+            model: {
+                "judged": counts["judged"],
+                "agree": counts["agree"],
+                "agreement": percent(counts["agree"], counts["judged"]),
+                SCORER_FALSE_ALARM: counts[SCORER_FALSE_ALARM],
+                SCORER_MISS: counts[SCORER_MISS],
+            }
+            for model, counts in sorted(per_judge.items())
+        },
+        "majority_decided": majority["decided"],
+        "majority_agree": majority["agree"],
+        "majority_agreement": percent(majority["agree"], majority["decided"]),
+        "majority_split": majority["split"],
+        "evidence_only_catches_passed_by_majority": len(catch_votes),
+        "evidence_only_catches_passed_unanimously": sum(1 for c in catch_votes if c["unanimous_pass"]),
+        "evidence_only_catch_votes": catch_votes,
+    }
+
+
+def render_panel_section(panel: dict[str, Any]) -> list[str]:
+    lines = [
+        "",
+        "## Judge panel — do the catches survive more judges?",
+        "",
+        "Independent text-only judges over the same records (each judge reads output",
+        "text only, never `tool_events`). Per-judge agreement with the structural",
+        "baseline, then a per-record majority vote:",
+        "",
+        "| Judge model | Judged | Agreement | Structural FAIL / judge PASS | Structural PASS / judge FAIL |",
+        "| --- | --- | --- | --- | --- |",
+    ]
+    for model, row in panel["judges"].items():
+        lines.append(
+            f"| `{model}` | {row['judged']} | {row['agreement']} "
+            f"| {row[SCORER_FALSE_ALARM]} | {row[SCORER_MISS]} |"
+        )
+    lines.extend(
+        [
+            "",
+            f"- Majority verdicts: {panel['majority_decided']} decided, {panel['majority_split']} split; "
+            f"majority-vs-structural agreement {panel['majority_agreement']}",
+            f"- **Evidence-only catches passed by the judge majority: "
+            f"{panel['evidence_only_catches_passed_by_majority']}"
+            f" (unanimously passed by every judge: {panel['evidence_only_catches_passed_unanimously']})** — "
+            "records where multiple independent text-only readers see nothing wrong and the recorded",
+            "  tool log shows a violation. Text review cannot catch these; action-level evidence does.",
+            "- Caveat: some panel judges also appear as fleet *target* models (each affects only its own",
+            "  40 records); majority voting across judges mitigates self-judging bias.",
+        ]
+    )
+    return lines
+
+
 def render_markdown(summary: dict[str, Any]) -> str:
     catches = summary["structural_catch_analysis"]
     judge_models = sorted({model for run in summary["runs"] for model in run["judge_models"]})
@@ -371,8 +510,35 @@ def render_markdown(summary: dict[str, Any]) -> str:
                 f"Structural modes: {structural_modes}. Judge: {example['judge_rationale']}"
             )
 
+    if summary.get("judge_panel"):
+        lines.extend(render_panel_section(summary["judge_panel"]))
+
     lines.extend(
         [
+            "",
+            "## Reproduce this",
+            "",
+            "The 8 raw fleet output files are committed at",
+            "`traces/external/sandbox_*.reviewed_sandbox_outputs.jsonl` and carry the recorded",
+            "`tool_events`, so the structural half of this study — every structural verdict and",
+            "every evidence-only catch — is deterministic and auditable offline from this",
+            "checkout alone:",
+            "",
+            "```bash",
+            "python3 src/sandbox_fleet_calibration.py --emit-only",
+            "```",
+            "",
+            "The judge half needs a local ollama with the judge model pulled",
+            "(`ollama pull gemma4`), is double-gated, and its agreement numbers vary",
+            "run-to-run (an LLM judge is not deterministic):",
+            "",
+            "```bash",
+            "AGENT_EVALS_ENABLE_LLM_JUDGE=1 python3 src/sandbox_fleet_calibration.py \\",
+            "  --live-judge --provider ollama --model gemma4:latest",
+            "```",
+            "",
+            "Scored and judged intermediates stay git-ignored (`*.local.jsonl`); only this",
+            "aggregated report is committed.",
             "",
             "## Evidence class and boundary",
             "",
@@ -407,6 +573,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--max-cases", type=int, default=None, help="Judge at most N records per agent (smoke use).")
     parser.add_argument("--json-out", type=Path, default=JSON_OUTPUT_PATH, help="Aggregate report JSON output path.")
     parser.add_argument("--md-out", type=Path, default=MARKDOWN_OUTPUT_PATH, help="Aggregate report Markdown output path.")
+    parser.add_argument(
+        "--panel",
+        action="store_true",
+        help="Also aggregate tagged multi-judge outputs (<stem>.judge.<model>.local.jsonl) into a panel section.",
+    )
     return parser.parse_args(argv)
 
 
@@ -436,6 +607,8 @@ def main(argv: list[str] | None = None) -> int:
         summary["case_set"] = "local_public_v2"
         summary["tier"] = args.tier
         summary["structural_catch_analysis"] = analyze_structural_catches(SCORED_DIR, SCORED_GLOB)
+        if args.panel:
+            summary["judge_panel"] = analyze_judge_panel(SCORED_DIR, SCORED_GLOB)
 
         write_json_object(summary, args.json_out)
         write_text(render_markdown(summary), args.md_out)

@@ -16,6 +16,17 @@ the tool calls the agent actually made — or drive any agent through the
 call is recorded. Reviewed local-model results:
 [leaderboard](docs/leaderboard/index.html). Named failure patterns:
 [AGB registry](docs/patterns/index.html) (cite as `AGB-030 approval-by-silence`).
+Scorer credibility is measured, not asserted: see the
+[700-record model calibration](reports/comparisons/scorer_judge_calibration.md)
+and the [320-record real-agent fleet calibration](reports/comparisons/sandbox_fleet_scorer_judge_calibration.md).
+
+Try the gate offline right now — no install, no network, no keys; it catches
+the shipped fake tool-use demo record and exits 1:
+
+```bash
+PYTHONPATH=src python3 src/gate_check.py \
+  --outputs examples/github-action/agent_outputs.jsonl --tier smoke
+```
 
 **Public proof record:** this repository is also summarized on
 [navidbr.me/work/agent-behavior-evals-lab](https://navidbr.me/work/agent-behavior-evals-lab)
@@ -54,6 +65,14 @@ matching recorded event passes; a claim with none fails as
 traces with [`src/trace_adapters.py`](examples/adapters/), which emits
 `tool_events` automatically. Gate the deeper v2 pressure-pattern corpus with
 `--case-path evals/benchmarks/local_public_v2/cases.jsonl`.
+
+Why action-level checking matters, measured: in the
+[real-agent fleet calibration](reports/comparisons/sandbox_fleet_scorer_judge_calibration.md)
+(320 records, 8 framework x model agents), a text-only LLM judge passed
+records where the recorded tool log shows the agent executed a destructive
+call without approval or fabricated a tool claim — failures only the
+structural `tool_events` check caught. Text review misses these by
+construction; the recorded-action check does not.
 
 ## Run One Demo Audit In 5 Minutes
 
@@ -173,6 +192,12 @@ directory and keep public/private workflows separate.
 
 The deterministic gate validates the evaluator, reports, fixtures, schemas, and ledgers. The repository contains reviewed local/open-weight benchmark ledgers for `llama3.2:latest`, `mistral:latest`, `qwen3.5:2b-q4_K_M`, `deepseek-coder:6.7b-instruct`, `glm4:latest`, and `codellama:7b-instruct` over the public `local_public_v1` corpus, plus one synthetic public-safe image/document multimodal saved-output pilot fixture. Those reports are scoped benchmark or pilot evidence only; they are not cloud rankings, production-safety proof, compliance certification, broad multimodal coverage, or customer-readiness evidence.
 
+Scorer calibration evidence (how often an independent LLM judge agrees with the deterministic scorer, and where they diverge):
+
+- [Keyword scorer vs judge, 700 model records](reports/comparisons/scorer_judge_calibration.md) — 55.1% agreement across 6 local models; disagreement localizes the keyword rules that need work.
+- [Structural scorer vs judge, 320 real-agent fleet records](reports/comparisons/sandbox_fleet_scorer_judge_calibration.md) — 70.6% agreement across 8 framework x model agents, including evidence-only catches a text-only judge cannot see.
+- [Sandbox benchmark sanity pass, 24 hand-authored records](reports/comparisons/sandbox_scorer_judge_calibration.md) — 100% agreement on clean exemplars; explicitly a sanity check, not validation.
+
 ## Milestone 1 Status
 
 Milestone 1 establishes a deterministic baseline pipeline:
@@ -189,7 +214,7 @@ Milestone 1 establishes a deterministic baseline pipeline:
 
 The current deterministic mock baseline should not be interpreted as evidence of production model or agent performance. The mock client exists to validate the evaluator pipeline before real adapters are added.
 
-See `docs/milestone_1_closeout.md` for the Milestone 1 closeout summary, `docs/milestone_2_closeout.md` for the regression and comparison layer closeout, `docs/milestones/m3-controlled-real-output-prep-closeout.md` for the controlled real-output preparation closeout, `docs/milestones/m4-adapter-readiness-closeout.md` for the adapter readiness closeout, `docs/milestones/m5-adapter-contract-hardening-closeout.md` for the adapter contract hardening closeout, `docs/milestones/m6-controlled-adapter-sandbox-closeout.md` for the controlled adapter sandbox closeout, `docs/milestones/m7-text-only-saved-output-collector-closeout.md` for the text-only saved-output workflow closeout, `docs/milestones/m8-reviewed-output-promotion-closeout.md` for the reviewed output promotion closeout, `docs/milestones/m9-adjudication-and-trace-comparison-closeout.md` for the adjudication and trace comparison closeout, `docs/milestones/m10-adjudication-aware-reporting-closeout.md` for the adjudication-aware reporting closeout, `docs/milestones/m11-reporting-regression-hardening-closeout.md` for the reporting regression hardening closeout, `docs/milestones/m12-reviewed-adjudication-coverage-closeout.md` for the reviewed adjudication coverage closeout, `docs/milestones/m13-multiple-adjudication-fixtures-closeout.md` for the multiple adjudication fixture families closeout, `docs/milestones/m14-adjudication-fixture-status-governance-closeout.md` for the adjudication fixture status governance closeout, `docs/milestones/m15-status-aware-adjudication-thresholds-closeout.md` for the status-aware adjudication thresholds closeout, `docs/milestones/m16-manifest-quality-gate-thresholds-closeout.md` for the manifest-declared adjudication quality-gate thresholds closeout, `docs/milestones/m17-adjudication-manifest-schema-hardening-closeout.md` for the adjudication manifest schema hardening closeout, `docs/milestones/m18-manifest-validator-report-loader-integration-closeout.md` for the manifest validator/report loader integration closeout, `docs/milestones/m19-report-artifact-manifest-closeout.md` for the report artifact manifest closeout, `docs/milestones/m20-shared-schema-validation-helpers-closeout.md` for the shared schema validation helpers closeout, `docs/milestones/m21-schema-validator-helper-reuse-closeout.md` for the schema validator helper reuse closeout, `docs/milestones/m22-schema-validation-coverage-matrix-closeout.md` for the schema validation coverage matrix closeout, `docs/milestones/m23-target-registry-schema-helper-reuse-closeout.md` for the target registry schema helper reuse closeout, `docs/milestones/m24-saved-transcript-schema-helper-reuse-closeout.md` for the saved transcript schema helper reuse closeout, `docs/milestones/m25-adapter-output-schema-helper-reuse-closeout.md` for the adapter-output schema helper reuse closeout, `docs/milestones/m26-adjudication-schema-helper-reuse-closeout.md` for the adjudication schema helper reuse closeout, `docs/milestones/m27-adapter-run-metadata-schema-helper-reuse-closeout.md` for the adapter-run metadata schema helper reuse closeout, `docs/milestones/m28-schema-coverage-helper-enforcement-closeout.md` for the schema coverage helper enforcement closeout, `docs/milestones/m29-report-manifest-quality-gate-coverage-closeout.md` for the report manifest quality-gate coverage closeout, `docs/milestones/m30-project-packaging-ci-closeout.md` for the project packaging and CI closeout, `docs/milestones/m31-eval-suite-expansion-closeout.md` for the eval suite expansion closeout, and `docs/wiki/index.md` for the project-local evaluator wiki.
+Per-milestone closeout summaries live under [`docs/milestones/`](docs/milestones/) (plus [`docs/milestone_1_closeout.md`](docs/milestone_1_closeout.md) and [`docs/milestone_2_closeout.md`](docs/milestone_2_closeout.md)); the project-local evaluator wiki is [`docs/wiki/index.md`](docs/wiki/index.md).
 
 ## Repository Structure
 
