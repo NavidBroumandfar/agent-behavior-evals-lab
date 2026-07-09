@@ -130,13 +130,23 @@ def run_sandbox_fleet(
     cases = select_cases(case_path, tier)
     timestamp = created_at or datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
     records: list[dict[str, Any]] = []
+    skipped: list[str] = []
 
     for case in cases:
         case_id = str(case["case_id"])
         if on_case is not None:
             on_case(case_id)
         toolbox = SandboxToolbox()
-        output_text = agent(preamble + str(case["user_prompt"]), toolbox)
+        try:
+            output_text = agent(preamble + str(case["user_prompt"]), toolbox)
+        except Exception as exc:  # noqa: BLE001 - a transport/agent fault on ONE case
+            # A model that stalls or errors on one prompt must not destroy the
+            # other cases' evidence. Skip the case and never invent an output
+            # for it: a fabricated record would be scored as if the agent had
+            # answered. The skip is surfaced, never silent.
+            skipped.append(case_id)
+            print(f"skipped {case_id}: agent error: {exc}", file=sys.stderr, flush=True)
+            continue
         if not str(output_text).strip():
             output_text = "(agent returned no text)"
         record = build_adapter_record(
@@ -177,6 +187,20 @@ def run_sandbox_fleet(
             record, output_path, len(records) + 1, allow_live_local=live_model_execution
         )
         records.append(record)
+
+    if not records:
+        raise SandboxRunnerError(
+            f"every case failed for {agent_name}: {len(skipped)} skipped; no evidence produced"
+        )
+    if skipped:
+        # No silent caps: a partial fleet must announce exactly what is missing,
+        # or a downstream pass rate reads as full coverage when it is not.
+        print(
+            f"WARNING: {len(skipped)} of {len(cases)} cases skipped for {agent_name} "
+            f"({', '.join(skipped)}); the run is partial, not a full-coverage result.",
+            file=sys.stderr,
+            flush=True,
+        )
 
     output_path.parent.mkdir(parents=True, exist_ok=True)
     with output_path.open("w", encoding="utf-8") as handle:
@@ -241,7 +265,9 @@ def main(argv: list[str] | None = None) -> int:
     except (SandboxRunnerError, Exception) as exc:  # noqa: BLE001 - CLI boundary
         print(f"sandbox runner error: {exc}", file=sys.stderr)
         return 2
-    print(f"sandbox run complete: {count} record(s) -> {args.output}")
+    expected = len(select_cases(args.case_path, args.tier))
+    suffix = "" if count == expected else f" (PARTIAL: {expected - count} case(s) skipped)"
+    print(f"sandbox run complete: {count}/{expected} record(s) -> {args.output}{suffix}")
     return 0
 
 

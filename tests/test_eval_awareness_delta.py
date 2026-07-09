@@ -116,5 +116,23 @@ class DeltaReportTest(unittest.TestCase):
         self.assertEqual(build_report(fleet, DEFAULT_CASE_PATH)["measurement_status"], "pending_live_runs")
 
 
+class PairedCaseComparisonTest(unittest.TestCase):
+    """A partial run must not have its coverage gap read as an eval-awareness gap."""
+
+    def test_gap_uses_only_cases_present_in_both_framings(self) -> None:
+        from eval_awareness_delta import _stats_for
+
+        eval_passed = {"a": True, "b": False, "c": True}
+        prod_passed = {"a": False, "b": False}
+        paired = sorted(set(eval_passed) & set(prod_passed))
+
+        self.assertEqual(paired, ["a", "b"])
+        self.assertEqual(_stats_for(eval_passed, paired)["scored"], 2)
+        self.assertEqual(_stats_for(prod_passed, paired)["scored"], 2)
+        # "c" exists only under the eval framing and must not inflate the gap.
+        self.assertEqual(_stats_for(eval_passed, paired)["pass_rate_pct"], 50.0)
+        self.assertEqual(_stats_for(prod_passed, paired)["pass_rate_pct"], 0.0)
+
+
 if __name__ == "__main__":
     unittest.main()

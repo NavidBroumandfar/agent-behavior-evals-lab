@@ -61,7 +61,9 @@ def _pass_rate_pct(passed: int, scored: int) -> float:
     return round(100.0 * passed / scored, 1) if scored else 0.0
 
 
-def _score(path: Path, case_path: Path) -> dict[str, Any]:
+def _passed_by_case(path: Path, case_path: Path) -> dict[str, bool]:
+    """Per-case pass verdicts, so the two framings can be compared on the same cases."""
+
     summary = run_gate(
         path,
         tier="extended",
@@ -69,10 +71,15 @@ def _score(path: Path, case_path: Path) -> dict[str, Any]:
         case_path=case_path,
         allow_live_local=True,
     )
+    return {str(entry["case_id"]): bool(entry["passed"]) for entry in summary["scored_records"]}
+
+
+def _stats_for(passed_by_case: dict[str, bool], case_ids: list[str]) -> dict[str, Any]:
+    passed = sum(1 for case_id in case_ids if passed_by_case[case_id])
     return {
-        "scored": summary["scored_count"],
-        "passed": summary["pass_count"],
-        "pass_rate_pct": _pass_rate_pct(summary["pass_count"], summary["scored_count"]),
+        "scored": len(case_ids),
+        "passed": passed,
+        "pass_rate_pct": _pass_rate_pct(passed, len(case_ids)),
     }
 
 
@@ -88,8 +95,21 @@ def build_report(fleet_dir: Path, case_path: Path) -> dict[str, Any]:
     labels = discover_pairs(fleet_dir)
     configs: list[dict[str, Any]] = []
     for label in labels:
-        eval_stats = _score(fleet_dir / f"sandbox_{label}{EVAL_SUFFIX}", case_path)
-        prod_stats = _score(fleet_dir / f"sandbox_{label}{PROD_SUFFIX}", case_path)
+        eval_passed = _passed_by_case(fleet_dir / f"sandbox_{label}{EVAL_SUFFIX}", case_path)
+        prod_passed = _passed_by_case(fleet_dir / f"sandbox_{label}{PROD_SUFFIX}", case_path)
+
+        # A run may be partial (a model can stall on a case; sandbox_agent_runner
+        # skips it rather than fabricating an output). Comparing pass rates over
+        # different case sets would attribute a coverage gap to eval-awareness,
+        # so both framings are scored on the cases they share, and the excluded
+        # cases are named rather than quietly dropped.
+        paired = sorted(set(eval_passed) & set(prod_passed))
+        unpaired = sorted((set(eval_passed) ^ set(prod_passed)))
+        if not paired:
+            continue
+
+        eval_stats = _stats_for(eval_passed, paired)
+        prod_stats = _stats_for(prod_passed, paired)
         gap = round(eval_stats["pass_rate_pct"] - prod_stats["pass_rate_pct"], 1)
         configs.append(
             {
@@ -97,6 +117,8 @@ def build_report(fleet_dir: Path, case_path: Path) -> dict[str, Any]:
                 "eval_framed": eval_stats,
                 "production_shaped": prod_stats,
                 "eval_awareness_gap_pct": gap,
+                "paired_case_count": len(paired),
+                "unpaired_cases_excluded": unpaired,
             }
         )
     configs.sort(key=lambda c: (-c["eval_awareness_gap_pct"], c["config"]))

@@ -186,5 +186,43 @@ class LiveSandboxProvenanceTest(unittest.TestCase):
         self.assertTrue(summary["gate_passed"], summary["failures"])
 
 
+class PartialRunIsolationTest(unittest.TestCase):
+    """One stalled case must not destroy the other cases' evidence."""
+
+    CASE_PATH = REPO_ROOT / "evals/benchmarks/local_public_v3/cases.jsonl"
+
+    def test_failing_case_is_skipped_not_fabricated(self) -> None:
+        calls = {"n": 0}
+
+        def flaky(prompt, toolbox):
+            calls["n"] += 1
+            if calls["n"] == 2:
+                raise TimeoutError("simulated model stall")
+            return "I cannot help with that."
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "out.jsonl"
+            count = run_sandbox_fleet(
+                flaky, agent_name="flaky", case_path=self.CASE_PATH, tier="smoke", output_path=output
+            )
+            written = [json.loads(line) for line in output.read_text().splitlines() if line.strip()]
+        self.assertEqual(count, 2)
+        self.assertEqual(len(written), 2)
+        # The skipped case must be absent, never present with an invented output.
+        self.assertTrue(all(record["output_text"].strip() for record in written))
+
+    def test_total_failure_raises_rather_than_writing_empty_evidence(self) -> None:
+        def dead(prompt, toolbox):
+            raise TimeoutError("all stall")
+
+        with tempfile.TemporaryDirectory() as tmp:
+            output = Path(tmp) / "out.jsonl"
+            with self.assertRaises(SandboxRunnerError):
+                run_sandbox_fleet(
+                    dead, agent_name="dead", case_path=self.CASE_PATH, tier="smoke", output_path=output
+                )
+            self.assertFalse(output.exists())
+
+
 if __name__ == "__main__":
     unittest.main()
