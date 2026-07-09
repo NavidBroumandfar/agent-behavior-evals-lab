@@ -27,7 +27,7 @@
       "entry_count": 1,
       "excluded_entry_count": 1,
       "path": "traces/external/local_run_ledger.example.json",
-      "sha256": "53e364459a44dd2e05346b5bed85b01d90a8d4e8eef8d3c75476bf1ef0ec7981",
+      "sha256": "831dc9d0f2acf629a5f37011a74c4c13afab3e2cd27313db1edcd14c0fc30450",
       "source_id": "m58_reproducible_local_run_ledger_example",
       "source_kind": "dry_run_public_safe_example"
     },
@@ -36,7 +36,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
-      "sha256": "8e501e536b4488b306c279d0064071b800198a8f3ec75950dd94efc89d024ae0",
+      "sha256": "b97a414d67617e4b301ab5313550986ee03b9a21b9411cb270d0ba8769a9859a",
       "source_id": "m79_llama3_2_latest_extended_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -45,7 +45,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
-      "sha256": "b40bcf99092725bfe8d72faab32b6d380a275af389f8e96509ab388c4a86c084",
+      "sha256": "f973a3bebc43598fa1664747f221cb1262c99c19d5e0a0994f803e1100ba5417",
       "source_id": "m82_mistral_latest_extended_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -54,7 +54,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_qwen35_2b_q4km_standard_no_think.local_run_ledger.json",
-      "sha256": "b0a7787a1d55970b7b3fd63617b8039885052c598727812025e1698d16170381",
+      "sha256": "8c393626b804a62df788d7a1a2d4ef03cc35f448ba8d75779c3ab177146d7b2f",
       "source_id": "m107b_qwen35_2b_q4km_standard_no_think_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -63,7 +63,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_glm4_latest_standard.local_run_ledger.json",
-      "sha256": "0d8cad1f3c23157682d350035d6104d15e8bf8b139ffe7f1b4cc5b5df3ad243d",
+      "sha256": "a3f872628fb36e167f5935b76bc977a1f237989f8687ce5f6dc804257e7edf5e",
       "source_id": "m107b_glm4_latest_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -72,7 +72,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_deepseek_coder_6_7b_instruct_standard.local_run_ledger.json",
-      "sha256": "d20858b679e7fe5af9f8168e9e24e506ffe6d4a45c6a13f6ba03bd2cc00c17fe",
+      "sha256": "3a15e89f1966279d10aad980e94aa10412b73124282617766a5fb074060fdad8",
       "source_id": "m107b_deepseek_coder_6_7b_instruct_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -81,7 +81,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_codellama_7b_instruct_standard.local_run_ledger.json",
-      "sha256": "efdf7b44564106a0e2a71981cdd6cad8eb36f3e914f91bee9085f0b157e19c45",
+      "sha256": "86ab627fd058b4a6841cb14db01208bbe8dff6bf35c4411c370795878df1e514",
       "source_id": "m107b_codellama_7b_instruct_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     }
@@ -124,72 +124,159 @@
   "rankings": [
     {
       "abstention_count": 0,
-      "benchmark_split": "standard",
+      "benchmark_split": "extended",
       "bootstrap_ci_95": {
-        "high": 0.523,
-        "low": 0.2727
+        "high": 0.536,
+        "low": 0.3953
       },
-      "ledger_entry_id": "m107b_deepseek_coder_6_7b_instruct_standard_reviewed_live_local_entry",
-      "model": "deepseek-coder:6.7b-instruct",
+      "ledger_entry_id": "m79_llama3_2_latest_extended_reviewed_live_local_entry",
+      "model": "llama3.2:latest",
       "rank": 1,
       "review_counts": {
         "agreement_rate": 1.0,
-        "effective_fail_count": 38,
-        "effective_pass_count": 32,
+        "effective_fail_count": 108,
+        "effective_pass_count": 102,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 210,
+        "reviewer_count": 1,
+        "scorer_fail_count": 108,
+        "scorer_pass_count": 102,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 210,
+      "severity_weighted_effective_pass_rate": 0.4645,
+      "severity_weighted_heuristic_pass_rate": 0.4645,
+      "unresolved_review_count": 0
+    },
+    {
+      "abstention_count": 0,
+      "benchmark_split": "standard",
+      "bootstrap_ci_95": {
+        "high": 0.5696,
+        "low": 0.3217
+      },
+      "ledger_entry_id": "m107b_glm4_latest_standard_reviewed_live_local_entry",
+      "model": "glm4:latest",
+      "rank": 2,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 34,
+        "effective_pass_count": 36,
         "malformed_output_count": 0,
         "needs_discussion_count": 0,
         "override_count": 0,
         "records_reviewed": 70,
         "reviewer_count": 1,
-        "scorer_fail_count": 38,
-        "scorer_pass_count": 32,
+        "scorer_fail_count": 34,
+        "scorer_pass_count": 36,
         "unsafe_output_count": 0
       },
       "runtime": "ollama",
       "sample_size": 70,
-      "severity_weighted_effective_pass_rate": 0.3839,
-      "severity_weighted_heuristic_pass_rate": 0.3839,
+      "severity_weighted_effective_pass_rate": 0.4484,
+      "severity_weighted_heuristic_pass_rate": 0.4484,
+      "unresolved_review_count": 0
+    },
+    {
+      "abstention_count": 0,
+      "benchmark_split": "standard",
+      "bootstrap_ci_95": {
+        "high": 0.5375,
+        "low": 0.2904
+      },
+      "ledger_entry_id": "m107b_codellama_7b_instruct_standard_reviewed_live_local_entry",
+      "model": "codellama:7b-instruct",
+      "rank": 3,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 40,
+        "effective_pass_count": 30,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 70,
+        "reviewer_count": 1,
+        "scorer_fail_count": 40,
+        "scorer_pass_count": 30,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 70,
+      "severity_weighted_effective_pass_rate": 0.4161,
+      "severity_weighted_heuristic_pass_rate": 0.4161,
+      "unresolved_review_count": 0
+    },
+    {
+      "abstention_count": 0,
+      "benchmark_split": "standard",
+      "bootstrap_ci_95": {
+        "high": 0.5279,
+        "low": 0.2853
+      },
+      "ledger_entry_id": "m107b_deepseek_coder_6_7b_instruct_standard_reviewed_live_local_entry",
+      "model": "deepseek-coder:6.7b-instruct",
+      "rank": 4,
+      "review_counts": {
+        "agreement_rate": 1.0,
+        "effective_fail_count": 37,
+        "effective_pass_count": 33,
+        "malformed_output_count": 0,
+        "needs_discussion_count": 0,
+        "override_count": 0,
+        "records_reviewed": 70,
+        "reviewer_count": 1,
+        "scorer_fail_count": 37,
+        "scorer_pass_count": 33,
+        "unsafe_output_count": 0
+      },
+      "runtime": "ollama",
+      "sample_size": 70,
+      "severity_weighted_effective_pass_rate": 0.4032,
+      "severity_weighted_heuristic_pass_rate": 0.4032,
       "unresolved_review_count": 0
     },
     {
       "abstention_count": 0,
       "benchmark_split": "extended",
       "bootstrap_ci_95": {
-        "high": 0.4158,
-        "low": 0.286
+        "high": 0.3903,
+        "low": 0.2584
       },
-      "ledger_entry_id": "m79_llama3_2_latest_extended_reviewed_live_local_entry",
-      "model": "llama3.2:latest",
-      "rank": 2,
+      "ledger_entry_id": "m82_mistral_latest_extended_reviewed_live_local_entry",
+      "model": "mistral:latest",
+      "rank": 5,
       "review_counts": {
         "agreement_rate": 1.0,
-        "effective_fail_count": 126,
-        "effective_pass_count": 84,
+        "effective_fail_count": 138,
+        "effective_pass_count": 72,
         "malformed_output_count": 0,
         "needs_discussion_count": 0,
         "override_count": 0,
         "records_reviewed": 210,
         "reviewer_count": 1,
-        "scorer_fail_count": 126,
-        "scorer_pass_count": 84,
+        "scorer_fail_count": 138,
+        "scorer_pass_count": 72,
         "unsafe_output_count": 0
       },
       "runtime": "ollama",
       "sample_size": 210,
-      "severity_weighted_effective_pass_rate": 0.3484,
-      "severity_weighted_heuristic_pass_rate": 0.3484,
+      "severity_weighted_effective_pass_rate": 0.3258,
+      "severity_weighted_heuristic_pass_rate": 0.3258,
       "unresolved_review_count": 0
     },
     {
       "abstention_count": 0,
       "benchmark_split": "standard",
       "bootstrap_ci_95": {
-        "high": 0.3953,
-        "low": 0.1909
+        "high": 0.4139,
+        "low": 0.1961
       },
-      "ledger_entry_id": "m107b_glm4_latest_standard_reviewed_live_local_entry",
-      "model": "glm4:latest",
-      "rank": 3,
+      "ledger_entry_id": "m107b_qwen35_2b_q4km_standard_no_think_reviewed_live_local_entry",
+      "model": "qwen3.5:2b-q4_K_M",
+      "rank": 6,
       "review_counts": {
         "agreement_rate": 1.0,
         "effective_fail_count": 42,
@@ -207,93 +294,6 @@
       "sample_size": 70,
       "severity_weighted_effective_pass_rate": 0.2935,
       "severity_weighted_heuristic_pass_rate": 0.2935,
-      "unresolved_review_count": 0
-    },
-    {
-      "abstention_count": 0,
-      "benchmark_split": "standard",
-      "bootstrap_ci_95": {
-        "high": 0.3493,
-        "low": 0.1451
-      },
-      "ledger_entry_id": "m107b_qwen35_2b_q4km_standard_no_think_reviewed_live_local_entry",
-      "model": "qwen3.5:2b-q4_K_M",
-      "rank": 4,
-      "review_counts": {
-        "agreement_rate": 1.0,
-        "effective_fail_count": 45,
-        "effective_pass_count": 25,
-        "malformed_output_count": 0,
-        "needs_discussion_count": 0,
-        "override_count": 0,
-        "records_reviewed": 70,
-        "reviewer_count": 1,
-        "scorer_fail_count": 45,
-        "scorer_pass_count": 25,
-        "unsafe_output_count": 0
-      },
-      "runtime": "ollama",
-      "sample_size": 70,
-      "severity_weighted_effective_pass_rate": 0.2355,
-      "severity_weighted_heuristic_pass_rate": 0.2355,
-      "unresolved_review_count": 0
-    },
-    {
-      "abstention_count": 0,
-      "benchmark_split": "standard",
-      "bootstrap_ci_95": {
-        "high": 0.2135,
-        "low": 0.075
-      },
-      "ledger_entry_id": "m107b_codellama_7b_instruct_standard_reviewed_live_local_entry",
-      "model": "codellama:7b-instruct",
-      "rank": 5,
-      "review_counts": {
-        "agreement_rate": 1.0,
-        "effective_fail_count": 54,
-        "effective_pass_count": 16,
-        "malformed_output_count": 0,
-        "needs_discussion_count": 0,
-        "override_count": 0,
-        "records_reviewed": 70,
-        "reviewer_count": 1,
-        "scorer_fail_count": 54,
-        "scorer_pass_count": 16,
-        "unsafe_output_count": 0
-      },
-      "runtime": "ollama",
-      "sample_size": 70,
-      "severity_weighted_effective_pass_rate": 0.1452,
-      "severity_weighted_heuristic_pass_rate": 0.1452,
-      "unresolved_review_count": 0
-    },
-    {
-      "abstention_count": 0,
-      "benchmark_split": "extended",
-      "bootstrap_ci_95": {
-        "high": 0.1425,
-        "low": 0.0708
-      },
-      "ledger_entry_id": "m82_mistral_latest_extended_reviewed_live_local_entry",
-      "model": "mistral:latest",
-      "rank": 6,
-      "review_counts": {
-        "agreement_rate": 1.0,
-        "effective_fail_count": 172,
-        "effective_pass_count": 38,
-        "malformed_output_count": 0,
-        "needs_discussion_count": 0,
-        "override_count": 0,
-        "records_reviewed": 210,
-        "reviewer_count": 1,
-        "scorer_fail_count": 172,
-        "scorer_pass_count": 38,
-        "unsafe_output_count": 0
-      },
-      "runtime": "ollama",
-      "sample_size": 210,
-      "severity_weighted_effective_pass_rate": 0.1065,
-      "severity_weighted_heuristic_pass_rate": 0.1065,
       "unresolved_review_count": 0
     }
   ],

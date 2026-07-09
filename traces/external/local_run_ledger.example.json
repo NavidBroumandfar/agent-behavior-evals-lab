@@ -89,7 +89,7 @@
       },
       "scorer": {
         "scorer_artifact_path": "src/scorers.py",
-        "scorer_artifact_sha256": "a177400969bb0aca92c524dd148bb5cb9dbe741c6b6be655d46bd0e256bfcbff",
+        "scorer_artifact_sha256": "ecda7bbd757c060ad59cfd1bf8bc09870864ca22a01aaba0eda2c0755e2830ce",
         "scorer_id": "deterministic_v0_rule_based_scorer",
         "scorer_version": "v0-rule-based-heuristic"
       }

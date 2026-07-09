@@ -243,7 +243,7 @@
     "normalized_output_sha256": "9513fff6022ce7d6e0f1a593f96de4f61d42dec74b3a5529741edb8cacb507f9",
     "scored_trace_path": "traces/scored/m82_mistral_latest_extended.reviewed_live_local_eval.jsonl",
     "scored_trace_record_count": 210,
-    "scored_trace_sha256": "35a274ea35a225dd008ef459897c4469b8a0db2b8b6ecd3f64d1e8126b118446"
+    "scored_trace_sha256": "0600afa3ab6342e3430108812e06f3bd967c5d8bfcf2cb781665881ad5a6b4e7"
   },
   "prompt_template": {
     "template_id": "local_text_only_v1",
@@ -257,8 +257,8 @@
     "attempted": 210,
     "failed": 0,
     "planned_cases": 210,
-    "scorer_fail_count": 172,
-    "scorer_pass_count": 38,
+    "scorer_fail_count": 138,
+    "scorer_pass_count": 72,
     "skipped": 0,
     "succeeded": 210
   },

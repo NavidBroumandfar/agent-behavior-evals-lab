@@ -113,7 +113,7 @@
         "normalized_output_sha256": "8768c333604378090b577f8937a54b70bf0da73da8c28278de9676ecaae762b4",
         "scored_trace_path": "traces/scored/m107b_deepseek_coder_6_7b_instruct_standard.reviewed_live_local_eval.jsonl",
         "scored_trace_record_count": 70,
-        "scored_trace_sha256": "8879bf770080b7bc821f800aa9c63f3bd518f4f9168d932c6f09264997fef14a"
+        "scored_trace_sha256": "e58e679d4928e8f6a6cc73dffb79147ec33663484acaf2ee64ff1775fb5f0bc0"
       },
       "prompt_template": {
         "template_id": "local_text_only_v1",
@@ -132,14 +132,14 @@
         "reviewer_count": 1,
         "summary_id": "m107b_deepseek_coder_6_7b_instruct_standard_review_summary",
         "summary_path": "traces/external/m107b_deepseek_coder_6_7b_instruct_standard.review_summary.json",
-        "summary_sha256": "26fe7e19818c0aaf07631b1550accb0d68a054793478c285f67e47f25806aa32",
+        "summary_sha256": "4f9e58b6ed724d185291d926be2068c8f8d2f2a0a70aae2c4b2d525ffed94407",
         "unsafe_output_count": 0
       },
       "run_id": "m107b_deepseek_coder_6_7b_instruct_standard",
       "run_metadata": {
         "metadata_kind": "reviewed_live_local_run",
         "metadata_path": "traces/external/m107b_deepseek_coder_6_7b_instruct_standard.run_metadata.json",
-        "metadata_sha256": "6e30483297fa1f444fe4f4df3d437f3b7770820bebcbe45aafb152cd2469bd22"
+        "metadata_sha256": "b9581b26f628c4e612456394e50c35974d9d58139977d230c6dcd8f78502b132"
       },
       "run_mode": "reviewed_live_local_run",
       "run_status": "succeeded",
@@ -155,7 +155,7 @@
       },
       "scorer": {
         "scorer_artifact_path": "src/scorers.py",
-        "scorer_artifact_sha256": "a177400969bb0aca92c524dd148bb5cb9dbe741c6b6be655d46bd0e256bfcbff",
+        "scorer_artifact_sha256": "ecda7bbd757c060ad59cfd1bf8bc09870864ca22a01aaba0eda2c0755e2830ce",
         "scorer_id": "deterministic_v0_rule_based_scorer",
         "scorer_version": "v0-rule-based-heuristic"
       }

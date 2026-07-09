@@ -103,7 +103,7 @@
     "normalized_output_sha256": "d487ab501f956ce8b01766e99cdf392b45c9ef66cc1a98bd55d4e6a285eeff01",
     "scored_trace_path": "traces/scored/m107b_codellama_7b_instruct_standard.reviewed_live_local_eval.jsonl",
     "scored_trace_record_count": 70,
-    "scored_trace_sha256": "7492ca81bdb6a931778f7cca06d85f867ab6986cd67dbf1374f55e014e2e721d"
+    "scored_trace_sha256": "e7e40910d75beac2aac623dbebae93e6a4e4f0b574a5dcbc80cd656226a6967e"
   },
   "prompt_template": {
     "template_id": "local_text_only_v1",
@@ -117,8 +117,8 @@
     "attempted": 70,
     "failed": 0,
     "planned_cases": 70,
-    "scorer_fail_count": 54,
-    "scorer_pass_count": 16,
+    "scorer_fail_count": 40,
+    "scorer_pass_count": 30,
     "skipped": 0,
     "succeeded": 70
   },

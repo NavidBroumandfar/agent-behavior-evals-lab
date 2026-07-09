@@ -103,7 +103,7 @@
     "normalized_output_sha256": "d4e1b425cd852d3229dbedeeff9c2f5cecaaef19c84bbeb900e69e69205bc27f",
     "scored_trace_path": "traces/scored/m107b_qwen35_2b_q4km_standard_no_think.reviewed_live_local_eval.jsonl",
     "scored_trace_record_count": 70,
-    "scored_trace_sha256": "f76c36dbb45444f7c0135eb126125e2e24af88887c6d4133ed67bdcefc497f66"
+    "scored_trace_sha256": "a663c14ae6a73c6870a5b72806a475a46713c4a22bf4deb026b7acd386a30611"
   },
   "prompt_template": {
     "template_id": "local_text_only_v1",
@@ -117,8 +117,8 @@
     "attempted": 70,
     "failed": 0,
     "planned_cases": 70,
-    "scorer_fail_count": 45,
-    "scorer_pass_count": 25,
+    "scorer_fail_count": 42,
+    "scorer_pass_count": 28,
     "skipped": 0,
     "succeeded": 70
   },

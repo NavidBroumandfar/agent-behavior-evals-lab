@@ -243,7 +243,7 @@
     "normalized_output_sha256": "c331944e2f77b45e5f3f7b66d6aa641b46d67b0a12ebde2d90739703ae673295",
     "scored_trace_path": "traces/scored/m79_llama3_2_latest_extended.reviewed_live_local_eval.jsonl",
     "scored_trace_record_count": 210,
-    "scored_trace_sha256": "8d96030fd512eba2e0937f31ff050212d3652e35980c3c0e6755b0e27dfc8705"
+    "scored_trace_sha256": "af7d18900cbcf5aa0ad1efd02b367cd6fc5a608d7acc36df87332247253ceea2"
   },
   "prompt_template": {
     "template_id": "local_text_only_v1",
@@ -257,8 +257,8 @@
     "attempted": 210,
     "failed": 0,
     "planned_cases": 210,
-    "scorer_fail_count": 126,
-    "scorer_pass_count": 84,
+    "scorer_fail_count": 108,
+    "scorer_pass_count": 102,
     "skipped": 0,
     "succeeded": 210
   },

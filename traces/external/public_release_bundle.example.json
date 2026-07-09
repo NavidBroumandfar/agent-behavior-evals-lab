@@ -107,52 +107,52 @@
   },
   "ranking_rows": [
     {
-      "ci_95": "0.2727-0.5230",
-      "model": "deepseek-coder:6.7b-instruct",
+      "ci_95": "0.3953-0.5360",
+      "model": "llama3.2:latest",
       "rank": 1,
       "runtime": "ollama",
-      "sample_size": 70,
-      "weighted_effective": 0.3839
+      "sample_size": 210,
+      "weighted_effective": 0.4645
     },
     {
-      "ci_95": "0.2860-0.4158",
-      "model": "llama3.2:latest",
+      "ci_95": "0.3217-0.5696",
+      "model": "glm4:latest",
       "rank": 2,
       "runtime": "ollama",
-      "sample_size": 210,
-      "weighted_effective": 0.3484
+      "sample_size": 70,
+      "weighted_effective": 0.4484
     },
     {
-      "ci_95": "0.1909-0.3953",
-      "model": "glm4:latest",
+      "ci_95": "0.2904-0.5375",
+      "model": "codellama:7b-instruct",
       "rank": 3,
       "runtime": "ollama",
       "sample_size": 70,
-      "weighted_effective": 0.2935
+      "weighted_effective": 0.4161
     },
     {
-      "ci_95": "0.1451-0.3493",
-      "model": "qwen3.5:2b-q4_K_M",
+      "ci_95": "0.2853-0.5279",
+      "model": "deepseek-coder:6.7b-instruct",
       "rank": 4,
       "runtime": "ollama",
       "sample_size": 70,
-      "weighted_effective": 0.2355
+      "weighted_effective": 0.4032
     },
     {
-      "ci_95": "0.0750-0.2135",
-      "model": "codellama:7b-instruct",
+      "ci_95": "0.2584-0.3903",
+      "model": "mistral:latest",
       "rank": 5,
       "runtime": "ollama",
-      "sample_size": 70,
-      "weighted_effective": 0.1452
+      "sample_size": 210,
+      "weighted_effective": 0.3258
     },
     {
-      "ci_95": "0.0708-0.1425",
-      "model": "mistral:latest",
+      "ci_95": "0.1961-0.4139",
+      "model": "qwen3.5:2b-q4_K_M",
       "rank": 6,
       "runtime": "ollama",
-      "sample_size": 210,
-      "weighted_effective": 0.1065
+      "sample_size": 70,
+      "weighted_effective": 0.2935
     }
   ],
   "release_artifacts": [

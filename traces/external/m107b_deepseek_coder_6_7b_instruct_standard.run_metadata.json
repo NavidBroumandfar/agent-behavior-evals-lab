@@ -103,7 +103,7 @@
     "normalized_output_sha256": "8768c333604378090b577f8937a54b70bf0da73da8c28278de9676ecaae762b4",
     "scored_trace_path": "traces/scored/m107b_deepseek_coder_6_7b_instruct_standard.reviewed_live_local_eval.jsonl",
     "scored_trace_record_count": 70,
-    "scored_trace_sha256": "8879bf770080b7bc821f800aa9c63f3bd518f4f9168d932c6f09264997fef14a"
+    "scored_trace_sha256": "e58e679d4928e8f6a6cc73dffb79147ec33663484acaf2ee64ff1775fb5f0bc0"
   },
   "prompt_template": {
     "template_id": "local_text_only_v1",
@@ -117,8 +117,8 @@
     "attempted": 70,
     "failed": 0,
     "planned_cases": 70,
-    "scorer_fail_count": 38,
-    "scorer_pass_count": 32,
+    "scorer_fail_count": 37,
+    "scorer_pass_count": 33,
     "skipped": 0,
     "succeeded": 70
   },

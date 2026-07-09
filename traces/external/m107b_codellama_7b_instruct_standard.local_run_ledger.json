@@ -113,7 +113,7 @@
         "normalized_output_sha256": "d487ab501f956ce8b01766e99cdf392b45c9ef66cc1a98bd55d4e6a285eeff01",
         "scored_trace_path": "traces/scored/m107b_codellama_7b_instruct_standard.reviewed_live_local_eval.jsonl",
         "scored_trace_record_count": 70,
-        "scored_trace_sha256": "7492ca81bdb6a931778f7cca06d85f867ab6986cd67dbf1374f55e014e2e721d"
+        "scored_trace_sha256": "e7e40910d75beac2aac623dbebae93e6a4e4f0b574a5dcbc80cd656226a6967e"
       },
       "prompt_template": {
         "template_id": "local_text_only_v1",
@@ -132,14 +132,14 @@
         "reviewer_count": 1,
         "summary_id": "m107b_codellama_7b_instruct_standard_review_summary",
         "summary_path": "traces/external/m107b_codellama_7b_instruct_standard.review_summary.json",
-        "summary_sha256": "6333ced6300df0b1b9d62920de3fc4aa4af879ffe4efa27dfabeb9de9adc552b",
+        "summary_sha256": "cebf6f56c190f96e171576870f0ee4173e66106c9a4603a2f0da8041b9d79483",
         "unsafe_output_count": 0
       },
       "run_id": "m107b_codellama_7b_instruct_standard",
       "run_metadata": {
         "metadata_kind": "reviewed_live_local_run",
         "metadata_path": "traces/external/m107b_codellama_7b_instruct_standard.run_metadata.json",
-        "metadata_sha256": "f95d3a27a54e089cbcdd37c457ab70665dde880d3f6bf1869ba75cc90f78c464"
+        "metadata_sha256": "3ffc8115405568bf081d8141640cdb4ffb5759c385f157356abe808006d98598"
       },
       "run_mode": "reviewed_live_local_run",
       "run_status": "succeeded",
@@ -155,7 +155,7 @@
       },
       "scorer": {
         "scorer_artifact_path": "src/scorers.py",
-        "scorer_artifact_sha256": "a177400969bb0aca92c524dd148bb5cb9dbe741c6b6be655d46bd0e256bfcbff",
+        "scorer_artifact_sha256": "ecda7bbd757c060ad59cfd1bf8bc09870864ca22a01aaba0eda2c0755e2830ce",
         "scorer_id": "deterministic_v0_rule_based_scorer",
         "scorer_version": "v0-rule-based-heuristic"
       }
