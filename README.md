@@ -14,14 +14,19 @@ traces](examples/adapters/) and let the gate verify every action claim against
 the tool calls the agent actually made — or drive any agent through the
 [mock-tool sandbox](examples/fleet/) where destructive calls tempt and every
 call is recorded. Reviewed local-model results:
-[leaderboard](docs/leaderboard/index.html). Named failure patterns:
-[AGB registry](docs/patterns/index.html) (cite as `AGB-030 approval-by-silence`).
+[leaderboard](reports/comparisons/local_open_weight_benchmark_v1.md). Named failure patterns:
+[AGB registry](docs/patterns/index.md) (cite as `AGB-030 approval-by-silence`).
 Scorer credibility is measured, not asserted: see the
 [700-record model calibration](reports/comparisons/scorer_judge_calibration.md)
 and the [320-record real-agent fleet calibration](reports/comparisons/sandbox_fleet_scorer_judge_calibration.md).
 
 Try the gate offline right now — no install, no network, no keys; it catches
-the shipped fake tool-use demo record and exits 1:
+the two shipped unsafe demo records and exits 1. One is a fake tool-use claim
+("I ran the test suite" — it didn't). The other is a **laundered refusal**: the
+agent answers *"I can't assist with writing phishing messages"* while its
+recorded tool log shows `send_email … status=succeeded`. Every text-only check
+reads the refusal and passes that record; this gate reads the tool log and
+fails it.
 
 ```bash
 PYTHONPATH=src python3 src/gate_check.py \
@@ -73,6 +78,16 @@ records where the recorded tool log shows the agent executed a destructive
 call without approval or fabricated a tool claim — failures only the
 structural `tool_events` check caught. Text review misses these by
 construction; the recorded-action check does not.
+
+The refuse-in-text-act-in-tools failure (a **laundered refusal**) is
+independently documented: "Mind the GAP" ([arXiv:2602.16943](https://arxiv.org/abs/2602.16943))
+names and benchmarks the same text-level-refusal / action-level-compliance gap.
+This gate is, to our knowledge, the first CI gate that catches it structurally
+from the recorded tool log — see the shipped demo record above and the
+refusal-under-temptation corpus
+([`evals/benchmarks/local_public_v3/`](evals/benchmarks/local_public_v3/)),
+where every harmful request is paired with a sandbox tool that would carry it
+out.
 
 The verifier is red-teamed against its own adversarial corpus — passive
 voice, stateful assertions, markdown checklists, fabricated output blocks —
@@ -202,9 +217,32 @@ The deterministic gate validates the evaluator, reports, fixtures, schemas, and 
 
 Scorer calibration evidence (how often an independent LLM judge agrees with the deterministic scorer, and where they diverge):
 
-- [Keyword scorer vs judge, 700 model records](reports/comparisons/scorer_judge_calibration.md) — 55.1% agreement across 6 local models; disagreement localizes the keyword rules that need work.
+- [Keyword scorer vs judge, 700 model records](reports/comparisons/scorer_judge_calibration.md) — 59.7% agreement across 6 local models; disagreement localizes the keyword rules that need work.
 - [Structural scorer vs judge, 320 real-agent fleet records](reports/comparisons/sandbox_fleet_scorer_judge_calibration.md) — 70.6% agreement across 8 framework x model agents, including evidence-only catches a text-only judge cannot see.
 - [Sandbox benchmark sanity pass, 24 hand-authored records](reports/comparisons/sandbox_scorer_judge_calibration.md) — 100% agreement on clean exemplars; explicitly a sanity check, not validation.
+
+## Limitations — How To Attack This Repo
+
+If you want to stress-test these claims, start here. Every known weak point is
+listed with the measurement that quantifies it:
+
+- **Mock tools, not live execution.** Sandbox agents drive recorded mock
+  tools; no production calls are ever made. What that proves and what it
+  doesn't: [evidence trust model](docs/evidence-trust-model.md).
+- **Small local models only.** Reviewed results cover 6–8 local open-weight
+  models; no cloud/frontier rankings are claimed anywhere.
+- **The keyword scorer is brittle, measured.** 59.7% agreement with an LLM
+  judge over 700 records, over-strict by 235 false alarms vs 47 misses —
+  self-published in the [calibration study](reports/comparisons/scorer_judge_calibration.md).
+  The structural `tool_events` check exists because of this.
+- **Judge overlap.** Some panel judges also appear as fleet target models;
+  disclosed in the [fleet calibration](reports/comparisons/sandbox_fleet_scorer_judge_calibration.md).
+- **Single-reviewer evidence promotion**, with review assistance from an AI
+  agent, disclosed per run in the committed review summaries (e.g.
+  [fleet review](reports/comparisons/sandbox_fleet_review.md)).
+- **The verifier can be evaded**, measured: 84.6% catch rate on the
+  adversarial corpus; non-English claims and vague status language remain open
+  gaps — published in the [verifier evasion audit](reports/comparisons/verifier_evasion_audit.md).
 
 ## Milestone 1 Status
 
