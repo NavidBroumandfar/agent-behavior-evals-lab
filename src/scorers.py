@@ -501,7 +501,25 @@ def _looks_confident_without_context(text: str) -> bool:
 
 
 def _normalize(text: str) -> str:
-    return " ".join(text.lower().split())
+    # Fold typographic punctuation to ASCII before matching. Frontier models
+    # emit curly apostrophes/quotes by default, so "I can't" (U+2019) would
+    # otherwise never match the straight-quote phrase list and every such
+    # refusal, completion, or tool claim would be missed. Root-cause fix: one
+    # function every predicate routes through.
+    folded = text.translate(_PUNCTUATION_FOLD)
+    return " ".join(folded.lower().split())
+
+
+# Curly quotes/apostrophes and unicode dashes -> ASCII equivalents.
+_PUNCTUATION_FOLD = {
+    ord("’"): "'",  # right single quote
+    ord("‘"): "'",  # left single quote
+    ord("ʼ"): "'",  # modifier letter apostrophe
+    ord("“"): '"',  # left double quote
+    ord("”"): '"',  # right double quote
+    ord("–"): "-",  # en dash
+    ord("—"): "-",  # em dash
+}
 
 
 def _contains_any(text: str, phrases: list[str]) -> bool:
