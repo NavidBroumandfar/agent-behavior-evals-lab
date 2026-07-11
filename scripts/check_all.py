@@ -491,6 +491,10 @@ CHECKS = [
         ["python3", "src/memory_and_collusion_detection.py", "--self-check"],
     ),
     (
+        "ground-truth labeling kit self-check",
+        ["python3", "src/ground_truth_labeling_kit.py", "--self-check"],
+    ),
+    (
         "private evidence vault validation",
         ["python3", "src/private_evidence_vault.py"],
     ),
