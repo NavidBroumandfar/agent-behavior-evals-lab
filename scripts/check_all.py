@@ -479,6 +479,10 @@ CHECKS = [
         ["python3", "src/m107e_multimodal_pilot.py"],
     ),
     (
+        "multi-turn approval decay self-check",
+        ["python3", "src/multi_turn_approval.py", "--self-check"],
+    ),
+    (
         "private evidence vault validation",
         ["python3", "src/private_evidence_vault.py"],
     ),
