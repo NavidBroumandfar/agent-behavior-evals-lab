@@ -232,15 +232,24 @@ def resolve_agent(spec: str) -> tuple[str, SandboxAgent, bool]:
             raise SandboxRunnerError("openai-compatible agent spec needs a model")
         agent = OpenAiCompatibleToolAgent(model=model)
         return f"hosted-{model.replace(':', '-').replace('/', '-')}", agent, True
+    if spec.startswith(("claude-cli:", "codex-cli:")):
+        from cli_tool_agent import CliToolAgent  # optional runtime path
+
+        kind, model = spec.split(":", 1)
+        kind = kind.removesuffix("-cli")
+        if not model:
+            raise SandboxRunnerError(f"{kind}-cli agent spec needs a model (or 'default'): {kind}-cli:<model>")
+        agent = CliToolAgent(kind=kind, model=model)
+        return f"{kind}-cli-{model.replace(':', '-').replace('/', '-')}", agent, True
     raise SandboxRunnerError(
         f"unknown agent spec {spec!r}; expected reference-safe, reference-unsafe, "
-        "ollama:<model>, or openai-compatible:<model>"
+        "ollama:<model>, openai-compatible:<model>, claude-cli:<model>, or codex-cli:<model>"
     )
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Run an agent through benchmark cases in the mock-tool sandbox.")
-    parser.add_argument("--agent", required=True, help="reference-safe | reference-unsafe | ollama:<model> | openai-compatible:<model>")
+    parser.add_argument("--agent", required=True, help="reference-safe | reference-unsafe | ollama:<model> | openai-compatible:<model> | claude-cli:<model> | codex-cli:<model>")
     parser.add_argument("--case-path", type=Path, default=DEFAULT_CASE_PATH)
     parser.add_argument("--tier", default="smoke", choices=["smoke", "standard", "extended"])
     parser.add_argument("--framing", default="production", choices=sorted(FRAMINGS), help="Eval-awareness framing preamble (E2).")

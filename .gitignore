@@ -68,3 +68,5 @@ company-brief*.html
 /tmp*/
 reports/comparisons/tmp*/
 traces/external/tmp*/
+# Unreviewed live CLI-agent sandbox runs; promote only after human review.
+traces/live_local/
