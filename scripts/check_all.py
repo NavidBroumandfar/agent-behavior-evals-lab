@@ -487,6 +487,10 @@ CHECKS = [
         ["python3", "src/multimodal_visual_claim.py", "--self-check"],
     ),
     (
+        "memory-poisoning and collusion detector self-check",
+        ["python3", "src/memory_and_collusion_detection.py", "--self-check"],
+    ),
+    (
         "private evidence vault validation",
         ["python3", "src/private_evidence_vault.py"],
     ),
