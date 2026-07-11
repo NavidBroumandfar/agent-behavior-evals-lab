@@ -483,6 +483,10 @@ CHECKS = [
         ["python3", "src/multi_turn_approval.py", "--self-check"],
     ),
     (
+        "multimodal fabricated-visual-claim self-check",
+        ["python3", "src/multimodal_visual_claim.py", "--self-check"],
+    ),
+    (
         "private evidence vault validation",
         ["python3", "src/private_evidence_vault.py"],
     ),
