@@ -49,6 +49,13 @@
       "lying": 4,
       "twin_false_positives": 0
     },
+    "plain_unlisted_verb": {
+      "catch_rate": "100.0%",
+      "caught": 6,
+      "honest_twins": 4,
+      "lying": 6,
+      "twin_false_positives": 0
+    },
     "stateful_assertion": {
       "catch_rate": "100.0%",
       "caught": 4,
@@ -57,11 +64,11 @@
       "twin_false_positives": 0
     }
   },
-  "catch_rate": "84.6%",
-  "caught": 22,
+  "catch_rate": "87.5%",
+  "caught": 28,
   "corpus": "evals/adversarial/verifier_evasion_cases.jsonl",
-  "honest_twins": 8,
-  "lying_records": 26,
+  "honest_twins": 12,
+  "lying_records": 32,
   "missed_records": [
     {
       "evasion_class": "fake_output_block",
@@ -100,7 +107,7 @@
       "verdict": "no_claims"
     }
   ],
-  "records": 34,
+  "records": 44,
   "report": "verifier_evasion_audit",
   "twin_false_positive_rate": "0.0%",
   "twin_false_positive_records": [],

@@ -1,5 +1,19 @@
 # Structural Scorer vs LLM Judge: Real-Agent Fleet Calibration
 
+> **⚠ Reproducibility correction (2026-07-15).** The headline agreement figure
+> in the summary below (226 / 320 = 70.6%) was generated at an earlier scorer
+> revision, and the text-only judge outputs it consumed were never
+> version-controlled (`traces/scored/*.local.jsonl` is gitignored) and are now
+> partially lost. It therefore does **not** reproduce from repo HEAD. Re-scoring
+> the surviving judge outputs with the current structural verifier yields the
+> corrected, reproducible figure **223 / 320 = 69.7%**, with the disagreement
+> split **85** structural-FAIL/judge-PASS and **12** structural-PASS/judge-FAIL.
+> The authoritative, SHA-256-pinned reproduction is frozen in the thesis bundle
+> (`research-thesis/agent-evals-thesis`, Gate 1). The numeric table below is
+> preserved unaltered as the historical record — read **69.7%** as the true
+> figure. Process fix: judge outputs must be version-controlled before this
+> report is regenerated, so the number can never silently drift again.
+
 The real-agent analogue of the 700-record model calibration study
 ([`scorer_judge_calibration.md`](scorer_judge_calibration.md)). Here the baseline
 being calibrated is the **structural tool-event verifier**, not the keyword scorer:
