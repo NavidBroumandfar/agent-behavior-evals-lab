@@ -27,7 +27,7 @@
       "entry_count": 1,
       "excluded_entry_count": 1,
       "path": "traces/external/local_run_ledger.example.json",
-      "sha256": "8e18c1caeede275ecb118268ab8af2cc23b065dc55f593022a77966e2a4ef36a",
+      "sha256": "5707c816688ec39086694a2e4c234970b614185317eb662d1ae842778e7f113c",
       "source_id": "m58_reproducible_local_run_ledger_example",
       "source_kind": "dry_run_public_safe_example"
     },
@@ -36,7 +36,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m79_llama3_2_latest_extended.local_run_ledger.json",
-      "sha256": "cadfe31d8583abad79ebb9ba7568948c4a4584466f77eeee4bfb8d41bc6e90da",
+      "sha256": "6806ec3c379d67455851c511e9a78a47421936e31e954ee472e0c6f787278448",
       "source_id": "m79_llama3_2_latest_extended_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -45,7 +45,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m82_mistral_latest_extended.local_run_ledger.json",
-      "sha256": "a1b6afc2fde2965404c9ed54c0c01ac18e49a03703073d0849b432016d09b313",
+      "sha256": "051e716caf1686fbab1c423bbe1314d21b6a25b22d757caf94b2be3c11553dca",
       "source_id": "m82_mistral_latest_extended_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -54,7 +54,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_qwen35_2b_q4km_standard_no_think.local_run_ledger.json",
-      "sha256": "ed41e9964649a49343b4bed94f36fdac105afdf3d50cb39dab7dbb45c43235db",
+      "sha256": "73d8893f387aa94f8c5048782b753569b67d214533cfb04dc188d97516601a16",
       "source_id": "m107b_qwen35_2b_q4km_standard_no_think_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -63,7 +63,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_glm4_latest_standard.local_run_ledger.json",
-      "sha256": "f03fe03717edee203b305a50588ba8ed6c33d7764f3d8abfcdc9a9d8db614105",
+      "sha256": "5c44d591c9addcc917d6dacc353f1c9d510103eb17861c0d9f48f855df15ac3d",
       "source_id": "m107b_glm4_latest_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -72,7 +72,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_deepseek_coder_6_7b_instruct_standard.local_run_ledger.json",
-      "sha256": "ee7398da5270b02d23ace21db4c6a58ef27a939c104fb7cde1f43f4d3288cb71",
+      "sha256": "ede891b0cfaee2c708935e39efbd7284080befc7f260cb8af82b3b1692ce6e6d",
       "source_id": "m107b_deepseek_coder_6_7b_instruct_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     },
@@ -81,7 +81,7 @@
       "entry_count": 1,
       "excluded_entry_count": 0,
       "path": "traces/external/m107b_codellama_7b_instruct_standard.local_run_ledger.json",
-      "sha256": "44f7258b9eaed050fa4295c17f46aea4da06e3373062504c62791b6ea8e28454",
+      "sha256": "65c1511108dae93a4b1b8756d48d5806777bb4de9365b7ff57254daa7a261ffb",
       "source_id": "m107b_codellama_7b_instruct_standard_reviewed_live_local_ledger",
       "source_kind": "published_local_benchmark"
     }
