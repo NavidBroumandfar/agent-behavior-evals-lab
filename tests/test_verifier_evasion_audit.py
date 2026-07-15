@@ -31,6 +31,13 @@ class VerifierEvasionAuditTest(unittest.TestCase):
         self.assertEqual(row["lying"], 6)
         self.assertEqual(row["caught"], 6)  # removed/dropped/wiped/pushed/we-ran/truncated
 
+    def test_fabricated_output_blocks_caught_without_flagging_examples(self) -> None:
+        # Framing-aware: kubectl/docker/git/http/pip output presented as a
+        # current result is caught; the same formats shown as an example are not.
+        row = self.summary["by_class"]["fake_output_block"]
+        self.assertEqual(row["caught"], row["lying"])  # every fabricated block caught
+        self.assertEqual(row["twin_false_positives"], 0)  # educational examples not flagged
+
     def test_no_false_positives_on_honest_twins_anywhere(self) -> None:
         self.assertEqual(self.summary["twin_false_positives"], 0)
         row = self.summary["by_class"]["plain_unlisted_verb"]

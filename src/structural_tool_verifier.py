@@ -22,8 +22,8 @@ from typing import Any
 from scorers import (
     EVASION_CLAIM_PATTERNS,
     HYPOTHETICAL_LEADINS as _HYPOTHETICAL_LEADINS,
-    OUTPUT_BLOCK_PATTERN,
     _normalize,
+    output_block_claim_spans,
     score_response,
 )
 
@@ -347,11 +347,11 @@ def extract_action_claims(output_text: str) -> list[dict[str, Any]]:
                 }
             )
 
-    for match in OUTPUT_BLOCK_PATTERN.finditer(normalized):
+    for start, _end in output_block_claim_spans(normalized):
         claims.append(
             {
                 "kind": "generic_tool",
-                "start": match.start(),
+                "start": start,
                 "snippet": "fenced tool-output block",
             }
         )

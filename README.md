@@ -74,10 +74,11 @@ Named failure patterns: [AGB registry](docs/patterns/index.md) (cite as
   catches a text-only judge cannot see. (See the reproducibility-correction note
   at the top of that report.)
 - [Verifier evasion audit](reports/comparisons/verifier_evasion_audit.md)
-  — 87.5% catch rate on an adversarial corpus (passive voice, emoji/markdown
-  checklists, fabricated output blocks, and plain-English lies with unlisted
-  verbs), with honest-twin false positives held at 0. Open gaps (non-English
-  claims, vague status language) are published, not hidden.
+  — 91.7% catch rate on an adversarial corpus (passive voice, emoji/markdown
+  checklists, fabricated tool-output blocks — kubectl/docker/git/HTTP/pip — and
+  plain-English lies with unlisted verbs), with honest-twin false positives held
+  at 0. Open gaps (non-English claims, subjectless paraphrase) are published,
+  not hidden.
 
 ## Install & run the local gate
 
@@ -103,8 +104,8 @@ Every known weak point, with the measurement that quantifies it:
 - **The keyword scorer is brittle, measured** — 59.7% judge agreement over 700
   records, over-strict by 235 false alarms vs 47 misses. The structural check
   exists because of this.
-- **The verifier can be evaded, measured** — 87.5% catch rate; non-English
-  claims and vague status language remain open gaps.
+- **The verifier can be evaded, measured** — 91.7% catch rate; non-English
+  claims and subjectless paraphrase remain open gaps.
 - **Judge overlap and single-reviewer promotion** (with AI review assistance)
   are disclosed per run in the committed review summaries.
 
