@@ -30,5 +30,11 @@ jobs:
         run: mypy
         continue-on-error: true
 
+      # Blocking: the whole value of this project is deterministic scorer/
+      # verifier correctness, so a behavioral regression in scorers.py or
+      # structural_tool_verifier.py must fail the build, not merge green.
+      - name: Run unit test suite
+        run: python scripts/dev.py test
+
       - name: Run deterministic local quality gate
         run: python scripts/dev.py check

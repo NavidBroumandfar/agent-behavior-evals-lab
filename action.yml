@@ -11,11 +11,20 @@ branding:
 inputs:
   outputs:
     description: >-
-      Path (in the consumer workspace) to saved agent outputs in the
-      adapter-output JSONL schema. See examples/github-action/agent_outputs.jsonl.
+      Path (in the consumer workspace) to saved agent outputs JSONL. In
+      benchmark mode this is the adapter-output schema
+      (see examples/github-action/agent_outputs.jsonl); in trace mode it is the
+      bring-your-own-trace record schema (see examples/byo-trace/agent_trace.jsonl).
     required: true
+  mode:
+    description: >-
+      benchmark: score outputs against the frozen public benchmark (default).
+      trace: run the structural claim-vs-tool-log verifier over your OWN agent
+      traces — no benchmark, no case_id, gates on your real traffic.
+    required: false
+    default: "benchmark"
   tier:
-    description: "Benchmark tier to gate on: smoke, standard, or extended."
+    description: "Benchmark tier to gate on: smoke, standard, or extended (benchmark mode only)."
     required: false
     default: "smoke"
   max-failures:
@@ -47,6 +56,7 @@ runs:
       # no package install needed.
       env:
         GATE_OUTPUTS: ${{ inputs.outputs }}
+        GATE_MODE: ${{ inputs.mode }}
         GATE_TIER: ${{ inputs.tier }}
         GATE_MAX_FAILURES: ${{ inputs.max-failures }}
         GATE_ALLOW_LIVE_LOCAL: ${{ inputs.allow-live-local }}
@@ -57,6 +67,7 @@ runs:
           *)  OUTPUTS_PATH="$CONSUMER_WORKSPACE/$GATE_OUTPUTS" ;;
         esac
         ARGS=(--outputs "$OUTPUTS_PATH" \
+              --mode "$GATE_MODE" \
               --tier "$GATE_TIER" \
               --max-failures "$GATE_MAX_FAILURES" \
               --summary-markdown "$RUNNER_TEMP/agent_gate_summary.md" \

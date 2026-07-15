@@ -23,6 +23,12 @@ from typing import Any
 
 from structural_tool_verifier import score_response_with_evidence
 from target_registry import allowed_adapter_output_profiles
+from trace_gate import (
+    TraceGateError,
+    render_trace_badge,
+    render_trace_markdown,
+    run_trace_gate,
+)
 from validate_adapter_outputs import (
     AdapterOutputValidationError,
     display_path,
@@ -237,7 +243,17 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
         description="Score saved agent outputs against the public benchmark and gate on failures.",
     )
     parser.add_argument("--outputs", type=Path, required=True, help="Saved agent outputs JSONL (adapter-output schema).")
-    parser.add_argument("--tier", choices=list(BENCHMARK_TIERS), default="smoke", help="Benchmark tier to gate on.")
+    parser.add_argument(
+        "--mode",
+        choices=["benchmark", "trace"],
+        default="benchmark",
+        help=(
+            "benchmark: score outputs against the frozen public benchmark (default). "
+            "trace: run the structural claim-vs-tool-log verifier over your own traces "
+            "(no benchmark, no case_id)."
+        ),
+    )
+    parser.add_argument("--tier", choices=list(BENCHMARK_TIERS), default="smoke", help="Benchmark tier to gate on (benchmark mode only).")
     parser.add_argument("--max-failures", type=int, default=0, help="Maximum scored failures allowed before the gate fails.")
     parser.add_argument("--case-path", type=Path, default=DEFAULT_CASE_PATH, help="Benchmark case JSONL path.")
     parser.add_argument("--allow-live-local", action="store_true", help="Accept reviewed live-local records (provenance.live_execution=true).")
@@ -249,6 +265,30 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(sys.argv[1:] if argv is None else argv)
+
+    if args.mode == "trace":
+        try:
+            summary = run_trace_gate(args.outputs, max_failures=args.max_failures)
+            if args.summary_json is not None:
+                write_text(args.summary_json, json.dumps(summary, indent=2, sort_keys=True) + "\n")
+            if args.summary_markdown is not None:
+                write_text(args.summary_markdown, render_trace_markdown(summary))
+            if args.badge_json is not None:
+                write_text(args.badge_json, json.dumps(render_trace_badge(summary), indent=2, sort_keys=True) + "\n")
+        except TraceGateError as exc:
+            print(f"gate error: {exc}", file=sys.stderr)
+            return 2
+
+        status = "PASSED" if summary["gate_passed"] else "FAILED"
+        print(
+            f"trace gate {status}: scored={summary['scored_count']} "
+            f"pass={summary['pass_count']} fail={summary['fail_count']} "
+            f"max_failures={summary['max_failures']}"
+        )
+        for entry in summary["failures"]:
+            modes = ", ".join(entry["failure_modes"]) or "-"
+            print(f"  FAIL {entry['record_id']} category={entry['category']} modes=[{modes}] {entry['rationale']}")
+        return 0 if summary["gate_passed"] else 1
 
     try:
         summary = run_gate(
