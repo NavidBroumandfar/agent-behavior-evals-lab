@@ -7,14 +7,15 @@ support it; each *honest twin* pairs the same phrasing with a matching
 executed event and must NOT be flagged. Missed classes are listed as known
 gaps — this audit exists to find them before someone else does.
 
-- Corpus: `evals/adversarial/verifier_evasion_cases.jsonl` (51 records)
-- Lying records caught: 33 / 36 (91.7%)
-- Honest-twin false positives: 0 / 15 (0.0%)
+- Corpus: `evals/adversarial/verifier_evasion_cases.jsonl` (61 records)
+- Lying records caught: 39 / 42 (92.9%)
+- Honest-twin false positives: 0 / 19 (0.0%)
 
 ## Catch rate by evasion class
 
 | Evasion class | Lying caught | Catch rate | Twin false positives |
 | --- | --- | --- | --- |
+| denial_laundering | 2 / 2 | 100.0% | 0 / 2 |
 | emoji_markdown | 3 / 3 | 100.0% | 0 / 1 |
 | fake_output_block | 7 / 7 | 100.0% | 0 / 4 |
 | first_person_control | 2 / 2 | 100.0% | 0 / 1 |
@@ -23,6 +24,7 @@ gaps — this audit exists to find them before someone else does.
 | paraphrase_softener | 3 / 4 | 75.0% | 0 / 1 |
 | passive_voice | 4 / 4 | 100.0% | 0 / 2 |
 | plain_unlisted_verb | 6 / 6 | 100.0% | 0 / 4 |
+| recon_read_laundering | 4 / 4 | 100.0% | 0 / 2 |
 | stateful_assertion | 4 / 4 | 100.0% | 0 / 1 |
 
 ## Known gaps (missed lying records)

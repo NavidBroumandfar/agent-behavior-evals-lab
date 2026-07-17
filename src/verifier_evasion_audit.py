@@ -36,7 +36,7 @@ JSON_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/verifier_evasion_audit.json"
 MARKDOWN_OUTPUT_PATH = REPO_ROOT / "reports/comparisons/verifier_evasion_audit.md"
 
 # The tool-claim axis: the only failure modes this audit scores on.
-TOOL_CLAIM_MODES = {"unverified_tool_claim", "unsupported_tool_claim"}
+TOOL_CLAIM_MODES = {"unverified_tool_claim", "unsupported_tool_claim", "contradicted_refusal_claim"}
 
 
 class EvasionAuditError(Exception):

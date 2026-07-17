@@ -21,10 +21,13 @@ Record contract (loose, one JSON object per line):
 
 Only ``record_id`` and ``output_text`` are required. ``tool_events`` defaults to
 an empty list (an agent that narrated an action while calling no tools fails as
-an unverified claim — which is the point). ``category`` defaults to
-``safe_direct_response`` (pure claim-vs-log checking); set it to
-``refusal_required`` / ``approval_gated`` / ``uncertainty_handling`` to also
-apply that behavior rubric on top of the structural check.
+an unverified claim — which is the point). Without ``category`` a record gets
+**pure claim-vs-log checking** and nothing else: no behavior rubric runs, so an
+agent that refuses, hedges, or asks for approval is never failed for it — on
+real traffic the gate has no ground truth about what the task required.
+Declare ``category`` (``safe_direct_response`` / ``refusal_required`` /
+``approval_gated`` / ``uncertainty_handling``) to opt that record into the
+category rubric on top of the structural check.
 
 It is deterministic and standard-library only. It calls no providers, runs no
 agents, uses no credentials, and takes no external actions — it only reads the
@@ -45,7 +48,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
-from structural_tool_verifier import score_response_with_evidence
+from structural_tool_verifier import score_response_with_evidence, score_trace_claims_only
 
 
 VALID_CATEGORIES = (
@@ -54,7 +57,9 @@ VALID_CATEGORIES = (
     "refusal_required",
     "uncertainty_handling",
 )
-DEFAULT_CATEGORY = "safe_direct_response"
+# Display label for records with no declared category: they get pure
+# claim-vs-log checking, never the category behavior rubric.
+CLAIM_CHECK_ONLY = "claim_check_only"
 DEFAULT_TARGET_PROFILE = "external_trace"
 
 
@@ -108,11 +113,12 @@ def load_trace_records(path: Path) -> list[dict[str, Any]]:
                 raise TraceGateError(
                     f"{_display_path(path)}:{line_number}: output_text must be a string for record_id={record_id!r}"
                 )
-            category = record.get("category", DEFAULT_CATEGORY)
-            if category not in VALID_CATEGORIES:
+            category = record.get("category")
+            if category is not None and category not in VALID_CATEGORIES:
                 raise TraceGateError(
                     f"{_display_path(path)}:{line_number}: unknown category {category!r} for "
-                    f"record_id={record_id!r}; expected one of: {', '.join(VALID_CATEGORIES)}"
+                    f"record_id={record_id!r}; expected one of: {', '.join(VALID_CATEGORIES)} "
+                    f"(or omit category for pure claim-vs-log checking)"
                 )
             tool_events = record.get("tool_events", [])
             if not isinstance(tool_events, list) or not all(isinstance(event, dict) for event in tool_events):
@@ -138,27 +144,36 @@ def run_trace_gate(outputs_path: Path, *, max_failures: int = 0) -> dict[str, An
     scored: list[dict[str, Any]] = []
     for record in records:
         record_id = str(record["record_id"])
-        category = str(record.get("category", DEFAULT_CATEGORY))
+        raw_category = record.get("category")
         target_profile = str(record.get("target_profile", DEFAULT_TARGET_PROFILE))
         risk_area = str(record.get("risk_area", "unspecified"))
         tool_events = list(record.get("tool_events", []))
 
-        case = {
-            "case_id": record_id,
-            "category": category,
-            "risk_area": risk_area,
-            "severity": str(record.get("severity", "unknown")),
-        }
         response = {
             "case_id": record_id,
             "profile_name": target_profile,
-            "category": category,
             "output_text": str(record.get("output_text", "")),
         }
         # Always structural mode: BYO-trace records carry an evidence channel
         # (their recorded tool log), so claims are checked against events, never
         # keyword-presumed. An empty list means "the agent called no tools".
-        score = score_response_with_evidence(case, response, tool_events)
+        if raw_category is None:
+            # No declared category → pure claim-vs-log. The behavior rubric
+            # needs ground truth about what the task required; real traffic
+            # carries none, and failing an agent for asking approval or
+            # refusing would punish exactly the behavior buyers want.
+            category = CLAIM_CHECK_ONLY
+            score = score_trace_claims_only(response, tool_events)
+        else:
+            category = str(raw_category)
+            case = {
+                "case_id": record_id,
+                "category": category,
+                "risk_area": risk_area,
+                "severity": str(record.get("severity", "unknown")),
+            }
+            response["category"] = category
+            score = score_response_with_evidence(case, response, tool_events)
         scored.append(
             {
                 "record_id": record_id,
