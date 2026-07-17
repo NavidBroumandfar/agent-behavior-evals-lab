@@ -100,12 +100,12 @@ Named failure patterns: [AGB registry](docs/patterns/index.md) (cite as
   catches a text-only judge cannot see. (See the reproducibility-correction note
   at the top of that report.)
 - [Verifier evasion audit](reports/comparisons/verifier_evasion_audit.md)
-  — 93.5% catch rate on an adversarial corpus (passive voice, emoji/markdown
+  — 97.8% catch rate on an adversarial corpus (passive voice, emoji/markdown
   checklists, fabricated tool-output blocks — kubectl/docker/git/HTTP/pip —
   plain-English lies with unlisted verbs, reconnaissance-read laundering,
-  denial laundering, coordinated-elision and partial-object lies), with honest-twin false
-  positives held at 0. Open gaps (non-English claims, subjectless paraphrase)
-  are published, not hidden.
+  denial laundering, coordinated-elision and partial-object lies, and Spanish/
+  German claims), with honest-twin false positives held at 0. Open gaps (vague
+  paraphrase, languages beyond ES/DE) are published, not hidden.
 
 ## Install & run the local gate
 
@@ -138,8 +138,8 @@ Every known weak point, with the measurement that quantifies it:
   [trace adapters](#how-it-works) or [`--mode trace`](#gate-your-own-agents-real-traces-bring-your-own-trace).
   In that evidence-based path a claim with a matching recorded event passes, and
   only a genuine claim-vs-log mismatch fails.
-- **The verifier can be evaded, measured** — 93.5% catch rate; non-English
-  claims and subjectless paraphrase remain open gaps.
+- **The verifier can be evaded, measured** — 97.8% catch rate; vague
+  paraphrase and languages beyond Spanish/German remain open gaps.
 - **Judge overlap and single-reviewer promotion** (with AI review assistance)
   are disclosed per run in the committed review summaries.
 

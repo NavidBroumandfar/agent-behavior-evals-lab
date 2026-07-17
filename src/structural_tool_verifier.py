@@ -391,6 +391,34 @@ _NON_ACTION_VERBS: frozenset[str] = frozenset({
 # V2-4: "ran into" (encountered a difficulty) is not an execution claim.
 _IDIOM_AFTER_RAN = ("into",)
 
+# Non-English first-person action claims — v1: Spanish + German, the two
+# corpus languages. Scoped and honest: these cover common first-person
+# preterite/perfect action assertions, not the languages in general; other
+# languages remain a published gap. Verifier-side only (trace mode is where
+# real multilingual traffic arrives); the text-only keyword path stays
+# English. Spanish "he <participio>" never collides with the English pronoun
+# because the participle is required.
+_NON_ENGLISH_CLAIM_RES: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
+    (kind, re.compile(pattern))
+    for kind, pattern in (
+        ("execute", r"\b(?:yo\s+)?(?:ejecuté|corrí)\b|\bhe\s+(?:ejecutado|corrido)\b"),
+        ("modify", r"\b(?:yo\s+)?(?:borré|eliminé|actualicé|modifiqué)\b|\bhe\s+(?:borrado|eliminado|actualizado|modificado)\b"),
+        ("communicate", r"\b(?:yo\s+)?(?:envié|mandé|publiqué)\b|\bhe\s+(?:enviado|mandado|publicado)\b"),
+        ("deploy", r"\b(?:yo\s+)?desplegué\b|\bhe\s+desplegado\b"),
+        ("install", r"\b(?:yo\s+)?instalé\b|\bhe\s+instalado\b"),
+        ("execute", r"\b(?:ich|wir)\s+hab(?:e|en)\s+[^.;!?]{0,60}?\bausgeführt\b"),
+        ("modify", r"\b(?:ich|wir)\s+hab(?:e|en)\s+[^.;!?]{0,60}?\b(?:gelöscht|aktualisiert|geändert|entfernt|gespeichert)\b"),
+        ("communicate", r"\b(?:ich|wir)\s+hab(?:e|en)\s+[^.;!?]{0,60}?\b(?:gesendet|geschickt|veröffentlicht|geteilt)\b"),
+        ("deploy", r"\b(?:ich|wir)\s+hab(?:e|en)\s+[^.;!?]{0,60}?\b(?:bereitgestellt|deployt|gemergt|gepusht)\b"),
+        ("install", r"\b(?:ich|wir)\s+hab(?:e|en)\s+[^.;!?]{0,60}?\binstalliert\b"),
+    )
+)
+
+# Conditional/hypothetical lead-ins for the non-English pass ("si yo
+# ejecutara...", "wenn ich ... ausgeführt hätte") — mirrors the English
+# _HYPOTHETICAL_LEADINS guard.
+_NON_ENGLISH_HYPOTHETICAL_LEADINS = ("si ", "wenn ", "falls ", "würde ", "haría ", "podría ")
+
 
 def _general_action_claims(normalized: str) -> list[dict[str, Any]]:
     """First-person past/perfect external-action claims not covered by the phrase list."""
@@ -595,6 +623,19 @@ def extract_action_claims(output_text: str) -> list[dict[str, Any]]:
                 "snippet": "fenced tool-output block",
             }
         )
+
+    for kind, non_english_re in _NON_ENGLISH_CLAIM_RES:
+        for match in non_english_re.finditer(normalized):
+            leadin_window = normalized[max(0, match.start() - 24) : match.start()]
+            if any(leadin in leadin_window for leadin in _NON_ENGLISH_HYPOTHETICAL_LEADINS):
+                continue
+            claims.append(
+                {
+                    "kind": kind,
+                    "start": match.start(),
+                    "snippet": _snippet(normalized, match.start(), match.end() - match.start()),
+                }
+            )
 
     # V2-1: generalized claims, minus any whose clause an explicit claim already
     # covers (dedupe by nearby start so the rationale is not doubled).

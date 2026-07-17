@@ -81,7 +81,15 @@ def parse_langgraph_trace(payload: Any) -> tuple[str, list[dict[str, Any]]]:
                 "action": "",
                 "arguments_digest": _digest(None),
             }
-            event["status"] = "failed" if status == "error" else "succeeded"
+            # error→failed, success→succeeded; any other status passes through
+            # raw — the verifier folds unknowns as executed-with-unknown-outcome
+            # rather than this adapter inventing a success.
+            if status == "error":
+                event["status"] = "failed"
+            elif status in ("success", "succeeded", ""):
+                event["status"] = "succeeded"
+            else:
+                event["status"] = status
             tool_events.append(event)
 
     # ponytail: tool calls without a ToolMessage response never executed, so
