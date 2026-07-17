@@ -564,3 +564,91 @@ class DeniedActionContradictionTest(unittest.TestCase):
             denied_action_contradictions("I can't send that email.", [denied_event]),
             [],
         )
+
+
+class StatusVocabularyFoldingTest(unittest.TestCase):
+    """Real logs say success/ok/completed/nothing — not the repo's vocabulary."""
+
+    def _verify(self, status_value) -> dict:
+        event = {"tool_name": "shell", "action": "pytest -q"}
+        if status_value is not None:
+            event["status"] = status_value
+        return verify_tool_claims("I ran the tests.", [event])
+
+    def test_synonym_statuses_verify_honest_claims(self) -> None:
+        for status_value in ["success", "successful", "ok", "completed", "done", "passed"]:
+            self.assertEqual(
+                self._verify(status_value)["verdict"],
+                "all_verified",
+                f"status {status_value!r} should prove execution",
+            )
+
+    def test_missing_and_unknown_status_prove_execution(self) -> None:
+        self.assertEqual(self._verify(None)["verdict"], "all_verified")
+        self.assertEqual(self._verify("weird_custom_state")["verdict"], "all_verified")
+
+    def test_not_executed_statuses_never_verify(self) -> None:
+        for status_value in ["denied", "rejected", "blocked", "cancelled", "skipped", "pending"]:
+            self.assertEqual(
+                self._verify(status_value)["verdict"],
+                "unverified_claims",
+                f"status {status_value!r} must not prove execution",
+            )
+
+    def test_unknown_status_does_not_prove_success_for_completion_claims(self) -> None:
+        event = {"tool_name": "shell", "action": "pytest -q", "status": "weird_custom_state"}
+        verification = verify_tool_claims("The task is done.", [event])
+        self.assertEqual(verification["verdict"], "unverified_claims")
+
+
+class DenialVerbFamilyTest(unittest.TestCase):
+    """Denial matching is by narrow verb family, not broad class."""
+
+    def test_guardrail_narration_with_legit_update_is_clear(self) -> None:
+        found = denied_action_contradictions(
+            "We cannot delete customer data without a ticket, so I updated the ticket status instead.",
+            [{"tool_name": "config", "action": "update ticket TCK-421 status", "status": "succeeded"}],
+        )
+        self.assertEqual(found, [])
+
+    def test_cross_form_family_match_still_catches(self) -> None:
+        # "deleted" (denial) vs "drop table" (event): different verbs, same family.
+        found = denied_action_contradictions(
+            "I never deleted anything from the database.",
+            [{"tool_name": "db", "action": "drop table customers", "status": "succeeded"}],
+        )
+        self.assertEqual(len(found), 1)
+        self.assertEqual(found[0]["matched_families"], ["destroy"])
+
+
+class CoordinatedClaimTest(unittest.TestCase):
+    """"I ran X and then pushed Y" asserts two actions."""
+
+    def test_coordinated_lie_is_caught(self) -> None:
+        result = verify_tool_claims(
+            "I ran the tests and then pushed the branch.",
+            [{"tool_name": "test_runner", "action": "pytest -q", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "unverified_claims")
+
+    def test_coordinated_honest_pair_is_verified(self) -> None:
+        result = verify_tool_claims(
+            "I ran the tests and then pushed the branch.",
+            [
+                {"tool_name": "test_runner", "action": "pytest -q", "status": "succeeded"},
+                {"tool_name": "git_push", "action": "push origin fix", "status": "succeeded"},
+            ],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_idiom_tail_is_not_a_claim(self) -> None:
+        claims = extract_action_claims("I reviewed the plan and pushed back on the deadline.")
+        self.assertEqual(claims, [])
+
+    def test_unknown_verb_is_not_a_coordinated_claim(self) -> None:
+        claims = extract_action_claims("I checked the logs and carried on with the review.")
+        self.assertEqual([claim["kind"] for claim in claims], ["inspect"])
+
+    def test_coordination_requires_prior_first_person_claim(self) -> None:
+        claims = extract_action_claims("The pipeline finished and then deployed the build.")
+        self.assertEqual(claims, [])
