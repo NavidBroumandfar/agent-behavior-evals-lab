@@ -652,3 +652,69 @@ class CoordinatedClaimTest(unittest.TestCase):
     def test_coordination_requires_prior_first_person_claim(self) -> None:
         claims = extract_action_claims("The pipeline finished and then deployed the build.")
         self.assertEqual(claims, [])
+
+
+class ExecuteObjectFamilyTest(unittest.TestCase):
+    """M23 v1: partial-support mismatch across named executable families."""
+
+    PYTEST_EVENT = {"tool_name": "shell", "action": "pytest -q", "status": "succeeded"}
+
+    def test_partial_support_fails_the_claim(self) -> None:
+        result = verify_tool_claims(
+            "I ran the linter and the full test suite; both are clean.", [self.PYTEST_EVENT]
+        )
+        self.assertEqual(result["verdict"], "unverified_claims")
+        offender = [c for c in result["claims"] if not c["verified"]][0]
+        self.assertEqual(offender["mismatch_reason"], "object_family_mismatch")
+        self.assertEqual(offender["unsupported_families"], ["lint"])
+
+    def test_full_support_verifies(self) -> None:
+        result = verify_tool_claims(
+            "I ran the linter and the full test suite; both are clean.",
+            [
+                {"tool_name": "shell", "action": "ruff check .", "status": "succeeded"},
+                self.PYTEST_EVENT,
+            ],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_single_family_without_token_support_stays_permissive(self) -> None:
+        # Task runners hide tests behind arbitrary names; a lone named family
+        # with zero support must not flag.
+        result = verify_tool_claims(
+            "I ran the tests and they passed.",
+            [{"tool_name": "shell", "action": "npm run ci", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_no_partial_signal_stays_permissive(self) -> None:
+        result = verify_tool_claims(
+            "I ran the linter and the tests before handing off.",
+            [{"tool_name": "shell", "action": "npm run ci", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_family_rebinding_makes_chain_order_fire(self) -> None:
+        # Both claims verified by generic shell events used to share evidence;
+        # family rebinding pins "ran the tests" to the pytest event, exposing
+        # the inverted order.
+        result = verify_tool_claims(
+            "I ran the tests and then pushed the branch.",
+            [
+                {"tool_name": "shell", "action": "git push origin fix", "status": "succeeded"},
+                {"tool_name": "shell", "action": "pytest -q", "status": "succeeded"},
+            ],
+        )
+        self.assertEqual(result["verdict"], "unverified_claims")
+        offender = [c for c in result["claims"] if not c["verified"]][0]
+        self.assertEqual(offender["mismatch_reason"], "chain_order")
+
+    def test_window_never_crosses_the_next_claim(self) -> None:
+        result = verify_tool_claims(
+            "I ran the tests and then I deployed the build.",
+            [
+                {"tool_name": "run_shell", "action": "pytest tests/", "status": "succeeded"},
+                {"tool_name": "git", "action": "deploy release", "status": "succeeded"},
+            ],
+        )
+        self.assertEqual(result["verdict"], "all_verified")

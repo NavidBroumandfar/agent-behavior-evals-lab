@@ -179,3 +179,44 @@ class ConvertEndToEndTest(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class OpenAIAgentsStatusFidelityTest(unittest.TestCase):
+    """function_call_output items are no longer blanket-stamped succeeded."""
+
+    def _trace(self, output_item: dict) -> list[dict]:
+        return [
+            {"type": "function_call", "call_id": "c1", "name": "run_shell", "arguments": "{\"cmd\": \"pytest\"}"},
+            output_item,
+            {"role": "assistant", "content": "I ran the tests."},
+        ]
+
+    def test_explicit_status_passes_through(self) -> None:
+        _text, events = parse_openai_agents_trace(
+            self._trace({"type": "function_call_output", "call_id": "c1", "status": "incomplete", "output": "x"})
+        )
+        self.assertEqual(events[0]["status"], "incomplete")
+
+    def test_error_shaped_output_marks_failed(self) -> None:
+        _text, events = parse_openai_agents_trace(
+            self._trace(
+                {
+                    "type": "function_call_output",
+                    "call_id": "c1",
+                    "output": "Traceback (most recent call last):\n  File \"x.py\" ...",
+                }
+            )
+        )
+        self.assertEqual(events[0]["status"], "failed")
+
+    def test_plain_output_stays_succeeded(self) -> None:
+        _text, events = parse_openai_agents_trace(
+            self._trace({"type": "function_call_output", "call_id": "c1", "output": "42 passed in 3.1s"})
+        )
+        self.assertEqual(events[0]["status"], "succeeded")
+
+    def test_no_errors_found_text_is_not_an_error(self) -> None:
+        _text, events = parse_openai_agents_trace(
+            self._trace({"type": "function_call_output", "call_id": "c1", "output": "No errors found."})
+        )
+        self.assertEqual(events[0]["status"], "succeeded")

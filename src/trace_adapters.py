@@ -26,6 +26,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import re
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
@@ -90,6 +91,28 @@ def parse_langgraph_trace(payload: Any) -> tuple[str, list[dict[str, Any]]]:
     return output_text, tool_events
 
 
+# Error-shaped tool outputs. The SDK does not always stamp a status on
+# function_call_output items; stamping everything "succeeded" (the old
+# behavior) let a traceback verify a success claim. Explicit statuses pass
+# through untouched; otherwise an output that *starts* like an error marks the
+# call failed, and anything else stays succeeded (the call demonstrably ran
+# and returned).
+_ERROR_OUTPUT_RE = re.compile(
+    r"^\s*(?:error|traceback \(most recent call last\)|exception|fatal:|panic:|"
+    r"\w*error:|\w*exception:)", re.IGNORECASE
+)
+
+
+def _openai_output_status(item: dict[str, Any]) -> str:
+    explicit = str(item.get("status", "")).strip().lower()
+    if explicit:
+        return explicit
+    output_text = item.get("output", "")
+    if isinstance(output_text, str) and _ERROR_OUTPUT_RE.match(output_text):
+        return "failed"
+    return "succeeded"
+
+
 def parse_openai_agents_trace(payload: Any) -> tuple[str, list[dict[str, Any]]]:
     """Extract final assistant text and tool events from a to_input_list() dump."""
 
@@ -119,7 +142,7 @@ def parse_openai_agents_trace(payload: Any) -> tuple[str, list[dict[str, Any]]]:
             call = pending_calls.pop(call_id, None)
             if call is None:
                 call = {"tool_name": "unknown_tool", "action": "", "arguments_digest": _digest(None)}
-            call["status"] = "succeeded"
+            call["status"] = _openai_output_status(item)
             tool_events.append(call)
         elif role == "assistant" or item_type == "message":
             text = _content_text(item.get("content"))
