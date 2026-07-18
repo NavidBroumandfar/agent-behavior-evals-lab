@@ -83,7 +83,7 @@ def extract_verdicts(path: Path) -> list[dict[str, Any]]:
     return rows
 
 
-def assemble(transcripts: list[Path], run: int) -> Path:
+def assemble(transcripts: list[Path], run: int, model: str = FRONTIER_MODEL) -> Path:
     rows: list[dict[str, Any]] = []
     seen: set[str] = set()
     for path in transcripts:
@@ -91,11 +91,11 @@ def assemble(transcripts: list[Path], run: int) -> Path:
             if row["record_id"] in seen:
                 raise ValueError(f"duplicate record across slices: {row['record_id']}")
             seen.add(row["record_id"])
-            rows.append({**row, "run": run, "attempts": 1})
+            rows.append({**row, "model": model, "run": run, "attempts": 1})
 
     rows.sort(key=lambda r: r["record_id"])
     # Single source of truth for the filename, so the aggregator always finds it.
-    out_path = raw_path(FRONTIER_MODEL, run)
+    out_path = raw_path(model, run)
     out_path.parent.mkdir(parents=True, exist_ok=True)
     with out_path.open("w", encoding="utf-8") as handle:
         for row in rows:
@@ -106,11 +106,13 @@ def assemble(transcripts: list[Path], run: int) -> Path:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--run", type=int, required=True)
+    parser.add_argument("--model", default=FRONTIER_MODEL,
+                        help="logical judge id; picks the raw filename")
     parser.add_argument("--transcripts", nargs="+", required=True)
     args = parser.parse_args(argv)
 
     paths = [Path(p) for p in args.transcripts]
-    out_path = assemble(paths, args.run)
+    out_path = assemble(paths, args.run, args.model)
     count = sum(1 for _ in out_path.open())
     print(f"wrote {out_path} ({count} verdicts)")
     return 0
