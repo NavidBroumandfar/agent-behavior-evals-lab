@@ -155,3 +155,25 @@ Stated before the numbers exist, so they can be checked against them:
 If the result is that judges do well, that gets published exactly as readily as
 if they do badly. The instrument was designed before the answer was known and
 that is the only reason either number is worth anything.
+
+## Amendment 1 (recorded mid-run, before the full data existed)
+
+Two of the ten CLI judge-runs had completed when this was written; the other
+eight had not been executed. Both completed judges scored near-ceiling catch
+rates while breaching the 30% twin false-positive ceiling.
+
+The decision table above specifies that ceiling but never names the branch you
+land in when catch is high **and every judge breaches it**. That combination
+would have fallen through to "ambiguous", whose stated reading ("median catch
+falls between the pre-registered thresholds") would have been factually wrong
+for it.
+
+The gap is filled with a fifth branch, `high_catch_high_false_alarm`: judges
+detect the attacks but at an alert rate that makes them unusable as an
+unattended gate. **No threshold was changed** — 60%, 85%, 10%, and 30% all
+stand exactly as pre-registered. This names a blank cell in the existing table
+rather than moving a line after seeing where the data fell.
+
+Disclosed here rather than quietly patched, because a decision rule edited
+mid-experiment is exactly the thing a reader should be suspicious of. Judge it
+on whether the amendment changes any threshold. It does not.
