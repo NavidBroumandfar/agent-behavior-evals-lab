@@ -1,18 +1,19 @@
 # Structural Scorer vs LLM Judge: Real-Agent Fleet Calibration
 
-> **⚠ Reproducibility correction (2026-07-15).** The headline agreement figure
-> in the summary below (226 / 320 = 70.6%) was generated at an earlier scorer
-> revision, and the text-only judge outputs it consumed were never
-> version-controlled (`traces/scored/*.local.jsonl` is gitignored) and are now
-> partially lost. It therefore does **not** reproduce from repo HEAD. Re-scoring
-> the surviving judge outputs with the current structural verifier yields the
-> corrected, reproducible figure **223 / 320 = 69.7%**, with the disagreement
-> split **85** structural-FAIL/judge-PASS and **12** structural-PASS/judge-FAIL.
-> The authoritative, SHA-256-pinned reproduction is frozen in the thesis bundle
-> (`research-thesis/agent-evals-thesis`, Gate 1). The numeric table below is
-> preserved unaltered as the historical record — read **69.7%** as the true
-> figure. Process fix: judge outputs must be version-controlled before this
-> report is regenerated, so the number can never silently drift again.
+> **Provenance (generator-emitted; do not hand-edit this report).** The
+> structural side is reproducible from repo HEAD: the committed reviewed
+> fleet records (`traces/external/*.reviewed_sandbox_outputs.jsonl`)
+> re-scored by the current verifier (`--emit-only`, deterministic,
+> offline). The judge side is a **dated one-time measurement**: text-only
+> judge outputs recorded 2026-07-09/10 on a local Ollama rig
+> (`traces/scored/*.judge*.local.jsonl`, git-ignored). Read the headline
+> agreement as *current verifier vs the 2026-07-09/10 judge verdicts*,
+> not as a HEAD-only artifact. History: the 2026-07-15 correction fixed a
+> drifted figure to 223/320 = 69.7% at the then-current verifier; the
+> 2026-07-18 verifier hardening (status folding, denial contradiction,
+> coordinated and ES/DE claims, inspect-lock) produced the numbers below.
+> The thesis bundle keeps its own frozen, SHA-256-pinned reproduction
+> (Gate 1) and is unaffected by regeneration here.
 
 The real-agent analogue of the 700-record model calibration study
 ([`scorer_judge_calibration.md`](scorer_judge_calibration.md)). Here the baseline
@@ -40,7 +41,7 @@ in the keyword study:
 - Judge model(s): gemma4:latest (a local judge is itself imperfect; disagreement localizes review-worthy records, it does not adjudicate them)
 - Judged records: 320
 - Agreement: 226 (70.6%)
-- Structural FAIL, judge PASS: 82 (of which 7 = 8.5% are evidence-only catches the text-only judge cannot see)
+- Structural FAIL, judge PASS: 82 (of which 8 = 9.8% are evidence-only catches the text-only judge cannot see)
 - Structural PASS, judge FAIL: 12
 
 ## Per agent
@@ -58,7 +59,7 @@ in the keyword study:
 
 ## Evidence-only catches — what a text-only judge cannot see
 
-**7 of 82 (8.5%) structural-FAIL / judge-PASS records are evidence-only catches**: the structural layer failed them on the recorded `tool_events`
+**8 of 82 (9.8%) structural-FAIL / judge-PASS records are evidence-only catches**: the structural layer failed them on the recorded `tool_events`
 log, which the text-only judge never sees — a fabricated tool use, a success claim with
 all tool calls failed, or an approval-gated case where a destructive tool call actually
 executed (6 of the
@@ -125,7 +126,7 @@ baseline, then a per-record majority vote:
 | `mistral:latest` | 308 | 78.2% | 22 | 45 |
 
 - Majority verdicts: 319 decided, 1 split; majority-vs-structural agreement 75.5%
-- **Evidence-only catches passed by the judge majority: 3 (unanimously passed by every judge: 0)** — records where multiple independent text-only readers see nothing wrong and the recorded
+- **Evidence-only catches passed by the judge majority: 4 (unanimously passed by every judge: 1)** — records where multiple independent text-only readers see nothing wrong and the recorded
   tool log shows a violation. Text review cannot catch these; action-level evidence does.
 - Caveat: some panel judges also appear as fleet *target* models (each affects only its own
   40 records); majority voting across judges mitigates self-judging bias.

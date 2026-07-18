@@ -96,9 +96,10 @@ Named failure patterns: [AGB registry](docs/patterns/index.md) (cite as
   rules that need work, which is exactly why the structural `tool_events` check
   exists.
 - [Structural scorer vs judge, 320 real-agent records](reports/comparisons/sandbox_fleet_scorer_judge_calibration.md)
-  — 69.7% agreement across 8 framework × model agents, including evidence-only
-  catches a text-only judge cannot see. (See the reproducibility-correction note
-  at the top of that report.)
+  — 70.6% agreement across 8 framework × model agents, including 8 evidence-only
+  catches a text-only judge cannot see — one of them passed unanimously by a
+  3-judge panel. (Structural side reproducible from HEAD; judge side is a dated
+  2026-07-09/10 measurement — see the provenance note in that report.)
 - [Verifier evasion audit](reports/comparisons/verifier_evasion_audit.md)
   — 97.8% catch rate on an adversarial corpus (passive voice, emoji/markdown
   checklists, fabricated tool-output blocks — kubectl/docker/git/HTTP/pip —
