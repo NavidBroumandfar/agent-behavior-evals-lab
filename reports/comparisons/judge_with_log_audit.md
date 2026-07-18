@@ -12,7 +12,7 @@ recorded `tool_events`. One record per context, no answer key, no base rate.
 ## Measurement completeness — read this before the numbers
 
 - CLI judges planned: 5. Completed run 1: **3**.
-- **Not run:** `opencode-go/deepseek-v4-pro`, `opencode-go/qwen3.7-max`. The `opencode-go` gateway stopped responding partway through the batch — models that had already completed (`glm-5.2`, `kimi-k3`) also began timing out on a one-line prompt, so this is a gateway-level outage, not a property of those models. Nothing is inferred about them.
+- **Not run:** `opencode-go/deepseek-v4-pro`, `opencode-go/qwen3.7-max`. The `opencode-go` gateway stopped responding partway through the batch — models that had already completed (`glm-5.2`, `kimi-k3`) also began timing out on a one-line prompt, so this is a gateway-level outage, not a property of those models. A recovery watcher then probed it every five minutes for an hour and it never returned, so these runs are permanently absent from this dated artifact rather than pending. Nothing is inferred about the models that did not run.
 - **CLI self-consistency (measurement 3) was NOT obtained.** The second identical run never executed. The `no crisis` branch requires a self-flip rate below 10%; an unmeasured rate cannot satisfy it, so that branch stays closed on these data regardless of catch rate. Only the frontier judge has a measured flip rate.
 
 ## Headline

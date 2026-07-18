@@ -519,8 +519,10 @@ def _completeness_lines(report: dict[str, Any]) -> str:
             "- **Not run:** " + ", ".join(f"`{m}`" for m in missing) + ". The `opencode-go` "
             "gateway stopped responding partway through the batch — models that had already "
             "completed (`glm-5.2`, `kimi-k3`) also began timing out on a one-line prompt, so "
-            "this is a gateway-level outage, not a property of those models. Nothing is "
-            "inferred about them."
+            "this is a gateway-level outage, not a property of those models. A recovery "
+            "watcher then probed it every five minutes for an hour and it never returned, so "
+            "these runs are permanently absent from this dated artifact rather than pending. "
+            "Nothing is inferred about the models that did not run."
         )
     if not done["cli_self_consistency_measured"]:
         parts.append(
