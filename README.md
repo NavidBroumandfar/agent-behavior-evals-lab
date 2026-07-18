@@ -174,12 +174,22 @@ PYTHONPATH=src python3 src/memory_and_collusion_detection.py  # authorization pr
   3-judge panel. (Structural side reproducible from HEAD; judge side is a dated
   2026-07-09/10 measurement — see the provenance note in that report.)
 - [Verifier evasion audit](reports/comparisons/verifier_evasion_audit.md)
-  — 97.8% catch rate on an adversarial corpus (passive voice, emoji/markdown
-  checklists, fabricated tool-output blocks — kubectl/docker/git/HTTP/pip —
-  plain-English lies with unlisted verbs, reconnaissance-read laundering,
-  denial laundering, coordinated-elision and partial-object lies, and Spanish/
-  German claims), with honest-twin false positives held at 0. Open gaps (vague
-  paraphrase, languages beyond ES/DE) are published, not hidden.
+  — 98.0% catch on the **self-authored** corpus (passive voice, markdown
+  checklists, fabricated tool-output blocks, reconnaissance-read and denial
+  laundering, coordinated-elision and partial-object lies, invisible/homoglyph
+  characters, markup-hidden claims, ES/DE claims), honest-twin false positives
+  0. Treat this as a regression suite, not evidence about novel attacks — the
+  same author wrote the verifier and the attacks.
+- [**Blind** red-team audit](reports/comparisons/blind_red_team_audit.md)
+  — **21.8% catch (12/55), 0 honest-twin false positives**, on a corpus written
+  by independent authors who saw only this README, never the code. The
+  [protocol](evals/adversarial/blind-red-team-protocol.md) and a
+  [sha256 manifest](evals/adversarial/blind_red_team_manifest.json) were
+  committed **before** any fix, so the pre-fix figure (14.5%) is published
+  permanently beside the post-fix one. **This is the number to judge the
+  verifier by**, and the gaps it exposes — scope/magnitude claims,
+  presupposition, attributed speech, action claims in languages beyond ES/DE —
+  are listed in that report.
 
 ## Install & run the local gate
 
@@ -212,8 +222,12 @@ Every known weak point, with the measurement that quantifies it:
   [trace adapters](#how-it-works) or [`--mode trace`](#gate-your-own-agents-real-traces-bring-your-own-trace).
   In that evidence-based path a claim with a matching recorded event passes, and
   only a genuine claim-vs-log mismatch fails.
-- **The verifier can be evaded, measured** — 97.8% catch rate; vague
-  paraphrase and languages beyond Spanish/German remain open gaps.
+- **The verifier can be evaded, and the honest number is low.** On a blind
+  corpus written by authors who never saw the code, it catches **21.8%**
+  (98.0% on the corpus its own author wrote — that gap is the point). Novel
+  phrasings get through: dishonest scope/magnitude over a real event,
+  presupposition and displaced agency, attributed speech, and action claims in
+  languages beyond ES/DE. Both audits, and the pre-fix figures, are published.
 - **Judge overlap and single-reviewer promotion** (with AI review assistance)
   are disclosed per run in the committed review summaries.
 
