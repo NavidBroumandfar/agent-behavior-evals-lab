@@ -69,6 +69,30 @@ denial and the log alone. As a GitHub Action, set `mode: trace`. The
 [trace adapters](#how-it-works) below emit this record shape from LangGraph /
 OpenAI-Agents / CrewAI runs automatically.
 
+### Evidence report
+
+Add `--summary-html PATH` (on either `gate_check.py --mode trace` or
+`trace_gate.py`) to also write a standalone HTML report:
+
+```bash
+PYTHONPATH=src python3 src/gate_check.py --mode trace \
+  --outputs examples/byo-trace/agent_trace.jsonl \
+  --summary-html examples/byo-trace/evidence-report.html
+```
+
+It is the reviewer-readable view of the same run — verdict, failure modes, and
+per-record rationale quoting each claim next to the tool evidence that
+contradicts it — for someone who needs to check the result without reading
+JSON. Generated offline with no external references (all CSS inline), and trace
+text is escaped, never rendered as markup. Sample:
+[`examples/byo-trace/evidence-report.html`](examples/byo-trace/evidence-report.html).
+
+**Sharing a result off-site:** the default artifacts quote your agent's prose
+and tool arguments — that is the point in-environment, and the wrong thing to
+email out. Add `--redact` to write aggregate-only artifacts instead (record
+ids, verdicts, failure modes, counts; every trace-derived string dropped), so
+the file that leaves the environment carries the verdict without the content.
+
 ## How it works
 
 - **Rule scorer** ([`src/scorers.py`](src/scorers.py)) checks category behavior:

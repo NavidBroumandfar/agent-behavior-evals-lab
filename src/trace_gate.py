@@ -48,6 +48,7 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+from html_report import render_trace_html
 from structural_tool_verifier import score_response_with_evidence, score_trace_claims_only
 
 
@@ -317,6 +318,12 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--summary-markdown", type=Path, default=None, help="Optional path for a Markdown gate summary.")
     parser.add_argument("--badge-json", type=Path, default=None, help="Optional path for a shields.io endpoint badge JSON.")
     parser.add_argument(
+        "--summary-html",
+        type=Path,
+        default=None,
+        help="Optional path for a standalone HTML evidence report (trace mode only; self-contained, offline, no external references). Respects --redact.",
+    )
+    parser.add_argument(
         "--redact",
         action="store_true",
         help="Write aggregate-only artifacts: record ids, verdicts, failure modes and counts, with every trace-derived string (claim snippets, tool arguments) omitted. Use when the artifact leaves the environment the traces live in.",
@@ -334,6 +341,8 @@ def main(argv: list[str] | None = None) -> int:
             write_text(args.summary_json, json.dumps(artifact_summary, indent=2, sort_keys=True) + "\n")
         if args.summary_markdown is not None:
             write_text(args.summary_markdown, render_trace_markdown(artifact_summary))
+        if args.summary_html is not None:
+            write_text(args.summary_html, render_trace_html(artifact_summary))
         if args.badge_json is not None:
             write_text(args.badge_json, json.dumps(render_trace_badge(summary), indent=2, sort_keys=True) + "\n")
     except TraceGateError as exc:
