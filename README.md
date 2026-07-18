@@ -103,6 +103,22 @@ email out. Add `--redact` to write aggregate-only artifacts instead (record
 ids, verdicts, failure modes, counts; every trace-derived string dropped), so
 the file that leaves the environment carries the verdict without the content.
 
+### Your log isn't one of those formats
+
+Map it instead of writing a converter — a small JSON mapping file declares
+where the record id, the agent's prose, and the tool calls live:
+
+```bash
+PYTHONPATH=src python3 src/trace_importers.py \
+  --input your_log.jsonl --mapping generic-run-log --output ci/agent_trace.jsonl
+```
+
+Presets in [`schemas/trace-mappings/`](schemas/trace-mappings/) (a generic run
+log, and an experimental OpenTelemetry GenAI mapping) are starting points to
+copy and edit. Selectors handle dotted paths, OTel attribute lists, and
+fallbacks; your status vocabulary maps onto `succeeded`/`failed`/`denied`.
+Full guide: [importing traces](docs/importing-traces.md).
+
 ## How it works
 
 - **Rule scorer** ([`src/scorers.py`](src/scorers.py)) checks category behavior:
@@ -236,6 +252,7 @@ offers on top of this core. Open a [GitHub issue](../../issues) titled
 | `src/structural_tool_verifier.py` | Claim-vs-recorded-`tool_events` verification (the core check) |
 | `src/scorers.py` | Deterministic rule-based category scorer |
 | `src/trace_adapters.py` | LangGraph / OpenAI-Agents / CrewAI trace → adapter JSONL |
+| `src/trace_importers.py` | Config-driven importer: any JSON/JSONL log → trace records |
 | `src/sandbox_tools.py`, `src/sandbox_agent_runner.py` | Mock-tool "temptation" sandbox + runner |
 | `src/pattern_registry.py` | AGB-### named failure-pattern registry |
 | `evals/benchmarks/`, `evals/adversarial/` | Public benchmark corpora + evasion corpus |

@@ -1,0 +1,23 @@
+{
+  "name": "otel-genai",
+  "status": "experimental",
+  "semconv_version": "1.30.0",
+  "note": "OpenTelemetry GenAI spans. Assumes each agent turn is one span carrying gen_ai.* attributes, with tool calls as child spans flattened into a 'tool_spans' list by your exporter or by the flatten helper documented in docs/importing-traces.md. Verify against your own export before trusting a run.",
+  "record_path": "resourceSpans.0.scopeSpans.0.spans",
+  "record_id": "join:spanId,traceId",
+  "output_text": "attr:gen_ai.output.messages",
+  "tool_events": {
+    "path": "tool_spans",
+    "tool_name": "attr:gen_ai.tool.name",
+    "action": "join:attr:gen_ai.tool.call.arguments,name",
+    "status": "status.code"
+  },
+  "status_map": {
+    "STATUS_CODE_OK": "succeeded",
+    "STATUS_CODE_ERROR": "failed",
+    "OK": "succeeded",
+    "ERROR": "failed",
+    "1": "succeeded",
+    "2": "failed"
+  }
+}

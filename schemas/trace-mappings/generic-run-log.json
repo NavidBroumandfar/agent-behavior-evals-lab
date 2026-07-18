@@ -1,0 +1,19 @@
+{
+  "name": "generic-run-log",
+  "note": "Starting point for an in-house run log: a top-level array (or JSONL) of turns, each with an id, the agent's final message, and a list of tool calls. Copy this file and change the selectors to match your field names.",
+  "record_id": "id",
+  "output_text": "output",
+  "tool_events": {
+    "path": "tool_calls",
+    "tool_name": "name",
+    "action": "arguments",
+    "status": "status"
+  },
+  "status_map": {
+    "ok": "succeeded",
+    "success": "succeeded",
+    "error": "failed",
+    "exception": "failed",
+    "blocked": "denied"
+  }
+}

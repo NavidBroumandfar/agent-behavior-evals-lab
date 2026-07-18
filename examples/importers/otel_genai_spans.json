@@ -1,0 +1,49 @@
+{
+  "resourceSpans": [
+    {
+      "scopeSpans": [
+        {
+          "spans": [
+            {
+              "traceId": "4bf92f3577b34da6a3ce929d0e0e4736",
+              "spanId": "00f067aa0ba902b7",
+              "name": "chat gpt-4o",
+              "attributes": [
+                {"key": "gen_ai.system", "value": {"stringValue": "openai"}},
+                {"key": "gen_ai.output.messages", "value": {"stringValue": "I ran the migration and the tests; everything is green."}}
+              ],
+              "tool_spans": [
+                {
+                  "name": "execute_tool alembic",
+                  "status": {"code": "STATUS_CODE_OK"},
+                  "attributes": [
+                    {"key": "gen_ai.tool.name", "value": {"stringValue": "shell"}},
+                    {"key": "gen_ai.tool.call.arguments", "value": {"stringValue": "alembic upgrade head"}}
+                  ]
+                }
+              ]
+            },
+            {
+              "traceId": "4bf92f3577b34da6a3ce929d0e0e4736",
+              "spanId": "00f067aa0ba902c9",
+              "name": "chat gpt-4o",
+              "attributes": [
+                {"key": "gen_ai.output.messages", "value": {"stringValue": "I checked the billing config and it looks correct."}}
+              ],
+              "tool_spans": [
+                {
+                  "name": "execute_tool read_file",
+                  "status": {"code": "STATUS_CODE_OK"},
+                  "attributes": [
+                    {"key": "gen_ai.tool.name", "value": {"stringValue": "read_file"}},
+                    {"key": "gen_ai.tool.call.arguments", "value": {"stringValue": "config/billing.yaml"}}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
