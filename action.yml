@@ -39,6 +39,47 @@ inputs:
     description: "Python version used to run the gate."
     required: false
     default: "3.11"
+  redact:
+    description: >-
+      Trace mode: write aggregate-only artifacts (ids, verdicts, failure modes,
+      counts) with every trace-derived string omitted. Use when the gate output
+      leaves the environment the traces live in.
+    required: false
+    default: "false"
+  github-token:
+    description: >-
+      Optional token used ONLY to post the gate summary as a pull-request
+      comment when comment-on-pr is true. Needs `pull-requests: write`. Leave
+      unset to post nothing (default). Never use with `pull_request_target` and
+      an untrusted checkout: the summary quotes agent output, which is
+      attacker-influenced content in that threat model.
+    required: false
+    default: ""
+  comment-on-pr:
+    description: >-
+      Post the gate summary as a pull-request comment (requires github-token).
+    required: false
+    default: "false"
+
+outputs:
+  gate-passed:
+    description: "true when the gate passed, false when it failed."
+    value: ${{ steps.gate.outputs.gate-passed }}
+  scored-count:
+    description: "Number of records scored."
+    value: ${{ steps.gate.outputs.scored-count }}
+  pass-count:
+    description: "Number of records that passed."
+    value: ${{ steps.gate.outputs.pass-count }}
+  fail-count:
+    description: "Number of records that failed."
+    value: ${{ steps.gate.outputs.fail-count }}
+  summary-json:
+    description: "Path to the JSON gate summary artifact."
+    value: ${{ steps.gate.outputs.summary-json }}
+  summary-markdown:
+    description: "Path to the Markdown gate summary artifact."
+    value: ${{ steps.gate.outputs.summary-markdown }}
 
 runs:
   using: "composite"
@@ -49,6 +90,7 @@ runs:
         python-version: ${{ inputs.python-version }}
 
     - name: Run agent behavior safety gate
+      id: gate
       shell: bash
       working-directory: ${{ github.action_path }}
       # Inputs pass through env, never inline ${{ }} in the script body,
@@ -60,6 +102,7 @@ runs:
         GATE_TIER: ${{ inputs.tier }}
         GATE_MAX_FAILURES: ${{ inputs.max-failures }}
         GATE_ALLOW_LIVE_LOCAL: ${{ inputs.allow-live-local }}
+        GATE_REDACT: ${{ inputs.redact }}
         CONSUMER_WORKSPACE: ${{ github.workspace }}
       run: |
         case "$GATE_OUTPUTS" in
@@ -75,6 +118,9 @@ runs:
         if [ "$GATE_ALLOW_LIVE_LOCAL" = "true" ]; then
           ARGS+=(--allow-live-local)
         fi
+        if [ "$GATE_REDACT" = "true" ]; then
+          ARGS+=(--redact)
+        fi
         set +e
         python src/gate_check.py "${ARGS[@]}"
         STATUS=$?
@@ -82,4 +128,32 @@ runs:
         if [ -f "$RUNNER_TEMP/agent_gate_summary.md" ]; then
           cat "$RUNNER_TEMP/agent_gate_summary.md" >> "$GITHUB_STEP_SUMMARY"
         fi
+        # Machine-readable outputs for downstream steps. Values come from the
+        # gate's own JSON summary, never from the exit status alone.
+        SUMMARY_JSON="$RUNNER_TEMP/agent_gate_summary.json"
+        {
+          echo "summary-json=$SUMMARY_JSON"
+          echo "summary-markdown=$RUNNER_TEMP/agent_gate_summary.md"
+        } >> "$GITHUB_OUTPUT"
+        if [ -f "$SUMMARY_JSON" ]; then
+          python -c "import json,sys;s=json.load(open(sys.argv[1]));print('gate-passed='+str(bool(s.get('gate_passed'))).lower());print('scored-count='+str(s.get('scored_count','')));print('pass-count='+str(s.get('pass_count','')));print('fail-count='+str(s.get('fail_count','')))" "$SUMMARY_JSON" >> "$GITHUB_OUTPUT"
+        fi
         exit $STATUS
+
+    - name: Comment gate summary on the pull request
+      if: ${{ always() && inputs.comment-on-pr == 'true' && inputs.github-token != '' && github.event_name == 'pull_request' }}
+      shell: bash
+      env:
+        GH_TOKEN: ${{ inputs.github-token }}
+        COMMENTS_URL: ${{ github.event.pull_request.comments_url }}
+      run: |
+        SUMMARY_MD="$RUNNER_TEMP/agent_gate_summary.md"
+        [ -f "$SUMMARY_MD" ] || exit 0
+        python -c "import json,sys;print(json.dumps({'body':open(sys.argv[1],encoding='utf-8').read()}))" "$SUMMARY_MD" > "$RUNNER_TEMP/agent_gate_comment.json"
+        curl --fail --silent --show-error \
+          -X POST \
+          -H "Authorization: Bearer $GH_TOKEN" \
+          -H "Accept: application/vnd.github+json" \
+          -H "Content-Type: application/json" \
+          --data @"$RUNNER_TEMP/agent_gate_comment.json" \
+          "$COMMENTS_URL"

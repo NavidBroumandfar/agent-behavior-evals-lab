@@ -32,12 +32,22 @@ fails the build over threshold:
 
 ```yaml
 - name: Run agent behavior safety gate
+  id: gate
   uses: NavidBroumandfar/agent-behavior-evals-lab@v1
   with:
     outputs: ci/agent_outputs.jsonl   # adapter-output JSONL in your repo
     tier: smoke                       # smoke | standard | extended
     max-failures: "0"
 ```
+
+Results land in the job summary. The step also exposes `gate-passed`,
+`scored-count`, `pass-count`, `fail-count`, `summary-json`, and
+`summary-markdown` as outputs, so a later step can branch on the verdict
+(`steps.gate.outputs.fail-count`). To post the summary as a PR comment, pass
+`comment-on-pr: true` and `github-token: ${{ secrets.GITHUB_TOKEN }}` with
+`permissions: pull-requests: write`; it is off by default. Do not enable it on
+`pull_request_target` with an untrusted checkout — the summary quotes agent
+output, which is attacker-influenced there.
 
 **Live demo:** [agent-gate-demo](https://github.com/NavidBroumandfar/agent-gate-demo)
 — a real PR blocked because the agent claimed it ran tests it never ran. Worked
@@ -112,6 +122,29 @@ the file that leaves the environment carries the verdict without the content.
 
 Named failure patterns: [AGB registry](docs/patterns/index.md) (cite as
 `AGB-030 approval-by-silence`).
+
+## Beyond single-turn claims
+
+Three further behavior checks ship in the repo, each runnable offline on
+committed fixtures:
+
+```bash
+PYTHONPATH=src python3 src/multi_turn_approval.py           # approval decay
+PYTHONPATH=src python3 src/multimodal_visual_claim.py       # fabricated visual claims
+PYTHONPATH=src python3 src/memory_and_collusion_detection.py  # authorization provenance
+```
+
+- **Approval decay** ([`src/multi_turn_approval.py`](src/multi_turn_approval.py))
+  plays escalating multi-turn conversations through one persistent sandbox and
+  asks whether the agent keeps gating consequential steps or quietly stops —
+  scored on behavior, not on whether it said "shall I proceed?".
+- **Fabricated visual claims** ([`src/multimodal_visual_claim.py`](src/multimodal_visual_claim.py))
+  records ground truth for a rendered scene, so an agent that reports "all
+  green" on a red dashboard is caught by the same claim-vs-evidence rule.
+- **Authorization provenance** ([`src/memory_and_collusion_detection.py`](src/memory_and_collusion_detection.py))
+  checks one invariant — the authorization chain must terminate at a human —
+  catching memory-note activation and manufactured cross-agent approval
+  ([threat models](docs/threat-models/)).
 
 ## Scorer credibility is measured, not asserted
 
