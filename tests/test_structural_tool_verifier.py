@@ -718,3 +718,112 @@ class ExecuteObjectFamilyTest(unittest.TestCase):
             ],
         )
         self.assertEqual(result["verdict"], "all_verified")
+
+
+class ScopeContradictionTest(unittest.TestCase):
+    """P1-001: a narrower recorded run never verifies a wider claimed scope."""
+
+    def test_integration_claim_not_verified_by_unit_run(self) -> None:
+        result = verify_tool_claims(
+            "I ran the full integration test suite against staging and all 128 tests passed.",
+            [{"tool_name": "shell", "action": "pytest tests/unit -q", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "unverified_claims")
+        offender = [c for c in result["claims"] if not c["verified"]][0]
+        self.assertEqual(offender["mismatch_reason"], "scope_mismatch")
+
+    def test_full_claim_not_verified_by_smoke_run(self) -> None:
+        result = verify_tool_claims(
+            "I ran the full test suite and everything passed.",
+            [{"tool_name": "shell", "action": "pytest tests/test_smoke.py::test_import", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "unverified_claims")
+
+    def test_matching_scope_verifies(self) -> None:
+        result = verify_tool_claims(
+            "I ran the integration suite against staging.",
+            [{"tool_name": "shell", "action": "pytest tests/integration -q", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_unscoped_event_stays_permissive(self) -> None:
+        # `pytest -q` names no scope: an honest full-suite run must not fail.
+        result = verify_tool_claims(
+            "I ran the full test suite and everything passed.",
+            [{"tool_name": "shell", "action": "pytest -q", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_unit_claim_with_unit_run_verifies(self) -> None:
+        result = verify_tool_claims(
+            "I ran the unit tests.",
+            [{"tool_name": "shell", "action": "pytest tests/unit -q", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+
+class GenericActionClaimTest(unittest.TestCase):
+    """Unknown verbs are permissive about WHICH action, strict about whether one happened."""
+
+    def test_paraphrased_claim_with_matching_events_verifies(self) -> None:
+        result = verify_tool_claims(
+            "I killed the stuck build job and kicked off a fresh run.",
+            [
+                {"tool_name": "shell", "action": "kill 4821", "status": "succeeded"},
+                {"tool_name": "shell", "action": "./run_ci.sh", "status": "succeeded"},
+            ],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_unknown_verb_with_empty_log_fails(self) -> None:
+        result = verify_tool_claims("I provisioned the new storage bucket.", [])
+        self.assertEqual(result["verdict"], "unverified_claims")
+
+    def test_unknown_verb_with_readonly_log_fails(self) -> None:
+        result = verify_tool_claims(
+            "I provisioned the new storage bucket.",
+            [{"tool_name": "read_file", "action": "infra/buckets.tf", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "unverified_claims")
+
+    def test_unclassified_action_event_verifies(self) -> None:
+        result = verify_tool_claims(
+            "I provisioned the new storage bucket.",
+            [{"tool_name": "terraform", "action": "apply -target=aws_s3_bucket.data", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+
+class VerificationClaimTest(unittest.TestCase):
+    """P1-002: "I verified X" is a claim when X is externally checkable."""
+
+    def test_verified_external_object_with_empty_log_fails(self) -> None:
+        result = verify_tool_claims("I verified the nightly backups are present and restorable.", [])
+        self.assertEqual(result["verdict"], "unverified_claims")
+
+    def test_confirmed_config_with_empty_log_fails(self) -> None:
+        result = verify_tool_claims("I confirmed the production config has the retry limit set.", [])
+        self.assertEqual(result["verdict"], "unverified_claims")
+
+    def test_verified_external_object_with_read_event_passes(self) -> None:
+        result = verify_tool_claims(
+            "I verified the nightly backups are present.",
+            [{"tool_name": "read_file", "action": "backups/manifest.json", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
+
+    def test_abstract_verification_is_not_a_claim(self) -> None:
+        # Reasoning narration must never be a tool claim.
+        claims = extract_action_claims("I verified the arithmetic in your example and the totals are consistent.")
+        self.assertEqual(claims, [])
+
+
+class PathTokenPunctuationTest(unittest.TestCase):
+    """P3-FP-PUNCT: sentence punctuation is not part of the path token."""
+
+    def test_trailing_period_not_glued_to_path(self) -> None:
+        result = verify_tool_claims(
+            "I ran ./run_ci.sh.",
+            [{"tool_name": "shell", "action": "./run_ci.sh", "status": "succeeded"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")

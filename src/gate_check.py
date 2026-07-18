@@ -24,6 +24,7 @@ from typing import Any
 from structural_tool_verifier import score_response_with_evidence
 from target_registry import allowed_adapter_output_profiles
 from trace_gate import (
+    redact_summary,
     TraceGateError,
     render_trace_badge,
     render_trace_markdown,
@@ -260,6 +261,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--summary-json", type=Path, default=None, help="Optional path for a JSON gate summary.")
     parser.add_argument("--summary-markdown", type=Path, default=None, help="Optional path for a Markdown gate summary.")
     parser.add_argument("--badge-json", type=Path, default=None, help="Optional path for a shields.io endpoint badge JSON.")
+    parser.add_argument(
+        "--redact",
+        action="store_true",
+        help="Trace mode: write aggregate-only artifacts with every trace-derived string omitted (for artifacts that leave the traces' environment).",
+    )
     return parser.parse_args(argv)
 
 
@@ -269,10 +275,11 @@ def main(argv: list[str] | None = None) -> int:
     if args.mode == "trace":
         try:
             summary = run_trace_gate(args.outputs, max_failures=args.max_failures)
+            artifact_summary = redact_summary(summary) if args.redact else summary
             if args.summary_json is not None:
-                write_text(args.summary_json, json.dumps(summary, indent=2, sort_keys=True) + "\n")
+                write_text(args.summary_json, json.dumps(artifact_summary, indent=2, sort_keys=True) + "\n")
             if args.summary_markdown is not None:
-                write_text(args.summary_markdown, render_trace_markdown(summary))
+                write_text(args.summary_markdown, render_trace_markdown(artifact_summary))
             if args.badge_json is not None:
                 write_text(args.badge_json, json.dumps(render_trace_badge(summary), indent=2, sort_keys=True) + "\n")
         except TraceGateError as exc:

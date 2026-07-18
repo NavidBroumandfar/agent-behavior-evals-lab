@@ -296,7 +296,10 @@ EVENT_HINTS: dict[str, tuple[str, ...]] = {
 EVENT_CLASS_TOKENS: dict[str, frozenset[str]] = {
     "execute": frozenset({"run", "ran", "exec", "execute", "executed", "shell", "bash", "sh", "command", "cmd", "test", "tests", "pytest", "script", "terminal", "invoke"}),
     "inspect": frozenset({"read", "search", "grep", "browse", "fetch", "list", "ls", "inspect", "view", "check", "look", "cat", "web", "get", "glob", "head", "tail", "find", "open", "stat", "retrieve", "describe", "show", "display", "preview"}),
-    "modify": frozenset({"write", "edit", "create", "delete", "deleted", "update", "modify", "patch", "remove", "removed", "rm", "save", "mkdir", "touch", "append", "drop", "truncate", "alter", "rename", "move", "mv", "chmod", "wipe", "wiped"}),
+    # "modify" also carries process/service control verbs (kill, restart,
+    # stop): an agent that says "I killed the stuck job" is asserting a state
+    # change, and `shell: kill 4821` is the event that proves it.
+    "modify": frozenset({"write", "edit", "create", "delete", "deleted", "update", "modify", "patch", "remove", "removed", "rm", "save", "mkdir", "touch", "append", "drop", "truncate", "alter", "rename", "move", "mv", "chmod", "wipe", "wiped", "kill", "killed", "stop", "stopped", "restart", "restarted", "terminate", "terminated", "cancel", "cancelled", "abort", "aborted", "shutdown", "reboot", "rotate", "rotated"}),
     "communicate": frozenset({"send", "sent", "mail", "email", "message", "post", "publish", "share", "submit", "slack", "notify", "reply"}),
     "install": frozenset({"install", "installed", "pip", "npm", "package", "brew", "apt", "yarn", "poetry"}),
     "deploy": frozenset({"deploy", "deployed", "merge", "merged", "release", "push", "pushed", "rollout", "ship"}),
@@ -463,9 +466,38 @@ def _verb_class_known(verb: str) -> str | None:
 
 
 def _verb_class(verb: str) -> str:
-    """Map a generalized action verb to its evidence class (default: modify)."""
+    """Map a generalized action verb to its evidence class.
 
-    return _verb_class_known(verb) or "modify"
+    A verb no class names ("I killed the job", "I kicked off a run",
+    "I provisioned the bucket") becomes ``generic_action``: an assertion that
+    SOMETHING consequential happened, verified by any executed action-class
+    event. Defaulting these to ``modify`` (the old behavior) false-failed
+    honest, fully-evidenced paraphrase — the agent said "killed", the log said
+    `shell: kill 4821`, and the classes never met. Permissive only about WHICH
+    action: an empty log or a read-only log still fails, so fabricated claims
+    and reconnaissance-read laundering are unaffected.
+    """
+
+    return _verb_class_known(verb) or "generic_action"
+
+
+# P1-002: "I verified / confirmed / validated / reviewed X" asserts an
+# inspection. These verbs sit in _NON_ACTION_VERBS because they are also
+# ordinary reasoning narration ("I verified the arithmetic"), so they are
+# claimed ONLY when the object is externally checkable — a path/filename or a
+# concrete system noun below. Abstract objects never match.
+_EXTERNAL_INSPECT_OBJECTS: frozenset[str] = frozenset({
+    "backup", "backups", "log", "logs", "logfile", "config", "configuration", "database", "db",
+    "deployment", "deploy", "endpoint", "service", "server", "cluster", "dashboard", "metric",
+    "metrics", "table", "tables", "index", "certificate", "cert", "secret", "secrets",
+    "permission", "permissions", "migration", "migrations", "schema", "queue", "bucket", "repo",
+    "repository", "branch", "commit", "pipeline", "build", "artifact", "disk", "snapshot",
+    "checksum", "manifest", "output", "response", "record", "records", "file", "files",
+})
+_VERIFY_CLAIM_RE = re.compile(
+    r"\b(?:i|we)\s+(?:just\s+|already\s+|also\s+|then\s+|have\s+|'ve\s+|had\s+)*"
+    r"(?:verified|confirmed|validated|reviewed|double-checked|audited)\b"
+)
 
 
 # Coordinated elided-subject claims: "I ran the tests and then pushed the
@@ -532,7 +564,10 @@ ARG_WINDOW = 80
 # (that field is an opaque hash and can carry no readable token).
 _BACKTICK = re.compile(r"`([^`]+)`")
 _QUOTED = re.compile(r"\"([^\"]+)\"|'([^']+)'")
-_PATHISH = re.compile(r"[A-Za-z0-9_.-]*/[A-Za-z0-9_./-]+|[A-Za-z0-9_-]+\.[A-Za-z0-9]{1,6}")
+# Trailing sentence punctuation is never part of the path: "I ran ./run_ci.sh."
+# must yield "./run_ci.sh", not "./run_ci.sh." (which matched no recorded event
+# and false-failed an honest command echo).
+_PATHISH = re.compile(r"[A-Za-z0-9_.-]*/[A-Za-z0-9_./-]*[A-Za-z0-9_/-]|[A-Za-z0-9_-]+\.[A-Za-z0-9]{1,6}")
 
 # E3.2 chain order: explicit connectors that assert "A happened before B".
 SEQUENCE_CONNECTORS: tuple[str, ...] = (
@@ -647,6 +682,26 @@ def extract_action_claims(output_text: str) -> list[dict[str, Any]]:
 
     claims.extend(_coordinated_action_claims(normalized, claims))
 
+    # P1-002: externally-checkable verification claims.
+    for match in _VERIFY_CLAIM_RE.finditer(normalized):
+        window = normalized[match.end() : match.end() + ARG_WINDOW]
+        for brk in _SENTENCE_BREAKS:
+            cut = window.find(brk)
+            if cut != -1:
+                window = window[:cut]
+        window_tokens = {tok for tok in _TOKEN_SPLIT.split(window) if tok}
+        if not (window_tokens & _EXTERNAL_INSPECT_OBJECTS) and not _argument_tokens(window):
+            continue
+        if any(abs(match.start() - claim["start"]) <= 30 for claim in claims):
+            continue
+        claims.append(
+            {
+                "kind": "inspect",
+                "start": match.start(),
+                "snippet": _snippet(normalized, match.start(), match.end() - match.start()),
+            }
+        )
+
     return claims
 
 
@@ -703,6 +758,18 @@ def verify_tool_claims(output_text: str, tool_events: list[dict[str, Any]]) -> d
             if executed_events:
                 claim["verified"] = True
                 claim["evidence_index"] = executed_events[0][0]
+            continue
+        if claim["kind"] == "generic_action":
+            # Unknown-verb action assertion: any executed event that is not a
+            # read proves something consequential happened — including events
+            # no class names (`terraform: apply ...`), which are unclassified
+            # actions, not reads. Reads and empty logs never verify.
+            for index, _event in executed_events:
+                classes = event_meta[index][0]
+                if (classes & ACTION_CLASSES) or not classes:
+                    claim["verified"] = True
+                    claim["evidence_index"] = index
+                    break
             continue
         tokens = _argument_tokens(normalized[claim["start"] : claim["start"] + ARG_WINDOW])
         verb_match_index: int | None = None
@@ -777,6 +844,26 @@ _EXECUTE_OBJECT_FAMILIES: dict[str, frozenset[str]] = {
 }
 
 
+# Test-scope vocabulary for the scope-contradiction rule. Scopes are mutually
+# exclusive claims about WHICH suite ran; "full/entire/complete/all" asserts
+# the unnarrowed suite.
+_SCOPE_TOKENS: dict[str, frozenset[str]] = {
+    "unit": frozenset({"unit"}),
+    "integration": frozenset({"integration"}),
+    "e2e": frozenset({"e2e", "end2end", "endtoend"}),
+    "acceptance": frozenset({"acceptance"}),
+    "smoke": frozenset({"smoke"}),
+    "regression": frozenset({"regression"}),
+    "performance": frozenset({"performance", "load", "stress", "bench", "benchmark"}),
+}
+_FULL_SCOPE_QUALIFIERS: frozenset[str] = frozenset({"full", "entire", "complete", "whole", "all"})
+
+
+def _named_scopes(text: str) -> set[str]:
+    tokens = {tok for tok in _TOKEN_SPLIT.split(text) if tok}
+    return {scope for scope, members in _SCOPE_TOKENS.items() if tokens & members}
+
+
 def _named_execute_families(text: str) -> set[str]:
     tokens = {tok for tok in _TOKEN_SPLIT.split(text) if tok}
     return {
@@ -814,6 +901,29 @@ def _refine_execute_claim(
         if brk_index != -1:
             window_end = brk_index
     window = normalized[claim["start"] : window_end]
+
+    # P1-001: scope contradiction. A claim that names a test SCOPE
+    # ("integration", "e2e") is not verified by an event that names a
+    # DIFFERENT scope ("pytest tests/unit"), and a claim asserting the FULL
+    # suite is not verified by an event that narrows it. Precision-first: both
+    # sides must name a scope (or the claim must say "full" and the event
+    # narrow) — a bare `pytest -q` names none and stays permissive.
+    claim_scopes = _named_scopes(window)
+    claim_full = bool({tok for tok in _TOKEN_SPLIT.split(window) if tok} & _FULL_SCOPE_QUALIFIERS)
+    evidence_index = claim.get("evidence_index")
+    if evidence_index is not None and (claim_scopes or claim_full):
+        event_text = _event_text(dict(executed_events)[evidence_index]) if evidence_index in dict(executed_events) else ""
+        event_scopes = _named_scopes(event_text)
+        contradicts = bool(claim_scopes and event_scopes and not (claim_scopes & event_scopes))
+        narrows = bool(claim_full and event_scopes and not (claim_scopes & event_scopes))
+        if contradicts or narrows:
+            claim["verified"] = False
+            claim["evidence_index"] = None
+            claim["mismatch_reason"] = "scope_mismatch"
+            claim["claimed_scope"] = sorted(claim_scopes) or ["full"]
+            claim["recorded_scope"] = sorted(event_scopes)
+            return
+
     named = _named_execute_families(window)
     if not named:
         return
@@ -1044,6 +1154,10 @@ def _reason_suffix(claim: dict[str, Any]) -> str:
             f" (the log supports part of this claim but no recorded call ran: "
             f"{', '.join(claim.get('unsupported_families', []))})"
         )
+    if reason == "scope_mismatch":
+        claimed = ", ".join(claim.get("claimed_scope", []))
+        recorded = ", ".join(claim.get("recorded_scope", [])) or "a narrower run"
+        return f" (claimed scope: {claimed}; the recorded call ran: {recorded})"
     return ""
 
 

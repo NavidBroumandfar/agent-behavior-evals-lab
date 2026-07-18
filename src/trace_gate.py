@@ -203,6 +203,45 @@ def run_trace_gate(outputs_path: Path, *, max_failures: int = 0) -> dict[str, An
         "failure_mode_counts": dict(sorted(failure_mode_counts.items())),
         "failures": failures,
         "scored_records": scored,
+        "content_disclosure": "full",
+    }
+
+
+# Fields whose values are derived from the trace itself and can therefore carry
+# the agent's prose or tool arguments verbatim.
+_TRACE_DERIVED_FIELDS = ("rationale",)
+
+
+def redact_summary(summary: dict[str, Any]) -> dict[str, Any]:
+    """Aggregate-only view of a trace-gate summary — no trace content.
+
+    The full summary quotes claim snippets and tool-call arguments in each
+    rationale so a reviewer can see WHY a record failed. That is the right
+    artifact inside the customer's environment and the wrong one to hand out:
+    an on-prem engagement that promises "only machine-generated aggregate
+    summaries leave your infrastructure" cannot ship verbatim agent output.
+    This view keeps record ids, verdicts, failure modes, and counts, and drops
+    every trace-derived string.
+    """
+
+    def strip(entry: dict[str, Any]) -> dict[str, Any]:
+        redacted = {key: value for key, value in entry.items() if key not in _TRACE_DERIVED_FIELDS}
+        verification = dict(redacted.get("tool_claim_verification", {}))
+        redacted["tool_claim_verification"] = {
+            key: value for key, value in verification.items() if key != "claims"
+        }
+        return redacted
+
+    return {
+        **{key: value for key, value in summary.items() if key not in ("failures", "scored_records")},
+        "content_disclosure": "redacted",
+        "redaction_note": (
+            "Aggregate view: record ids, verdicts, failure modes and counts only. "
+            "Claim snippets and tool-call arguments are omitted so this file can leave "
+            "the environment the traces live in."
+        ),
+        "failures": [strip(entry) for entry in summary["failures"]],
+        "scored_records": [strip(entry) for entry in summary["scored_records"]],
     }
 
 
@@ -224,7 +263,8 @@ def render_trace_markdown(summary: dict[str, Any]) -> str:
         lines.append("| --- | --- | --- | --- | --- |")
         for entry in summary["failures"]:
             modes = ", ".join(entry["failure_modes"]) or "-"
-            rationale = entry["rationale"].replace("|", "\\|")
+            # Redacted summaries carry no rationale (it quotes trace content).
+            rationale = str(entry.get("rationale", "_(redacted — run without --redact inside the trace environment to see why)_")).replace("|", "\\|")
             lines.append(
                 f"| `{entry['record_id']}` | {entry['category']} | {entry['risk_area']} "
                 f"| {modes} | {rationale} |"
@@ -276,6 +316,11 @@ def parse_args(argv: list[str]) -> argparse.Namespace:
     parser.add_argument("--summary-json", type=Path, default=None, help="Optional path for a JSON gate summary.")
     parser.add_argument("--summary-markdown", type=Path, default=None, help="Optional path for a Markdown gate summary.")
     parser.add_argument("--badge-json", type=Path, default=None, help="Optional path for a shields.io endpoint badge JSON.")
+    parser.add_argument(
+        "--redact",
+        action="store_true",
+        help="Write aggregate-only artifacts: record ids, verdicts, failure modes and counts, with every trace-derived string (claim snippets, tool arguments) omitted. Use when the artifact leaves the environment the traces live in.",
+    )
     return parser.parse_args(argv)
 
 
@@ -284,10 +329,11 @@ def main(argv: list[str] | None = None) -> int:
 
     try:
         summary = run_trace_gate(args.outputs, max_failures=args.max_failures)
+        artifact_summary = redact_summary(summary) if args.redact else summary
         if args.summary_json is not None:
-            write_text(args.summary_json, json.dumps(summary, indent=2, sort_keys=True) + "\n")
+            write_text(args.summary_json, json.dumps(artifact_summary, indent=2, sort_keys=True) + "\n")
         if args.summary_markdown is not None:
-            write_text(args.summary_markdown, render_trace_markdown(summary))
+            write_text(args.summary_markdown, render_trace_markdown(artifact_summary))
         if args.badge_json is not None:
             write_text(args.badge_json, json.dumps(render_trace_badge(summary), indent=2, sort_keys=True) + "\n")
     except TraceGateError as exc:
