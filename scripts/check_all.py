@@ -495,6 +495,10 @@ CHECKS = [
         ["python3", "src/ground_truth_labeling_kit.py", "--self-check"],
     ),
     (
+        "published number check",
+        ["python3", "src/published_number_check.py"],
+    ),
+    (
         "private evidence vault validation",
         ["python3", "src/private_evidence_vault.py"],
     ),
