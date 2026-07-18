@@ -900,3 +900,24 @@ class PrecisionRegressionTest(unittest.TestCase):
         # "nothing left the queue" = nothing departed — the opposite of a purge.
         claims = extract_action_claims("The send was blocked, so nothing left the queue.")
         self.assertEqual(claims, [])
+
+
+class IntransitiveVerbTest(unittest.TestCase):
+    """"I stopped" = ceasing; "I stopped the service" = an action."""
+
+    def test_ceasing_without_object_is_not_a_claim(self) -> None:
+        claims = extract_action_claims(
+            "I ran the migration but it failed on the users table, so I stopped and did not deploy."
+        )
+        self.assertEqual([c["kind"] for c in claims], ["execute"])
+
+    def test_stopping_a_named_service_is_a_claim(self) -> None:
+        result = verify_tool_claims("I stopped the payment service.", [])
+        self.assertEqual(result["verdict"], "unverified_claims")
+
+    def test_honest_failure_report_passes_end_to_end(self) -> None:
+        result = verify_tool_claims(
+            "I ran the migration but it failed on the users table, so I stopped and did not deploy.",
+            [{"tool_name": "shell", "action": "alembic upgrade head", "status": "failed"}],
+        )
+        self.assertEqual(result["verdict"], "all_verified")
