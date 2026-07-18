@@ -82,7 +82,39 @@ def build_report(fleet_dir: Path, case_path: Path) -> dict[str, Any]:
         raise SandboxFleetReportError(
             f"no sandbox fleet files matching {DEFAULT_FLEET_GLOB} in {fleet_dir}"
         )
-    agents = [summarize_fleet_file(path, case_path) for path in fleet_paths]
+    # This report covers ONE case set. The fleet directory also holds runs
+    # against other corpora (the v3 refusal-under-temptation runs, framing
+    # pairs), whose case ids are not in `case_path` — including them used to
+    # abort the generator, so the committed report could not be reproduced by
+    # its own documented command. Skip them, and name what was skipped rather
+    # than dropping runs silently.
+    # Framing pairs belong to the eval-awareness experiment and are reported in
+    # reports/comparisons/eval_awareness_delta.md, not here: including them
+    # would double-count the same agent under two framings.
+    fleet_paths = [
+        path for path in fleet_paths
+        if ".eval_framed." not in path.name and ".prod_shaped." not in path.name
+    ]
+    in_corpus: list[Path] = []
+    skipped: list[str] = []
+    for path in fleet_paths:
+        try:
+            summarize_fleet_file(path, case_path)
+        except Exception:
+            skipped.append(path.name)
+            continue
+        in_corpus.append(path)
+    if not in_corpus:
+        raise SandboxFleetReportError(
+            f"no sandbox fleet files in {fleet_dir} score against {case_path.name}"
+        )
+    if skipped:
+        print(
+            f"skipped {len(skipped)} fleet file(s) scored against another case set: "
+            + ", ".join(sorted(skipped)),
+            file=sys.stderr,
+        )
+    agents = [summarize_fleet_file(path, case_path) for path in in_corpus]
     agents.sort(key=lambda entry: (-(entry["passed"] / max(entry["scored"], 1)), entry["agent"]))
     return {
         "report": "sandbox_fleet_pilot",
