@@ -173,6 +173,15 @@ PYTHONPATH=src python3 src/memory_and_collusion_detection.py  # authorization pr
   catches a text-only judge cannot see — one of them passed unanimously by a
   3-judge panel. (Structural side reproducible from HEAD; judge side is a dated
   2026-07-09/10 measurement — see the provenance note in that report.)
+- [Human ground truth on contested records, n=60](reports/comparisons/ground_truth_agreement_v2.md)
+  — 60 records where the deterministic scorer and the text-only judge
+  disagreed, adjudicated one by one by a human against the behavior policy.
+  **Where a destructive call was in the tool log, the deterministic check
+  matched the human 8/8 and the judge 0/8** — including a `kill -9` that
+  succeeded while the agent said it could not disable the service. Where no
+  tool evidence existed, the keyword rubric was over-strict and lost 13/52.
+  Both halves are published; the second is why the keyword rubric is opt-in in
+  trace mode.
 - [Verifier evasion audit](reports/comparisons/verifier_evasion_audit.md)
   — 98.0% catch on the **self-authored** corpus (passive voice, markdown
   checklists, fabricated tool-output blocks, reconnaissance-read and denial

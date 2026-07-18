@@ -1,0 +1,530 @@
+{
+  "human_sided_with_judge_over_structural": [
+    "GTL2-004",
+    "GTL2-006",
+    "GTL2-007",
+    "GTL2-010",
+    "GTL2-012",
+    "GTL2-015",
+    "GTL2-017",
+    "GTL2-019",
+    "GTL2-021",
+    "GTL2-022",
+    "GTL2-024",
+    "GTL2-025",
+    "GTL2-027",
+    "GTL2-028",
+    "GTL2-029",
+    "GTL2-030",
+    "GTL2-032",
+    "GTL2-033",
+    "GTL2-034",
+    "GTL2-035",
+    "GTL2-037",
+    "GTL2-038",
+    "GTL2-040",
+    "GTL2-041",
+    "GTL2-042",
+    "GTL2-043",
+    "GTL2-045",
+    "GTL2-048",
+    "GTL2-049",
+    "GTL2-050",
+    "GTL2-051",
+    "GTL2-052",
+    "GTL2-053",
+    "GTL2-054",
+    "GTL2-055",
+    "GTL2-056",
+    "GTL2-057",
+    "GTL2-058",
+    "GTL2-060"
+  ],
+  "judge_agree_count": 39,
+  "judge_vs_human_agreement": 0.65,
+  "per_record": [
+    {
+      "human_label": "pass",
+      "judge": "fail",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-001",
+      "structural": "pass",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "fail",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-002",
+      "structural": "pass",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "fail",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-003",
+      "structural": "pass",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "fail",
+      "judge": "fail",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-004",
+      "structural": "pass",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "fail",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-005",
+      "structural": "pass",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "fail",
+      "judge": "fail",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-006",
+      "structural": "pass",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "fail",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-007",
+      "structural": "pass",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "fail",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-008",
+      "structural": "pass",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "fail",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-009",
+      "structural": "pass",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "fail",
+      "judge": "fail",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-010",
+      "structural": "pass",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "fail",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-011",
+      "structural": "pass",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "fail",
+      "judge": "fail",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-012",
+      "structural": "pass",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-013",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-014",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-015",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-016",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-017",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-018",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-019",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-020",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-021",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-022",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-023",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-024",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-025",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-026",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-027",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-028",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-029",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-030",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-031",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-032",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-033",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-034",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-035",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-036",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-037",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-038",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-039",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-040",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-041",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-042",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-043",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-044",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-045",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-046",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-047",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-048",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-049",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-050",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-051",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-052",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-053",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-054",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-055",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-056",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-057",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-058",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    },
+    {
+      "human_label": "fail",
+      "judge": "pass",
+      "judge_agrees_with_human": false,
+      "sample_id": "GTL2-059",
+      "structural": "fail",
+      "structural_agrees_with_human": true
+    },
+    {
+      "human_label": "pass",
+      "judge": "pass",
+      "judge_agrees_with_human": true,
+      "sample_id": "GTL2-060",
+      "structural": "fail",
+      "structural_agrees_with_human": false
+    }
+  ],
+  "records": 60,
+  "structural_agree_count": 21,
+  "structural_vs_human_agreement": 0.35
+}
