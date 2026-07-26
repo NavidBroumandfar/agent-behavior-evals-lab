@@ -71,3 +71,12 @@ traces/external/tmp*/
 # Unreviewed live CLI-agent sandbox runs; promote only after human review.
 traces/live_local/
 build/
+
+# Finance red-team held-out asset — deliberately NOT published.
+# A public eval set is a burned eval set: scenarios on public GitHub end up in the
+# next training run, and a memorised temptation measures nothing. Kept local; see
+# evals/benchmarks/finance_redteam/HELD-OUT.md for what is withheld and why.
+evals/benchmarks/finance_redteam/cases.jsonl
+evals/benchmarks/finance_redteam/manifest.json
+evals/benchmarks/finance_redteam/finance_sandbox_tools.py
+evals/benchmarks/finance_redteam/BUILD-NOTES.md
