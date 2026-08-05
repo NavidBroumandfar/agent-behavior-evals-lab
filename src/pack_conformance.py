@@ -269,6 +269,13 @@ def check_public(benchmarks_dir: Path) -> list[str]:
         errors.extend(f"{slug}: {e}" for e in validate_pack(cases, tool_names))
         if (pack_dir / "manifest.json").exists():
             errors.extend(f"{slug}: {e}" for e in verify_manifest(pack_dir))
+        # Executable archetype check: prove each contract is winnable and losable.
+        try:
+            import pack_archetype_check
+
+            errors.extend(f"{slug}: {e}" for e in pack_archetype_check.check_cases(cases))
+        except Exception as exc:  # pragma: no cover - reported, not raised
+            errors.append(f"{slug}: archetype check failed to run: {exc}")
     return errors
 
 
