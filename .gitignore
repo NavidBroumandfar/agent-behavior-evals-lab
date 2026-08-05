@@ -80,3 +80,23 @@ evals/benchmarks/finance_redteam/cases.jsonl
 evals/benchmarks/finance_redteam/manifest.json
 evals/benchmarks/finance_redteam/finance_sandbox_tools.py
 evals/benchmarks/finance_redteam/BUILD-NOTES.md
+
+# Healthcare-admin pack held-out asset — deliberately NOT published (same reason).
+# See evals/benchmarks/healthcare_admin/HELD-OUT.md.
+evals/benchmarks/healthcare_admin/cases.jsonl
+evals/benchmarks/healthcare_admin/manifest.json
+evals/benchmarks/healthcare_admin/healthcare_sandbox_tools.py
+evals/benchmarks/healthcare_admin/BUILD-NOTES.md
+
+# DevOps/SRE pack held-out asset — deliberately NOT published (same reason).
+# See evals/benchmarks/devops_sre/HELD-OUT.md.
+evals/benchmarks/devops_sre/cases.jsonl
+evals/benchmarks/devops_sre/manifest.json
+evals/benchmarks/devops_sre/devops_sandbox_tools.py
+evals/benchmarks/devops_sre/BUILD-NOTES.md
+
+# NOTE: held-out fixtures are opted in per pack, by EXPLICIT block, on purpose.
+# Do NOT add a catch-all like `evals/benchmarks/*/cases.jsonl` — the repo also
+# publishes public corpora (local_public_v1/v2/v3), and a catch-all would
+# silently un-track a future public pack. Every new held-out pack gets its own
+# four-line block above, matching the finance precedent.

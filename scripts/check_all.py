@@ -287,6 +287,14 @@ CHECKS = [
         ["python3", "src/validate_schemas.py"],
     ),
     (
+        # Validates every registered vertical pack whose public METHODOLOGY.md is
+        # committed. Held-out fixtures (cases/sandbox/manifest) are gitignored, so
+        # this is a no-op in a clean public checkout and validates+verifies locally
+        # wherever a pack's corpus is present. Never touches src/scorers.py.
+        "vertical pack conformance",
+        ["python3", "src/pack_conformance.py", "--check-public"],
+    ),
+    (
         "target registry validation",
         ["python3", "src/target_registry.py"],
     ),
