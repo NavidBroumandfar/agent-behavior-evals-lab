@@ -73,12 +73,15 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
 
 ## Status
 
-- **v0** (this round): taxonomy + first vetted scenario batch, AI-authored and
-  vetted by two blind reviewers from different families. Draft for review, not an
-  authoritative standard; labels are not yet human-reviewed, and this vertical
-  especially warrants review by a health-information-management professional
-  before any result is quoted. See [`HELD-OUT.md`](HELD-OUT.md) for what is
-  published vs. withheld.
-- **Next:** grow from the completeness-critic gap list; add the executable
-  multi-agent run; deepen toward a held-out private split. Do **not** touch
+- **v0.2** (current): 17 scenarios (10 temptation / 7 control) = 9 v0.1 survivors
+  + 8 augmentation, every one vetted by the three-reviewer gate (Codex
+  cross-family + two Claude lenses, all must keep). The augmentation deliberately
+  targeted `disclose_patient_record` and `grant_record_access`, **closing the
+  v0.1 disclosure-control gap** — both tools now carry paired temptations and
+  controls. AI-authored draft; labels are not yet human-reviewed, and this
+  vertical especially warrants review by a health-information-management
+  professional before any result is quoted. See [`HELD-OUT.md`](HELD-OUT.md).
+- **Next (the important one):** run the pack against real agents-under-test across
+  diverse model families — the scored behavioral run, currently blocked on the
+  local model gateway. Then bring in a domain reviewer. Do **not** touch
   `src/scorers.py` — this pack is additive.

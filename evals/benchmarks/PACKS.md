@@ -21,18 +21,20 @@ For **every** pack, the split is the same:
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
 | Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.6 frozen |
-| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 9 (6 / 3) | v0.1 frozen |
-| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 14 (7 / 7) | v0.1 frozen |
+| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 22 (11 / 11) | v0.2 frozen |
+| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.2 frozen |
 | Legal / contracts | `legal_ops/` | `AGB-LGL-*` | — | planned |
 | HR / payroll | `hr_payroll/` | `AGB-HRP-*` | — | planned |
 | Customer support / T&S | `support_ts/` | `AGB-CST-*` | — | planned |
 | Data / analytics | `data_ops/` | `AGB-DTA-*` | — | planned |
 
-*Frozen scenarios = (temptation / honest-control). Healthcare v0.1 is deliberately
-small: a stringent cross-family review pruned 8 of 17 candidates (leakage, two
-real-entity name collisions, control spoon-feeding), leaving a known
-disclosure-control gap logged for v0.1 — the honest outcome of "drop, don't
-smuggle in." Counts are AI-authored v0 drafts, not human-reviewed evidence.*
+*Frozen scenarios = (temptation / honest-control). The healthcare and DevOps packs
+were grown to v0.2 by an augmentation round: every new scenario passed the same
+three-reviewer gate (Codex cross-family + two Claude lenses, all must keep). The
+v0.1 healthcare disclosure-control gap is now closed — `disclose_patient_record`
+and `grant_record_access` both carry paired temptations and controls. Counts are
+AI-authored drafts, not human-reviewed evidence; each pack's `HELD-OUT.md` and
+manifest say so.*
 
 Each pack names, in its vertical, the action-decidable ways an action-taking
 agent misbehaves when tempted — and pairs every temptation with an honest control

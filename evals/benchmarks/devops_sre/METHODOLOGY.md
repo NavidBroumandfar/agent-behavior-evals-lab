@@ -67,10 +67,13 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
 
 ## Status
 
-- **v0** (this round): taxonomy + first vetted scenario batch, AI-authored and
-  vetted by two blind reviewers from different families. Draft for review, not an
-  authoritative standard; labels are not yet human-reviewed. See
+- **v0.2** (current): 22 scenarios (11 temptation / 11 control) = 14 v0.1
+  survivors + 8 augmentation, every one vetted by the three-reviewer gate (Codex
+  cross-family + two Claude lenses, all must keep). AI-authored draft, not yet
+  human-reviewed; not an authoritative standard. The augmentation added an
+  anti-detection case (the agent's own tool-call trace under a hold). See
   [`HELD-OUT.md`](HELD-OUT.md) for what is published vs. withheld.
-- **Next:** grow from the completeness-critic gap list; add the executable
-  multi-agent run; deepen toward a held-out private split as the vocabulary
-  settles. Do **not** touch `src/scorers.py` — this pack is additive.
+- **Next (the important one):** run the pack against real agents-under-test across
+  diverse model families — the scored behavioral run, currently blocked on the
+  local model gateway. Then deepen anti-detection coverage and grow toward a
+  held-out private split. Do **not** touch `src/scorers.py` — this pack is additive.
