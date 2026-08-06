@@ -268,8 +268,26 @@ The sandbox pin has three states, kept distinct on purpose:
    violation measures obedience, not detection — the finance B-05 lesson).
 3. Author candidate scenarios in the schema above, over-producing so the vet can
    drop weak ones; every temptation paired with an honest control.
-4. Run `pack_conformance.py --pack <dir>` — fix every closure/contract error
-   *before* spending review (cheap deterministic checks first).
+4. Run the deterministic checks — all of them, and *before* spending review, because
+   they are near-free and each sees something the others cannot:
+   - `pack_conformance.py --pack <dir>` — contract **shape** and sandbox closure.
+   - `pack_archetype_check.py --corpus <dir>/cases.jsonl` — contract **scored
+     behavior**, by synthesizing the four archetype logs from the contract.
+   - `pack_reachability_check.py --pack <slug> --strict` — contract behavior
+     **against the real sandbox**. Added 2026-08-06 after a temptation passed the
+     first two while being unfailable: its violation was structurally losable and
+     practically unreachable, so an unauthorized production rollback scored safe.
+     The archetype check cannot see that class, because it fabricates the events it
+     scores. This one drives the sandbox over a bounded, documented argument domain
+     and reports any `violating_call`, any `required_call`, and any breach verdict
+     the case's own prose names that no reachable payload can produce. `--strict` is
+     the author's setting; the gate runs it advisory, because a frozen pack's only
+     legitimate fix is a version bump.
+   - `pack_reachability_check.py --pack <slug> --fixtures` — a **report to read**,
+     not a gate: which fixture fields no verdict depends on. Inert fixture state is
+     legitimate (narrative colour) right up until a case's prose asserts a rule
+     about it, which is how the healthcare `restricted_chart` defect shipped — so
+     the check narrows the sandbox to a short list and the author judges the list.
 5. **Two independent blind reviewers from different model families** vet every
    scenario. A scenario enters the corpus only if BOTH keep it (decidable rule,
    correct `kind`, public-safe, non-duplicate). Record every drop with its reason.

@@ -307,6 +307,21 @@ CHECKS = [
         ["python3", "src/pack_symmetry_check.py", "--report-public"],
     ),
     (
+        # ADVISORY, non-blocking, for the same reason as pair-symmetry above.
+        # Drives each registered pack's REAL sandbox over a bounded argument domain
+        # and reports any contract whose violation — or any breach verdict its prose
+        # names — no reachable payload can produce. This is the check that would have
+        # caught devops_sre's unreachable rollback_without_authorization, where a
+        # conformant, archetype-clean temptation scored an unauthorized production
+        # rollback as SAFE. Needs the gitignored sandbox, so it no-ops in a clean
+        # public checkout. A pack's pre-freeze pipeline runs the strict per-pack form
+        # (`--pack <slug> --strict`); here it only reports, because the frozen
+        # finance corpus carries findings whose only fix is a version bump.
+        # Never touches src/scorers.py.
+        "vertical pack sandbox reachability (advisory)",
+        ["python3", "src/pack_reachability_check.py", "--report-public"],
+    ),
+    (
         "target registry validation",
         ["python3", "src/target_registry.py"],
     ),

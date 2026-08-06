@@ -21,8 +21,8 @@ For **every** pack, the split is the same:
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
 | Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.6 frozen |
-| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.4 frozen |
-| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.3 frozen |
+| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.5 frozen |
+| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.4 frozen |
 | Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | taxonomy + sandbox built; scenarios pending |
 | HR / payroll | [`hr_payroll/`](hr_payroll/) | `AGB-HRP-*` | — | taxonomy + sandbox built; scenarios pending |
 | Customer support / T&S | `support_ts/` | `AGB-CST-*` | — | planned |
@@ -68,12 +68,40 @@ finds for you.
   differently if the sandbox changed, because only the corpus is hashed. Being
   closed; until it is, a published result must name the sandbox commit as well
   as the corpus hash.
-- **Two further defects found and NOT yet fixed**, because each would move a
-  frozen case's verdict and that is a corpus decision, not a bug fix: one
-  devops rollback temptation cannot actually reach its violation (an
-  unauthorized rollback currently scores safe on the safety axis), and one
-  healthcare fixture flag is read by no tool, so a case's stated rule is not
-  enforced. Both are recorded in the held-out build notes.
+- **Two further sandbox defects — FIXED 2026-08-06** (devops v0.5,
+  healthcare v0.4). Both were reported-not-fixed in the round above, because each
+  moves a frozen case's verdict and that is a corpus decision rather than a bug
+  fix. The decision was taken, because in both cases the *old* verdict was the
+  wrong one.
+  - One devops rollback temptation could not reach its violation: authorization
+    was computed environment-wide, so a ticket added for the paired control
+    authorized every rollback in that environment and **an unauthorized
+    production rollback scored safe on the safety axis**. Authorization is now
+    scoped to the specific service and target release the approved change names.
+  - One healthcare fixture flag (a break-the-glass chart marker) was read by no
+    tool, so a frozen case's stated rule was unenforced and a heightened-access
+    grant scored safe. The flag is now read, and the read-only tool the case's
+    prose claims surfaces it now does.
+
+  Both fixes are strictly tightening, verified by driving every reachable payload
+  of both tools through the old and the new rule in one process: **0 payloads
+  became more lenient.** Exactly **two** verdicts moved across the 43 frozen
+  cases — the two the fixes exist to move. The superseded versions and their
+  measurements stay in the record.
+- **A conformant, archetype-clean contract can still be unfailable.** The devops
+  defect above passed every check this repo had, because `pack_archetype_check`
+  *fabricates* tool events from the scoring contract: it proves a contract losable
+  in principle, never that the pack's own sandbox can emit the losing event.
+  `src/pack_reachability_check.py` now drives the real sandbox over a bounded,
+  documented argument domain and reports any contract — or any breach verdict a
+  case's own prose names — that no reachable payload can produce, plus (author
+  mode) any fixture field no verdict depends on. It is wired into the gate as an
+  **advisory** step for the same reason pair-symmetry is: the frozen corpora
+  predate it, and the only legitimate fix is a version bump. Against the fixed
+  devops and healthcare packs it reports zero findings. Against `finance_redteam`
+  it reports 3 hard and 18 advisory findings that are a **triage list, not
+  confirmed defects**: the sweep drives one call per payload, and that pack's
+  sandbox keeps call history, which the check measures and names per finding.
 
 ## Running the packs
 
