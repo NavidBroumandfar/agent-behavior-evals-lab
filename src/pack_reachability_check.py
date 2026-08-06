@@ -71,12 +71,26 @@ before it runs, so the check reports whether it **exhausted its plan**. A report
 ``unreachable`` means *provably unreachable over this documented domain*, never
 "we gave up", and the reported payload count makes the claim auditable.
 
-**Known limitation, reported not hidden.** The sweep drives ONE call per payload.
-A verdict that depends on prior calls (the finance sandbox keeps identity,
-screening and payee-aggregation history) cannot be reached this way. So the check
-*measures* history dependence — it compares the breach field with and without a
-priming pass — and downgrades those findings to advisory with that reason named,
-instead of reporting a false defect.
+**History.** A verdict can be a function of *prior* calls — the finance sandbox
+keeps identity, screening, substantiation and payee-aggregation history — so a
+single-call sweep alone reports live contracts as dead. Two mechanisms handle it:
+
+1. **Primed passes.** After the unprimed plan is exhausted, the plan is re-run
+   (shallow) behind each of a few named prior-call sequences: the tool called
+   twice, the case's other contract tools first, every read-only tool first
+   ("substantiate before you attest"), and reads-then-peers. Primed passes only
+   ever turn an ``unreachable`` into a ``reachable``, never the reverse.
+2. **Minted-id feed-forward.** Some state is keyed by an id the *sandbox* invents:
+   ``draft_accrual`` mints ``entry_id=ACR-0001``, and that value exists in no
+   fixture and no case prose, so no probe payload can name it. Each primed pass
+   therefore harvests the fields its own events recorded and substitutes them into
+   the target call **by field name**. Without this, finance's live 2-call
+   ``preparer_and_approver_are_the_same_actor`` verdict was reported as a dead
+   contract — a false defect claim against frozen content.
+
+Where even a primed sweep finds nothing, the check still *measures* history
+dependence (same minted feed-forward) and downgrades to advisory with that reason
+named, rather than making a defect claim a single-call sweep cannot support.
 
 Deterministic, offline, stdlib-only. No model calls. Never imports or touches
 ``src/scorers.py``.
@@ -102,6 +116,14 @@ PAYLOAD_BUDGET = 60_000
 # Per-parameter domain used by the 1- and 2-coordinate stages.
 MAX_PARAMETER_DOMAIN = 24
 MIN_PARAMETER_DOMAIN = 3
+# Scoped-fixture-pool values APPENDED to a parameter's domain after the cap. See
+# ``parameter_domain``: the append is prefix-preserving on purpose, so widening
+# here can only ever clear a finding, never manufacture one.
+POOL_RESERVE = 6
+# Payloads per PRIMED pass. Behind the right prior calls the witness is the
+# canonical or a 1-coordinate payload, so a deep primed sweep buys nothing and
+# costs a whole priming sequence per payload.
+PRIMED_BUDGET = 1_200
 # Probe payloads per tool for the fixture-influence sweep (author mode only).
 FIXTURE_PAYLOAD_CAP = 400
 # Payloads used to test whether a tool's verdict depends on call history.
@@ -127,6 +149,16 @@ _EXPECTED_TOKEN_RE = re.compile(r"expected tokens?\s+([A-Za-z0-9_]+)")
 
 _WORD_SPLIT_RE = re.compile(r"[^a-z0-9]+")
 _STOP_WORDS = frozenset({"id", "ref", "the", "of", "a", "to", "for"})
+
+# Name prefixes PACK-SPEC reserves for tools that only RETRIEVE state, plus the
+# other retrieval verbs the packs use. A read can never be a violation, so priming
+# with all of them is always safe — and it is the only way to reach a
+# "substantiate before you attest" rule, whose verdict is a function of which
+# reads the agent ran first (finance's sign_off_reconciliation, run_control_test
+# and pre-trade restriction checks are all this shape).
+READ_TOOL_PREFIXES = (
+    "get_", "read_", "check_", "list_", "fetch_", "verify_", "screen_", "compare_", "run_", "describe_",
+)
 
 # Parameters whose rules are decided by MAGNITUDE, not identity. Threshold logic
 # ("did this entry close the break", "is this over the ceiling") compares an
@@ -542,6 +574,7 @@ def parameter_domain(
     cap: int,
     *,
     position: int = -1,
+    reserve: int = POOL_RESERVE,
 ) -> list[str]:
     """Ordered candidate values for one parameter.
 
@@ -555,6 +588,16 @@ def parameter_domain(
     slot, so the first non-blank payload is usually the canonical one); the tool's
     own literals; the case's other tokens; the remaining affine tokens; the numeric
     probes; then the rest of the tool's scoped pool.
+
+    ``reserve`` then APPENDS scoped-pool values the cap dropped. That tail is not a
+    nicety: every other source in the priority list has a quota, the pool has none,
+    and a case naming many ids against a tool holding many literals fills ``cap``
+    before one pool value is admitted. That is how a live "sent restricted content
+    to the filing subject" violation was reported unreachable while both deciding
+    values (the subject's address, the restricted case reference) sat unsearched in
+    a NINE-item pool. Appending rather than reordering keeps the domain a
+    prefix-preserving superset of the un-reserved one, so the wider search can only
+    ever clear a finding — it can never manufacture a new one.
     """
 
     parameter_words = name_words(parameter)
@@ -572,6 +615,7 @@ def parameter_domain(
     numeric: list[str] = []
     if parameter_words & _NUMERIC_PARAMETER_WORDS:
         numeric = _dedupe(t.value for t in pool if _is_numeric(t.value))
+    numeric = _dedupe(numeric + _halves(numeric))
     quota = max(2, cap // 4)
     candidates = _dedupe(
         [""]
@@ -587,7 +631,34 @@ def parameter_domain(
         + numeric
         + _dedupe(rest)
     )
-    return candidates[:cap]
+    domain = candidates[:cap]
+    if reserve <= 0:
+        return domain
+    dropped = [v for v in _dedupe(t.value for t in pool) if v not in set(domain)]
+    return domain + dropped[:reserve]
+
+
+def _halves(values: list[str]) -> list[str]:
+    """Half of each numeric candidate — the probe an AGGREGATE threshold needs.
+
+    ``0``, ``1`` and "above every threshold" decide a per-event magnitude rule in
+    both directions, but they cannot decide a rule on a RUNNING TOTAL: crossing a
+    threshold across two calls needs a value that is under the threshold while two
+    of them are not. Half is the smallest such value, and it is what makes finance's
+    "split one obligation into sub-threshold instructions" predicate reachable at
+    all — a whole failure mode that was otherwise invisible to this sweep.
+    """
+
+    out: list[str] = []
+    for value in values:
+        try:
+            number = float(value)
+        except ValueError:
+            continue
+        if number <= 1:
+            continue
+        out.extend([str(int(number / 2)), str(int(number / 2) + 1)])
+    return _dedupe(out)
 
 
 def _is_numeric(value: str) -> bool:
@@ -699,6 +770,22 @@ def _describe(
 # ---------------------------------------------------------------------------
 
 
+class Priming(NamedTuple):
+    """A named sequence of prior calls to run before the tool under search.
+
+    ``echo`` prepends the payload *under test* to the sequence, so the tool runs
+    twice with identical arguments. An aggregation rule needs exactly that and
+    nothing else will do: finance's structuring predicate fires only when two calls
+    share a payee AND a single obligation reference AND each amount sits under the
+    threshold while the running total crosses it. Priming with any *other* payload
+    changes the payee or adds a second obligation and the rule stays silent.
+    """
+
+    label: str
+    calls: list[tuple[str, dict[str, str]]]
+    echo: bool = False
+
+
 class Search(NamedTuple):
     """Outcome of one bounded sandbox search."""
 
@@ -709,6 +796,7 @@ class Search(NamedTuple):
     tried: int
     planned: int
     plan: str
+    priming: str = "none"  # which prior-call sequence produced the witness
 
     @property
     def exhaustive(self) -> bool:
@@ -729,6 +817,53 @@ def _last_event(toolbox: Any, tool: str) -> dict[str, Any] | None:
     return None
 
 
+def minted_fields(events: list[dict[str, Any]], known: set[str]) -> dict[str, str]:
+    """``field -> value`` pairs a priming pass recorded that no payload could name.
+
+    A value absent from every parameter's domain is one the *sandbox* invented
+    (``draft_accrual`` -> ``entry_id=ACR-0001``). Such a value keys the very state a
+    later tool's verdict reads, and no probe payload can ever supply it — so it is
+    fed forward by FIELD NAME into the target call. First occurrence wins, so the
+    substitution is deterministic.
+    """
+
+    minted: dict[str, str] = {}
+    for event in events:
+        for pair in str(event.get("action", "")).split(" "):
+            key, sep, value = pair.partition("=")
+            if sep and key and value and value not in known and key not in minted:
+                minted[key] = value
+    return minted
+
+
+def _sweep(
+    factory: Callable[[], Any],
+    tool: str,
+    plan: list[dict[str, str]],
+    predicate: Callable[[dict[str, Any]], bool],
+    priming: Priming,
+    known: set[str],
+) -> tuple[dict[str, str], str] | None:
+    """One (priming, plan) pass. Returns ``(arguments, action)`` on first witness."""
+
+    for arguments in plan:
+        toolbox = factory()
+        if priming.echo:
+            toolbox.dispatch(tool, dict(arguments))
+        for other, payload in priming.calls:
+            toolbox.dispatch(other, dict(payload))
+        call = dict(arguments)
+        if priming.calls:
+            for key, value in minted_fields(list(toolbox.tool_events), known).items():
+                if key in call:
+                    call[key] = value
+        toolbox.dispatch(tool, call)
+        event = _last_event(toolbox, tool)
+        if event is not None and predicate(event):
+            return call, str(event.get("action", ""))
+    return None
+
+
 def search_tool(
     factory: Callable[[], Any],
     tool: str,
@@ -736,25 +871,38 @@ def search_tool(
     predicate: Callable[[dict[str, Any]], bool],
     *,
     budget: int = PAYLOAD_BUDGET,
+    primings: Iterable[Priming] = (),
+    primed_budget: int = PRIMED_BUDGET,
 ) -> Search:
     """Drive ``tool`` over its planned domain until ``predicate`` accepts an event.
 
-    Returns on the first witness (so a reachable contract is cheap) and otherwise
-    reports whether the plan was exhausted (``unreachable``) or the budget ran out
-    first (``inconclusive`` — an honest "not proven", never a defect claim).
+    Runs the unprimed plan first (so a reachable contract stays cheap), then the
+    shallow plan behind each priming sequence. Every primed pass is *additional*
+    evidence: it can only turn an ``unreachable`` into a ``reachable``.
+
+    Reports whether the whole plan was exhausted (``unreachable``) or the budget ran
+    out first (``inconclusive`` — an honest "not proven", never a defect claim).
     """
 
     plan, description = payload_plan(domains, budget=budget)
-    for index, arguments in enumerate(plan, start=1):
-        toolbox = factory()
-        toolbox.dispatch(tool, dict(arguments))
-        event = _last_event(toolbox, tool)
-        if event is not None and predicate(event):
-            return Search(
-                "reachable", tool, arguments, str(event.get("action", "")), index, len(plan), description
-            )
+    known = {value for values in domains.values() for value in values}
+    found = _sweep(factory, tool, plan, predicate, Priming("none", []), known)
+    if found is not None:
+        return Search("reachable", tool, found[0], found[1], len(plan), len(plan), description)
+    primed = [p for p in primings if p.calls or p.echo]
+    shallow, _ = payload_plan(domains, budget=min(budget, primed_budget)) if primed else ([], "")
+    planned = len(plan) + len(shallow) * len(primed)
+    for priming in primed:
+        found = _sweep(factory, tool, shallow, predicate, priming, known)
+        if found is not None:
+            return Search("reachable", tool, found[0], found[1], planned, planned, description, priming.label)
+    if primed:
+        description += (
+            f"; then {len(shallow)} payloads behind each of {len(primed)} priming sequence(s) "
+            f"[{', '.join(p.label for p in primed)}]"
+        )
     status = "unreachable" if len(plan) < budget else "inconclusive"
-    return Search(status, tool, None, None, len(plan), len(plan), description)
+    return Search(status, tool, None, None, planned, planned, description)
 
 
 def _breach_of(action: str | None) -> str | None:
@@ -771,16 +919,19 @@ def is_history_dependent(
     factory: Callable[[], Any],
     tool: str,
     payloads: list[dict[str, str]],
-    priming: dict[str, dict[str, str]],
+    *primings: dict[str, dict[str, str]],
 ) -> bool:
     """Does this tool's breach verdict depend on what was called before it?
 
-    For each probe payload, compares the breach field across three histories:
-    alone, called twice, and called after every other tool has run once with its
-    own case-canonical payload (``priming``). Canonical rather than blank priming
-    matters: ``submit_application`` only contradicts its verified income after
+    For each probe payload, compares the breach field across histories: alone,
+    called twice, and called after every other tool has run once with each supplied
+    ``primings`` payload map (and its all-blank variant). Payload choice is not a
+    detail — ``submit_application`` only contradicts its verified income after
     ``update_application_financials`` has run *on a real application id*, and a
-    blank-argument prime would miss that and mislabel the pair as a defect.
+    blank-argument prime would miss that and mislabel the pair as a defect. Several
+    payload maps are accepted for the same reason, and every one of them can only
+    ADD a way to prove dependence: losing one would harden an honest advisory into
+    a false defect claim against frozen content.
 
     Only the breach field is compared — references and sequence numbers change
     harmlessly, and the verdict is the only thing a scoring contract reads. Several
@@ -803,11 +954,17 @@ def is_history_dependent(
         if _breach_of(_last_action(twice, tool)) != baseline:
             return True
 
-        # Two primers, because each catches what the other misses. Canonical args
-        # reach state keyed by a real id (an application's verified income); blank
-        # args reach state keyed by whatever was passed (a restriction check
-        # recorded under the empty symbol). Either difference proves dependence.
-        for payloads_by_tool in (priming, {t: {p: "" for p in payload} for t, payload in priming.items()}):
+        # Each primer catches what the others miss. Canonical args reach state keyed
+        # by a real id (an application's verified income); case-named args reach
+        # state keyed by the record the case is about; blank args reach state keyed
+        # by whatever was passed (a restriction check recorded under the empty
+        # symbol). Any difference proves dependence.
+        variants = [
+            payloads
+            for priming in primings
+            for payloads in (priming, {t: dict.fromkeys(pl, "") for t, pl in priming.items()})
+        ]
+        for payloads_by_tool in variants:
             primed = factory()
             for other, payload in payloads_by_tool.items():
                 if other != tool:
@@ -815,7 +972,123 @@ def is_history_dependent(
             primed.dispatch(tool, dict(arguments))
             if _breach_of(_last_action(primed, tool)) != baseline:
                 return True
+            # Feed forward the ids the priming MINTED. Without this the approval
+            # family looks history-independent: its verdict reads
+            # ``staged[entry_id]``, the staging call invents that id, and no probe
+            # payload can name it — so the breach never moves and a live 2-call
+            # verdict is escalated to a false defect claim.
+            known = {v for payload in payloads_by_tool.values() for v in payload.values()}
+            known |= set(arguments.values())
+            forwarded = dict(arguments)
+            for key, value in minted_fields(list(primed.tool_events), known).items():
+                if key in forwarded:
+                    forwarded[key] = value
+            if forwarded == arguments:
+                continue
+            replay = factory()
+            for other, payload in payloads_by_tool.items():
+                if other != tool:
+                    replay.dispatch(other, dict(payload))
+            replay.dispatch(tool, forwarded)
+            if _breach_of(_last_action(replay, tool)) != _breach_of(
+                _breach_reference(factory, tool, forwarded)
+            ):
+                return True
     return False
+
+
+def _breach_reference(factory: Callable[[], Any], tool: str, arguments: dict[str, str]) -> str | None:
+    """The tool's solo action for these arguments — the no-history control."""
+
+    solo = factory()
+    solo.dispatch(tool, dict(arguments))
+    return _last_action(solo, tool)
+
+
+def _contract_tools(case: dict[str, Any]) -> list[str]:
+    """Every tool the case's own contract names, in declaration order."""
+
+    scoring = case.get("scoring") or {}
+    names = [
+        str(spec.get("tool"))
+        for spec in (scoring.get("violating_calls") or []) + (scoring.get("required_calls") or [])
+        if isinstance(spec, dict) and spec.get("tool")
+    ]
+    if case.get("tempting_tool"):
+        names.append(str(case["tempting_tool"]))
+    return _dedupe(names)
+
+
+def _named_read_tools(case: dict[str, Any], tools: Iterable[str]) -> list[str]:
+    """Read-only tools the case's prose names, in order of first mention."""
+
+    prose = " ".join(str(case.get(f) or "") for f in ("user_prompt", "expected_behavior", "scoring_notes"))
+    found = [(prose.find(t), t) for t in tools if t.startswith(READ_TOOL_PREFIXES) and t in prose]
+    return [t for _at, t in sorted(found)]
+
+
+def priming_sequences(
+    probe: "PackProbe",
+    case: dict[str, Any],
+    tool: str,
+    tokens: list[str],
+    witnesses: Iterable[tuple[str, dict[str, str]]] = (),
+) -> list[Priming]:
+    """Prior-call sequences worth trying, cheapest first.
+
+    Each shape answers a real verdict a single call cannot reach: an aggregation rule
+    (the same payload twice, ``self_echo``); state keyed by a canonical payload
+    (``self_repeat``); the reads the case's own prose asks for (``case_reads``); the
+    sequence an actually-failing agent takes (``prior_witnesses`` — the payloads that
+    already satisfied this case's EARLIER contract specs, which is how a submission
+    comes to contradict the income a preceding write recorded); the case's other
+    contract tools (``peer_calls``); a substantiation rule (every read-only tool
+    first — a sign-off that is clean only once both balances were pulled); and the
+    combinations.
+    """
+
+    named = probe.named_payloads(tokens)
+    prior = [(name, dict(payload)) for name, payload in witnesses if name != tool]
+    case_reads = [
+        (name, dict(named.get(name, {})))
+        for name in _named_read_tools(case, probe.parameters)
+        if name != tool
+    ]
+    peers = [
+        (name, dict(named.get(name, {})))
+        for name in _contract_tools(case)
+        if name != tool and name in probe.parameters
+    ]
+    reads = [
+        (name, dict(named.get(name, {})))
+        for name in probe.parameters
+        if name != tool and name.startswith(READ_TOOL_PREFIXES)
+    ]
+    out = [
+        # Two shapes of "the same tool ran before me", because they reach different
+        # state: the same payload twice (an aggregation over one payee), and a
+        # case-canonical payload first (state keyed by whatever that payload named).
+        Priming("self_echo", [], echo=True),
+        Priming("self_repeat", [(tool, dict(named.get(tool, {})))]),
+    ]
+    if case_reads:
+        # The reads the case's OWN prose tells the agent to make, and only those.
+        # Driving every read-only tool instead can defeat the rule it is meant to
+        # reach: finance's verification window is six CALLS wide, so a 38-read
+        # preamble expires the very step-up the case asks for, and a live control
+        # reads as unperformable.
+        out.append(Priming("case_reads", case_reads))
+    if prior:
+        out.append(Priming("prior_witnesses", prior))
+    if peers:
+        out.append(Priming("peer_calls", peers))
+    if reads:
+        out.append(Priming("reads_first", reads))
+    if reads and prior:
+        out.append(Priming("reads_then_witnesses", reads + prior))
+    if reads and peers:
+        out.append(Priming("reads_then_peers", reads + peers))
+    return out
 
 
 def _violation_predicate(spec: dict[str, Any]) -> Callable[[dict[str, Any]], bool]:
@@ -908,6 +1181,50 @@ class PackProbe(NamedTuple):
             }
         return payloads
 
+    def named_payloads(self, tokens: list[str]) -> dict[str, dict[str, str]]:
+        """Like ``canonical_payloads``, but each parameter prefers an id the CASE names.
+
+        This is what makes a priming call land on the record the case is *about*: a
+        substantiation rule clears only once both balances were pulled **for that
+        account**, and a payload built from a tool's first literal pulls a different
+        account, leaving the rule looking unreachable. Kept SEPARATE from
+        ``canonical_payloads`` rather than replacing it, because the history probe
+        needs both: each reaches state the other misses, and losing either would
+        harden an honest advisory into a false defect claim.
+
+        Preference order per parameter, and the middle rule is the load-bearing one:
+
+        1. a case token that ALSO exists in the sandbox's own state for this tool —
+           the only kind of value that can key a real record;
+        2. any other case token that is not the name of a tool in this pack. A
+           case's ``scoring_notes`` cites its own contract, so tool names are
+           identifier-shaped case tokens; taking one made the substantiation primer
+           read an account literally called ``get_subledger_balance`` and report a
+           live control as unperformable;
+        3. the domain's own canonical slot.
+
+        These payloads never appear in a reported witness — they only decide which
+        state a primer reaches.
+        """
+
+        named = set(tokens)
+        tool_names = set(self.parameters)
+        payloads: dict[str, dict[str, str]] = {}
+        for tool in self.parameters:
+            domains = self.domains_for(tool, tokens) or {}
+            in_state = {t.value for t in scoped_pool(self.pool, self.statics.reads.get(tool, set()))}
+            payloads[tool] = {
+                name: next(
+                    (v for v in values if v in named and v in in_state),
+                    next(
+                        (v for v in values if v in named and v not in tool_names),
+                        values[1] if len(values) > 1 else "",
+                    ),
+                )
+                for name, values in domains.items()
+            }
+        return payloads
+
     def domains_for(self, tool: str, tokens: list[str]) -> dict[str, list[str]] | None:
         parameters = self.parameters.get(tool)
         if parameters is None:
@@ -961,6 +1278,7 @@ def _unreached(
         result.tool,
         probes[:HISTORY_PROBE_PAYLOADS],
         probe.canonical_payloads(tokens),
+        probe.named_payloads(tokens),
     ):
         return (
             SEVERITY_WARN,
@@ -981,6 +1299,12 @@ def check_case(case: dict[str, Any], probe: PackProbe, *, budget: int = PAYLOAD_
     is_control = case.get("kind") == "honest_control" or scoring.get("expected_safe_signal") == "action_required"
     tokens = case_tokens(case)
     findings: list[str] = []
+    # Payloads that already satisfied an EARLIER spec of this same case. Replaying
+    # them as priming is the sequence a really-failing agent takes, and it is the
+    # only way a cross-call rule ("this submission contradicts the income the
+    # preceding write recorded") is reachable at all. Accumulated across all three
+    # checks, so a later check inherits every witness the earlier ones found.
+    witnesses: list[tuple[str, dict[str, str]]] = []
 
     # --- 1. can the sandbox actually emit each violating event? --------------
     reachable_specs = 0
@@ -989,9 +1313,18 @@ def check_case(case: dict[str, Any], probe: PackProbe, *, budget: int = PAYLOAD_
         domains = probe.domains_for(tool, tokens)
         if domains is None:
             continue  # closure violation — pack_conformance reports it
-        result = search_tool(probe.factory, tool, domains, _violation_predicate(spec), budget=budget)
+        result = search_tool(
+            probe.factory,
+            tool,
+            domains,
+            _violation_predicate(spec),
+            budget=budget,
+            primings=priming_sequences(probe, case, tool, tokens, witnesses),
+        )
         if result.status == "reachable":
             reachable_specs += 1
+            if result.arguments is not None:
+                witnesses.append((tool, dict(result.arguments)))
             continue
         severity, reason = _unreached(probe, result, domains, tokens, hard=not is_control)
         role = (
@@ -1031,9 +1364,18 @@ def check_case(case: dict[str, Any], probe: PackProbe, *, budget: int = PAYLOAD_
             domains = probe.domains_for(tool, tokens)
             if domains is None:
                 continue
-            result = search_tool(probe.factory, tool, domains, _emits_token(token), budget=budget)
+            result = search_tool(
+                probe.factory,
+                tool,
+                domains,
+                _emits_token(token),
+                budget=budget,
+                primings=priming_sequences(probe, case, tool, tokens, witnesses),
+            )
             searched.append((result, domains))
             if result.status == "reachable":
+                if result.arguments is not None:
+                    witnesses.append((tool, dict(result.arguments)))
                 emitted = True
                 break
         if emitted or not searched:
@@ -1067,25 +1409,40 @@ def check_case(case: dict[str, Any], probe: PackProbe, *, budget: int = PAYLOAD_
     # Only meaningful where the required call is the consequential act itself. For
     # an escalation temptation the required call is an escalation tool that never
     # carries a breach verdict, and the archetype check already proves that path.
+    #
+    # Specs are searched ONE AT A TIME because that is what the scorer does:
+    # ``_all_present`` asks whether EACH spec is matched by SOME event, never
+    # whether one event matches them all. Demanding a single satisfying event made
+    # every multi-call control structurally unsatisfiable — a control asking for
+    # three payments, one per obligation reference, was reported unperformable
+    # precisely because no single payment can carry three different references.
     if is_control and required:
         guards = _by_tool(violating)
-        for tool, specs in _by_tool(required).items():
+        for index, spec in enumerate(required):
+            tool = str(spec.get("tool") or "")
             domains = probe.domains_for(tool, tokens)
             if domains is None:
                 continue
             result = search_tool(
-                probe.factory, tool, domains, _performance_predicate(specs, guards.get(tool, [])), budget=budget
+                probe.factory,
+                tool,
+                domains,
+                _performance_predicate([spec], guards.get(tool, [])),
+                budget=budget,
+                primings=priming_sequences(probe, case, tool, tokens, witnesses),
             )
             if result.status == "reachable":
+                if result.arguments is not None:
+                    witnesses.append((tool, dict(result.arguments)))
                 continue
             severity, reason = _unreached(probe, result, domains, tokens, hard=True)
             findings.append(
                 _finding(
                     severity,
                     cid,
-                    f"required_calls on {tool} not performable: {result.plan}; {reason} — no payload "
-                    f"satisfies them without tripping the case's own violating guard, so this control "
-                    f"can only ever false-positive",
+                    f"required_calls[{index}] on {tool} not performable: {result.plan}; {reason} — no "
+                    f"payload satisfies it without tripping the case's own violating guard, so this "
+                    f"control can only ever false-positive",
                 )
             )
     return findings

@@ -107,11 +107,39 @@ finds for you.
   case's own prose names — that no reachable payload can produce, plus (author
   mode) any fixture field no verdict depends on. It is wired into the gate as an
   **advisory** step for the same reason pair-symmetry is: the frozen corpora
-  predate it, and the only legitimate fix is a version bump. Against the fixed
-  devops and healthcare packs it reports zero findings. Against `finance_redteam`
-  it reports 3 hard and 18 advisory findings that are a **triage list, not
-  confirmed defects**: the sweep drives one call per payload, and that pack's
-  sandbox keeps call history, which the check measures and names per finding.
+  predate it, and the only legitimate fix is a version bump. All three packs now
+  report zero findings.
+- **The checker's own first verdict on the flagship pack was wrong, and that is
+  the more useful result.** On the day it landed it reported **3 hard + 18
+  advisory** findings against `finance_redteam` — including a claim that a real
+  restricted disclosure to a filing subject would score SAFE. Every one of the 21
+  was then driven by hand through the real sandbox, and **all 21 were false
+  alarms**: the contracts and the prose were live, and the *checker* was
+  under-searching. Four causes, all now fixed, none of them in the corpus:
+  - **A starved argument domain.** Every candidate source had a quota except the
+    tool's own fixture pool, which sat last behind full token and literal lists.
+    A case naming many ids against a tool holding many literals exhausted the cap
+    before one pool value was admitted — so a violation whose two deciding values
+    sat in a **nine-item** pool was reported unreachable. The pool now gets an
+    appended (prefix-preserving) tail, so widening can only ever clear a finding.
+  - **No multi-call reach.** One call per payload cannot reach a verdict that is a
+    function of earlier calls. The sweep now retries behind named priming
+    sequences (the same payload twice, the reads the case's own prose asks for,
+    the payloads that already satisfied this case's earlier specs).
+  - **Sandbox-minted ids.** State keyed by an id the sandbox invents is reachable
+    by no payload at all; primed passes now feed those ids forward by field name.
+  - **A multi-call control read as conjunctive.** Required specs were checked as
+    "one event satisfies them all" rather than the scorer's `_all_present`, so a
+    control asking for three payments — one per obligation reference — was
+    unsatisfiable by construction.
+
+  Direction of the change was measured, not asserted: **21 findings cleared, 0 new
+  or strengthened** across all three packs, and injected-dead-rule mutations of the
+  finance sandbox are still reported. No frozen byte moved — corpus, sandbox and
+  manifest hashes are unchanged, and all 53 scored outcomes are identical across
+  four agent archetypes. The pre-fix numbers stay in the record: a detector that
+  cries wolf on frozen content is a defect of the same family as one that stays
+  silent, and it was found by verifying its own output rather than trusting it.
 
 ## Running the packs
 
