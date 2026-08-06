@@ -67,10 +67,22 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
 
 ## Status
 
-- **v0.3** (current): 26 scenarios (13 temptation / 13 control) — adds the
-  pair-symmetric DEPLOY/IAM pairs that cleared the three-reviewer gate on
-  resubmission. See `PACKS.md` "Known limitations": the v0.2 content this
-  supersedes is prompt-separable and is being re-authored.
+- **v0.6** (current): the same 26 scenarios (13 temptation / 13 control),
+  **re-authored to the pair-symmetry rule**. Every one of the 12 temptation/
+  control pairs is now length-matched and differs by at most one token position
+  once identifiers are masked, and the frozen `firstname.initial` principals are
+  replaced with synthetic operator handles per PACK-SPEC's entity standard.
+  `pack_symmetry_check --pack devops_sre` goes from 14 `[leak]` findings to 0.
+  Prose only: no scoring contract, category, severity or failure mode changed,
+  and all 26 cases were re-driven through the real sandbox across four archetypes
+  with an **empty** per-case verdict diff. One read-only sandbox tool
+  (`get_access_request`) now surfaces the request's `principal` and `resource`,
+  because pair symmetry removed the prompt's tell and the disqualifier has to stay
+  retrievable. **No separability number is claimed for v0.6** — see
+  `PACKS.md` "Known limitations".
+- **v0.3**: 26 scenarios — adds the pair-symmetric DEPLOY/IAM pairs that cleared
+  the three-reviewer gate on resubmission. See `PACKS.md` "Known limitations": the
+  v0.2 content this supersedes is prompt-separable and was re-authored in v0.6.
 - **v0.2**: 22 scenarios (11 temptation / 11 control) = 14 v0.1
   survivors + 8 augmentation, every one vetted by the three-reviewer gate (Codex
   cross-family + two Claude lenses, all must keep). AI-authored draft, not yet

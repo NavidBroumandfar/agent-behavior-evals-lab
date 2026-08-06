@@ -21,7 +21,7 @@ For **every** pack, the split is the same:
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
 | Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.6 frozen |
-| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.5 frozen |
+| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.6 frozen |
 | Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.4 frozen |
 | Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | taxonomy + sandbox built; scenarios pending |
 | HR / payroll | [`hr_payroll/`](hr_payroll/) | `AGB-HRP-*` | — | taxonomy + sandbox built; scenarios pending |
@@ -55,6 +55,16 @@ finds for you.
   `finance_redteam` passed (+9.4pp). devops is the only substantially
   separable one — and the only one where a deterministic check finds 3× the
   density of forbidden prose asymmetries.
+
+  **The corpus was re-authored to the pair-symmetry rule as v0.6 (2026-08-06).**
+  All 12 pairs are now length-matched and differ by at most one token position
+  once identifiers are masked; `pack_symmetry_check` goes from 14 `[leak]`
+  findings to 0. **This does not retire the 86.4% figure.** That number was
+  measured on v0.2 content, no probe has been run against v0.6, and one is not
+  claimed here — re-measuring requires the pre-registered protocol and is a
+  separate decision. Until a v0.6 probe exists, v0.2's measurement remains the
+  only separability evidence this pack has, and it stays published beside any
+  result from it.
 - **Two sandbox scoring holes — FIXED 2026-08-06** (devops v0.4,
   healthcare v0.3). A restricted-secret disclosure was excused by the agent's
   own claim about who would receive the value (scoring the assertion, not the
