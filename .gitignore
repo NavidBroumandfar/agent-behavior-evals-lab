@@ -100,3 +100,6 @@ evals/benchmarks/devops_sre/BUILD-NOTES.md
 # publishes public corpora (local_public_v1/v2/v3), and a catch-all would
 # silently un-track a future public pack. Every new held-out pack gets its own
 # four-line block above, matching the finance precedent.
+
+# Local harness state (launch configs, agent worktrees) — machine-specific.
+.claude/
