@@ -181,13 +181,16 @@ class PackReachabilityError(Exception):
 # ---------------------------------------------------------------------------
 
 
-def load_sandbox(sandbox_path: Path, class_name: str) -> tuple[Any, Callable[[], Any]]:
+def load_sandbox(sandbox_path: Path, class_name: str | None = None) -> tuple[Any, Callable[[], Any]]:
     """Import a pack sandbox and return ``(module, zero-arg toolbox factory)``.
 
     A **fresh** toolbox per payload is not paranoia: the finance sandbox keeps
     call ledgers (payee totals, screening calls, verification TTL) that tools
     mutate, so a shared instance would make a sweep order-dependent. Construction
     costs microseconds, so isolation is free.
+
+    ``class_name`` may be omitted for an **unregistered** pack, whose toolbox class
+    no registry entry names; it is then discovered from the module itself.
     """
 
     spec = importlib.util.spec_from_file_location(sandbox_path.stem, sandbox_path)
@@ -199,9 +202,12 @@ def load_sandbox(sandbox_path: Path, class_name: str) -> tuple[Any, Callable[[],
     # analysis silently resolves nothing, which quietly widens every domain.
     sys.modules[spec.name] = module
     spec.loader.exec_module(module)
-    cls = getattr(module, class_name, None)
+    resolved = class_name or pack_conformance.toolbox_class_name(module)
+    if not resolved:
+        raise PackReachabilityError(f"{sandbox_path.name} defines no toolbox class")
+    cls = getattr(module, resolved, None)
     if cls is None:
-        raise PackReachabilityError(f"{sandbox_path.name} has no class {class_name}")
+        raise PackReachabilityError(f"{sandbox_path.name} has no class {resolved}")
     return module, cls
 
 
@@ -1721,35 +1727,44 @@ def fixture_findings(
 # ---------------------------------------------------------------------------
 
 
-def _pack_inputs(pack_dir: Path, meta: dict[str, str]) -> tuple[list[dict[str, Any]], Any, Any] | None:
-    """Load a pack's corpus + sandbox, or ``None`` when held-out files are absent."""
+def _pack_inputs(
+    pack_dir: Path, entry: pack_conformance.PackEntry
+) -> tuple[list[dict[str, Any]], Any, Any] | None:
+    """Load a pack's corpus + sandbox, or ``None`` when held-out files are absent.
+
+    The toolbox class comes from the registry when there is an entry naming one,
+    and is discovered from the module otherwise — an unregistered pack's sandbox
+    is still a sandbox, and refusing to sweep it for want of a registry line is
+    the silence this traversal exists to end.
+    """
 
     corpus = pack_dir / "cases.jsonl"
-    sandbox = pack_dir / meta.get("sandbox", "")
-    if not corpus.exists() or not sandbox.exists():
+    sandbox = pack_conformance.entry_sandbox_path(pack_dir, entry)
+    if not corpus.exists() or sandbox is None:
         return None
     cases = pack_conformance.load_cases(corpus)
-    module, factory = load_sandbox(sandbox, meta["class"])
+    module, factory = load_sandbox(sandbox, entry.cls or None)
     return cases, module, factory
 
 
 def public_findings_by_pack(
     benchmarks_dir: Path, *, budget: int = PAYLOAD_BUDGET
 ) -> dict[str, list[str]]:
-    """Findings per registered pack whose held-out corpus AND sandbox are present.
+    """Findings per discovered pack whose held-out corpus AND sandbox are present.
 
-    Mirrors ``pack_conformance.check_public``'s traversal, including its rule that
-    an absent held-out fixture is not a failure — this check needs the gitignored
-    sandbox, so it must no-op in a clean public checkout.
+    Mirrors ``pack_conformance.check_public``'s traversal — the same
+    ``discover_packs`` enumeration, so an unregistered pack with a sandbox on disk
+    is swept too — including its rule that an absent held-out fixture is not a
+    failure. This check needs the gitignored sandbox, so it no-ops in a clean
+    public checkout.
     """
 
     by_pack: dict[str, list[str]] = {}
-    for slug, meta in pack_conformance.REGISTERED_PACKS.items():
+    for entry in pack_conformance.packs_with_corpus(benchmarks_dir):
+        slug = entry.slug
         pack_dir = benchmarks_dir / slug
-        if not (pack_dir / "METHODOLOGY.md").exists():
-            continue  # pack not registered in this checkout
         try:
-            loaded = _pack_inputs(pack_dir, meta)
+            loaded = _pack_inputs(pack_dir, entry)
         except Exception as exc:  # reported, not raised
             by_pack[slug] = [_finding(SEVERITY_WARN, slug, f"sandbox/corpus could not be loaded: {exc}")]
             continue
@@ -1807,8 +1822,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--report-public",
         action="store_true",
-        help="gate mode (advisory, always exits 0 without --strict): sweep every registered pack "
-        "whose held-out sandbox is present locally",
+        help="gate mode (advisory, always exits 0 without --strict): sweep every discovered pack "
+        "(registered or not) whose held-out sandbox is present locally",
     )
     parser.add_argument("--strict", action="store_true", help="exit non-zero on any finding")
     args = parser.parse_args(argv)
@@ -1833,9 +1848,18 @@ def main(argv: list[str] | None = None) -> int:
                     dead += 1
                 else:
                     warn += 1
+        # Name what was swept, not only what had findings — see the same note in
+        # pack_symmetry_check: an empty report over an empty traversal is the
+        # failure mode, not the good news.
+        swept = [
+            e.slug
+            for e in pack_conformance.packs_with_corpus(benchmarks)
+            if pack_conformance.entry_sandbox_path(benchmarks / e.slug, e) is not None
+        ]
         print(
             f"pack reachability (advisory): {dead} dead, {warn} advisory across "
-            f"{len(by_pack)} pack(s) with findings"
+            f"{len(by_pack)} pack(s) with findings; {len(swept)} pack(s) swept "
+            f"[{', '.join(swept) or 'none — no corpus+sandbox present'}]"
         )
         return 1 if args.strict and (dead or warn) else 0
 
@@ -1843,9 +1867,17 @@ def main(argv: list[str] | None = None) -> int:
         parser.error("--pack is required unless --report-public is given")
     meta = dict(pack_conformance.REGISTERED_PACKS.get(args.pack, {}))
     pack_dir = benchmarks / args.pack
-    sandbox_path = Path(args.sandbox) if args.sandbox else pack_dir / meta.get("sandbox", "")
-    class_name = args.sandbox_class or meta.get("class", "")
-    if not sandbox_path.exists() or not class_name:
+    entry = pack_conformance.PackEntry(
+        args.pack, meta.get("sandbox", ""), meta.get("class", ""), pack_conformance.STATUS_UNREGISTERED
+    )
+    # An unregistered pack names no sandbox, so fall back to the *sandbox_tools.py
+    # convention and let load_sandbox discover the toolbox class. The author of a
+    # brand-new pack must be able to run this BEFORE registering it.
+    sandbox_path = (
+        Path(args.sandbox) if args.sandbox else pack_conformance.entry_sandbox_path(pack_dir, entry)
+    )
+    class_name = args.sandbox_class or meta.get("class", "") or None
+    if sandbox_path is None or not sandbox_path.exists():
         print(f"no sandbox for pack {args.pack} ({sandbox_path})", file=sys.stderr)
         return 2
     cases = pack_conformance.load_cases(pack_dir / "cases.jsonl")

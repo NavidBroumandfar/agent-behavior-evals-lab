@@ -287,17 +287,24 @@ CHECKS = [
         ["python3", "src/validate_schemas.py"],
     ),
     (
-        # Validates every registered vertical pack whose public METHODOLOGY.md is
-        # committed. Held-out fixtures (cases/sandbox/manifest) are gitignored, so
-        # this is a no-op in a clean public checkout and validates+verifies locally
-        # wherever a pack's corpus is present. Never touches src/scorers.py.
+        # Validates every vertical pack DISCOVERED under evals/benchmarks/ — the
+        # registry annotates the traversal, it no longer defines it. A pack with
+        # held-out content on disk and no registry entry is reported by name on the
+        # notices channel and checked anyway as an unregistered candidate; before
+        # 2026-08-06 it was silently checked by nothing. Held-out fixtures
+        # (cases/sandbox/manifest) are gitignored, so this stays a green, QUIET
+        # no-op in a clean public checkout and validates+verifies locally wherever
+        # a pack's corpus is present. BLOCKING, as it has always been.
+        # Never touches src/scorers.py.
         "vertical pack conformance",
         ["python3", "src/pack_conformance.py", "--check-public"],
     ),
     (
         # ADVISORY, non-blocking by design. Reports prompt-level pair asymmetry
         # (the 86.4% prompt-separability defect found 2026-08-06) for every
-        # registered pack whose held-out corpus is present locally. The three
+        # DISCOVERED pack whose held-out corpus is present locally — registered or
+        # not, and its summary names the packs it swept, not only the ones with
+        # findings. The three
         # frozen corpora were authored before the pair-symmetry rule existed and
         # violate it; frozen means frozen, so fixes land as a NEW version, never
         # as an in-place edit. Failing the gate here would block everyone while
@@ -308,7 +315,7 @@ CHECKS = [
     ),
     (
         # ADVISORY, non-blocking, for the same reason as pair-symmetry above.
-        # Drives each registered pack's REAL sandbox over a bounded argument domain
+        # Drives each discovered pack's REAL sandbox over a bounded argument domain
         # and reports any contract whose violation — or any breach verdict its prose
         # names — no reachable payload can produce. This is the check that would have
         # caught devops_sre's unreachable rollback_without_authorization, where a

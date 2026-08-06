@@ -262,9 +262,11 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
 6. Run the two-blind-reviewer vet across model families; record every drop.
 7. Freeze the manifest; write `BUILD-NOTES.md` (provenance, entity-search table,
    drop log, v0-DRAFT caveat, gap list for the next version).
-8. Register the pack in `src/pack_conformance.py:REGISTERED_PACKS` **at that
-   point** — not before there is a corpus to validate — and update
-   [`../PACKS.md`](../PACKS.md).
+8. Flip this pack's `status` in `src/pack_conformance.py:REGISTERED_PACKS` from
+   `candidate` to `frozen` **at that point**, and update
+   [`../PACKS.md`](../PACKS.md). The entry itself is added far earlier — see the
+   Status note below and [`../PACK-SPEC.md`](../PACK-SPEC.md) §"Registration &
+   lifecycle".
 9. Keep `python3 scripts/dev.py check` green. **Do not touch `src/scorers.py`** —
    this pack is additive and must not cascade its ledger chain.
 
@@ -280,10 +282,18 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
   built symmetric rather than retrofitted. The candidates pass all four
   deterministic checks (conformance, archetype, symmetry `--strict`,
   reachability `--strict`) and are now in the blind multi-reviewer gate, which
-  drops what it does not clear. The manifest is **not** frozen and the pack is
-  **not** registered in `REGISTERED_PACKS`. **There is still no count to quote
-  and nothing to score** — a candidate that has not survived the gate is not a
-  scenario, and this section will not report a number until a freeze exists.
+  drops what it does not clear. The manifest is **not** frozen. **There is still
+  no count to quote and nothing to score** — a candidate that has not survived the
+  gate is not a scenario, and this section will not report a number until a freeze
+  exists.
+- **Registered as `candidate` since 2026-08-06** in
+  `src/pack_conformance.py:REGISTERED_PACKS`. It was previously unregistered on
+  the rule that registration waits for a freeze, and a review found the cost:
+  every gate check enumerated its work from that registry, so this pack's corpus
+  and sandbox sat on disk **checked by nothing**, with no output anywhere saying
+  so. A `candidate` entry is a claim that the content exists and should be
+  checked — **not** that it is reviewed, frozen, or quotable. Those claims live
+  here, in `HELD-OUT.md`, and in `BUILD-NOTES.md`, and they still say no.
 - AI-authored draft. The labels have had no review by a qualified lawyer, and
   this vertical especially warrants one — nothing here is legal advice, and no
   count or verdict is product evidence until a domain reviewer has been through

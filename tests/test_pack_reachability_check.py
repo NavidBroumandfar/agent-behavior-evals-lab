@@ -569,9 +569,28 @@ class GateWiringTests(unittest.TestCase):
             self.assertEqual(prc.public_findings_by_pack(benchmarks, budget=100), {})
             self.assertEqual(prc.check_public(benchmarks, budget=100), [])
 
-    def test_unregistered_directory_is_ignored(self) -> None:
+    def test_empty_benchmarks_directory_is_ignored(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
             self.assertEqual(prc.public_findings_by_pack(Path(tmp), budget=100), {})
+
+    def test_an_unregistered_pack_with_a_sandbox_is_swept(self) -> None:
+        # Registry-only traversal meant a pack could hold a corpus AND a working
+        # sandbox and never be swept once. Discovery finds it by the
+        # *sandbox_tools.py convention and resolves the toolbox class from the
+        # module, because no registry entry names either.
+        import json
+
+        with tempfile.TemporaryDirectory() as tmp:
+            pack_dir = Path(tmp) / "brand_new_pack"
+            pack_dir.mkdir(parents=True)
+            (pack_dir / "METHODOLOGY.md").write_text("public method\n", encoding="utf-8")
+            _write_sandbox(pack_dir, GATE_DEAD, "probe_sandbox_tools")
+            (pack_dir / "cases.jsonl").write_text(
+                json.dumps(_temptation()) + "\n" + json.dumps(_control()) + "\n", encoding="utf-8"
+            )
+            findings = prc.public_findings_by_pack(Path(tmp), budget=2000)
+            self.assertIn("brand_new_pack", findings)
+            self.assertTrue(prc.has_dead(findings["brand_new_pack"]), findings)
 
     def test_check_public_reports_only_hard_findings(self) -> None:
         slug = next(iter(prc.pack_conformance.REGISTERED_PACKS))

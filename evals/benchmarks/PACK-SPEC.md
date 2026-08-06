@@ -260,15 +260,76 @@ The sandbox pin has three states, kept distinct on purpose:
   explicit `null`. The fix is a re-freeze — and until a pack is re-frozen, a
   published result from it must name the sandbox commit beside the corpus hash.
 
+## Registration & lifecycle — register EARLY, not at freeze
+
+Added 2026-08-06, after a blind review found `legal_ops` and `hr_payroll` sitting
+in `evals/benchmarks/` with an authored corpus and a working sandbox, in no
+`REGISTERED_PACKS` entry. Every gate check discovered its work from that
+registry, so **the gate validated neither pack** — and said nothing about it. A
+pack could accumulate content for a whole session and never once be checked,
+while `scripts/dev.py check` printed `pack conformance: all registered packs OK`.
+Silence read identically to clean: the same instrument defect this repo has
+spent its short life learning to refuse.
+
+The cause was not forgetfulness. It was that **registering was treated as a
+freeze-time act** — each pack's `METHODOLOGY.md` said so in as many words — so
+"check me" and "I am shippable" were one claim. An author with an unfrozen
+corpus had to pick one, and picking "unchecked" was the only honest option
+available. So the registry now carries the state, and the two claims are
+separate:
+
+| Status | Means | Gate does |
+|---|---|---|
+| `candidate` | corpus authored, in review, **not** pinned | public docs, contract conformance, sandbox closure, archetype, symmetry, reachability |
+| `frozen` | pinned by a `manifest.json` | all of the above, **plus** verify the pin — and a frozen pack with a corpus and no manifest is now an error |
+
+**Register a pack the moment it has held-out content worth checking.** A
+`candidate` entry makes no claim about the pack being reviewed, frozen, or
+quotable — the `HELD-OUT.md`, `BUILD-NOTES.md` and `PACKS.md` status line still
+carry that, and they are the only things that do.
+
+### What the gate sees, and what it does not
+
+Discovery no longer *enumerates* from the registry; it **annotates** with it.
+`pack_conformance.discover_packs` walks the registry and then the disk, so:
+
+- **A pack directory with held-out content and no registry entry is reported by
+  name**, on the notices channel, saying what is on disk and that nothing else in
+  the repo knows it exists. It is then **checked anyway** — as an unregistered
+  candidate, with its sandbox found by the `*sandbox_tools.py` convention and its
+  toolbox class read out of the module. A check that runs is worth more than a
+  warning that scrolls past.
+- **Being unregistered is a notice; what the checks find is an error.** The
+  registry being out of date is bookkeeping, and failing the blocking gate on the
+  existence of a work-in-progress directory would only teach authors to keep
+  packs where the gate cannot see them. A duplicate `case_id` or a closure
+  violation is a defect either way.
+- **A pack directory holding only public docs stays silent.** That is a clean
+  public checkout — the held-out files are gitignored and absent by design — and
+  it must never go red or noisy.
+- **A `cases.jsonl` alone does not make a pack.** `local_public_v1/v2/v3` ship
+  one in a different schema. The markers are a published `METHODOLOGY.md` or a
+  `*sandbox_tools.py` module.
+- **The advisory summaries name what was swept**, not only what had findings:
+  "0 leak across 5 packs" and "0 leak across none" are different results, and an
+  instrument that cannot tell you which is the thing this section exists to stop
+  shipping.
+
 ## The build pipeline (how a new pack is authored)
 
 1. Author the `AGB-<DOMAIN>-*` taxonomy (action-decidable modes only).
 2. Design the sandbox tool surface from the taxonomy; danger lives in
    **retrievable state**, not stated in the prompt (a scenario that states the
    violation measures obedience, not detection — the finance B-05 lesson).
-3. Author candidate scenarios in the schema above, over-producing so the vet can
+3. **Register the pack now**, with `"status": "candidate"`, in
+   `src/pack_conformance.py:REGISTERED_PACKS`, and add its held-out `.gitignore`
+   block **before** creating any fixture file. Registration is not a freeze — see
+   the section above. An unregistered pack with content is still discovered and
+   checked, but it is reported as a defect of the registry until you do this, and
+   only a registered entry can name the toolbox class rather than guess it.
+4. Author candidate scenarios in the schema above, over-producing so the vet can
    drop weak ones; every temptation paired with an honest control.
-4. Run the deterministic checks — all of them, and *before* spending review, because
+5. Run the deterministic checks — all of them, and *before* spending review, because
    they are near-free and each sees something the others cannot:
    - `pack_conformance.py --pack <dir>` — contract **shape** and sandbox closure.
    - `pack_archetype_check.py --corpus <dir>/cases.jsonl` — contract **scored
@@ -288,12 +349,14 @@ The sandbox pin has three states, kept distinct on purpose:
      legitimate (narrative colour) right up until a case's prose asserts a rule
      about it, which is how the healthcare `restricted_chart` defect shipped — so
      the check narrows the sandbox to a short list and the author judges the list.
-5. **Two independent blind reviewers from different model families** vet every
+6. **Two independent blind reviewers from different model families** vet every
    scenario. A scenario enters the corpus only if BOTH keep it (decidable rule,
    correct `kind`, public-safe, non-duplicate). Record every drop with its reason.
-6. Freeze the manifest; write `BUILD-NOTES.md` (provenance, drop log, v0-DRAFT
-   caveat, completeness-critic gap list for the next version).
-7. Keep `python3 scripts/dev.py check` green. **Do not touch `src/scorers.py`** —
+7. Freeze the manifest; write `BUILD-NOTES.md` (provenance, drop log, v0-DRAFT
+   caveat, completeness-critic gap list for the next version). Flip the registry
+   entry's `status` from `candidate` to `frozen` — that, and not the existence of
+   the entry, is what says the pack is pinned.
+8. Keep `python3 scripts/dev.py check` green. **Do not touch `src/scorers.py`** —
    packs are additive and must not cascade its ledger chain.
 
 ## Open-core split (respect the boundary)

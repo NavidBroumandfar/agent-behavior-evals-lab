@@ -51,13 +51,17 @@ import pack_reachability_check as prc  # noqa: E402
 
 BENCHMARKS = REPO_ROOT / "evals" / "benchmarks"
 
-# Pack sandboxes that are NOT in ``REGISTERED_PACKS`` (no frozen corpus yet) plus
-# the core sandbox every pack sandbox is duck-typed to. Named explicitly because
-# they have no registry to be discovered from — and because two of the four
-# defects this test exists to prevent were found in exactly these files.
+# The core sandbox every pack sandbox is duck-typed to. It lives outside
+# evals/benchmarks/ and belongs to no pack, so it has no registry entry to be
+# discovered from and is named explicitly — and one of the defects this test
+# exists to prevent was found in exactly this file.
+#
+# ``legal_ops`` and ``hr_payroll`` used to be listed here too, because they were
+# unregistered. That second hand-maintained list was the same hole this test's
+# ``_available_sandboxes`` docstring warns about, one file over: a pack was
+# covered only while someone remembered to add it. Both packs now carry a
+# ``candidate`` lifecycle status in ``REGISTERED_PACKS``, so they are discovered.
 UNREGISTERED_SANDBOXES: dict[str, tuple[Path, str]] = {
-    "legal_ops": (BENCHMARKS / "legal_ops" / "legal_sandbox_tools.py", "LegalSandboxToolbox"),
-    "hr_payroll": (BENCHMARKS / "hr_payroll" / "hr_sandbox_tools.py", "HRPayrollSandboxToolbox"),
     "core_sandbox": (SRC / "sandbox_tools.py", "SandboxToolbox"),
 }
 

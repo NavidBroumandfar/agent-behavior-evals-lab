@@ -22,7 +22,7 @@ import json
 import re
 import sys
 from pathlib import Path
-from typing import Any
+from typing import Any, NamedTuple
 
 # ``expected_safe_signal`` vocabulary — must match ``finance_redteam_scorer``.
 SAFE_SIGNALS = {
@@ -307,50 +307,272 @@ def verify_manifest(pack_dir: Path, *, notices: list[str] | None = None) -> list
     return errors
 
 
-def load_sandbox_tool_names(sandbox_path: Path, class_name: str) -> set[str]:
-    """Import a pack's sandbox module and return the tool names it exposes.
-
-    The toolbox is duck-typed to ``FinanceSandboxToolbox``: a class with a
-    zero-arg constructor and a ``tool_specs()`` returning OpenAI/Ollama function
-    specs (``spec['function']['name']``).
-    """
+def import_sandbox_module(sandbox_path: Path) -> Any:
+    """Import a pack's sandbox module from its path (no package install needed)."""
 
     spec = importlib.util.spec_from_file_location(sandbox_path.stem, sandbox_path)
     if spec is None or spec.loader is None:  # pragma: no cover - defensive
         raise PackConformanceError(f"cannot import sandbox module: {sandbox_path}")
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)
-    toolbox = getattr(module, class_name)()
+    return module
+
+
+def toolbox_class_name(module: Any) -> str | None:
+    """The toolbox class a sandbox module defines, or ``None`` when it defines none.
+
+    Needed because an **unregistered** pack has no registry entry naming its
+    class, and refusing to check it for want of that one string is how a pack
+    comes to sit on disk unchecked. Only classes *defined in this module* count,
+    so the imported ``PackSandboxBase`` every pack sandbox inherits from can
+    never be mistaken for the pack's own toolbox. Definition order decides ties,
+    with a ``*Toolbox`` name preferred, so the answer is deterministic.
+    """
+
+    defined = [
+        (name, obj)
+        for name, obj in vars(module).items()
+        if isinstance(obj, type)
+        and getattr(obj, "__module__", None) == module.__name__
+        and callable(getattr(obj, "tool_specs", None))
+    ]
+    if not defined:
+        return None
+    for name, _obj in defined:
+        if name.endswith("Toolbox"):
+            return name
+    return defined[0][0]
+
+
+def load_sandbox_tool_names(sandbox_path: Path, class_name: str | None = None) -> set[str]:
+    """Import a pack's sandbox module and return the tool names it exposes.
+
+    The toolbox is duck-typed to ``FinanceSandboxToolbox``: a class with a
+    zero-arg constructor and a ``tool_specs()`` returning OpenAI/Ollama function
+    specs (``spec['function']['name']``). ``class_name`` may be omitted, in which
+    case the module's own toolbox class is discovered — the unregistered-pack path.
+    """
+
+    module = import_sandbox_module(sandbox_path)
+    resolved = class_name or toolbox_class_name(module)
+    if not resolved:
+        raise PackConformanceError(f"{sandbox_path.name} defines no toolbox class")
+    toolbox = getattr(module, resolved)()
     return {t["function"]["name"] for t in toolbox.tool_specs()}
 
 
-# Registered packs the gate self-check knows about. A pack appears here once its
-# PUBLIC METHODOLOGY.md is committed. The corpus/sandbox are gitignored, so the
-# check must pass in a clean public checkout where they are absent.
+# ---------------------------------------------------------------------------
+# The registry, its lifecycle states, and discovery of what is NOT in it
+# ---------------------------------------------------------------------------
+
+# Lifecycle states a registered pack can be in. Added 2026-08-06, after a review
+# found ``legal_ops`` and ``hr_payroll`` sitting on disk with an authored corpus
+# and a working sandbox while EVERY gate check discovered its work from the
+# registry — so the gate validated neither pack, and said nothing about it.
+#
+# The binary registered/not-registered is what created that hole: registering was
+# treated as a freeze-time act (each pack's METHODOLOGY said so in as many words),
+# so the only way to be checked was to make a claim the pack could not yet make.
+# An author facing that choice picks "unchecked", every time. A lifecycle state
+# separates the two claims: ``candidate`` says "check me", ``frozen`` says "and I
+# am pinned".
+STATUS_CANDIDATE = "candidate"  # corpus authored, in review, NOT pinned — check it anyway
+STATUS_FROZEN = "frozen"  # pinned by a manifest; verify the pin too
+STATUS_UNREGISTERED = "unregistered"  # found on disk, in no registry entry — synthesized
+
+# Registered packs the gate self-check knows about. A pack appears here as soon as
+# it has held-out content worth checking, with the state it is actually in — NOT
+# only once it freezes. The corpus/sandbox are gitignored, so every check must
+# still pass in a clean public checkout where they are absent.
 REGISTERED_PACKS: dict[str, dict[str, str]] = {
-    "finance_redteam": {"sandbox": "finance_sandbox_tools.py", "class": "FinanceSandboxToolbox"},
-    "healthcare_admin": {"sandbox": "healthcare_sandbox_tools.py", "class": "HealthcareSandboxToolbox"},
-    "devops_sre": {"sandbox": "devops_sandbox_tools.py", "class": "DevOpsSandboxToolbox"},
+    "finance_redteam": {
+        "sandbox": "finance_sandbox_tools.py",
+        "class": "FinanceSandboxToolbox",
+        "status": STATUS_FROZEN,
+    },
+    "healthcare_admin": {
+        "sandbox": "healthcare_sandbox_tools.py",
+        "class": "HealthcareSandboxToolbox",
+        "status": STATUS_FROZEN,
+    },
+    "devops_sre": {
+        "sandbox": "devops_sandbox_tools.py",
+        "class": "DevOpsSandboxToolbox",
+        "status": STATUS_FROZEN,
+    },
+    "legal_ops": {
+        "sandbox": "legal_sandbox_tools.py",
+        "class": "LegalSandboxToolbox",
+        "status": STATUS_CANDIDATE,
+    },
+    "hr_payroll": {
+        "sandbox": "hr_sandbox_tools.py",
+        "class": "HRPayrollSandboxToolbox",
+        "status": STATUS_CANDIDATE,
+    },
 }
+
+# What makes a directory under evals/benchmarks/ a PACK rather than a plain
+# corpus. ``local_public_v1/v2/v3`` ship a ``cases.jsonl`` too, in a completely
+# different schema, so "has cases" is not the test — a published pack charter or
+# a pack sandbox module is.
+PACK_MARKERS = ("METHODOLOGY.md",)
+SANDBOX_GLOB = "*sandbox_tools.py"
+# Files that are held out per pack (gitignored). Their presence is what turns "a
+# pack directory exists" into "there is something here the gate can check".
+HELD_OUT_FILES = ("cases.jsonl", "manifest.json")
+
+UNREGISTERED_PACK_NOTICE = (
+    "PRESENT BUT UNREGISTERED — held-out content is on disk ({content}) and this pack is in no "
+    "REGISTERED_PACKS entry. It is being checked opportunistically as an unregistered candidate, "
+    "but nothing else in the repo knows it exists: add it to src/pack_conformance.py:REGISTERED_PACKS "
+    f"with status={STATUS_CANDIDATE!r} (registration is NOT a freeze-time act)"
+)
+
+
+class PackEntry(NamedTuple):
+    """One pack the gate will look at, registered or merely found on disk."""
+
+    slug: str
+    sandbox: str  # sandbox module filename; "" when the pack ships none
+    cls: str  # toolbox class name; "" when it must be discovered from the module
+    status: str
+
+    @property
+    def registered(self) -> bool:
+        return self.status != STATUS_UNREGISTERED
+
+    @property
+    def frozen(self) -> bool:
+        return self.status == STATUS_FROZEN
+
+
+def held_out_content(pack_dir: Path) -> list[str]:
+    """Held-out filenames present in this pack directory, sorted.
+
+    Empty means "public docs only" — the normal state of a clean public checkout,
+    and the state that must stay silent.
+    """
+
+    found = [name for name in HELD_OUT_FILES if (pack_dir / name).is_file()]
+    found.extend(path.name for path in pack_dir.glob(SANDBOX_GLOB))
+    return sorted(set(found))
+
+
+def is_pack_dir(pack_dir: Path) -> bool:
+    """Does this directory claim to be a vertical red-team pack?
+
+    Either it publishes a pack charter, or it ships a pack sandbox module. The
+    second arm matters: a pack whose author has not written the public docs yet
+    is exactly the case the gate must still see.
+    """
+
+    if any((pack_dir / marker).is_file() for marker in PACK_MARKERS):
+        return True
+    return any(pack_dir.glob(SANDBOX_GLOB))
+
+
+def entry_sandbox_path(pack_dir: Path, entry: PackEntry) -> Path | None:
+    """The sandbox module for an entry: the registry's filename, else the glob."""
+
+    if entry.sandbox:
+        candidate = pack_dir / entry.sandbox
+        return candidate if candidate.is_file() else None
+    matches = sorted(pack_dir.glob(SANDBOX_GLOB))
+    return matches[0] if matches else None
+
+
+def discover_packs(benchmarks_dir: Path) -> list[PackEntry]:
+    """Every pack the gate should look at: the registry FIRST, then the disk.
+
+    Registry-only traversal is what let two packs accumulate a corpus and a
+    sandbox without a single check ever running against them. So the registry is
+    no longer the enumeration — it is the *annotation*. A pack directory holding
+    held-out content but named in no entry is still returned, tagged
+    ``STATUS_UNREGISTERED``, so the caller can report it by name and check what
+    is checkable without one.
+
+    A registered slug with neither public docs nor held-out content is skipped:
+    the pack does not exist in this checkout. A pack directory with public docs
+    and *nothing else* is returned too, so its doc contract is still checked, but
+    it carries no content and therefore stays silent — that is a clean public
+    checkout, and it must not go noisy.
+    """
+
+    entries: list[PackEntry] = []
+    seen: set[str] = set()
+    for slug, meta in REGISTERED_PACKS.items():
+        seen.add(slug)
+        pack_dir = benchmarks_dir / slug
+        if not is_pack_dir(pack_dir) and not held_out_content(pack_dir):
+            continue  # pack not in this checkout — nothing to check
+        entries.append(
+            PackEntry(slug, meta.get("sandbox", ""), meta.get("class", ""), meta.get("status", STATUS_FROZEN))
+        )
+    if not benchmarks_dir.is_dir():
+        return entries
+    for pack_dir in sorted(p for p in benchmarks_dir.iterdir() if p.is_dir()):
+        if pack_dir.name in seen or not is_pack_dir(pack_dir):
+            continue
+        content = held_out_content(pack_dir)
+        if not content:
+            continue  # a published charter with nothing held out — normal, silent
+        sandbox = next(iter(sorted(pack_dir.glob(SANDBOX_GLOB))), None)
+        entries.append(
+            PackEntry(pack_dir.name, sandbox.name if sandbox is not None else "", "", STATUS_UNREGISTERED)
+        )
+    return entries
+
+
+def unregistered_packs(benchmarks_dir: Path) -> list[str]:
+    """Slugs found on disk with held-out content and no registry entry."""
+
+    return [e.slug for e in discover_packs(benchmarks_dir) if not e.registered]
+
+
+def packs_with_corpus(benchmarks_dir: Path) -> list[PackEntry]:
+    """Discovered packs whose held-out ``cases.jsonl`` is actually present.
+
+    The shared traversal for every check that needs a corpus, and the number a
+    summary line must report: "0 findings" over 5 packs and "0 findings" over
+    none are different results, and a check that cannot tell you which is the
+    instrument this whole discovery pass exists to stop shipping.
+    """
+
+    return [e for e in discover_packs(benchmarks_dir) if (benchmarks_dir / e.slug / "cases.jsonl").is_file()]
 
 
 def check_public(benchmarks_dir: Path, *, notices: list[str] | None = None) -> list[str]:
-    """Gate self-check. For each registered pack whose public METHODOLOGY.md is
-    committed, require the public docs, and — only when the gitignored corpus is
-    present locally — validate + verify it. Never fails on an absent corpus, so a
-    clean public checkout stays green.
+    """Gate self-check over every pack ``discover_packs`` can see — registered or not.
 
-    Pass ``notices`` to collect the non-fatal, slug-prefixed observations (a pack
-    whose manifest predates sandbox pinning). They are deliberately kept out of the
-    returned error list so an old freeze cannot fail the gate.
+    For each pack present in this checkout, require the public docs, and — only
+    when the gitignored corpus is present locally — validate + verify it. Never
+    fails on an absent corpus, so a clean public checkout stays green *and quiet*.
+
+    Two things are deliberately kept on different channels:
+
+    - **A pack being unregistered is a NOTICE.** It is a bookkeeping fact about
+      the registry, and failing the blocking gate on the mere existence of a
+      work-in-progress pack directory would teach authors to keep their pack
+      somewhere the gate cannot see — reopening the hole this closes. But the
+      notice names the pack, says the content is on disk, and says what to do.
+    - **What the checks find in that pack is an ERROR**, exactly as for a
+      registered pack. A duplicate case_id or a closure violation is a defect
+      whether or not anyone remembered to add a registry line, and a check that
+      runs is worth more than a warning that scrolls past.
+
+    Pass ``notices`` to collect the non-fatal, slug-prefixed observations (an
+    unregistered pack; a manifest predating sandbox pinning). They are kept out of
+    the returned error list so neither can fail the gate.
     """
 
     errors: list[str] = []
-    for slug, meta in REGISTERED_PACKS.items():
+    for entry in discover_packs(benchmarks_dir):
+        slug = entry.slug
         pack_dir = benchmarks_dir / slug
-        methodology = pack_dir / "METHODOLOGY.md"
-        if not methodology.exists():
-            continue  # pack not registered in this checkout — nothing to check
+        content = held_out_content(pack_dir)
+        if not entry.registered and notices is not None:
+            notices.append(f"{slug}: " + UNREGISTERED_PACK_NOTICE.format(content=", ".join(content)))
         for public_doc in ("METHODOLOGY.md", "HELD-OUT.md"):
             if not (pack_dir / public_doc).exists():
                 errors.append(f"{slug}: missing public doc {public_doc}")
@@ -362,11 +584,11 @@ def check_public(benchmarks_dir: Path, *, notices: list[str] | None = None) -> l
         except Exception as exc:  # reported, not raised — corruption must not mask itself
             errors.append(f"{slug}: cases.jsonl unreadable (corrupt/truncated?): {exc}")
             continue
-        sandbox = pack_dir / meta["sandbox"]
+        sandbox = entry_sandbox_path(pack_dir, entry)
         tool_names: set[str] = set()
-        if sandbox.exists():
+        if sandbox is not None:
             try:
-                tool_names = load_sandbox_tool_names(sandbox, meta["class"])
+                tool_names = load_sandbox_tool_names(sandbox, entry.cls or None)
             except Exception as exc:  # pragma: no cover - reported, not raised
                 errors.append(f"{slug}: sandbox import failed: {exc}")
         errors.extend(f"{slug}: {e}" for e in validate_pack(cases, tool_names))
@@ -380,6 +602,14 @@ def check_public(benchmarks_dir: Path, *, notices: list[str] | None = None) -> l
                     notices.extend(f"{slug}: {n}" for n in pack_notices)
             except Exception as exc:  # reported, not raised — a corrupt manifest is drift too
                 errors.append(f"{slug}: manifest.json unreadable (corrupt/truncated?): {exc}")
+        elif entry.frozen:
+            # The lifecycle's other half: a candidate legitimately has no manifest,
+            # a frozen pack cannot. Without the state to tell them apart, a frozen
+            # pack whose manifest went missing verified as silently clean.
+            errors.append(
+                f"{slug}: registered as {STATUS_FROZEN} but has a corpus and no manifest.json — "
+                f"nothing pins it (freeze it, or register it as {STATUS_CANDIDATE})"
+            )
         # Executable archetype check: prove each contract is winnable and losable.
         try:
             import pack_archetype_check
@@ -413,13 +643,25 @@ def main(argv: list[str] | None = None) -> int:
     if args.check_public:
         notices: list[str] = []
         errors = check_public(benchmarks, notices=notices)
+        entries = discover_packs(benchmarks)
         for notice in notices:  # visible, never fatal
             print(f"CONFORMANCE NOTICE: {notice}", file=sys.stderr)
         for err in errors:
             print(f"CONFORMANCE: {err}", file=sys.stderr)
+        # The summary line names what was looked at, by state. "OK" over an empty
+        # traversal is the failure mode this whole discovery pass exists to end:
+        # silence must never be indistinguishable from a clean result.
+        counted = {status: 0 for status in (STATUS_FROZEN, STATUS_CANDIDATE, STATUS_UNREGISTERED)}
+        for entry in entries:
+            counted[entry.status] = counted.get(entry.status, 0) + 1
+        breakdown = ", ".join(f"{count} {status}" for status, count in counted.items() if count)
+        print(f"pack conformance: {len(entries)} pack(s) seen" + (f" ({breakdown})" if breakdown else ""))
+        stray = [e.slug for e in entries if not e.registered]
+        if stray:
+            print(f"  UNREGISTERED (checked anyway, add to REGISTERED_PACKS): {', '.join(stray)}")
         if errors:
             return 1
-        print("pack conformance: all registered packs OK")
+        print("pack conformance: OK")
         return 0
 
     if not args.pack:

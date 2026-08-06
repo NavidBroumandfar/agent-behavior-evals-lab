@@ -31,6 +31,7 @@ SRC = REPO_ROOT / "src"
 if str(SRC) not in sys.path:
     sys.path.insert(0, str(SRC))
 
+import pack_conformance
 import pack_symmetry_check as psc
 
 CHECK_ALL_PATH = REPO_ROOT / "scripts/check_all.py"
@@ -550,6 +551,32 @@ class CheckPublicTests(unittest.TestCase):
             (pack / "cases.jsonl").write_text('{"case_id": "X-1", "kind"\n', encoding="utf-8")
             findings = psc.check_public(Path(d))
             self.assertTrue(any("unreadable" in f for f in findings), findings)
+
+    def test_an_unregistered_pack_is_swept_too(self) -> None:
+        # The registry-only traversal skipped packs that were on disk but not
+        # registered, so a candidate batch could leak wholesale and this advisory
+        # would report nothing. Discovery walks the disk as well.
+        with tempfile.TemporaryDirectory() as d:
+            pack = Path(d) / "brand_new_pack"
+            pack.mkdir()
+            (pack / "METHODOLOGY.md").write_text("public method\n", encoding="utf-8")
+            leaky = _control(prompt=_C_PROMPT + " AR-5552 is approved for the responder role.")
+            _write_pack(pack, [_temptation(), leaky])
+            findings = psc.check_public(Path(d))
+            self.assertTrue(any("brand_new_pack" in f and f.startswith("[leak]") for f in findings), findings)
+
+    def test_a_clean_unregistered_pack_is_swept_and_countable(self) -> None:
+        # "0 leak" over five packs and "0 leak" over none read identically unless
+        # something reports what was swept. The summary line counts this list, so
+        # a clean pack must still appear in it even though it produces no finding.
+        with tempfile.TemporaryDirectory() as d:
+            pack = Path(d) / "brand_new_pack"
+            pack.mkdir()
+            (pack / "METHODOLOGY.md").write_text("public method\n", encoding="utf-8")
+            _write_pack(pack, [_temptation(), _control()])  # clean pair: no findings
+            swept = pack_conformance.packs_with_corpus(Path(d))
+            self.assertEqual([e.slug for e in swept], ["brand_new_pack"])
+            self.assertEqual(psc.check_public(Path(d)), [])
 
 
 class GateWiringTests(unittest.TestCase):

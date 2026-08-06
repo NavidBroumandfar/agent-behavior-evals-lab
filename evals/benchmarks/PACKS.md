@@ -23,8 +23,8 @@ For **every** pack, the split is the same:
 | Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.7 frozen |
 | DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.6 frozen |
 | Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.4 frozen |
-| Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | taxonomy + sandbox built; scenarios pending |
-| HR / payroll | [`hr_payroll/`](hr_payroll/) | `AGB-HRP-*` | — | taxonomy + sandbox built; scenarios pending |
+| Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | **candidate** — taxonomy + sandbox built, batch in review, nothing frozen |
+| HR / payroll | [`hr_payroll/`](hr_payroll/) | `AGB-HRP-*` | — | **candidate** — taxonomy + sandbox built, batch in review, nothing frozen |
 | Customer support / T&S | `support_ts/` | `AGB-CST-*` | — | planned |
 | Data / analytics | `data_ops/` | `AGB-DTA-*` | — | planned |
 
@@ -172,6 +172,28 @@ finds for you.
   never raises, records exactly one event, and keeps `breach=` first. Zero of the
   53 + 26 + 17 frozen cases moved verdict across four agent archetypes.
 
+- **The gate was checking two packs less than it appeared to — FIXED
+  2026-08-06.** A blind reviewer found `legal_ops` and `hr_payroll` on disk with
+  an authored corpus and a working sandbox and **no `REGISTERED_PACKS` entry**.
+  Every check — conformance, pair-symmetry, reachability, the hostile-argument
+  sandbox contract — enumerated its work from that registry, so none of them ever
+  looked at either pack, while the gate printed `pack conformance: all registered
+  packs OK`. Nothing anywhere said the two packs were unchecked, which is the same
+  defect these packs exist to detect: an instrument reporting nothing while it is
+  looking at nothing.
+
+  The cause was the binary registered/not-registered. Registration was documented
+  as a **freeze-time** act, so "check me" and "I am shippable" were one claim and
+  an author with an unfrozen corpus could only pick unchecked. Two changes: the
+  registry carries a lifecycle `status` (`candidate` / `frozen`), so a pack is
+  registered and checked the moment it has content; and traversal is now
+  `discover_packs`, which walks the **disk** as well as the registry — a pack with
+  held-out content and no entry is reported by name and checked anyway, with its
+  sandbox found by convention and its toolbox class read from the module. A
+  directory holding only public docs (a clean public checkout) stays silent, and
+  the advisory summaries now name the packs they swept rather than only the ones
+  with findings. Advisory/blocking status of every existing step is unchanged.
+
 ## Running the packs
 
 The first execution of the packs against real tool-calling agents is
@@ -184,11 +206,18 @@ from these packs exists yet; when one does, it lands as a dated report in
 ## Adding a pack
 
 Follow the pipeline in [`PACK-SPEC.md`](PACK-SPEC.md) §"The build pipeline":
-author the taxonomy, design the sandbox, author scenarios (danger in retrievable
-state, not stated in the prompt), run `pack_conformance.py`, vet with two blind
-reviewers from different model families, freeze the manifest. Register the pack in
+author the taxonomy, design the sandbox, **register the pack as a `candidate` in
 `src/pack_conformance.py:REGISTERED_PACKS` and add its held-out `.gitignore` block
-**before** creating any fixture file.
+before creating any fixture file**, author scenarios (danger in retrievable state,
+not stated in the prompt), run the four deterministic checks, vet with two blind
+reviewers from different model families, freeze the manifest, flip the status to
+`frozen`.
+
+Registration is **not** a freeze-time act, and treating it as one is what let two
+packs accumulate a corpus and a sandbox that no gate check ever looked at — see
+[`PACK-SPEC.md`](PACK-SPEC.md) §"Registration & lifecycle". A pack with held-out
+content on disk and no registry entry is now discovered, reported by name, and
+checked anyway; registering it is what stops the gate calling that out.
 
 > **Disclosure:** v0 packs are AI-authored and AI-vetted first passes. Their
 > labels have not had domain-expert human review and their counts are not to be

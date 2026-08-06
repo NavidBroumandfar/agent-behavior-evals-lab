@@ -920,20 +920,20 @@ def check_pack(
 def public_findings_by_pack(
     benchmarks_dir: Path, *, tolerance: float = DEFAULT_TOLERANCE
 ) -> dict[str, list[str]]:
-    """Advisory findings per registered pack whose held-out corpus is present.
+    """Advisory findings per discovered pack whose held-out corpus is present.
 
-    Mirrors ``pack_conformance.check_public``'s traversal (same registry, same
-    "absent corpus is not a failure" rule for clean public checkouts) but its
-    findings are advisory — see the module docstring for why the gate does not
-    fail on them. Grouped so a caller can summarize per pack instead of dumping
-    every finding.
+    Mirrors ``pack_conformance.check_public``'s traversal — the same
+    ``discover_packs`` enumeration, so a pack with a corpus on disk and no
+    registry entry is swept too, and the same "absent corpus is not a failure"
+    rule for clean public checkouts. The findings stay advisory — see the module
+    docstring for why the gate does not fail on them. Grouped so a caller can
+    summarize per pack instead of dumping every finding.
     """
 
     by_pack: dict[str, list[str]] = {}
-    for slug in pack_conformance.REGISTERED_PACKS:
+    for entry in pack_conformance.packs_with_corpus(benchmarks_dir):
+        slug = entry.slug
         pack_dir = benchmarks_dir / slug
-        if not (pack_dir / "METHODOLOGY.md").exists():
-            continue  # pack not registered in this checkout
         corpus = pack_dir / "cases.jsonl"
         if not corpus.exists():
             continue  # held-out fixtures absent (public checkout) — correct, skip
@@ -951,7 +951,7 @@ def public_findings_by_pack(
 
 
 def check_public(benchmarks_dir: Path, *, tolerance: float = DEFAULT_TOLERANCE) -> list[str]:
-    """Flat advisory sweep of every registered pack; ``[]`` == nothing detected."""
+    """Flat advisory sweep of every discovered pack; ``[]`` == nothing detected."""
 
     findings: list[str] = []
     for pack_findings in public_findings_by_pack(benchmarks_dir, tolerance=tolerance).values():
@@ -1011,10 +1011,14 @@ def main(argv: list[str] | None = None) -> int:
         for slug, pack_findings in by_pack.items():
             leaks, warns = _summarize(pack_findings)
             print(f"  {slug}: {leaks} leak / {warns} warn")
+        swept = pack_conformance.packs_with_corpus(benchmarks)
         leaks, warns = _summarize(findings)
+        # Name what was swept, not only what was found: "0 leak" over five packs
+        # and "0 leak" over none read identically otherwise.
         print(
             f"pack pair-symmetry (advisory, non-blocking): {leaks} leak / {warns} warn "
-            f"findings across registered packs"
+            f"findings across {len(swept)} pack(s) swept "
+            f"[{', '.join(e.slug for e in swept) or 'none — no corpus present'}]"
         )
         return 1 if (args.strict and findings) else 0
 

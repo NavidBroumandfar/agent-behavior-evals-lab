@@ -495,6 +495,284 @@ class CheckPublicTests(unittest.TestCase):
             errors = pc.check_public(bench)
             self.assertTrue(any("closure" in e and "esc" in e for e in errors), errors)
 
+    def test_registered_pack_produces_no_notices(self) -> None:
+        # The other half of the unregistered-notice contract: a pack that IS
+        # registered must stay silent, or the notice becomes background noise.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack, cases = _write_registered_pack(bench)
+            pc.freeze_manifest(pack, cases, case_set_id="fin_v0", version="v0.1")
+            notices: list[str] = []
+            self.assertEqual(pc.check_public(bench, notices=notices), [])
+            self.assertEqual(notices, [])
+
+
+class DiscoveryTests(unittest.TestCase):
+    """The hole this closes: every gate check enumerated its work from
+    ``REGISTERED_PACKS``, so a pack with an authored corpus and a working sandbox
+    on disk but no registry entry was validated by NOTHING — and nothing said so.
+    Silence read identically to clean.
+
+    Discovery now walks the disk as well as the registry. The two properties that
+    must hold together: an unregistered pack WITH held-out content is reported and
+    checked; a pack directory with only public docs (a clean public checkout, where
+    the held-out files are absent by design) stays green and silent."""
+
+    def _unregistered_pack(self, bench: Path, slug: str = "brand_new_pack", cases=None):
+        """A pack directory in no registry entry, with public docs and a corpus."""
+
+        pack = bench / slug
+        pack.mkdir(parents=True)
+        (pack / "METHODOLOGY.md").write_text("public method\n", encoding="utf-8")
+        (pack / "HELD-OUT.md").write_text("held out\n", encoding="utf-8")
+        if cases is None:
+            cases = [
+                _temptation("AGB-NEW-001", "escalation_required",
+                            violating=[{"tool": "t"}], required=[{"tool": "esc"}]),
+                _control("AGB-NEW-002", required=[{"tool": "t"}]),
+            ]
+        (pack / "cases.jsonl").write_text(
+            "\n".join(json.dumps(c) for c in cases) + "\n", encoding="utf-8"
+        )
+        return pack
+
+    def test_unregistered_pack_with_content_is_reported_by_name(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            self._unregistered_pack(bench)
+            notices: list[str] = []
+            errors = pc.check_public(bench, notices=notices)
+            self.assertEqual(errors, [])  # the content is conformant...
+            self.assertEqual(len(notices), 1, notices)  # ...but its absence from the registry is said
+            self.assertTrue(notices[0].startswith("brand_new_pack: "), notices)
+            self.assertIn("UNREGISTERED", notices[0])
+            self.assertIn("cases.jsonl", notices[0])  # names WHAT is on disk
+
+    def test_unregistered_pack_is_actually_checked_not_merely_named(self) -> None:
+        # A warning that scrolls past is worth less than a check that runs, so the
+        # pack's own defects surface on the ERROR channel like any other pack's.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            broken = [
+                _temptation("AGB-NEW-001", "escalation_required", violating=[{"tool": "t"}]),
+                _control("AGB-NEW-002", required=[{"tool": "t"}]),
+            ]
+            self._unregistered_pack(bench, cases=broken)
+            errors = pc.check_public(bench)
+            self.assertTrue(
+                any("brand_new_pack" in e and "required_call" in e for e in errors), errors
+            )
+
+    def test_unregistered_pack_closure_uses_the_globbed_sandbox(self) -> None:
+        # No registry entry names this pack's sandbox module or its toolbox class,
+        # so both are resolved from the directory itself — otherwise "we cannot
+        # check closure without a registry line" becomes the new silence.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack = self._unregistered_pack(bench)
+            _write_sandbox(pack)  # exposes tool 't' only; the corpus also names 'esc'
+            errors = pc.check_public(bench)
+            self.assertTrue(
+                any("brand_new_pack" in e and "closure" in e and "esc" in e for e in errors), errors
+            )
+
+    def test_pack_directory_with_only_public_docs_is_silent(self) -> None:
+        # The clean-public-checkout case: docs committed, held-out files absent by
+        # design. Nothing to check and nothing to say.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack = bench / "docs_only_pack"
+            pack.mkdir()
+            (pack / "METHODOLOGY.md").write_text("public method\n", encoding="utf-8")
+            (pack / "HELD-OUT.md").write_text("held out\n", encoding="utf-8")
+            notices: list[str] = []
+            self.assertEqual(pc.check_public(bench, notices=notices), [])
+            self.assertEqual(notices, [])
+            self.assertEqual(pc.discover_packs(bench), [])
+
+    def test_clean_public_checkout_stays_green_and_quiet(self) -> None:
+        # Every registered pack laid out the way a fresh clone has it: public docs
+        # only. No errors, no notices — this is the property that must not regress.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            for slug in pc.REGISTERED_PACKS:
+                pack = bench / slug
+                pack.mkdir()
+                (pack / "METHODOLOGY.md").write_text("public method\n", encoding="utf-8")
+                (pack / "HELD-OUT.md").write_text("held out\n", encoding="utf-8")
+            notices: list[str] = []
+            self.assertEqual(pc.check_public(bench, notices=notices), [])
+            self.assertEqual(notices, [])
+            self.assertEqual(pc.unregistered_packs(bench), [])
+            self.assertEqual(pc.packs_with_corpus(bench), [])
+
+    def test_public_corpus_directory_is_not_mistaken_for_a_pack(self) -> None:
+        # local_public_v1/v2/v3 ship a cases.jsonl in a completely different
+        # schema. Discovering on "has cases" would validate them as packs and
+        # produce a wall of false errors, so a charter or a sandbox is the marker.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            corpus_dir = bench / "local_public_v9"
+            corpus_dir.mkdir()
+            (corpus_dir / "cases.jsonl").write_text('{"case_id": "LPB-1"}\n', encoding="utf-8")
+            (corpus_dir / "manifest.json").write_text("{}\n", encoding="utf-8")
+            self.assertEqual(pc.discover_packs(bench), [])
+            self.assertEqual(pc.check_public(bench), [])
+
+    def test_sandbox_without_public_docs_is_discovered_and_flagged(self) -> None:
+        # A pack whose author has not written the charter yet is exactly the case
+        # that must not slip through: the sandbox module alone marks the directory.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack = bench / "sandbox_only_pack"
+            pack.mkdir()
+            _write_sandbox(pack)
+            errors = pc.check_public(bench)
+            self.assertTrue(
+                any("sandbox_only_pack" in e and "METHODOLOGY.md" in e for e in errors), errors
+            )
+            self.assertEqual(pc.unregistered_packs(bench), ["sandbox_only_pack"])
+
+    def test_discover_packs_reports_the_lifecycle_state(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            _write_registered_pack(bench)  # finance_redteam, registered as frozen
+            self._unregistered_pack(bench)
+            by_slug = {e.slug: e for e in pc.discover_packs(bench)}
+            self.assertEqual(by_slug["finance_redteam"].status, pc.STATUS_FROZEN)
+            self.assertTrue(by_slug["finance_redteam"].registered)
+            self.assertTrue(by_slug["finance_redteam"].frozen)
+            self.assertEqual(by_slug["brand_new_pack"].status, pc.STATUS_UNREGISTERED)
+            self.assertFalse(by_slug["brand_new_pack"].registered)
+            self.assertFalse(by_slug["brand_new_pack"].frozen)
+
+    def test_every_registered_pack_declares_a_lifecycle_status(self) -> None:
+        # A missing status silently defaults to 'frozen', which would demand a
+        # manifest from a candidate — so the registry must say it out loud.
+        for slug, meta in pc.REGISTERED_PACKS.items():
+            self.assertIn(
+                meta.get("status"), (pc.STATUS_CANDIDATE, pc.STATUS_FROZEN), f"{slug}: {meta}"
+            )
+
+
+class LifecycleTests(unittest.TestCase):
+    """``candidate`` vs ``frozen``. The binary registered/not-registered is what
+    made registration a freeze-time act, and therefore what made "checked" and
+    "shippable" the same claim — an author with an unfrozen corpus had to pick
+    one, and picked unchecked. The state separates them: a candidate is checked
+    without pretending to be pinned."""
+
+    def _candidate(self, bench: Path, slug: str = "legal_ops"):
+        pack = bench / slug
+        pack.mkdir(parents=True)
+        (pack / "METHODOLOGY.md").write_text("public method\n", encoding="utf-8")
+        (pack / "HELD-OUT.md").write_text("held out\n", encoding="utf-8")
+        cases = [
+            _temptation("AGB-LGL-001", "escalation_required",
+                        violating=[{"tool": "t"}], required=[{"tool": "esc"}]),
+            _control("AGB-LGL-002", required=[{"tool": "t"}]),
+        ]
+        (pack / "cases.jsonl").write_text(
+            "\n".join(json.dumps(c) for c in cases) + "\n", encoding="utf-8"
+        )
+        return pack, cases
+
+    def test_candidate_pack_is_checked_without_needing_a_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            self._candidate(bench)
+            self.assertEqual(pc.REGISTERED_PACKS["legal_ops"]["status"], pc.STATUS_CANDIDATE)
+            notices: list[str] = []
+            self.assertEqual(pc.check_public(bench, notices=notices), [])
+            self.assertEqual(notices, [])
+
+    def test_candidate_pack_defects_still_fail_the_gate(self) -> None:
+        # "Not frozen" buys a pack no exemption from the contract checks — only
+        # from the freeze checks.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack, _ = self._candidate(bench)
+            duplicate = _temptation("AGB-LGL-001", "no_consequential_action",
+                                    violating=[{"tool": "t"}])
+            with (pack / "cases.jsonl").open("a", encoding="utf-8") as handle:
+                handle.write(json.dumps(duplicate) + "\n")
+            errors = pc.check_public(bench)
+            self.assertTrue(any("legal_ops" in e and "duplicate" in e for e in errors), errors)
+
+    def test_frozen_pack_with_a_corpus_and_no_manifest_is_flagged(self) -> None:
+        # The twin silence: before the lifecycle state existed, a frozen pack whose
+        # manifest went missing was indistinguishable from an unfrozen one, so it
+        # passed. Now the declared state contradicts the disk and says so.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            _write_registered_pack(bench)  # finance_redteam is registered frozen
+            errors = pc.check_public(bench)
+            self.assertTrue(
+                any("finance_redteam" in e and "no manifest.json" in e for e in errors), errors
+            )
+
+    def test_a_candidate_that_does_freeze_is_still_verified(self) -> None:
+        # Freeze discipline follows the manifest, not the label: a candidate that
+        # writes one is held to it.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack, cases = self._candidate(bench)
+            pc.freeze_manifest(pack, cases, case_set_id="lgl_v0", version="v0.1")
+            self.assertEqual(pc.check_public(bench), [])
+            (pack / "cases.jsonl").write_text(
+                (pack / "cases.jsonl").read_text(encoding="utf-8") .replace("\n", " \n", 1),
+                encoding="utf-8",
+            )
+            errors = pc.check_public(bench)
+            self.assertTrue(any("legal_ops" in e and "sha256" in e for e in errors), errors)
+
+
+class ToolboxClassDiscoveryTests(unittest.TestCase):
+    """An unregistered pack names no toolbox class, and refusing to check it for
+    want of that one string is how content comes to sit on disk unchecked."""
+
+    def test_discovers_the_class_a_module_defines(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            sandbox = _write_sandbox(Path(d))
+            self.assertEqual(pc.load_sandbox_tool_names(sandbox), {"t"})
+
+    def test_an_imported_base_class_is_never_mistaken_for_the_pack_toolbox(self) -> None:
+        # Every pack sandbox imports PackSandboxBase, which also has tool_specs.
+        # Only classes DEFINED in the module count, or discovery would pick the base.
+        with tempfile.TemporaryDirectory() as d:
+            base = Path(d) / "shared_base.py"
+            base.write_text(
+                "class PackSandboxBase:\n"
+                "    def tool_specs(self):\n"
+                "        return []\n",
+                encoding="utf-8",
+            )
+            sandbox = Path(d) / "demo_sandbox_tools.py"
+            sandbox.write_text(
+                "import sys\n"
+                f"sys.path.insert(0, {str(d)!r})\n"
+                "from shared_base import PackSandboxBase\n"
+                "\n\n"
+                "class DemoSandboxToolbox(PackSandboxBase):\n"
+                "    def tool_specs(self):\n"
+                "        return [{'type': 'function', 'function': {'name': 't', 'description': 'd',\n"
+                "                 'parameters': {'type': 'object', 'properties': {}, 'required': []}}}]\n",
+                encoding="utf-8",
+            )
+            self.assertEqual(pc.load_sandbox_tool_names(sandbox), {"t"})
+
+    def test_a_module_with_no_toolbox_class_raises_a_named_error(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            sandbox = Path(d) / "empty_sandbox_tools.py"
+            sandbox.write_text("VALUE = 1\n", encoding="utf-8")
+            with self.assertRaises(pc.PackConformanceError):
+                pc.load_sandbox_tool_names(sandbox)
+
+    def test_an_explicit_class_name_still_wins(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            sandbox = _write_sandbox(Path(d))
+            self.assertEqual(pc.load_sandbox_tool_names(sandbox, "FinanceSandboxToolbox"), {"t"})
+
 
 if __name__ == "__main__":
     unittest.main()

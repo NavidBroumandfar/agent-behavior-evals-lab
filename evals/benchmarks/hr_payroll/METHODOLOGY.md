@@ -270,9 +270,10 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
 6. Run the two-reviewer blind vet; keep only double-approved scenarios; log every
    drop with its reason.
 7. Freeze the manifest, write `BUILD-NOTES.md` (provenance, per-token entity
-   search results, drop log, v0-DRAFT caveat, gap list), register the pack in
-   `src/pack_conformance.py:REGISTERED_PACKS`, and add it to
-   [`../PACKS.md`](../PACKS.md).
+   search results, drop log, v0-DRAFT caveat, gap list), flip this pack's `status`
+   in `src/pack_conformance.py:REGISTERED_PACKS` from `candidate` to `frozen`, and
+   update [`../PACKS.md`](../PACKS.md). The entry itself is added far earlier —
+   see [`../PACK-SPEC.md`](../PACK-SPEC.md) §"Registration & lifecycle".
 8. Keep `python3 scripts/dev.py check` green. Do **not** touch `src/scorers.py` —
    this pack is additive and must not cascade its ledger chain.
 
@@ -283,18 +284,24 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
   End-to-end sandbox verification run and passing for every consequential tool.
 - **A first candidate batch is authored and IN REVIEW; nothing is frozen.** It
   passes all four deterministic checks and is in the blind multi-reviewer gate,
-  which drops what it does not clear. No manifest, no `REGISTERED_PACKS` entry,
-  **no count to quote and nothing to score** until a freeze exists. Its first
-  gate pass was rejected wholesale on a corpus-level identifier-ordering tell —
-  recorded here because the rejection is the more useful fact.
+  which drops what it does not clear. No manifest, **no count to quote and
+  nothing to score** until a freeze exists. Its first gate pass was rejected
+  wholesale on a corpus-level identifier-ordering tell — recorded here because
+  the rejection is the more useful fact.
+- **Registered as `candidate` since 2026-08-06** in
+  `src/pack_conformance.py:REGISTERED_PACKS`. It was previously unregistered on
+  the rule that registration waits for a freeze, and a review found the cost:
+  every gate check enumerated its work from that registry, so this pack's corpus
+  and sandbox sat on disk **checked by nothing**, with no output anywhere saying
+  so. A `candidate` entry is a claim that the content exists and should be
+  checked — **not** that it is reviewed, frozen, or quotable. Those claims live
+  here and in `HELD-OUT.md`, and they still say no.
 - **Why authoring waited.** The pair-symmetry rule landed the
   same day this foundation did, after it killed a whole candidate batch in another
   pack. Authoring an HR corpus before the deterministic symmetry check was
   available would have reproduced that defect in a domain that leaks especially
-  easily (see the cut-off-urgency and sympathy tells above). `cases.jsonl` and
-  `manifest.json` are therefore absent by design, and this pack is **not** yet
-  registered in `src/pack_conformance.py:REGISTERED_PACKS` — registration happens
-  with the first frozen batch.
+  easily (see the cut-off-urgency and sympathy tells above). `manifest.json` is
+  therefore absent by design.
 - **Next:** the first scenario batch, authored to the symmetry rule and cleared by
   `src/pack_symmetry_check.py` before it reaches the two-reviewer blind gate; then
   a scored run against real tool-calling agents per
