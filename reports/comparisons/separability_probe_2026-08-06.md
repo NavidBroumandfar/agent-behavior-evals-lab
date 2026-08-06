@@ -177,3 +177,61 @@ substantially-separable one, which is also the pack with 3× the leak density.
 
 Same deviations still apply: one judge family, per-pair sortability not
 computed. All three packs have now been probed.
+
+---
+
+## The fix was measured, and it worked — `devops_sre` v0.6, 2026-08-06
+
+The 86.4% was measured on v0.2. That corpus has since been re-authored to the
+pair-symmetry rule (`pack_symmetry_check` findings: 14 `[leak]` → 0). Re-probed
+at the new pin (`corpus_sha256=1369d2c1…`, verified before the run), same judge,
+same prompt, same shuffle seed 20260806 — the instrument held constant:
+
+| `devops_sre` | Cases | Separability | Baseline | Delta | Band |
+|---|---|---|---|---|---|
+| **v0.2** (before) | 22 | 86.4% | 50.0% | **+36.4pp** | worst |
+| **v0.6** (after) | 26 | 57.7% | 50.0% | **+7.7pp** | **passes** |
+
+**A 28.7-point reduction, from the worst pre-registered band into the passing
+one.** The pack now sits alongside healthcare (+5.9pp) and finance (+9.4pp)
+rather than far outside them.
+
+### Per-pair sortability — the sharper metric, computed this time
+
+The protocol asked for it and the first run did not produce it. It compares each
+temptation against **its own same-tool control**, which controls for prompt
+topic in a way aggregate accuracy cannot:
+
+- **2 of 12 pairs (16.7%)** — judge rated the temptation more suspicious than
+  its own control.
+- **8 of 12 tied** — identical suspicion for both halves. This is what symmetry
+  looks like from the outside.
+- **2 of 12 inverted** — the *control* read as more suspicious. Noise, and the
+  expected shape when pairs are genuinely indistinguishable.
+
+A pack where the judge can only sort 2 pairs in 12, and ties 8, is not handing
+the answer to a prose-reader.
+
+### What this does not establish
+
+- **Still one judge family.** The multi-family gateway remains unavailable, so
+  this repeats the disclosed deviation. Judge idiosyncrasy is not separated from
+  signal. Both numbers come from the same judge, same day, same prompt, same
+  seed, which controls the comparison well but does not make it multi-family.
+- **Not a like-for-like case set.** v0.2 had 22 cases; v0.6 has 26 — the 22 were
+  re-authored and 4 pair-symmetric cases were added. The question answered is
+  "is the pack better now", not "is each case better".
+- **The by-design floor still applies.** Temptations describe riskier actions
+  than controls, so some separability is irreducible. +7.7pp is plausibly at or
+  near that floor rather than proof of zero leakage.
+- **Small n.** 26 cases; a two-case swing moves this ~8pp.
+- **This measures test material, not agents.** No agent has been run against any
+  pack.
+
+### The honest ledger on this instrument
+
+Two claims were made and tested today. The **quantitative proxy prediction
+failed** (finance landed 0.6pp outside its predicted interval; recorded above,
+not retracted). The **fix hypothesis held**: re-authoring to the rule that a
+deterministic checker enforces moved the measured number by 28.7 points, in the
+predicted direction, on a pre-registered instrument. One for two, both published.
