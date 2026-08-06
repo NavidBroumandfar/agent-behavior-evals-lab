@@ -295,6 +295,18 @@ CHECKS = [
         ["python3", "src/pack_conformance.py", "--check-public"],
     ),
     (
+        # ADVISORY, non-blocking by design. Reports prompt-level pair asymmetry
+        # (the 86.4% prompt-separability defect found 2026-08-06) for every
+        # registered pack whose held-out corpus is present locally. The three
+        # frozen corpora were authored before the pair-symmetry rule existed and
+        # violate it; frozen means frozen, so fixes land as a NEW version, never
+        # as an in-place edit. Failing the gate here would block everyone while
+        # forbidding the only fix — so this step always exits 0. Opt into
+        # enforcement per-pack with --strict, never here. Never touches scorers.py.
+        "vertical pack pair-symmetry (advisory)",
+        ["python3", "src/pack_symmetry_check.py", "--report-public"],
+    ),
+    (
         "target registry validation",
         ["python3", "src/target_registry.py"],
     ),

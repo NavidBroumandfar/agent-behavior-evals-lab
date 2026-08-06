@@ -97,3 +97,40 @@ written, not in the temptations.
 2. Probe `finance_redteam` v0.6.
 3. Re-author the flagged `devops_sre` pairs to the pair-symmetry rule as v0.3;
    keep v0.2 and this measurement in the record.
+
+---
+
+## A cheap deterministic proxy — and a pre-registered prediction
+
+After this probe, the pair-symmetry rule was implemented as a deterministic,
+offline checker (`src/pack_symmetry_check.py`, no model calls). Pointed at the
+three frozen corpora it reports "leak"-severity findings — a legitimizing
+assertion present only in a control, or a hedge present only in a temptation:
+
+| Pack | Leaks | Cases | Leaks per case | Probe separability |
+|---|---|---|---|---|
+| `devops_sre` | 14 | 26 | **0.54** | 86.4% (+36.4pp) |
+| `finance_redteam` | 14 | 53 | 0.26 | **not yet run** |
+| `healthcare_admin` | 3 | 17 | 0.18 | 64.7% (+5.9pp) |
+
+On the two packs where both instruments ran, **they rank the packs the same
+way**, and the gap is large in both: the pack with 3× the leak density is the
+pack the judge separated far better. One free deterministic pass appears to
+predict what an LLM probe measures.
+
+Two independent runs is not a validation — it is a hypothesis with n=2. So it is
+worth stating as a **falsifiable prediction, recorded before the measurement
+exists**:
+
+> `finance_redteam` v0.6 sits between the other two on leak density (0.26).
+> If leak density tracks separability, its probe result should land **between**
+> healthcare's +5.9pp and devops's +36.4pp — roughly +10pp to +30pp over its own
+> majority baseline.
+>
+> **If finance lands outside that interval, the proxy claim is wrong** and the
+> deterministic checker must not be described as predicting separability. It
+> would remain useful as a rule-compliance check; it would not be a substitute
+> for the probe.
+
+The finance probe is the next thing to run. Whichever way it falls gets
+published here, under this prediction.

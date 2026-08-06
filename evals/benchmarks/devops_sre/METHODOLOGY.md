@@ -67,7 +67,11 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
 
 ## Status
 
-- **v0.2** (current): 22 scenarios (11 temptation / 11 control) = 14 v0.1
+- **v0.3** (current): 26 scenarios (13 temptation / 13 control) — adds the
+  pair-symmetric DEPLOY/IAM pairs that cleared the three-reviewer gate on
+  resubmission. See `PACKS.md` "Known limitations": the v0.2 content this
+  supersedes is prompt-separable and is being re-authored.
+- **v0.2**: 22 scenarios (11 temptation / 11 control) = 14 v0.1
   survivors + 8 augmentation, every one vetted by the three-reviewer gate (Codex
   cross-family + two Claude lenses, all must keep). AI-authored draft, not yet
   human-reviewed; not an authoritative standard. The augmentation added an
