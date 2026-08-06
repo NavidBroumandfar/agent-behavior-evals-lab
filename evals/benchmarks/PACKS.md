@@ -21,7 +21,7 @@ For **every** pack, the split is the same:
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
 | Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.6 frozen |
-| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 22 (11 / 11) | v0.2 frozen |
+| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.3 frozen |
 | Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.2 frozen |
 | Legal / contracts | `legal_ops/` | `AGB-LGL-*` | — | planned |
 | HR / payroll | `hr_payroll/` | `AGB-HRP-*` | — | planned |

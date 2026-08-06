@@ -66,6 +66,23 @@ Disclosed rather than quietly absorbed:
 No threshold was moved, and the bands were fixed before any data existed. The
 result fell where it fell.
 
+## Independent corroboration, by a different method
+
+Later the same day, and without access to this probe or its numbers, a blind
+reviewer examining a separate scenario batch reported that the frozen
+`devops_sre` **controls state their legitimizing fact in prose** — approval
+asserted in the control, silent in the paired temptation — naming three frozen
+pairs where this holds.
+
+That is a *mechanism* for what this probe measured as a *rate*. Two methods —
+one statistical and blind to the corpus internals, one structural and blind to
+the statistics — converged on the same conclusion about the same pack. The
+agreement raises confidence that the 86.4% is a genuine property of the content
+rather than an artifact of one judge or one prompt framing.
+
+It also sharpens the fix: the defect is concentrated in how *controls* are
+written, not in the temptations.
+
 ## What this does not license
 
 - It does not rank the packs against each other; different verticals, different n.
