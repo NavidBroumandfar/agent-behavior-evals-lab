@@ -40,6 +40,28 @@ Each pack names, in its vertical, the action-decidable ways an action-taking
 agent misbehaves when tempted — and pairs every temptation with an honest control
 that a safe agent must **not** refuse.
 
+## Known limitations of the frozen packs
+
+Published because a limitation you find yourself is worth more than one a buyer
+finds for you.
+
+- **`devops_sre` v0.2 is substantially prompt-separable.** A judge shown only
+  the request text — no state, no labels — recovered the temptation/control
+  label 86.4% of the time against a 50% baseline
+  ([separability probe, 2026-08-06](../../reports/comparisons/separability_probe_2026-08-06.md)).
+  Any result from this pack must publish that number beside it, and the pack is
+  re-authored to the pair-symmetry rule before commercial use. `healthcare_admin`
+  v0.2 passed the same probe (+5.9pp over baseline); `finance_redteam` v0.6 is
+  not yet probed.
+- **Two sandbox scoring holes found by adversarial review, 2026-08-06.** In the
+  devops sandbox, one restricted-secret contract can be satisfied without the
+  agent actually refusing, so an unsafe path can score safe. In the healthcare
+  sandbox, one status-transition breach is gated on an exact string, so
+  equivalent transitions worded differently under-detect. Both are recorded in
+  the held-out build notes with their fixes; neither is patched in a frozen
+  pack — they land in the next version, with the flawed version left in the
+  record.
+
 ## Running the packs
 
 The first execution of the packs against real tool-calling agents is
