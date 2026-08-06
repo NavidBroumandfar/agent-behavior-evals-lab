@@ -8,6 +8,7 @@ catches post-freeze mutation. Deterministic, offline, no providers.
 
 from __future__ import annotations
 
+import hashlib
 import json
 import sys
 import tempfile
@@ -51,6 +52,26 @@ _SANDBOX_SRC = (
     "        return [{'type': 'function', 'function': {'name': 't', 'description': 'd',\n"
     "                 'parameters': {'type': 'object', 'properties': {}, 'required': []}}}]\n"
 )
+
+
+def _write_sandbox(pack_dir: Path, name: str = "demo_sandbox_tools.py") -> Path:
+    """Drop a sandbox module into a pack dir (found by the *sandbox_tools.py glob)."""
+
+    path = pack_dir / name
+    path.write_text(_SANDBOX_SRC, encoding="utf-8")
+    return path
+
+
+def _strip_sandbox_pin(pack_dir: Path) -> None:
+    """Rewrite manifest.json as a LEGACY manifest: one frozen before sandbox
+    pinning existed, so both sandbox keys are absent (not null)."""
+
+    manifest = json.loads((pack_dir / "manifest.json").read_text(encoding="utf-8"))
+    manifest.pop("sandbox_filename", None)
+    manifest.pop("sandbox_sha256", None)
+    (pack_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
 
 
 def _write_registered_pack(bench: Path, slug: str = "finance_redteam"):
@@ -285,6 +306,87 @@ class FreezeVerifyTests(unittest.TestCase):
             errors = pc.verify_manifest(tmp)
             self.assertTrue(any("corpus_sha256 mismatch" in e for e in errors), errors)
 
+    def test_freeze_records_the_sandbox_hash(self) -> None:
+        # The sandbox emits the breach tokens the scorer reads, so the freeze must
+        # pin it too — a corpus-only manifest lets the same pinned cases score
+        # differently after a sandbox change.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            sandbox = _write_sandbox(tmp)
+            manifest = pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            self.assertEqual(manifest["sandbox_filename"], "demo_sandbox_tools.py")
+            self.assertEqual(
+                manifest["sandbox_sha256"],
+                hashlib.sha256(sandbox.read_bytes()).hexdigest(),  # raw bytes, as for the corpus
+            )
+            self.assertEqual(pc.verify_manifest(tmp), [])
+
+    def test_verify_catches_single_byte_sandbox_edit(self) -> None:
+        # The gap this closes: cases.jsonl is untouched (corpus + per-record hashes
+        # both still match) and only the sandbox moved.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            sandbox = _write_sandbox(tmp)
+            pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            sandbox.write_text(sandbox.read_text(encoding="utf-8") + " ", encoding="utf-8")
+            errors = pc.verify_manifest(tmp)
+            self.assertTrue(any("sandbox_sha256 mismatch" in e for e in errors), errors)
+            self.assertFalse(any("corpus_sha256" in e or "per-record" in e for e in errors), errors)
+
+    def test_legacy_manifest_verifies_as_unpinned_not_as_mismatch(self) -> None:
+        # PIN (the compatibility crux): a manifest frozen before sandbox pinning
+        # made no claim about the sandbox, so nothing can contradict it. Even with
+        # the sandbox edited after that freeze, verification must NOT fail — it
+        # reports the manifest as unpinned, visibly and separately.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            sandbox = _write_sandbox(tmp)
+            pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            _strip_sandbox_pin(tmp)
+            sandbox.write_text(sandbox.read_text(encoding="utf-8") + " ", encoding="utf-8")
+            notices: list[str] = []
+            self.assertEqual(pc.verify_manifest(tmp, notices=notices), [])
+            self.assertTrue(any("not pinned" in n.lower() for n in notices), notices)
+
+    def test_pack_without_sandbox_module_freezes_and_verifies_clean(self) -> None:
+        # A pack driven by --tools has no sandbox module. Absence is recorded as an
+        # explicit null — a different claim from a legacy manifest's silence — and
+        # verifies clean with no unpinned notice.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            manifest = pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            self.assertIsNone(manifest["sandbox_sha256"])
+            self.assertIsNone(manifest["sandbox_filename"])
+            notices: list[str] = []
+            self.assertEqual(pc.verify_manifest(tmp, notices=notices), [])
+            self.assertEqual(notices, [])
+
+    def test_sandbox_appearing_after_a_null_freeze_is_drift(self) -> None:
+        # Why null is recorded explicitly rather than omitted: "this pack had no
+        # sandbox" is a claim, and a module showing up later contradicts it — the
+        # breach-token emitter changed after the freeze.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            _write_sandbox(tmp)
+            errors = pc.verify_manifest(tmp)
+            self.assertTrue(any("sandbox_sha256 mismatch" in e for e in errors), errors)
+
+    def test_verify_flags_a_pinned_sandbox_that_went_missing(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            sandbox = _write_sandbox(tmp)
+            pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            sandbox.unlink()
+            errors = pc.verify_manifest(tmp)
+            self.assertTrue(any("missing" in e and "demo_sandbox_tools.py" in e for e in errors), errors)
+
     def test_truncated_manifest_raises_for_direct_callers(self) -> None:
         # PIN: verify_manifest itself raises on unparseable JSON; only the gate
         # wrapper (check_public) downgrades that crash to a reported error.
@@ -335,6 +437,22 @@ class CheckPublicTests(unittest.TestCase):
             pack, cases = _write_registered_pack(bench)
             pc.freeze_manifest(pack, cases, case_set_id="fin_v0", version="v0.1")
             self.assertEqual(pc.check_public(bench), [])
+
+    def test_legacy_manifest_keeps_the_gate_green_and_surfaces_a_notice(self) -> None:
+        # Every pack frozen before sandbox pinning has such a manifest. The gate
+        # must stay green for them (errors == []) while the unpinned state is still
+        # visible on the notices channel, slug-prefixed like an error would be.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack, cases = _write_registered_pack(bench)
+            pc.freeze_manifest(pack, cases, case_set_id="fin_v0", version="v0.1")
+            _strip_sandbox_pin(pack)
+            notices: list[str] = []
+            self.assertEqual(pc.check_public(bench, notices=notices), [])
+            self.assertTrue(
+                any(n.startswith("finance_redteam: ") and "not pinned" in n.lower() for n in notices),
+                notices,
+            )
 
     def test_corrupt_manifest_reported_not_raised(self) -> None:
         # Post-freeze corruption is the artifact class the gate polices; a

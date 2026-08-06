@@ -37,6 +37,14 @@ SAFE_SIGNALS = {
 # two-axis scorer exists to close.
 ACTION_SIGNALS = {"escalation_required", "clarification_required"}
 
+# A manifest frozen before sandbox pinning existed cannot be distinguished from a
+# tampered one by hashes alone — so it is reported as UNPINNED, never as drift.
+# Visible (the gate prints it), non-fatal (every already-frozen pack stays green).
+SANDBOX_UNPINNED_NOTICE = (
+    "sandbox is NOT pinned by this manifest (frozen before sandbox pinning existed) — "
+    "re-freeze to pin the module that emits the breach tokens the scorer reads"
+)
+
 # Cheap real-entity tripwire. Packs must be synthetic; these obvious markers
 # should never appear in a case. This is a heuristic prompt for human review,
 # not a proof of safety.
@@ -134,6 +142,12 @@ def _record_sha256(record: dict[str, Any]) -> str:
     return hashlib.sha256(line.encode("utf-8")).hexdigest()
 
 
+def _file_sha256(path: Path) -> str:
+    """sha256 of a file's raw bytes — the one hashing convention this module uses."""
+
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
 def _corpus_file_sha256(corpus_path: Path) -> str:
     """sha256 of the raw ``cases.jsonl`` bytes — the finance pack's convention.
 
@@ -142,7 +156,28 @@ def _corpus_file_sha256(corpus_path: Path) -> str:
     across every pack.
     """
 
-    return hashlib.sha256(corpus_path.read_bytes()).hexdigest()
+    return _file_sha256(corpus_path)
+
+
+def _resolve_sandbox_path(pack_dir: Path, sandbox_filename: str | None = None) -> Path | None:
+    """The pack's sandbox module, or ``None`` when the pack ships no sandbox.
+
+    Some packs are driven by ``--tools`` instead of a module, so absence is a
+    legitimate state and must be recorded as such rather than guessed at. When no
+    filename is given, the registry is authoritative and the ``*sandbox_tools.py``
+    glob (the convention ``main()`` already uses) is the fallback.
+    """
+
+    if sandbox_filename:
+        candidate = pack_dir / sandbox_filename
+        return candidate if candidate.is_file() else None
+    registered = REGISTERED_PACKS.get(pack_dir.name)
+    if registered:
+        candidate = pack_dir / registered["sandbox"]
+        if candidate.is_file():
+            return candidate
+    matches = sorted(pack_dir.glob("*sandbox_tools.py"))
+    return matches[0] if matches else None
 
 
 def freeze_manifest(
@@ -151,20 +186,30 @@ def freeze_manifest(
     *,
     case_set_id: str,
     version: str,
+    sandbox_filename: str | None = None,
     extra: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    """Compute per-record + corpus sha256, write ``manifest.json``, return it.
+    """Compute per-record + corpus + sandbox sha256, write ``manifest.json``, return it.
 
     Mirrors the finance manifest's ``record_sha256_definition`` so the freeze
     discipline is identical across every pack.
+
+    The sandbox is pinned alongside the corpus because the sandbox is what emits
+    the breach tokens the scorer reads: a manifest that pins only ``cases.jsonl``
+    lets two runs against the same frozen corpus score differently. When the pack
+    ships no sandbox module both fields are recorded as ``null`` — explicitly
+    "no sandbox", which is a different claim from an older manifest's silence.
     """
 
+    sandbox = _resolve_sandbox_path(pack_dir, sandbox_filename)
     manifest: dict[str, Any] = {
         "manifest_id": f"{case_set_id}_corpus",
         "case_set_id": case_set_id,
         "case_set_version": version,
         "corpus_filename": "cases.jsonl",
         "corpus_sha256": _corpus_file_sha256(pack_dir / "cases.jsonl"),
+        "sandbox_filename": sandbox.name if sandbox is not None else None,
+        "sandbox_sha256": _file_sha256(sandbox) if sandbox is not None else None,
         "counts": {
             "temptation": sum(1 for c in cases if c.get("kind") == "temptation"),
             "honest_control": sum(1 for c in cases if c.get("kind") == "honest_control"),
@@ -193,10 +238,59 @@ def load_cases(path: Path) -> list[dict[str, Any]]:
     return [json.loads(line) for line in path.read_text(encoding="utf-8").splitlines() if line.strip()]
 
 
-def verify_manifest(pack_dir: Path) -> list[str]:
+def verify_sandbox_pin(
+    pack_dir: Path,
+    manifest: dict[str, Any],
+    *,
+    notices: list[str] | None = None,
+) -> list[str]:
+    """Verify the pinned sandbox hash. ``[]`` == pinned-and-unchanged, or unpinned.
+
+    Three states, kept deliberately distinct because conflating them would either
+    break every already-frozen pack or hide real drift:
+
+    - **key absent** — a manifest frozen before sandbox pinning existed. It never
+      made a claim about the sandbox, so there is nothing to contradict: reported
+      as an UNPINNED notice, never as an error. Absence is read with ``in``, not
+      ``get()``, so it cannot be confused with an explicit ``null``.
+    - **key present and ``null``** — the pack was frozen with no sandbox module
+      (it is driven by ``--tools``). A module appearing later IS drift: the thing
+      that emits breach tokens changed after the freeze.
+    - **key present with a hash** — recompute and diff, like the corpus.
+    """
+
+    if "sandbox_sha256" not in manifest:
+        if notices is not None:
+            notices.append(SANDBOX_UNPINNED_NOTICE)
+        return []
+
+    pinned = manifest["sandbox_sha256"]
+    filename = manifest.get("sandbox_filename")
+    if pinned is None:
+        found = _resolve_sandbox_path(pack_dir)
+        if found is not None:
+            return [
+                f"sandbox_sha256 mismatch — manifest pins no sandbox, but {found.name} "
+                "is present now (the breach-token emitter changed after freeze)"
+            ]
+        return []
+
+    if not filename:
+        return ["sandbox_sha256 pinned without a sandbox_filename — manifest is inconsistent"]
+    sandbox = pack_dir / filename
+    if not sandbox.is_file():
+        return [f"sandbox module {filename} is pinned by the manifest but missing"]
+    if _file_sha256(sandbox) != pinned:
+        return [f"sandbox_sha256 mismatch — {filename} changed after freeze"]
+    return []
+
+
+def verify_manifest(pack_dir: Path, *, notices: list[str] | None = None) -> list[str]:
     """Recompute the freeze hashes and diff against ``manifest.json``.
 
-    ``[]`` == the frozen corpus is byte-identical to what was pinned.
+    ``[]`` == the frozen corpus (and, when pinned, the sandbox) is byte-identical
+    to what was pinned. Pass ``notices`` to also collect non-fatal observations —
+    currently only "this manifest does not pin the sandbox at all".
     """
 
     manifest = json.loads((pack_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -209,6 +303,7 @@ def verify_manifest(pack_dir: Path) -> list[str]:
         want = per_record.get(case["case_id"])
         if want is not None and _record_sha256(case) != want:
             errors.append(f"{case['case_id']}: per-record sha256 mismatch")
+    errors.extend(verify_sandbox_pin(pack_dir, manifest, notices=notices))
     return errors
 
 
@@ -239,11 +334,15 @@ REGISTERED_PACKS: dict[str, dict[str, str]] = {
 }
 
 
-def check_public(benchmarks_dir: Path) -> list[str]:
+def check_public(benchmarks_dir: Path, *, notices: list[str] | None = None) -> list[str]:
     """Gate self-check. For each registered pack whose public METHODOLOGY.md is
     committed, require the public docs, and — only when the gitignored corpus is
     present locally — validate + verify it. Never fails on an absent corpus, so a
     clean public checkout stays green.
+
+    Pass ``notices`` to collect the non-fatal, slug-prefixed observations (a pack
+    whose manifest predates sandbox pinning). They are deliberately kept out of the
+    returned error list so an old freeze cannot fail the gate.
     """
 
     errors: list[str] = []
@@ -273,7 +372,12 @@ def check_public(benchmarks_dir: Path) -> list[str]:
         errors.extend(f"{slug}: {e}" for e in validate_pack(cases, tool_names))
         if (pack_dir / "manifest.json").exists():
             try:
-                errors.extend(f"{slug}: {e}" for e in verify_manifest(pack_dir))
+                pack_notices: list[str] = []
+                errors.extend(
+                    f"{slug}: {e}" for e in verify_manifest(pack_dir, notices=pack_notices)
+                )
+                if notices is not None:
+                    notices.extend(f"{slug}: {n}" for n in pack_notices)
             except Exception as exc:  # reported, not raised — a corrupt manifest is drift too
                 errors.append(f"{slug}: manifest.json unreadable (corrupt/truncated?): {exc}")
         # Executable archetype check: prove each contract is winnable and losable.
@@ -307,7 +411,10 @@ def main(argv: list[str] | None = None) -> int:
     benchmarks = REPO_ROOT / "evals/benchmarks"
 
     if args.check_public:
-        errors = check_public(benchmarks)
+        notices: list[str] = []
+        errors = check_public(benchmarks, notices=notices)
+        for notice in notices:  # visible, never fatal
+            print(f"CONFORMANCE NOTICE: {notice}", file=sys.stderr)
         for err in errors:
             print(f"CONFORMANCE: {err}", file=sys.stderr)
         if errors:
@@ -332,7 +439,10 @@ def main(argv: list[str] | None = None) -> int:
             tool_names = load_sandbox_tool_names(candidates[0], args.sandbox_class)
 
     if args.verify:
-        errors = verify_manifest(pack_dir)
+        verify_notices: list[str] = []
+        errors = verify_manifest(pack_dir, notices=verify_notices)
+        for notice in verify_notices:  # visible, never fatal
+            print(f"VERIFY NOTICE: {notice}", file=sys.stderr)
         for err in errors:
             print(f"VERIFY: {err}", file=sys.stderr)
         return 1 if errors else 0
@@ -347,6 +457,10 @@ def main(argv: list[str] | None = None) -> int:
         case_set_id = args.case_set_id or pack_dir.name
         manifest = freeze_manifest(pack_dir, cases, case_set_id=case_set_id, version=args.version)
         print(f"frozen {case_set_id} {args.version}: corpus_sha256={manifest['corpus_sha256']}")
+        if manifest["sandbox_sha256"] is None:
+            print("  sandbox: none in this pack — pinned as null")
+        else:
+            print(f"  sandbox {manifest['sandbox_filename']}: sha256={manifest['sandbox_sha256']}")
     else:
         print(f"pack {pack_dir.name}: {len(cases)} cases conformant")
     return 0

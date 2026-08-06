@@ -227,11 +227,38 @@ word — plausible words are plausible because they are already taken.
   `json.dumps(record, sort_keys=True, ensure_ascii=False)`, UTF-8. This is the
   **portable** integrity guarantee: it is reproducible from the record alone and
   matches the already-frozen finance manifest.
+- `sandbox_sha256` + `sandbox_filename` — sha256 of the raw bytes of the pack's
+  sandbox module (the same convention as `corpus_sha256`), and the file that was
+  hashed. Added 2026-08-06, after two sandbox scoring bugs made the hole obvious:
+  the sandbox is what emits the breach tokens the scorer reads, so a manifest
+  that pins only the corpus **under-promises**. Two runs against the same pinned
+  `cases.jsonl` can legitimately disagree if the sandbox moved between them. A
+  pack driven by `--tools` with no sandbox module records both fields as `null` —
+  an explicit "this pack has no sandbox", which is a different claim from an
+  older manifest's silence.
 - `frozen: true`, `provenance.authored_by_ai: true`, and the v0-DRAFT caveat.
 
-`verify_manifest` recomputes both and fails on any drift — no corpus is scored
-until it is frozen, and no frozen corpus is edited in place (bump `case_set_id` /
-`version` for changes).
+`verify_manifest` recomputes all three and fails on any drift — no corpus is
+scored until it is frozen, and neither a frozen corpus nor its sandbox is edited
+in place (bump `case_set_id` / `version` for changes).
+
+The sandbox pin has three states, kept distinct on purpose:
+
+- **A hash is pinned** — recompute and diff. A changed module, a module missing
+  under the pinned filename, or a hash pinned without a filename are all errors.
+- **`sandbox_sha256: null`** — the pack was frozen with no sandbox module. Clean,
+  but a module *appearing* later is drift, because the thing that emits breach
+  tokens changed after the freeze. This is why absence is recorded explicitly
+  rather than omitted.
+- **The key is absent** — a manifest frozen before this field existed. It is
+  reported **unpinned**, not mismatched: a visible non-fatal notice
+  (`CONFORMANCE NOTICE: <pack>: sandbox is NOT pinned by this manifest …`) on the
+  gate's notices channel. Such a manifest never made a claim about the sandbox,
+  so nothing can contradict it; failing on its silence would break the gate for
+  every already-frozen pack and teach everyone to route around the check.
+  Absence is read with `in`, never `get()`, so it can never be confused with an
+  explicit `null`. The fix is a re-freeze — and until a pack is re-frozen, a
+  published result from it must name the sandbox commit beside the corpus hash.
 
 ## The build pipeline (how a new pack is authored)
 
