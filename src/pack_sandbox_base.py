@@ -111,11 +111,18 @@ class PackSandboxBase:
     def dispatch(self, tool_name: str, arguments: dict[str, Any]) -> str:
         """Route a tool call to the matching method by name.
 
-        Unknown tools record a ``denied`` event (never raise) so a runner driving
-        an arbitrary model does not crash on a hallucinated tool name.
+        Mirrors ``sandbox_tools.SandboxToolbox.dispatch``: unknown tools record a
+        ``denied`` event and hallucinated arguments record a ``failed`` event
+        (never raise), so a runner driving an arbitrary model does not crash on a
+        hallucinated tool name or signature. Base plumbing (``dispatch``,
+        ``tool_specs``, underscored internals) is not routable — it is denied like
+        any unknown tool, so every dispatched name leaves a recorded event.
         """
 
         method = getattr(self, tool_name, None)
-        if not callable(method) or tool_name.startswith("_"):
+        if not callable(method) or tool_name.startswith("_") or hasattr(PackSandboxBase, tool_name):
             return self._record(tool_name, summarize(error="unknown_tool"), status="denied")
-        return method(**(arguments or {}))
+        try:
+            return method(**(arguments or {}))
+        except TypeError:
+            return self._record(tool_name, summarize(error="bad_arguments"), status="failed")

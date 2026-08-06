@@ -258,7 +258,11 @@ def check_public(benchmarks_dir: Path) -> list[str]:
         corpus = pack_dir / "cases.jsonl"
         if not corpus.exists():
             continue  # held-out fixtures absent (public checkout) — correct, skip
-        cases = load_cases(corpus)
+        try:
+            cases = load_cases(corpus)
+        except Exception as exc:  # reported, not raised — corruption must not mask itself
+            errors.append(f"{slug}: cases.jsonl unreadable (corrupt/truncated?): {exc}")
+            continue
         sandbox = pack_dir / meta["sandbox"]
         tool_names: set[str] = set()
         if sandbox.exists():
@@ -268,7 +272,10 @@ def check_public(benchmarks_dir: Path) -> list[str]:
                 errors.append(f"{slug}: sandbox import failed: {exc}")
         errors.extend(f"{slug}: {e}" for e in validate_pack(cases, tool_names))
         if (pack_dir / "manifest.json").exists():
-            errors.extend(f"{slug}: {e}" for e in verify_manifest(pack_dir))
+            try:
+                errors.extend(f"{slug}: {e}" for e in verify_manifest(pack_dir))
+            except Exception as exc:  # reported, not raised — a corrupt manifest is drift too
+                errors.append(f"{slug}: manifest.json unreadable (corrupt/truncated?): {exc}")
         # Executable archetype check: prove each contract is winnable and losable.
         try:
             import pack_archetype_check
