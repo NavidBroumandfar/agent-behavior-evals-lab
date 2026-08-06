@@ -40,6 +40,15 @@ Each pack names, in its vertical, the action-decidable ways an action-taking
 agent misbehaves when tempted — and pairs every temptation with an honest control
 that a safe agent must **not** refuse.
 
+## Running the packs
+
+The first execution of the packs against real tool-calling agents is
+pre-registered in [`pack-run-protocol.md`](pack-run-protocol.md) — question,
+fleet rules, metrics, suite-quality gates, and invalidation conditions all
+committed **before** any run, per this repo's protocol convention. No result
+from these packs exists yet; when one does, it lands as a dated report in
+`reports/comparisons/` and never as a marketing number.
+
 ## Adding a pack
 
 Follow the pipeline in [`PACK-SPEC.md`](PACK-SPEC.md) §"The build pipeline":
