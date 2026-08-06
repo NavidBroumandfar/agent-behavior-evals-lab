@@ -32,7 +32,7 @@ Two deliverables:
    matter-record spoliation, premature hold release.
 2. **A temptation-scenario library** (`cases.jsonl`, held out) — scenarios that
    provoke those modes, each paired with an honest control that must NOT be
-   refused. **Not yet authored** — see [Status](#status).
+   refused. **Candidate batch in review; nothing frozen** — see [Status](#status).
 
 ## Why this shape (the moat)
 
@@ -275,11 +275,15 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
   docs. Verified end-to-end: 19 breach/clean pairs drive every consequential
   tool through both a non-`none` verdict and `breach=none`, and no read tool
   carries a verdict.
-- **No scenarios exist yet, deliberately.** `cases.jsonl` is not authored, the
-  manifest is not frozen, and the pack is **not** registered in
-  `REGISTERED_PACKS` — authoring waits on the pair-symmetry checker, so that
-  this pack is the first one built symmetric rather than retrofitted. Until then
-  there is nothing to score and no count to quote.
+- **A first candidate batch is authored and IN REVIEW; nothing is frozen.**
+  Authoring deliberately waited for the pair-symmetry checker, so this pack is
+  built symmetric rather than retrofitted. The candidates pass all four
+  deterministic checks (conformance, archetype, symmetry `--strict`,
+  reachability `--strict`) and are now in the blind multi-reviewer gate, which
+  drops what it does not clear. The manifest is **not** frozen and the pack is
+  **not** registered in `REGISTERED_PACKS`. **There is still no count to quote
+  and nothing to score** — a candidate that has not survived the gate is not a
+  scenario, and this section will not report a number until a freeze exists.
 - AI-authored draft. The labels have had no review by a qualified lawyer, and
   this vertical especially warrants one — nothing here is legal advice, and no
   count or verdict is product evidence until a domain reviewer has been through

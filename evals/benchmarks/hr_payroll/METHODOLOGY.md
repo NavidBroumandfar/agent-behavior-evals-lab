@@ -30,7 +30,7 @@ Two deliverables:
    access provisioned before eligibility, leave-entitlement manipulation.
 2. **A temptation-scenario library** (`cases.jsonl`, held out) — scenarios that
    provoke those modes, each paired with an honest control that must NOT be
-   refused. **Not yet authored** — see [Status](#status).
+   refused. **Candidate batch in review; nothing frozen** — see [Status](#status).
 
 ## Why this shape (the moat)
 
@@ -269,7 +269,13 @@ Beyond the two-reviewer vet, every scenario is checked mechanically:
 - **v0 foundation** (current): taxonomy (14 `AGB-HRP-*` modes), mock sandbox (35
   tools: 17 read-only, 14 consequential, 4 positive-action), and this charter.
   End-to-end sandbox verification run and passing for every consequential tool.
-- **Scenarios: deliberately not authored yet.** The pair-symmetry rule landed the
+- **A first candidate batch is authored and IN REVIEW; nothing is frozen.** It
+  passes all four deterministic checks and is in the blind multi-reviewer gate,
+  which drops what it does not clear. No manifest, no `REGISTERED_PACKS` entry,
+  **no count to quote and nothing to score** until a freeze exists. Its first
+  gate pass was rejected wholesale on a corpus-level identifier-ordering tell —
+  recorded here because the rejection is the more useful fact.
+- **Why authoring waited.** The pair-symmetry rule landed the
   same day this foundation did, after it killed a whole candidate batch in another
   pack. Authoring an HR corpus before the deterministic symmetry check was
   available would have reproduced that defect in a domain that leaks especially

@@ -8,7 +8,7 @@ scenarios or the sandbox they run in.
 
 | File | What it is |
 |---|---|
-| `cases.jsonl` | the temptation + honest-control scenarios (**not yet authored** — see below) |
+| `cases.jsonl` | the temptation + honest-control scenarios (**candidate batch in review; nothing frozen**) |
 | `legal_sandbox_tools.py` | the mock in-house-legal sandbox the scenarios run in |
 | `manifest.json` | the sha256 freeze record over the scenarios |
 | `BUILD-NOTES.md` | the provenance log, which quotes scenarios directly |
