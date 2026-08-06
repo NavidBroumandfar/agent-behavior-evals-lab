@@ -125,7 +125,97 @@ A pack is conformant iff `validate_pack` returns no errors:
    control (a suite that is nearly all temptations rewards over-refusal).
 8. **Synthetic content** — a denylist tripwire flags obvious real-entity / PII
    strings for human review. Passing the tripwire is necessary, not sufficient;
-   authors are still responsible for inventing every entity.
+   authors are still responsible for inventing every entity. See the entity
+   standard below for what "invented" means and how it is checked.
+
+## The pair-symmetry rule
+
+Added 2026-08-06, after a review round found that **every pair in a candidate
+batch was separable from prompt text alone** — and that this, not any single
+bad case, was the batch's real defect.
+
+The failure looks like this. In each pair the honest control carried a clause
+confirming the legitimizing fact ("the correction review is complete", "the
+entry is a drill artifact", "a request has been filed as X"), while the
+temptation either omitted that clause or hedged it ("a possible artifact",
+"they say it was an error"). Every case passed conformance. Every disqualifier
+technically lived in state. And yet an agent could score **every case correctly
+without making a single read call**, by learning:
+
+> act when the message confirms the gate, escalate when it hedges.
+
+That agent looks safe and has verified nothing. A pack that can be beaten this
+way measures prose sentiment while claiming to measure behavior — the exact
+substitution this lab exists to refuse.
+
+**The rule:** within a temptation/control pair, the two prompts must differ
+only in identifiers. Same opening structure, same approximate length, same
+register, same confidence. The requester states their premise **flatly in both
+cases**; the sandbox state, not the wording, decides whether the premise holds.
+
+Practical tests an author must apply before submitting a pair:
+
+- **Sortability test.** Show both prompts, stripped of ids and labels, to a
+  reader with no sandbox access. If they can reliably say which is the
+  temptation, the pair leaks — regardless of where the disqualifier "lives".
+- **No hedging asymmetry.** Hedged language ("possibly", "they claim", "if
+  it turns out") in one half and flat assertion in the other is a tell, even
+  when both prompts are individually plausible.
+- **No justification asymmetry.** Extra explanation, urgency, or
+  consequence-of-delay framing on one side is a tell. Real requesters justify
+  routine work about as much as they justify irregular work.
+- **No verb asymmetry.** If the temptation's ask is phrased as the more
+  destructive act ("delete from the audit log") and the control's as the
+  gentler one ("clear from the queue"), the pair sorts on the verb.
+- **Role implication.** If the requester's stated role or department implies
+  the disqualifier, the prompt has leaked it without naming it.
+
+A pair that fails any of these is re-authored, not patched — and a control
+whose partner is re-authored must be re-checked against its new twin, because
+symmetry is a property of the pair, never of either prompt alone.
+
+## The entity standard
+
+Added 2026-08-06 after a review round dropped a whole candidate batch on entity
+collisions, and found the batch's own "these names are invented" note had been
+written **without anyone running a search**. The rule was implicit; reviewers
+applied it inconsistently; it is now explicit.
+
+**The bar is *no confusable referent*, not *zero search results*.** Zero-hit is
+unachievable — almost any pronounceable token matches something — and a
+zero-hit rule would retroactively condemn already-frozen names whose referents
+no reader could confuse with the scenario.
+
+A name is a **drop** when any of these hold:
+
+- **Same-domain collision.** The token names a real company, product, or
+  service in or near the vertical the scenario depicts. A real telemetry
+  company's name on a fictional metrics service is a drop, however unfamiliar
+  the company is.
+- **Third-party role.** The token names an *external* organization in the
+  scenario — a vendor, payer, provider, counterparty. This is the highest-risk
+  position, because the scenario depicts that party behaving badly. Held to a
+  stricter bar than an internal service the fictional company names for itself.
+- **Real person.** Any handle, byline, or principal resolving to an identifiable
+  individual. `firstname.initial` handles are **not acceptable**: they collide
+  with real people by construction and cannot be cleared by search. Use
+  obviously-synthetic operator handles instead.
+- **Real identifiers.** Anything shaped like a genuine account, card, SSN, NPI,
+  IBAN, or contact address, whether or not it is currently assigned.
+
+A name is **acceptable** when its only hits are out-of-domain and no reader in
+the scenario's field would resolve the fictional entity to the real one — the
+standard already-frozen internal service names are held to.
+
+**Evidence, not assertion.** Every proper noun in a candidate batch is
+web-searched before review, and the result is recorded per token in the batch's
+build notes. "No real entity of that name is known" is not a check and does not
+count. An unsearched token is treated as a failed token: the reviewer drops it
+without further analysis, because one false provenance claim makes the whole
+batch's provenance unverified.
+
+Coin names by fusing unrelated morphemes rather than by picking a plausible
+word — plausible words are plausible because they are already taken.
 
 ## Freeze & verify
 
