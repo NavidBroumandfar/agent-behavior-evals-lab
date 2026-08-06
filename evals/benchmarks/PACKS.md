@@ -21,10 +21,10 @@ For **every** pack, the split is the same:
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
 | Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.6 frozen |
-| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.3 frozen |
-| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.2 frozen |
-| Legal / contracts | `legal_ops/` | `AGB-LGL-*` | — | planned |
-| HR / payroll | `hr_payroll/` | `AGB-HRP-*` | — | planned |
+| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.4 frozen |
+| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.3 frozen |
+| Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | taxonomy + sandbox built; scenarios pending |
+| HR / payroll | [`hr_payroll/`](hr_payroll/) | `AGB-HRP-*` | — | taxonomy + sandbox built; scenarios pending |
 | Customer support / T&S | `support_ts/` | `AGB-CST-*` | — | planned |
 | Data / analytics | `data_ops/` | `AGB-DTA-*` | — | planned |
 
@@ -50,17 +50,30 @@ finds for you.
   label 86.4% of the time against a 50% baseline
   ([separability probe, 2026-08-06](../../reports/comparisons/separability_probe_2026-08-06.md)).
   Any result from this pack must publish that number beside it, and the pack is
-  re-authored to the pair-symmetry rule before commercial use. `healthcare_admin`
-  v0.2 passed the same probe (+5.9pp over baseline); `finance_redteam` v0.6 is
-  not yet probed.
-- **Two sandbox scoring holes found by adversarial review, 2026-08-06.** In the
-  devops sandbox, one restricted-secret contract can be satisfied without the
-  agent actually refusing, so an unsafe path can score safe. In the healthcare
-  sandbox, one status-transition breach is gated on an exact string, so
-  equivalent transitions worded differently under-detect. Both are recorded in
-  the held-out build notes with their fixes; neither is patched in a frozen
-  pack — they land in the next version, with the flawed version left in the
-  record.
+  re-authored to the pair-symmetry rule before commercial use. All three packs
+  have now been probed: `healthcare_admin` passed (+5.9pp) and
+  `finance_redteam` passed (+9.4pp). devops is the only substantially
+  separable one — and the only one where a deterministic check finds 3× the
+  density of forbidden prose asymmetries.
+- **Two sandbox scoring holes — FIXED 2026-08-06** (devops v0.4,
+  healthcare v0.3). A restricted-secret disclosure was excused by the agent's
+  own claim about who would receive the value (scoring the assertion, not the
+  act); and a coverage-granting status change was gated on one exact string, so
+  the same transition worded differently under-detected. Both fixes were
+  verified by driving all 43 frozen cases through both sandboxes before and
+  after: **zero canonical verdicts moved.** The superseded versions and their
+  measurements stay in the record.
+- **The freeze manifest pins the corpus, not the sandbox.** Discovered while
+  fixing the above: two runs against the same pinned `cases.jsonl` could score
+  differently if the sandbox changed, because only the corpus is hashed. Being
+  closed; until it is, a published result must name the sandbox commit as well
+  as the corpus hash.
+- **Two further defects found and NOT yet fixed**, because each would move a
+  frozen case's verdict and that is a corpus decision, not a bug fix: one
+  devops rollback temptation cannot actually reach its violation (an
+  unauthorized rollback currently scores safe on the safety axis), and one
+  healthcare fixture flag is read by no tool, so a case's stated rule is not
+  enforced. Both are recorded in the held-out build notes.
 
 ## Running the packs
 

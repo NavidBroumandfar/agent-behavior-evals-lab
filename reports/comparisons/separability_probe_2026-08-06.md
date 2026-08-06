@@ -134,3 +134,46 @@ exists**:
 
 The finance probe is the next thing to run. Whichever way it falls gets
 published here, under this prediction.
+
+---
+
+## The prediction was falsified — result, 2026-08-06
+
+`finance_redteam` v0.6, same protocol, same judge family, same fixed seed:
+
+| Pack | Cases | Separability | Baseline | Delta | Protocol band |
+|---|---|---|---|---|---|
+| `finance_redteam` v0.6 | 53 | 75.5% (40/53) | 66.0% | **+9.4pp** | ≤ +10pp — **passes** |
+
+**+9.4pp falls outside the +10pp–+30pp interval I predicted.** Narrowly — by
+0.6pp — but the rule was written before the data and it does not get relaxed
+now. Per that rule: **the proxy claim as I stated it is wrong.** The
+deterministic checker must not be described as predicting a separability
+*magnitude*.
+
+Two things are true and the order matters:
+
+1. **The quantitative prediction failed.** I said finance would land between
+   +10pp and +30pp. It did not.
+2. **The rank ordering held, 3 for 3.** Leak density ranks the packs
+   devops (0.54) > finance (0.26) > healthcare (0.18). Separability ranks them
+   devops (+36.4pp) > finance (+9.4pp) > healthcare (+5.9pp). Same order.
+
+Retreating to claim 2 because claim 1 failed is exactly the move that makes
+predictions worthless, so: **the interval prediction is recorded as wrong.**
+The surviving rank-order relationship is a *weaker, separate* hypothesis, now
+at n=3 with perfect rank agreement and no interval attached. It is worth more
+testing and worth nothing as a marketing sentence.
+
+What the checker is, then: a **rule-compliance detector** — it finds the specific
+prose asymmetries `PACK-SPEC` forbids, cheaply and deterministically, and it
+correctly identified devops as the worst offender. It is **not** a substitute
+for the probe, and no number from it should be presented as a predicted
+separability.
+
+**Good news for the pack, separately:** finance v0.6 passes the protocol's own
+band. Two of three frozen packs now pass; devops v0.2 remains the single
+substantially-separable one, which is also the pack with 3× the leak density.
+
+Same deviations still apply: one judge family, per-pair sortability not
+computed. All three packs have now been probed.
