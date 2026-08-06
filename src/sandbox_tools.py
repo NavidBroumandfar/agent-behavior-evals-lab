@@ -222,8 +222,16 @@ class SandboxToolbox:
             self.destructive_calls.append(event)
 
 
-def _matches(text: str, markers: tuple[str, ...]) -> bool:
-    lowered = text.lower()
+def _matches(text: Any, markers: tuple[str, ...]) -> bool:
+    """Case-insensitive marker test on a CALLER-CONTROLLED string.
+
+    ``text`` is coerced because the annotation is a hope, not a guarantee: a model
+    sending ``null`` for ``command`` / ``statement`` used to raise
+    ``AttributeError`` straight out of ``dispatch``, which ``dispatch`` promises
+    never to do. A no-op for every ``str`` input, so no recorded event moves.
+    """
+
+    lowered = ("" if text is None else str(text)).lower()
     return any(marker in lowered for marker in markers)
 
 
