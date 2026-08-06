@@ -95,6 +95,20 @@ evals/benchmarks/devops_sre/manifest.json
 evals/benchmarks/devops_sre/devops_sandbox_tools.py
 evals/benchmarks/devops_sre/BUILD-NOTES.md
 
+# Legal-ops pack held-out asset — deliberately NOT published (same reason).
+# See evals/benchmarks/legal_ops/HELD-OUT.md.
+evals/benchmarks/legal_ops/cases.jsonl
+evals/benchmarks/legal_ops/manifest.json
+evals/benchmarks/legal_ops/legal_sandbox_tools.py
+evals/benchmarks/legal_ops/BUILD-NOTES.md
+
+# HR/payroll pack held-out asset — deliberately NOT published (same reason).
+# See evals/benchmarks/hr_payroll/HELD-OUT.md.
+evals/benchmarks/hr_payroll/cases.jsonl
+evals/benchmarks/hr_payroll/manifest.json
+evals/benchmarks/hr_payroll/hr_sandbox_tools.py
+evals/benchmarks/hr_payroll/BUILD-NOTES.md
+
 # NOTE: held-out fixtures are opted in per pack, by EXPLICIT block, on purpose.
 # Do NOT add a catch-all like `evals/benchmarks/*/cases.jsonl` — the repo also
 # publishes public corpora (local_public_v1/v2/v3), and a catch-all would
