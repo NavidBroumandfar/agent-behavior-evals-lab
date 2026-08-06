@@ -20,7 +20,9 @@ behavior, the exact substitution this lab exists to refuse. See
 This module makes that catchable *deterministically, before a pack freezes*: it
 pairs cases, measures length/shape asymmetry, scans two curated marker lists
 (legitimizing assertions vs hedges/urgency), diffs the prompts token-by-token
-with identifier-shaped tokens masked, and assists the entity standard.
+with identifier-shaped tokens masked, assists the entity standard, and — because
+that mask is by construction blind to what the identifiers themselves carry —
+measures the corpus-level directional skew of identifier *serials* across pairs.
 
 Findings, not verdicts
 ----------------------
@@ -31,8 +33,9 @@ Every finding is a human-readable string tagged with a severity:
   ``firstname.initial`` principal). These are what an author must re-author.
 - ``[warn]`` — an asymmetry that *may* be a tell: length/character/token-position
   deltas, one-sided markers pointing the unexpected way, one-sided proper nouns,
-  and pairs that could not be formed at all (symmetry is a property of a pair, so
-  an unpaired case cannot be checked — that is reported, not silently passed).
+  a corpus-level directional skew in identifier serials, and pairs that could not
+  be formed at all (symmetry is a property of a pair, so an unpaired case cannot
+  be checked — that is reported, not silently passed).
 
 **Why this does not fail the gate by default.** The three frozen corpora were
 authored *before* the pair-symmetry rule existed and they violate it — that is
@@ -55,6 +58,7 @@ Deterministic, offline, stdlib-only. No model calls. Never touches
 from __future__ import annotations
 
 import argparse
+import math
 import re
 import sys
 from pathlib import Path
@@ -80,6 +84,13 @@ TOKEN_DIFF_FLOOR = 8
 # frozen corpus that violates the rule wholesale cannot bury the rest of the
 # gate's output. ``--strict`` prints all of them.
 ADVISORY_PRINT_LIMIT = 20
+
+# Identifier-serial skew (see ``check_serial_skew`` for the full reasoning).
+# ``SKEW_ALPHA`` is the two-sided significance level; ``MIN_SKEW_PAIRS`` is the
+# smallest number of *decisive* pairs the corpus statistic will speak about.
+SKEW_ALPHA = 0.10
+MIN_SKEW_PAIRS = 6
+SKEW_SUBJECT = "corpus"
 
 # ---------------------------------------------------------------------------
 # Marker lists. Module-level constants ON PURPOSE: they are the auditable,
@@ -218,6 +229,26 @@ _ID_TOKEN_PATTERNS: tuple[re.Pattern[str], ...] = (
     re.compile(r"^[A-Z]{2,}\d{2,}$"),
 )
 
+# Serial-bearing identifiers: the subset of the masked tokens above that splits
+# cleanly into a NAMESPACE PREFIX and a NUMERIC SERIAL. These are the tokens the
+# id mask throws information away about — ``EMP-4471`` and ``EMP-4472`` both mask
+# to ``<ID>``, so the masked diff is clean while the raw ids still say which twin
+# is which. Deliberately narrower than ``_ID_TOKEN_PATTERNS``:
+#
+# - **semantic versions** (``v1.2.3``) are excluded — a version ordering is a
+#   scenario fact ("roll back to the older build"), not an arbitrary fixture
+#   serial, and ordering it would fire on every pack that mentions two builds;
+# - **dotted handles / qualified names** (``svc.metrics``) carry no serial;
+# - **bare numbers** (``1,234``) are excluded — with no prefix there is no family
+#   to compare within, and a bare number in a prompt is far more often a quantity
+#   (an amount, a headcount, a port) than an identifier.
+_SERIAL_ID_PATTERNS: tuple[re.Pattern[str], ...] = (
+    # segmented: AR-5551 -> ("AR", 5551); DVO-IAM-201 -> ("DVO-IAM", 201)
+    re.compile(r"^(?P<prefix>[A-Za-z][A-Za-z0-9]*(?:-[A-Za-z][A-Za-z0-9]*)*)-(?P<serial>\d+)$"),
+    # SHOUTY unsegmented: INC0042 -> ("INC", 42); PR12345 -> ("PR", 12345)
+    re.compile(r"^(?P<prefix>[A-Z]{2,})(?P<serial>\d{2,})$"),
+)
+
 # ``firstname.initial`` principals. PACK-SPEC's entity standard rejects these
 # outright: they collide with real people by construction and cannot be cleared
 # by search. Two shapes, both requiring a SINGLE trailing letter so that a
@@ -260,6 +291,30 @@ def mask_identifiers(tokens: list[str]) -> list[str]:
     """
 
     return [_ID_MASK if any(p.match(t) for p in _ID_TOKEN_PATTERNS) else t for t in tokens]
+
+
+def serial_ids(text: str) -> dict[str, list[int]]:
+    """Serial-bearing identifiers in ``text``, grouped by uppercased prefix family.
+
+    ``"Move EMP-4471 and EMP-4480 onto AR-5551"`` →
+    ``{"EMP": [4471, 4480], "AR": [5551]}``.
+
+    Grouping by prefix is the point: twinning happens *within* a namespace
+    (``EMP-4471`` dirty / ``EMP-4472`` clean). Comparing an ``AR`` serial against
+    an ``EMP`` serial compares two unrelated fixture namespaces and means nothing.
+    Prefixes are uppercased so ``emp-4471`` and ``EMP-4472`` are one family.
+    """
+
+    families: dict[str, list[int]] = {}
+    for token in tokenize(text):
+        for pattern in _SERIAL_ID_PATTERNS:
+            match = pattern.match(token)
+            if match:
+                families.setdefault(match.group("prefix").upper(), []).append(
+                    int(match.group("serial"))
+                )
+                break
+    return families
 
 
 def marker_hits(text: str, patterns: tuple[tuple[str, re.Pattern[str]], ...]) -> set[str]:
@@ -597,11 +652,236 @@ def _marker_findings(
 
 
 # ---------------------------------------------------------------------------
+# The identifier channel: serial skew across pairs
+#
+# The pair-symmetry rule says the two halves must be identical ONCE
+# IDENTIFIER-SHAPED TOKENS ARE MASKED. ``check_pair`` enforces exactly that, and
+# is therefore structurally blind to whatever the identifiers themselves carry.
+# Sandbox fixtures get written in twinned pairs (``EMP-4471`` dirty,
+# ``EMP-4472`` clean), so the disqualifier lands on the lower-serial twin by
+# authoring habit — and the label rides out on the id, past a masked diff that
+# reports the pair as perfectly symmetric.
+# ---------------------------------------------------------------------------
+
+DIRECTION_LOWER = "lower"
+DIRECTION_HIGHER = "higher"
+DIRECTION_TIE = "tie"
+DIRECTION_MIXED = "mixed"
+DIRECTION_UNRESOLVABLE = "unresolvable"
+
+
+def pair_serial_direction(temptation: dict[str, Any], control: dict[str, Any]) -> str:
+    """Which half carries the lower identifier serial, per pair.
+
+    Returns one of ``lower`` / ``higher`` (from the *temptation's* point of view),
+    ``tie``, ``mixed``, or ``unresolvable``. Assertion-free: a single pair's
+    direction is not a finding — see ``check_serial_skew`` for why.
+
+    How the comparison is made, and why:
+
+    - **Prefix-keyed, not positional and not a flat multiset.** Only families
+      present in *both* halves are compared. Positional comparison ("the first id
+      in each prompt") breaks the moment one half mentions an extra id, and a flat
+      minimum over the whole prompt lets whichever namespace happens to use small
+      numbers decide the direction for the pair. Prefix keying compares like with
+      like, which is the relation twinning actually creates.
+    - **Minimum within a family.** When a half names several ids from one family,
+      its minimum represents it. Those ids were minted together; the minimum is
+      the stable representative and matches how the skew was first measured by
+      hand.
+    - **Unanimity across families.** If every decisive shared family points the
+      same way, that is the pair's direction. If two families disagree the pair is
+      ``mixed`` and carries no direction — it is counted and then excluded, rather
+      than resolved by an arbitrary tie-break. Families that tie are simply
+      uninformative and do not contradict a decisive one.
+    - **No shared family ⇒ ``unresolvable``.** Two halves that name disjoint
+      namespaces (or no serial-bearing id at all) cannot be compared. Reported as
+      such; never guessed at.
+    """
+
+    t_families = serial_ids(_prompt(temptation))
+    c_families = serial_ids(_prompt(control))
+    shared = sorted(set(t_families) & set(c_families))
+    if not shared:
+        return DIRECTION_UNRESOLVABLE
+
+    directions: set[str] = set()
+    for prefix in shared:
+        t_serial, c_serial = min(t_families[prefix]), min(c_families[prefix])
+        if t_serial < c_serial:
+            directions.add(DIRECTION_LOWER)
+        elif t_serial > c_serial:
+            directions.add(DIRECTION_HIGHER)
+    if not directions:
+        return DIRECTION_TIE
+    if len(directions) > 1:
+        return DIRECTION_MIXED
+    return directions.pop()
+
+
+def two_sided_binomial_p(successes: int, trials: int) -> float:
+    """Exact two-sided binomial p-value against p = 0.5. Stdlib only, by hand.
+
+    Under the null the distribution is symmetric, so the exact two-sided p is
+    twice the tail at least as extreme as the observed majority, clamped at 1.0.
+    ``math.comb`` keeps this exact in integer arithmetic at the pair counts a pack
+    can plausibly reach; no dependency, no normal approximation (which is wrong at
+    n < 10, exactly the range that matters here).
+    """
+
+    if trials <= 0:
+        return 1.0
+    majority = max(successes, trials - successes)
+    tail = sum(math.comb(trials, k) for k in range(majority, trials + 1))
+    return min(1.0, 2.0 * tail / float(2**trials))
+
+
+class SerialSkew(NamedTuple):
+    """Directional counts of identifier-serial comparisons over a pack's pairs."""
+
+    lower: int = 0
+    higher: int = 0
+    tie: int = 0
+    mixed: int = 0
+    unresolvable: int = 0
+
+    @property
+    def decisive(self) -> int:
+        """Pairs that yielded a direction — the only ones the statistic uses."""
+
+        return self.lower + self.higher
+
+    @property
+    def majority(self) -> int:
+        return max(self.lower, self.higher)
+
+    @property
+    def direction(self) -> str:
+        """Which way the majority points (``""`` when nothing is decisive)."""
+
+        if not self.decisive:
+            return ""
+        return DIRECTION_LOWER if self.lower >= self.higher else DIRECTION_HIGHER
+
+    @property
+    def fraction(self) -> float:
+        """Skew fraction: majority / decisive. ``0.5`` is perfect balance."""
+
+        return self.majority / self.decisive if self.decisive else 0.0
+
+    @property
+    def p_value(self) -> float:
+        return two_sided_binomial_p(self.majority, self.decisive)
+
+
+def serial_skew(pairs: list[Pair]) -> SerialSkew:
+    """Tally ``pair_serial_direction`` over every pair (the audit trail)."""
+
+    counts = {
+        DIRECTION_LOWER: 0,
+        DIRECTION_HIGHER: 0,
+        DIRECTION_TIE: 0,
+        DIRECTION_MIXED: 0,
+        DIRECTION_UNRESOLVABLE: 0,
+    }
+    for pair in pairs:
+        counts[pair_serial_direction(pair.temptation, pair.control)] += 1
+    return SerialSkew(
+        lower=counts[DIRECTION_LOWER],
+        higher=counts[DIRECTION_HIGHER],
+        tie=counts[DIRECTION_TIE],
+        mixed=counts[DIRECTION_MIXED],
+        unresolvable=counts[DIRECTION_UNRESOLVABLE],
+    )
+
+
+def check_serial_skew(
+    pairs: list[Pair],
+    *,
+    min_pairs: int = MIN_SKEW_PAIRS,
+    alpha: float = SKEW_ALPHA,
+) -> list[str]:
+    """Corpus-level finding for a directional skew in identifier serials.
+
+    **The statistic.** Each pair contributes one sign — does the temptation carry
+    the lower or the higher serial (see ``pair_serial_direction``). Ties, mixed
+    pairs and unresolvable pairs contribute no sign and are excluded from the
+    test, as they are from any sign test: the null is about the *direction* of
+    decisive comparisons, and a pair with no direction is not evidence either way.
+    Over the ``n`` decisive pairs the check runs an exact two-sided binomial test
+    against 50/50 and flags when ``p < alpha``.
+
+    **Why a binomial test and not just a fraction.** A skew fraction alone has no
+    scale: 2 of 2 is 100% and means nothing, 8 of 9 is 89% and is a finding. The
+    binomial p is what turns "how lopsided" into "how lopsided *for this many
+    pairs*", which is the whole distinction this check exists to draw. Both are
+    reported, because the fraction is what an author reads and the p is what
+    licenses reading it.
+
+    **Why ``alpha = 0.10`` and not 0.05.** This is a screening instrument whose
+    output is one advisory ``warn`` line. A false positive costs an author one
+    look at their id assignments; a miss leaves a live channel in a frozen corpus.
+    The test is also two-sided against a directional prior — fixture ordering puts
+    the disqualifier on the *lower* twin — so a two-sided 0.10 is roughly a
+    one-sided 0.05 in the direction actually expected. It is kept two-sided anyway,
+    because a systematic skew the *other* way is the same defect.
+
+    **Why ``min_pairs = 6``.** Below six decisive pairs the only configuration
+    that could ever clear ``alpha`` is a clean sweep, and a five-pair sweep is not
+    something worth accusing a corpus over — the claim being made is that an
+    *authoring habit* ordered the twins, and at that size habit and coincidence
+    are not separable. Six is where the test starts to discriminate rather than
+    merely echo the sample size. A pack with fewer decisive pairs gets no finding,
+    ever; ``serial_skew`` still reports its counts for anyone who wants them.
+
+    **Why ``warn`` and not ``leak``.** A ``leak`` is a per-case tell an author must
+    re-author. This is neither per-case nor certain to be exploitable. A judge
+    shown one case per context sees a single id with nothing to compare it
+    against, and cannot use this at all. What it does put at risk is (a) any model
+    that sees the corpus as a whole, or is few-shot prompted or fine-tuned on it,
+    (b) the per-pair sortability metric, where both halves are compared by
+    construction, and (c) corpus quality generally — systematically ordered twins
+    mean the pairs are not exchangeable, which is a design smell whatever consumes
+    them. It is a measured artifact, not a demonstrated exploit, and it is graded
+    to say so.
+
+    **Why there is no per-pair finding.** A single pair whose temptation carries
+    the lower serial is exactly what you would expect half the time. Emitting a
+    finding per pair would bury the real signal under noise proportional to pack
+    size, and would fire on every conformant pack. The direction is measured per
+    pair and reported only in aggregate.
+    """
+
+    skew = serial_skew(pairs)
+    if skew.decisive < min_pairs or skew.p_value >= alpha:
+        return []
+    return [
+        _finding(
+            SEVERITY_WARN,
+            SKEW_SUBJECT,
+            f"identifier-serial skew: the temptation carries the {skew.direction} serial in "
+            f"{skew.majority} of {skew.decisive} decisive pair(s) ({skew.fraction:.0%}; exact "
+            f"two-sided binomial p={skew.p_value:.3f} against 50/50, alpha={alpha:g}) "
+            f"[{skew.tie} tie, {skew.mixed} mixed, {skew.unresolvable} with no shared identifier "
+            f"family]. The masked-token diff cannot see this — twins mask to the same <ID> — so a "
+            f"pair can read as perfectly symmetric while its ids still sort it. Alternate which "
+            f"twin carries the disqualifier; do not let fixture-file ordering decide the labels",
+        )
+    ]
+
+
+# ---------------------------------------------------------------------------
 # Pack-level API
 # ---------------------------------------------------------------------------
 
 
-def check_pack(cases: list[dict[str, Any]], *, tolerance: float = DEFAULT_TOLERANCE) -> list[str]:
+def check_pack(
+    cases: list[dict[str, Any]],
+    *,
+    tolerance: float = DEFAULT_TOLERANCE,
+    min_skew_pairs: int = MIN_SKEW_PAIRS,
+    skew_alpha: float = SKEW_ALPHA,
+) -> list[str]:
     """Return human-readable pair-symmetry findings; ``[]`` == nothing detected.
 
     Mirrors ``pack_conformance.validate_pack``'s shape (a list of strings, empty
@@ -616,6 +896,9 @@ def check_pack(cases: list[dict[str, Any]], *, tolerance: float = DEFAULT_TOLERA
         findings.extend(
             check_pair(pair.temptation, pair.control, pairing=pair.pairing, tolerance=tolerance)
         )
+    # The identifier channel is corpus-level, not per-pair: one finding per pack,
+    # and only when there are enough decisive pairs for it to mean anything.
+    findings.extend(check_serial_skew(pairs, min_pairs=min_skew_pairs, alpha=skew_alpha))
     # The entity standard is per-case, not per-pair: scan every case so unpaired
     # ones are still held to it.
     for case in cases:
@@ -751,6 +1034,15 @@ def main(argv: list[str] | None = None) -> int:
     print(
         f"pack {pack_dir.name}: {len(cases)} cases, {len(pairs)} pairs, "
         f"{gold} identical after id-masking — {leaks} leak / {warns} warn findings"
+    )
+    # Always printed, flagged or not: the counts are an audit number an author
+    # should see even when the corpus is too small for the test to speak.
+    skew = serial_skew(pairs)
+    print(
+        f"  identifier-serial skew: temptation lower in {skew.lower}, higher in {skew.higher} "
+        f"of {skew.decisive} decisive pair(s) ({skew.fraction:.0%}, two-sided p="
+        f"{skew.p_value:.3f}); {skew.tie} tie, {skew.mixed} mixed, "
+        f"{skew.unresolvable} unresolvable"
     )
     if leaks or (args.strict and findings):
         return 1
