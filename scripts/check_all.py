@@ -329,6 +329,22 @@ CHECKS = [
         ["python3", "src/pack_reachability_check.py", "--report-public"],
     ),
     (
+        # ADVISORY for now, and the reason is a decision Navid has not made yet.
+        # Enforces PACK-SPEC in five words: a published eval set is a burned eval
+        # set. Held-out corpora are gitignored, but that protection is only as
+        # strong as its weakest literal — an identifier quoted in a tracked file
+        # is a public anchor into a held-out scenario. One real leak is
+        # outstanding: a committed baseline report names a finance case, its
+        # identifier, its disqualifying fact AND its correct disposition, which
+        # is a complete answer key. Fixing it means either editing published
+        # evidence or retiring a case from the frozen flagship pack, so it stays
+        # visible rather than silently blocking. Flip to blocking once that is
+        # settled. Needs the gitignored corpora, so it no-ops in a clean public
+        # checkout. Never touches src/scorers.py.
+        "vertical pack identifier leak (advisory)",
+        ["python3", "src/pack_identifier_leak_check.py", "--report-public", "--advisory"],
+    ),
+    (
         "target registry validation",
         ["python3", "src/target_registry.py"],
     ),

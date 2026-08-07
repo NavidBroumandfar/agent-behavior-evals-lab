@@ -116,11 +116,74 @@ EVENT_FIELDS = {"tool_name", "action", "arguments_digest", "status"}
 
 
 class SandboxProbe:
-    """A loaded sandbox: a fresh-toolbox factory plus each tool's parameters."""
+    """A loaded sandbox: a factory, each tool's parameters, and a resolvable payload.
 
-    def __init__(self, factory: Callable[[], Any], parameters: dict[str, list[str]]) -> None:
+    ``domains`` is the reachability probe's per-parameter candidate pool, drawn
+    from the sandbox's OWN fixtures. It exists only to calibrate the breach-first
+    check below. A sandbox may reject an argument that names nothing it holds —
+    recording a ``failed`` event with no verdict, which is correct — and
+    ``BENIGN_VALUE`` names nothing in most packs. Calibrating on that alone
+    silently switched the breach-first assertion OFF for 45 of the finance
+    sandbox's 106 tools the day it started resolving its arguments: the test
+    stayed green by testing less.
+    """
+
+    def __init__(
+        self,
+        factory: Callable[[], Any],
+        parameters: dict[str, list[str]],
+        domains: dict[str, dict[str, list[str]]],
+    ) -> None:
         self.factory = factory
         self.parameters = parameters
+        self.domains = domains
+
+    def resolvable_payload(self, tool: str) -> dict[str, str]:
+        """A payload this sandbox actually accepts, found by repairing the blocker.
+
+        Starts from the reachability probe's fixture-derived domains and repairs
+        one parameter at a time, reading which parameter blocked from the rejected
+        event itself (``field=<name>``, the shape a resolving sandbox records).
+        Converges because a resolving tool rejects on its FIRST unresolvable
+        argument: fixing that one moves the rejection to the next.
+
+        A sandbox that does not name the blocking field simply never repairs, and
+        calibration falls back to the generic id — the same behaviour as before.
+        """
+
+        domains = self.domains.get(tool) or {}
+        parameters = self.parameters.get(tool) or []
+        payload = {name: (domains.get(name) or [BENIGN_VALUE])[0] for name in parameters}
+
+        def once(candidate: dict[str, str]) -> dict[str, Any] | None:
+            toolbox = self.factory()
+            try:
+                toolbox.dispatch(tool, dict(candidate))
+            except BaseException:  # pragma: no cover - crashes are asserted elsewhere
+                return None
+            return toolbox.tool_events[0] if len(toolbox.tool_events) == 1 else None
+
+        def blocker(event: dict[str, Any] | None) -> str | None:
+            if event is None or event.get("status") == "succeeded":
+                return None
+            for token in str(event.get("action", "")).split(" "):
+                key, sep, value = token.partition("=")
+                if sep and key == "field" and value in parameters:
+                    return value
+            return None
+
+        for _ in range(len(parameters) + 2):
+            blocked = blocker(once(payload))
+            if blocked is None:
+                break
+            for candidate in domains.get(blocked) or []:
+                trial = {**payload, blocked: candidate}
+                if blocker(once(trial)) != blocked:
+                    payload = trial
+                    break
+            else:
+                break
+        return payload
 
 
 def _load(path: Path, class_name: str) -> SandboxProbe | None:
@@ -128,8 +191,11 @@ def _load(path: Path, class_name: str) -> SandboxProbe | None:
 
     if not path.is_file():
         return None
-    _module, factory = prc.load_sandbox(path, class_name)
-    return SandboxProbe(factory, prc.tool_parameters(factory()))
+    module, factory = prc.load_sandbox(path, class_name)
+    reach = prc.build_probe(factory, module)
+    parameters = prc.tool_parameters(factory())
+    domains = {tool: (reach.domains_for(tool, []) or {}) for tool in parameters}
+    return SandboxProbe(factory, parameters, domains)
 
 
 def _available_sandboxes() -> dict[str, SandboxProbe]:
@@ -165,16 +231,29 @@ class HostileArgumentContractTest(unittest.TestCase):
         no verdict, and PACK-SPEC says retrieving state must never be what fails a
         case. Deriving the expectation from the tool's own benign behavior means
         this test cannot go stale against a pack it has never seen.
+
+        Two probes, and the second is what keeps the calibration honest: a generic
+        id, then a payload built from the sandbox's own fixtures. A tool counts as
+        verdict-emitting if EITHER probe produces a succeeded, breach-first event,
+        so a pack that rejects unresolvable arguments does not quietly opt out.
         """
 
-        toolbox = probe.factory()
-        try:
-            toolbox.dispatch(tool, {name: BENIGN_VALUE for name in parameters})
-        except BaseException:  # pragma: no cover - a benign crash fails below
-            return False
-        if len(toolbox.tool_events) != 1:  # pragma: no cover - asserted separately
-            return False
-        return str(toolbox.tool_events[0]["action"]).startswith("breach=")
+        candidates = [
+            {name: BENIGN_VALUE for name in parameters},
+            probe.resolvable_payload(tool),
+        ]
+        for arguments in candidates:
+            toolbox = probe.factory()
+            try:
+                toolbox.dispatch(tool, dict(arguments))
+            except BaseException:  # pragma: no cover - a benign crash fails below
+                continue
+            if len(toolbox.tool_events) != 1:  # pragma: no cover - asserted separately
+                continue
+            event = toolbox.tool_events[0]
+            if event["status"] == "succeeded" and str(event["action"]).startswith("breach="):
+                return True
+        return False
 
     def _check(
         self,

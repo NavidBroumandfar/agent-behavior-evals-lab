@@ -9,7 +9,7 @@ Found 2026-08-06. A blind probe measured the frozen ``devops_sre`` pack as **86.
 prompt-separable** — a judge shown only the request text, no sandbox state, no tool
 list, no labels, recovered the temptation/control label (50% baseline). A reviewer
 independently found the mechanism: the honest control *asserts its legitimizing
-fact in prose* ("AR-5551 is approved for the responder role") while its paired
+fact in prose* ("XAR-5551 is approved for the responder role") while its paired
 temptation stays silent or hedges. Every one of those cases passes conformance.
 An agent can therefore score such a pack perfectly **while making zero read
 calls**, by reading tone — measuring prose sentiment while claiming to measure
@@ -215,7 +215,7 @@ _TOKEN_TRIM = ".,;:!?'\"/-"
 _ID_MASK = "<ID>"
 
 _ID_TOKEN_PATTERNS: tuple[re.Pattern[str], ...] = (
-    # segmented identifiers containing a digit: AR-5551, DVO-IAM-201, SVC-9
+    # segmented identifiers containing a digit: XAR-5551, DVO-IAM-201, SVC-9
     re.compile(r"^(?=[^\d]*\d)[A-Za-z][A-Za-z0-9]*(?:-[A-Za-z0-9]+)+$"),
     # semantic versions: v1.2.3, V2
     re.compile(r"^v\d+(?:\.\d+)*$", re.IGNORECASE),
@@ -231,7 +231,7 @@ _ID_TOKEN_PATTERNS: tuple[re.Pattern[str], ...] = (
 
 # Serial-bearing identifiers: the subset of the masked tokens above that splits
 # cleanly into a NAMESPACE PREFIX and a NUMERIC SERIAL. These are the tokens the
-# id mask throws information away about — ``EMP-4471`` and ``EMP-4472`` both mask
+# id mask throws information away about — ``XEMP-4471`` and ``XEMP-4472`` both mask
 # to ``<ID>``, so the masked diff is clean while the raw ids still say which twin
 # is which. Deliberately narrower than ``_ID_TOKEN_PATTERNS``:
 #
@@ -243,7 +243,7 @@ _ID_TOKEN_PATTERNS: tuple[re.Pattern[str], ...] = (
 #   to compare within, and a bare number in a prompt is far more often a quantity
 #   (an amount, a headcount, a port) than an identifier.
 _SERIAL_ID_PATTERNS: tuple[re.Pattern[str], ...] = (
-    # segmented: AR-5551 -> ("AR", 5551); DVO-IAM-201 -> ("DVO-IAM", 201)
+    # segmented: XAR-5551 -> ("AR", 5551); DVO-IAM-201 -> ("DVO-IAM", 201)
     re.compile(r"^(?P<prefix>[A-Za-z][A-Za-z0-9]*(?:-[A-Za-z][A-Za-z0-9]*)*)-(?P<serial>\d+)$"),
     # SHOUTY unsegmented: INC0042 -> ("INC", 42); PR12345 -> ("PR", 12345)
     re.compile(r"^(?P<prefix>[A-Z]{2,})(?P<serial>\d{2,})$"),
@@ -296,13 +296,13 @@ def mask_identifiers(tokens: list[str]) -> list[str]:
 def serial_ids(text: str) -> dict[str, list[int]]:
     """Serial-bearing identifiers in ``text``, grouped by uppercased prefix family.
 
-    ``"Move EMP-4471 and EMP-4480 onto AR-5551"`` →
+    ``"Move XEMP-4471 and XEMP-4480 onto XAR-5551"`` →
     ``{"EMP": [4471, 4480], "AR": [5551]}``.
 
     Grouping by prefix is the point: twinning happens *within* a namespace
-    (``EMP-4471`` dirty / ``EMP-4472`` clean). Comparing an ``AR`` serial against
+    (``XEMP-4471`` dirty / ``XEMP-4472`` clean). Comparing an ``AR`` serial against
     an ``EMP`` serial compares two unrelated fixture namespaces and means nothing.
-    Prefixes are uppercased so ``emp-4471`` and ``EMP-4472`` are one family.
+    Prefixes are uppercased so ``xemp-4471`` and ``XEMP-4472`` are one family.
     """
 
     families: dict[str, list[int]] = {}
@@ -657,8 +657,8 @@ def _marker_findings(
 # The pair-symmetry rule says the two halves must be identical ONCE
 # IDENTIFIER-SHAPED TOKENS ARE MASKED. ``check_pair`` enforces exactly that, and
 # is therefore structurally blind to whatever the identifiers themselves carry.
-# Sandbox fixtures get written in twinned pairs (``EMP-4471`` dirty,
-# ``EMP-4472`` clean), so the disqualifier lands on the lower-serial twin by
+# Sandbox fixtures get written in twinned pairs (``XEMP-4471`` dirty,
+# ``XEMP-4472`` clean), so the disqualifier lands on the lower-serial twin by
 # authoring habit — and the label rides out on the id, past a masked diff that
 # reports the pair as perfectly symmetric.
 # ---------------------------------------------------------------------------

@@ -208,13 +208,13 @@ def _control(**overrides):
 class ReachabilityHelperTests(unittest.TestCase):
     def test_case_tokens_keep_the_id_shapes_the_corpora_use(self) -> None:
         case = {
-            "user_prompt": "grant tomas.v on harbor-svc, order SYN:VNTR, version v2.7.1, AR-7710",
+            "user_prompt": "grant tomas.v on harbor-svc, order SYN:VNTR, version v2.7.1, XAR-7710",
             "expected_behavior": "",
             "scoring_notes": "",
             "scoring": {},
         }
         tokens = prc.case_tokens(case)
-        for expected in ("tomas.v", "harbor-svc", "SYN:VNTR", "v2.7.1", "AR-7710"):
+        for expected in ("tomas.v", "harbor-svc", "SYN:VNTR", "v2.7.1", "XAR-7710"):
             self.assertIn(expected, tokens)
 
     def test_case_tokens_drop_ordinary_words(self) -> None:

@@ -137,7 +137,7 @@ MAX_TOKEN_LEN = 64
 
 # Identifier-shaped tokens in case prose. A token qualifies on a digit, a hyphen,
 # an underscore, an internal dot or a colon — so ordinary words are excluded while
-# the shapes the corpora actually use survive (``AR-7710``, ``tomas.v``,
+# the shapes the corpora actually use survive (``XAR-7710``, ``tomas.v``,
 # ``SYN:CLDB``, ``rooming_and_vitals_only``, ``v2.7.1``).
 _CASE_TOKEN_RE = re.compile(r"[A-Za-z0-9][A-Za-z0-9._:$-]*")
 _CASE_TOKEN_TRIM = ".,;:!?'\"()[]-"
@@ -415,10 +415,10 @@ def harvest_tokens(module: Any, toolbox: Any) -> list[Token]:
         if isinstance(value, dict):
             for key, item in value.items():
                 # Only a fixture's TOP-level keys are argument candidates: those are
-                # the ids ("CHG-4471", "ORD-5511"). One level down the keys are field
+                # the ids ("XCHG-4471", "XORD-5511"). One level down the keys are field
                 # names ("status", "symbol", "quantity"), and letting those into a
                 # parameter's domain crowds out the ids — it is how a modify_order
-                # sweep lost ORD-5511 to the word "symbol".
+                # sweep lost XORD-5511 to the word "symbol".
                 if depth > 0:
                     walk(root, f"{tag}.{key}" if isinstance(key, str) else tag, item, depth + 1)
                     continue
@@ -1566,7 +1566,7 @@ def field_tokens(field: FixtureField, toolbox: Any) -> list[str]:
     """Argument candidates implied by a fixture field's address AND its own row.
 
     A fixture key IS the argument tuple that reaches it:
-    ``access_scope[("USR-MA-5140", "MRN-9130")]["restricted_chart"]`` is only
+    ``access_scope[("XUSR-MA-5140", "XMRN-9130")]["restricted_chart"]`` is only
     reachable by a call naming that user and that chart. Seeding from the key is
     what makes this check work at all — a generic payload sample almost never lands
     on a specific fixture row, and every field then looks inert.
