@@ -45,11 +45,11 @@ The false-positive rule
 A token is reported iff it is **identifier-shaped** (see ``IDENTIFIER_RE``): a
 hyphen-segmented alphanumeric token, at least ``MIN_IDENTIFIER_LEN`` characters
 long, carrying at least one digit. That shape is what a fixture id looks like
-(``EMP-4471``, ``CTRL-AML-07``, ``HOLD-LIT-51``) and what ordinary prose does not.
+(``XEMP-4471``, ``XCTRL-AML-07``, ``XHOLD-LIT-51``) and what ordinary prose does not.
 
 There is deliberately **no semantic exemption**, and that is the whole design.
-The tempting exemption is "this token is generic domain vocabulary" — ``GL-1010``
-really could be a chart-of-accounts code in a taxonomy table, and ``CTRL-AML-07``
+The tempting exemption is "this token is generic domain vocabulary" — ``XGL-1010``
+really could be a chart-of-accounts code in a taxonomy table, and ``XCTRL-AML-07``
 really could name a control in the abstract. But "it reads as generic" is exactly
 the judgment that produced this breach: every one of the twenty-eight tokens
 looked generic to whoever typed it, and each was in fact the literal an agent
@@ -66,7 +66,8 @@ What *is* excluded is exclusion by construction rather than by judgment:
   skipping any token that is a ``case_id`` in the same corpus. In practice no
   corpus puts one in a prompt, so the exclusion is a guard, not a workaround.
 - **The reserved illustration band** (``RESERVED_ILLUSTRATION_RE``): a serial
-  beginning with ``X`` — ``EMP-X401``, ``HOLD-LIT-X07``. Public docs write their
+  whose LEADING SEGMENT begins with ``X`` — ``XEMP-4471``, ``XHOLD-LIT-51``.
+  Public docs write their
   worked examples in this band so the example keeps its teaching value while
   being structurally incapable of naming a fixture. A corpus prompt that uses the
   band is itself a finding, because it has taken an identifier the docs are
@@ -128,7 +129,7 @@ SEVERITY_LEAK = "leak"
 SEVERITY_NOTICE = "notice"
 
 # An identifier-shaped token: hyphen-segmented alphanumerics carrying a digit.
-# ``EMP-4471``, ``CTRL-AML-07``, ``ACCTREF-Z1A0``, ``HOLD-LIT-51`` all match;
+# ``XEMP-4471``, ``XCTRL-AML-07``, ``XACCTREF-Z1A0``, ``XHOLD-LIT-51`` all match;
 # ordinary hyphenated prose ("pre-approved", "out-of-band") does not, because it
 # has no digit, and "v2.7.1" does not, because it has no hyphen segmentation.
 IDENTIFIER_RE = re.compile(r"^(?=.*\d)[A-Za-z][A-Za-z0-9]*(?:-[A-Za-z0-9]+)+$")
@@ -206,7 +207,7 @@ def is_published_vocabulary(token: str) -> bool:
 
 
 def is_reserved_illustration(token: str) -> bool:
-    """Is ``token`` in the doc-only illustration band (``EMP-X401``)?"""
+    """Is ``token`` in the doc-only illustration band (``XEMP-4471``)?"""
 
     return bool(RESERVED_ILLUSTRATION_RE.search(token))
 
@@ -299,13 +300,13 @@ def tracked_files(repo_root: Path) -> list[Path]:
 def find_tokens(paths: Iterable[Path], tokens: Iterable[str]) -> dict[str, set[Path]]:
     """Which of ``tokens`` occur in which of ``paths``.
 
-    One compiled alternation, one pass per file. Longest-first so ``HOLD-LIT-51``
+    One compiled alternation, one pass per file. Longest-first so ``XHOLD-LIT-51``
     wins over any shorter token that prefixes it.
 
     **The boundary is alphanumeric, not hyphen-inclusive**, and that choice is
-    load-bearing. ``GL-1010`` must not match inside ``GL-10105`` — a different
+    load-bearing. ``XGL-1010`` must not match inside ``XGL-10105`` — a different
     account — so a trailing digit or letter blocks the match. But it *must* match
-    inside ``AUD-GL-1010``, the audit trail *for* that account, which is how the
+    inside ``AUD-XGL-1010``, the audit trail *for* that account, which is how the
     finance taxonomy published the ledger id while a hyphen-inclusive boundary
     read it as an unrelated token and missed it. Compositional identifiers share
     their tail on purpose in these corpora; a boundary that hides the shared part
@@ -441,7 +442,7 @@ def sweep(repo_root: Path, benchmarks_dir: Path | None = None) -> Sweep:
                     SEVERITY_LEAK,
                     token,
                     f"held-out prompt uses the reserved illustration band ({origin}) and the token "
-                    f"is tracked in {where}. The '-X<serial>' band is reserved for public worked "
+                    f"is tracked in {where}. The 'X'-prefix band is reserved for public worked "
                     f"examples — re-identify the CORPUS, not the doc",
                 )
             )
@@ -452,7 +453,7 @@ def sweep(repo_root: Path, benchmarks_dir: Path | None = None) -> Sweep:
                 token,
                 f"held-out prompt identifier ({origin}) appears verbatim in tracked file(s): "
                 f"{where}. A published anchor into a held-out corpus — re-illustrate the tracked "
-                f"file with a reserved '-X<serial>' identifier, or re-identify the corpus if the "
+                f"file with a reserved 'X'-prefixed identifier, or re-identify the corpus if the "
                 f"tracked text gives away the disposition",
             )
         )
@@ -465,7 +466,7 @@ def sweep(repo_root: Path, benchmarks_dir: Path | None = None) -> Sweep:
                 _finding(
                     SEVERITY_NOTICE,
                     scan.slug,
-                    f"{token} ({', '.join(cids)}) sits in the reserved '-X<serial>' illustration "
+                    f"{token} ({', '.join(cids)}) sits in the reserved 'X'-prefix illustration "
                     f"band that public docs are entitled to print — re-identify it before some "
                     f"future worked example collides with it",
                 )

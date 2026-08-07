@@ -174,6 +174,68 @@ A pair that fails any of these is re-authored, not patched — and a control
 whose partner is re-authored must be re-checked against its new twin, because
 symmetry is a property of the pair, never of either prompt alone.
 
+### The identifier channel (the rule's own blind spot)
+
+Added 2026-08-06, measured. The rule above says a pair must be identical *once
+identifier-shaped tokens are masked* — so the checker masks them, and is
+structurally blind to anything the identifiers themselves carry.
+
+Sandbox fixtures get written in twinned pairs, dirty twin first, so the
+disqualifier lands on the lower serial in every pair. The label ends up
+correlated with **fixture-file ordering** while every pair still reports
+"identical after id-masking". Measured across the corpora when this was found:
+
+| pack | temptation carries the lower serial |
+| --- | --- |
+| `hr_payroll` | 8 of 9 — 89% |
+| `devops_sre` | 7 of 8 — 88% |
+| `legal_ops` | 2 of 9 — no pattern |
+
+A blind cross-family reviewer dropped an entire 18-case batch over it.
+
+**The honest bound, which must not be overstated.** A judge shown **one case per
+context** cannot use this: it sees a single identifier with nothing to compare
+against. The real exposure is (a) anything that sees the corpus as a whole, or is
+few-shot or fine-tuned on it, (b) the per-pair sortability metric, and (c)
+exchangeability as a corpus-quality property. It is a measured artefact and a
+design smell, **not a demonstrated exploit**.
+
+`src/pack_symmetry_check.py` reports the corpus-level direction as a `warn` — one
+pair pointing a given way is what you see half the time; eight of nine in the
+same direction is the finding. It is silent below six decisive pairs, because
+under that only a clean sweep could ever clear the threshold and a five-pair
+sweep cannot separate authoring habit from coincidence.
+
+Authoring rules: alternate which twin carries the disqualifier; assign the roles
+**before** minting the ids; keep the digit width equal; and re-run the check,
+which prints the counts every time. When you rebalance, screen your choice
+against re-derivable patterns — flipping all the odd-numbered pairs just
+substitutes one learnable rule for another.
+
+### Reserved illustration identifiers
+
+Public docs, docstrings and test fixtures write their worked examples with an
+identifier whose **leading segment begins with `X`** — `XEMP-4471`,
+`XHOLD-LIT-51`. The example keeps its teaching value while being structurally
+incapable of naming a fixture.
+
+Why the prefix and not the serial: marking the serial (`EMP-X471`) destroys it,
+and `pack_symmetry_check` parses `<PREFIX>-<numeric serial>` and must be able to
+demonstrate that parsing in its own docstrings. A reserved prefix leaves the
+serial intact, so one rule covers every example in the repo.
+
+This exists because the rule was broken before it was written. A blind reviewer
+found a pack charter publishing a worked example that reproduced a real pair's
+both prompts, both identifiers, the deciding state **and** the correct
+disposition — a complete answer key in a tracked file, for a corpus that is
+gitignored precisely so a model cannot recall it. A sweep then found the same
+class across three packs, in `src/` and `tests/` as well as in markdown.
+
+`src/pack_identifier_leak_check.py` enforces it: every identifier in a held-out
+prompt is checked against every tracked file. A corpus prompt that uses the
+reserved band is itself a finding — it has taken an identifier the docs are
+entitled to print.
+
 ## The entity standard
 
 Added 2026-08-06 after a review round dropped a whole candidate batch on entity
