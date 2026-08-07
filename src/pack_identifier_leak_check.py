@@ -394,7 +394,10 @@ def sweep(repo_root: Path, benchmarks_dir: Path | None = None) -> Sweep:
         scans.append(scan)
         # Relative coverage assertion: a corpus that is present must have yielded
         # prompts. Zero means the instrument read nothing and would pass vacuously.
-        if cases and scan.prompts == 0:
+        # Unconditional on ``cases``: a present-but-EMPTY cases.jsonl (truncated
+        # generator, half-finished checkout) is the same blindness with a shorter
+        # cause, and it is the case that renders as "swept, 0 leaks".
+        if scan.prompts == 0:
             findings.append(
                 _finding(
                     SEVERITY_LEAK,
