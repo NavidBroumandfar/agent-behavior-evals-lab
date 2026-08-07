@@ -703,7 +703,10 @@ def _flat_cap(n_parameters: int, budget: int) -> int:
 
 
 def payload_plan(
-    domains: dict[str, list[str]], *, budget: int = PAYLOAD_BUDGET
+    domains: dict[str, list[str]],
+    *,
+    budget: int = PAYLOAD_BUDGET,
+    bases: list[dict[str, str]] | None = None,
 ) -> tuple[list[dict[str, str]], str]:
     """Every payload the sweep will drive, and a one-line description of the plan.
 
@@ -711,6 +714,13 @@ def payload_plan(
     passes (where most breach rules live) while the all-coordinate pass runs at
     whatever per-parameter cap the remaining budget affords. Planned up front and
     deduped, so "the plan was exhausted" is a checkable statement.
+
+    ``bases`` overrides the two default starting points (all-blank and the
+    canonical slot). It exists for the resolving-base pass in ``search_tool``:
+    against a sandbox that rejects an argument naming nothing it holds, both
+    default bases can be rejected outright, and every verdict then sits three or
+    four coordinates away from a base rather than two. Passing a base that is
+    known to resolve brings those verdicts back inside the 2-coordinate pass.
     """
 
     keys = list(domains)
@@ -725,9 +735,12 @@ def payload_plan(
             seen.add(key)
             plan.append(payload)
 
-    blank = {k: "" for k in keys}
-    canonical = {k: (domains[k][1] if len(domains[k]) > 1 else "") for k in keys}
-    bases = _unique_bases([blank, canonical], keys)
+    if bases is None:
+        blank = {k: "" for k in keys}
+        canonical = {k: (domains[k][1] if len(domains[k]) > 1 else "") for k in keys}
+        bases = [blank, canonical]
+    bases = _unique_bases([{k: base.get(k, "") for k in keys} for base in bases], keys)
+    n_bases = len(bases)
     for base in bases:
         push(dict(base))
     for depth in (1, 2):
@@ -736,7 +749,7 @@ def payload_plan(
                 pools = [[v for v in domains[p] if v != base[p]] or [base[p]] for p in positions]
                 for combo in itertools.product(*pools):
                     if len(plan) >= budget:
-                        return plan, _describe(plan, keys, domains, depth - 1, 0)
+                        return plan, _describe(plan, keys, domains, depth - 1, 0, n_bases)
                     payload = dict(base)
                     payload.update(dict(zip(positions, combo)))
                     push(payload)
@@ -744,9 +757,9 @@ def payload_plan(
     flat = [domains[k][:flat_cap] or [""] for k in keys]
     for combo in itertools.product(*flat):
         if len(plan) >= budget:
-            return plan, _describe(plan, keys, domains, 2, flat_cap)
+            return plan, _describe(plan, keys, domains, 2, flat_cap, n_bases)
         push(dict(zip(keys, combo)))
-    return plan, _describe(plan, keys, domains, 2, flat_cap)
+    return plan, _describe(plan, keys, domains, 2, flat_cap, n_bases)
 
 
 def _unique_bases(bases: list[dict[str, str]], keys: list[str]) -> list[dict[str, str]]:
@@ -761,13 +774,18 @@ def _unique_bases(bases: list[dict[str, str]], keys: list[str]) -> list[dict[str
 
 
 def _describe(
-    plan: list[dict[str, str]], keys: list[str], domains: dict[str, list[str]], depth: int, flat_cap: int
+    plan: list[dict[str, str]],
+    keys: list[str],
+    domains: dict[str, list[str]],
+    depth: int,
+    flat_cap: int,
+    n_bases: int = 2,
 ) -> str:
     sizes = "/".join(str(len(domains[k])) for k in keys)
     flat = f", full product at {flat_cap}/parameter" if flat_cap else ""
     return (
         f"{len(plan)} payloads over {len(keys)} parameters (domains {sizes}); "
-        f"all <={depth}-parameter variations from 2 bases{flat}"
+        f"all <={depth}-parameter variations from {n_bases} base(s){flat}"
     )
 
 
@@ -870,6 +888,67 @@ def _sweep(
     return None
 
 
+def resolving_base(
+    factory: Callable[[], Any], tool: str, domains: dict[str, list[str]]
+) -> dict[str, str] | None:
+    """A payload this sandbox ACCEPTS, found by repairing the blocking argument.
+
+    Starts from the canonical slot and repairs one parameter at a time, reading
+    which parameter blocked out of the rejected event itself (``field=<name>``,
+    the shape a resolving sandbox records). Converges because a resolving tool
+    rejects on its FIRST unresolvable argument: fixing that one moves the
+    rejection to the next.
+
+    Why this is needed. Once a sandbox refuses to act on an argument that names
+    nothing it holds, both of ``payload_plan``'s default bases can be rejected
+    outright — the all-blank one because a required subject is empty, the
+    canonical one because a fixture-affine slot put an identifier in a numeric
+    parameter. A verdict then needs three or four simultaneous non-default
+    coordinates, and a genuinely reachable violation gets reported ``dead``. That
+    happened the day hr_payroll started resolving: one live
+    ``approver_reports_to_requester`` case needed a resolvable employee, a
+    parseable amount and two identities at once.
+
+    Returns ``None`` when no payload is accepted, and for a sandbox that does not
+    name the blocking field it simply never repairs — the same behaviour as
+    before, so this can only ever ADD evidence.
+    """
+
+    parameters = list(domains)
+    payload = {k: (domains[k][1] if len(domains[k]) > 1 else "") for k in parameters}
+
+    def drive(candidate: dict[str, str]) -> dict[str, Any] | None:
+        toolbox = factory()
+        try:
+            toolbox.dispatch(tool, dict(candidate))
+        except BaseException:  # noqa: BLE001 - a crashing tool is another test's finding
+            return None
+        return toolbox.tool_events[0] if len(toolbox.tool_events) == 1 else None
+
+    def blocker(event: dict[str, Any] | None) -> str | None:
+        if event is None or event.get("status") == "succeeded":
+            return None
+        for token in str(event.get("action", "")).split(" "):
+            key, sep, value = token.partition("=")
+            if sep and key == "field" and value in parameters:
+                return value
+        return None
+
+    for _ in range(len(parameters) + 2):
+        blocked = blocker(drive(payload))
+        if blocked is None:
+            break
+        for candidate in domains.get(blocked) or []:
+            trial = {**payload, blocked: candidate}
+            if blocker(drive(trial)) != blocked:
+                payload = trial
+                break
+        else:
+            return None
+    event = drive(payload)
+    return payload if event is not None and event.get("status") == "succeeded" else None
+
+
 def search_tool(
     factory: Callable[[], Any],
     tool: str,
@@ -882,9 +961,11 @@ def search_tool(
 ) -> Search:
     """Drive ``tool`` over its planned domain until ``predicate`` accepts an event.
 
-    Runs the unprimed plan first (so a reachable contract stays cheap), then the
-    shallow plan behind each priming sequence. Every primed pass is *additional*
-    evidence: it can only turn an ``unreachable`` into a ``reachable``.
+    Runs the unprimed plan first (so a reachable contract stays cheap), then a
+    shallow plan from a base the sandbox is known to accept, then the shallow plan
+    behind each priming sequence. Every pass after the first is *additional*
+    evidence: each can only turn an ``unreachable`` into a ``reachable``, because a
+    payload that reaches a verdict is proof the verdict is reachable.
 
     Reports whether the whole plan was exhausted (``unreachable``) or the budget ran
     out first (``inconclusive`` — an honest "not proven", never a defect claim).
@@ -895,13 +976,31 @@ def search_tool(
     found = _sweep(factory, tool, plan, predicate, Priming("none", []), known)
     if found is not None:
         return Search("reachable", tool, found[0], found[1], len(plan), len(plan), description)
+
+    # Second pass: the same shallow plan, from a base this sandbox accepts.
+    accepted = resolving_base(factory, tool, domains)
+    resolved_plan: list[dict[str, str]] = []
+    if accepted is not None and accepted not in plan[:2]:
+        # The FULL budget, not a shallow slice: the 2-coordinate pass is where
+        # the verdicts live, and a 6-parameter tool needs ~12k payloads to finish
+        # it. A shortened pass stopped one pair short of the live
+        # ``approver_reports_to_requester`` payload and still reported it dead.
+        resolved_plan, _ = payload_plan(domains, budget=budget, bases=[accepted])
+        found = _sweep(factory, tool, resolved_plan, predicate, Priming("none", []), known)
+        if found is not None:
+            return Search("reachable", tool, found[0], found[1],
+                          len(plan) + len(resolved_plan), len(plan) + len(resolved_plan),
+                          description + f"; then {len(resolved_plan)} payloads from a resolving base")
+
     primed = [p for p in primings if p.calls or p.echo]
     shallow, _ = payload_plan(domains, budget=min(budget, primed_budget)) if primed else ([], "")
-    planned = len(plan) + len(shallow) * len(primed)
+    planned = len(plan) + len(resolved_plan) + len(shallow) * len(primed)
     for priming in primed:
         found = _sweep(factory, tool, shallow, predicate, priming, known)
         if found is not None:
             return Search("reachable", tool, found[0], found[1], planned, planned, description, priming.label)
+    if resolved_plan:
+        description += f"; then {len(resolved_plan)} payloads from a resolving base"
     if primed:
         description += (
             f"; then {len(shallow)} payloads behind each of {len(primed)} priming sequence(s) "
