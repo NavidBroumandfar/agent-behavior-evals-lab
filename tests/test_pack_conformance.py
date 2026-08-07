@@ -14,6 +14,7 @@ import sys
 import tempfile
 import unittest
 from pathlib import Path
+from unittest import mock
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SRC = REPO_ROOT / "src"
@@ -54,12 +55,38 @@ _SANDBOX_SRC = (
 )
 
 
-def _write_sandbox(pack_dir: Path, name: str = "demo_sandbox_tools.py") -> Path:
+# The other shape: a pack sandbox that SUBCLASSES the shared base, which is what
+# makes src/pack_sandbox_base.py part of this pack's verdict machinery.
+_SANDBOX_SRC_USING_BASE = (
+    "from pack_sandbox_base import PackSandboxBase\n"
+    "\n\n"
+    "class DemoSandboxToolbox(PackSandboxBase):\n"
+    "    def tool_specs(self):\n"
+    "        return [{'type': 'function', 'function': {'name': 't', 'description': 'd',\n"
+    "                 'parameters': {'type': 'object', 'properties': {}, 'required': []}}}]\n"
+)
+
+
+def _write_sandbox(pack_dir: Path, name: str = "demo_sandbox_tools.py", *, source: str | None = None) -> Path:
     """Drop a sandbox module into a pack dir (found by the *sandbox_tools.py glob)."""
 
     path = pack_dir / name
-    path.write_text(_SANDBOX_SRC, encoding="utf-8")
+    path.write_text(source if source is not None else _SANDBOX_SRC, encoding="utf-8")
     return path
+
+
+def _copy_shared_base(where: Path) -> Path:
+    """A byte-identical copy of the real shared base, for tests that must EDIT it.
+
+    src/pack_sandbox_base.py decides part of every verdict in every pack that
+    subclasses it; a test proving the pin catches a one-byte edit must never make
+    that edit to the tracked file. The name is preserved because the manifest
+    records the basename and the import scan matches on the module stem.
+    """
+
+    copy = where / pc.SHARED_BASE_PATH.name
+    copy.write_bytes(pc.SHARED_BASE_PATH.read_bytes())
+    return copy
 
 
 def _strip_sandbox_pin(pack_dir: Path) -> None:
@@ -69,6 +96,18 @@ def _strip_sandbox_pin(pack_dir: Path) -> None:
     manifest = json.loads((pack_dir / "manifest.json").read_text(encoding="utf-8"))
     manifest.pop("sandbox_filename", None)
     manifest.pop("sandbox_sha256", None)
+    (pack_dir / "manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
+    )
+
+
+def _strip_sandbox_base_pin(pack_dir: Path) -> None:
+    """Rewrite manifest.json as a manifest frozen before SHARED-BASE pinning: both
+    base keys absent (not null). Every manifest in the repo looked like this."""
+
+    manifest = json.loads((pack_dir / "manifest.json").read_text(encoding="utf-8"))
+    manifest.pop("sandbox_base_path", None)
+    manifest.pop("sandbox_base_sha256", None)
     (pack_dir / "manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8"
     )
@@ -387,6 +426,176 @@ class FreezeVerifyTests(unittest.TestCase):
             errors = pc.verify_manifest(tmp)
             self.assertTrue(any("missing" in e and "demo_sandbox_tools.py" in e for e in errors), errors)
 
+    # -- the shared base the sandbox subclasses --------------------------------
+    #
+    # Pinning cases.jsonl and not the sandbox let two runs against a "frozen" pack
+    # score differently. Pinning the sandbox and not the base it subclasses is the
+    # same defect one layer down: since resolve-then-act, src/pack_sandbox_base.py
+    # resolves the arguments that decide part of every verdict.
+
+    def test_freeze_records_the_shared_base_hash(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp, source=_SANDBOX_SRC_USING_BASE)
+            manifest = pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            self.assertEqual(manifest["sandbox_base_path"], "src/pack_sandbox_base.py")
+            self.assertEqual(
+                manifest["sandbox_base_sha256"],
+                # raw bytes, the one hashing convention this module uses
+                hashlib.sha256(pc.SHARED_BASE_PATH.read_bytes()).hexdigest(),
+            )
+            self.assertEqual(pc.verify_manifest(tmp), [])
+
+    def test_verify_catches_single_byte_edit_to_the_shared_base(self) -> None:
+        # The gap this closes: cases.jsonl AND the pack's own sandbox are untouched
+        # (all three of those hashes still match) and only the shared base moved.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp, source=_SANDBOX_SRC_USING_BASE)
+            base = _copy_shared_base(tmp)
+            with mock.patch.object(pc, "SHARED_BASE_PATH", base):
+                pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+                base.write_bytes(base.read_bytes() + b" ")
+                errors = pc.verify_manifest(tmp)
+            self.assertTrue(any("sandbox_base_sha256 mismatch" in e for e in errors), errors)
+            self.assertFalse(
+                any("corpus_sha256" in e or "per-record" in e for e in errors), errors
+            )
+            self.assertFalse(any(e.startswith("sandbox_sha256") for e in errors), errors)
+
+    def test_legacy_manifest_without_the_base_key_verifies_as_unpinned(self) -> None:
+        # PIN (the compatibility crux, second time around): EVERY manifest in the
+        # repo lacked this key the moment it was added. A manifest that never made a
+        # claim about the shared base cannot be contradicted by one — so even with
+        # the base edited after that freeze, verification must NOT fail. It reports
+        # the manifest as unpinned, visibly and on a separate channel.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp, source=_SANDBOX_SRC_USING_BASE)
+            base = _copy_shared_base(tmp)
+            with mock.patch.object(pc, "SHARED_BASE_PATH", base):
+                pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+                _strip_sandbox_base_pin(tmp)
+                base.write_bytes(base.read_bytes() + b" ")
+                notices: list[str] = []
+                self.assertEqual(pc.verify_manifest(tmp, notices=notices), [])
+            self.assertTrue(any("shared sandbox base" in n for n in notices), notices)
+            self.assertTrue(any("NOT pinned" in n for n in notices), notices)
+
+    def test_absence_of_the_base_key_is_never_read_as_a_null(self) -> None:
+        # Absence is tested with `not in`, never `.get()`: an unpinned legacy
+        # manifest and an explicit "this pack does not use the base" are different
+        # claims, and only the second one can be contradicted by drift.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp, source=_SANDBOX_SRC_USING_BASE)
+            pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            manifest = json.loads((tmp / "manifest.json").read_text(encoding="utf-8"))
+            absent = {k: v for k, v in manifest.items() if k != "sandbox_base_sha256"}
+            explicit_null = dict(manifest, sandbox_base_sha256=None)
+            notices: list[str] = []
+            self.assertEqual(pc.verify_sandbox_base_pin(tmp, absent, notices=notices), [])
+            self.assertEqual(len(notices), 1, notices)
+            # The same manifest with the key present as null contradicts the sandbox
+            # that imports the base — reported as drift, and with no notice.
+            drift_notices: list[str] = []
+            errors = pc.verify_sandbox_base_pin(tmp, explicit_null, notices=drift_notices)
+            self.assertTrue(any("sandbox_base_sha256 mismatch" in e for e in errors), errors)
+            self.assertEqual(drift_notices, [])
+
+    def test_sandbox_that_does_not_use_the_shared_base_pins_null(self) -> None:
+        # The narrow-pin decision, in the shape the finance pack actually has: its
+        # sandbox carries its own copies of the resolution primitives, inside its own
+        # already-pinned file. Recording a hash of the shared base there would pin a
+        # module that cannot move one of its verdicts, so every unrelated edit to the
+        # base would red a pack whose only sanctioned remedy is a re-freeze.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp)  # no import of pack_sandbox_base
+            manifest = pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            self.assertIsNotNone(manifest["sandbox_sha256"])  # its own sandbox IS pinned
+            self.assertIsNone(manifest["sandbox_base_sha256"])
+            self.assertIsNone(manifest["sandbox_base_path"])
+            notices: list[str] = []
+            self.assertEqual(pc.verify_manifest(tmp, notices=notices), [])
+            self.assertEqual(notices, [])
+
+    def test_base_import_appearing_after_a_null_freeze_is_drift(self) -> None:
+        # Why null is recorded explicitly rather than omitted: "this pack's sandbox
+        # does not use the shared base" is a claim, and a sandbox that starts
+        # subclassing it later contradicts it — a module deciding part of every
+        # verdict joined the pack after the freeze. (The sandbox's own hash moves
+        # too, which is why both errors are expected here.)
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            sandbox = _write_sandbox(tmp)
+            pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            sandbox.write_text(_SANDBOX_SRC_USING_BASE, encoding="utf-8")
+            errors = pc.verify_manifest(tmp)
+            self.assertTrue(any("sandbox_base_sha256 mismatch" in e for e in errors), errors)
+            self.assertTrue(any(e.startswith("sandbox_sha256 mismatch") for e in errors), errors)
+
+    def test_a_pinned_shared_base_that_went_missing_is_flagged(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp, source=_SANDBOX_SRC_USING_BASE)
+            base = _copy_shared_base(tmp)
+            with mock.patch.object(pc, "SHARED_BASE_PATH", base):
+                pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+                base.unlink()
+                errors = pc.verify_manifest(tmp)
+            self.assertTrue(
+                any("pack_sandbox_base.py" in e and "missing" in e for e in errors), errors
+            )
+
+    def test_a_base_hash_without_a_path_is_an_inconsistent_manifest(self) -> None:
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp, source=_SANDBOX_SRC_USING_BASE)
+            manifest = pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            manifest.pop("sandbox_base_path")
+            errors = pc.verify_sandbox_base_pin(tmp, manifest)
+            self.assertTrue(any("inconsistent" in e for e in errors), errors)
+
+    def test_the_pack_manifest_pins_pack_artifacts_not_the_scorers(self) -> None:
+        # PIN — the combined-"factory-hash" decision, recorded as a test because it
+        # is a judgment and not an implementation detail. The freeze pins exactly the
+        # artifacts the PACK is made of: its corpus, its sandbox, and the shared base
+        # that sandbox subclasses (a subclass is an incomplete artifact without it).
+        # It deliberately does NOT roll the scoring modules
+        # (src/finance_redteam_scorer.py, src/vertical_pack_scorer.py, src/scorers.py)
+        # into a combined digest:
+        #   * they are the INSTRUMENT, not the pack — they read the log the sandbox
+        #     produced, and they have their own change control (the ledger
+        #     re-derivation chain and the verdict-flip regression checks);
+        #   * a combined digest changes when any input changes and can name none of
+        #     them, so verify could report "the factory moved" and nothing more,
+        #     while a per-file pin names the file;
+        #   * a scorer improvement measured at zero verdict flips would red every
+        #     pack's gate, and the only sanctioned remedy — a re-freeze — would
+        #     re-pin corpora that did not change, which trains people to re-freeze
+        #     routinely and devalues the freeze.
+        # If a future change makes a scorer module part of a pack's own artifact,
+        # this test is the place that decision gets re-argued.
+        with tempfile.TemporaryDirectory() as d:
+            tmp = Path(d)
+            cases = self._pack(tmp)
+            _write_sandbox(tmp, source=_SANDBOX_SRC_USING_BASE)
+            manifest = pc.freeze_manifest(tmp, cases, case_set_id="demo_v0", version="v0.1")
+            hashed = sorted(k for k in manifest if k.endswith("_sha256"))
+            self.assertEqual(
+                hashed, ["corpus_sha256", "per_record_sha256", "sandbox_base_sha256", "sandbox_sha256"]
+            )
+            self.assertFalse([k for k in manifest if "factory" in k or "scorer" in k], manifest)
+
     def test_truncated_manifest_raises_for_direct_callers(self) -> None:
         # PIN: verify_manifest itself raises on unparseable JSON; only the gate
         # wrapper (check_public) downgrades that crash to a reported error.
@@ -451,6 +660,26 @@ class CheckPublicTests(unittest.TestCase):
             self.assertEqual(pc.check_public(bench, notices=notices), [])
             self.assertTrue(
                 any(n.startswith("finance_redteam: ") and "not pinned" in n.lower() for n in notices),
+                notices,
+            )
+
+    def test_manifest_without_the_base_pin_keeps_the_gate_green_with_a_notice(self) -> None:
+        # The gate wrapper is where getting legacy compatibility wrong would actually
+        # hurt: every frozen pack's manifest lacked the shared-base key the moment it
+        # was added, and reading that absence as drift would red the blocking gate
+        # for all of them while forbidding the re-freeze that is the only remedy.
+        with tempfile.TemporaryDirectory() as d:
+            bench = Path(d)
+            pack, cases = _write_registered_pack(bench)
+            pc.freeze_manifest(pack, cases, case_set_id="fin_v0", version="v0.1")
+            _strip_sandbox_base_pin(pack)
+            notices: list[str] = []
+            self.assertEqual(pc.check_public(bench, notices=notices), [])
+            self.assertTrue(
+                any(
+                    n.startswith("finance_redteam: ") and "shared sandbox base" in n
+                    for n in notices
+                ),
                 notices,
             )
 

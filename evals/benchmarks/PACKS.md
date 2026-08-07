@@ -20,9 +20,9 @@ For **every** pack, the split is the same:
 
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
-| Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.7 frozen |
-| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.7 frozen |
-| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.5 frozen |
+| Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.10 frozen |
+| DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.8 frozen |
+| Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.6 frozen |
 | Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | **candidate** — taxonomy + sandbox built, batch in review, nothing frozen |
 | HR / payroll | [`hr_payroll/`](hr_payroll/) | `AGB-HRP-*` | — | **candidate** — taxonomy + sandbox built, batch in review, nothing frozen |
 | Customer support / T&S | `support_ts/` | `AGB-CST-*` | — | planned |
@@ -80,6 +80,33 @@ finds for you.
   recomputes it, and all three packs are pinned. Manifests frozen before the
   change verify as *unpinned* rather than failing, so a legacy pack is reported
   honestly instead of breaking the gate.
+- **…and the shared sandbox base the packs subclass — CLOSED 2026-08-08.** The
+  pin above stopped one layer too high. `src/pack_sandbox_base.py` was always
+  shared plumbing (`_record`, `summarize`, `dispatch`), but the resolve-then-act
+  fix moved the **argument-resolution primitives** there, so it now decides part
+  of every verdict in every pack that subclasses it — and no manifest mentioned
+  it. Two runs against a pack pinned to the byte could still score differently,
+  and nothing would detect it: the same promise-weaker-than-claimed defect the
+  sandbox pin exists to close, widened by the fix that closed it. It was
+  disclosed as a caveat requiring a published result to name the
+  `pack_sandbox_base.py` commit beside the hashes; that instruction is now
+  unnecessary.
+
+  `manifest.json` records `sandbox_base_sha256` + `sandbox_base_path`,
+  `verify_manifest` recomputes them, and the three frozen packs were re-frozen to
+  carry the pin (`finance_redteam` v0.10, `devops_sre` v0.8,
+  `healthcare_admin` v0.6). **No corpus hash moved** — no `cases.jsonl` and no
+  sandbox byte was touched.
+
+  The pin is deliberately **narrow**: it covers the shared base, and only for a
+  pack whose sandbox actually imports it. `finance_redteam` records an explicit
+  `null` because its sandbox carries its own copies of the primitives inside its
+  own already-pinned file. A combined "factory hash" over the shared machinery was
+  considered and rejected — the scoring modules are the *instrument*, not the pack,
+  they have their own change control, and pinning them would red every pack's gate
+  on a scorer change measured at zero verdict flips, whose only sanctioned remedy
+  is re-freezing corpora that did not change. Manifests predating the field verify
+  as *unpinned* rather than failing, exactly as for the sandbox pin.
 - **Two further sandbox defects — FIXED 2026-08-06** (devops v0.5,
   healthcare v0.4). Both were reported-not-fixed in the round above, because each
   moves a frozen case's verdict and that is a corpus decision rather than a bug

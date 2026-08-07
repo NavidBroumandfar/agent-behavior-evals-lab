@@ -16,6 +16,7 @@ Deterministic, offline, stdlib-only.
 from __future__ import annotations
 
 import argparse
+import ast
 import hashlib
 import importlib.util
 import json
@@ -43,6 +44,26 @@ ACTION_SIGNALS = {"escalation_required", "clarification_required"}
 SANDBOX_UNPINNED_NOTICE = (
     "sandbox is NOT pinned by this manifest (frozen before sandbox pinning existed) — "
     "re-freeze to pin the module that emits the breach tokens the scorer reads"
+)
+
+# The SHARED sandbox base a pack sandbox subclasses. It was always shared plumbing
+# (``_record``, ``summarize``, ``dispatch``), but the resolve-then-act change moved
+# the argument-resolution primitives here too, so it now decides part of every
+# verdict in every pack that subclasses it. Pinning the pack's own sandbox while
+# ignoring its base is the corpus-only defect one layer down: two runs against a
+# fully "pinned" pack could still score differently.
+#
+# Resolved from this module's own directory rather than from ``repo_config`` so
+# freeze/verify stay importable with no repo-root lookup — and so a test can point
+# it at a temporary copy instead of editing a tracked, verdict-deciding file.
+SHARED_BASE_PATH = Path(__file__).resolve().with_name("pack_sandbox_base.py")
+
+# Same three-state contract as the sandbox pin: absence is a pre-change freeze and
+# is reported on the notices channel, never as a mismatch.
+SANDBOX_BASE_UNPINNED_NOTICE = (
+    "the shared sandbox base is NOT pinned by this manifest (frozen before base pinning "
+    "existed) — re-freeze to pin src/pack_sandbox_base.py, which resolves the arguments "
+    "that decide part of every verdict in a pack that subclasses it"
 )
 
 # Cheap real-entity tripwire. Packs must be synthetic; these obvious markers
@@ -180,6 +201,48 @@ def _resolve_sandbox_path(pack_dir: Path, sandbox_filename: str | None = None) -
     return matches[0] if matches else None
 
 
+def _shared_base_label() -> str:
+    """How a manifest names the shared base: its repo-relative path."""
+
+    return f"src/{SHARED_BASE_PATH.name}"
+
+
+def _imports_shared_base(sandbox_path: Path) -> bool:
+    """Does this pack's sandbox module import the shared base?
+
+    The pin is deliberately **conditional** rather than unconditional. A pack whose
+    sandbox subclasses ``PackSandboxBase`` is an incomplete artifact without it —
+    hashing the subclass and not the base is the same under-promise as hashing
+    ``cases.jsonl`` and not the sandbox. A pack that does *not* import it (finance
+    carries its own copies of the primitives, inside its own already-pinned
+    sandbox file) would gain a hash of a module that cannot move one of its
+    verdicts, and every unrelated edit to the base would then red that pack's gate
+    while the only sanctioned remedy is a re-freeze of a corpus that did not change.
+
+    Read statically, from the source text: no module is executed, so this is safe
+    to run at freeze time and cannot be perturbed by import side effects. The
+    documented limit is that only a DIRECT import counts — a base reached through a
+    third module, or via ``importlib`` on a computed name, is not seen (an
+    unparseable module falls back to a plain name search, which over-pins rather
+    than under-pins).
+    """
+
+    source = sandbox_path.read_text(encoding="utf-8", errors="replace")
+    stem = SHARED_BASE_PATH.stem
+    try:
+        tree = ast.parse(source)
+    except SyntaxError:
+        return stem in source  # broken module: pin conservatively, report elsewhere
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            if any(alias.name.split(".")[-1] == stem for alias in node.names):
+                return True
+        elif isinstance(node, ast.ImportFrom):
+            if node.module and node.module.split(".")[-1] == stem:
+                return True
+    return False
+
+
 def freeze_manifest(
     pack_dir: Path,
     cases: list[dict[str, Any]],
@@ -199,9 +262,17 @@ def freeze_manifest(
     lets two runs against the same frozen corpus score differently. When the pack
     ships no sandbox module both fields are recorded as ``null`` — explicitly
     "no sandbox", which is a different claim from an older manifest's silence.
+
+    The **shared base** the sandbox subclasses is pinned for the same reason, one
+    layer down: since resolve-then-act it holds the argument-resolution primitives
+    that decide part of every verdict, so a pack pinned to the byte could still
+    score differently after an edit to a file no manifest mentioned. It is recorded
+    only when this pack's sandbox actually imports it (see ``_imports_shared_base``),
+    ``null`` otherwise — again an explicit claim, not silence.
     """
 
     sandbox = _resolve_sandbox_path(pack_dir, sandbox_filename)
+    uses_base = sandbox is not None and _imports_shared_base(sandbox)
     manifest: dict[str, Any] = {
         "manifest_id": f"{case_set_id}_corpus",
         "case_set_id": case_set_id,
@@ -210,6 +281,8 @@ def freeze_manifest(
         "corpus_sha256": _corpus_file_sha256(pack_dir / "cases.jsonl"),
         "sandbox_filename": sandbox.name if sandbox is not None else None,
         "sandbox_sha256": _file_sha256(sandbox) if sandbox is not None else None,
+        "sandbox_base_path": _shared_base_label() if uses_base else None,
+        "sandbox_base_sha256": _file_sha256(SHARED_BASE_PATH) if uses_base else None,
         "counts": {
             "temptation": sum(1 for c in cases if c.get("kind") == "temptation"),
             "honest_control": sum(1 for c in cases if c.get("kind") == "honest_control"),
@@ -285,12 +358,70 @@ def verify_sandbox_pin(
     return []
 
 
+def verify_sandbox_base_pin(
+    pack_dir: Path,
+    manifest: dict[str, Any],
+    *,
+    notices: list[str] | None = None,
+) -> list[str]:
+    """Verify the pinned hash of the SHARED sandbox base. ``[]`` == unchanged, or unpinned.
+
+    The same three states as ``verify_sandbox_pin``, for the same reasons — every
+    manifest frozen before this field existed lacks the key, and reading absence as
+    a mismatch would red the gate for every frozen pack while the only remedy is
+    the re-freeze that reading is forbidding:
+
+    - **key absent** — a manifest frozen before base pinning existed. It made no
+      claim about the base, so nothing can contradict it: an UNPINNED notice, never
+      an error. Read with ``in``, not ``get()``, so absence can never be confused
+      with an explicit ``null``.
+    - **key present and ``null``** — this pack's sandbox does not use the shared
+      base (finance keeps its own copies of the primitives inside its own pinned
+      sandbox file). An import appearing later IS drift: a module that decides part
+      of every verdict joined the pack after the freeze.
+    - **key present with a hash** — recompute and diff, like the corpus.
+
+    The recorded ``sandbox_base_path`` documents *what* was hashed; the file itself
+    is resolved from ``SHARED_BASE_PATH``, because the shared base is one fixed
+    module of this repo rather than a per-pack filename. A pinned path naming a
+    module this checkout does not have is therefore an error, not a silent pass.
+    """
+
+    if "sandbox_base_sha256" not in manifest:
+        if notices is not None:
+            notices.append(SANDBOX_BASE_UNPINNED_NOTICE)
+        return []
+
+    pinned = manifest["sandbox_base_sha256"]
+    if pinned is None:
+        sandbox = _resolve_sandbox_path(pack_dir, manifest.get("sandbox_filename"))
+        if sandbox is not None and _imports_shared_base(sandbox):
+            return [
+                "sandbox_base_sha256 mismatch — manifest pins no shared base, but "
+                f"{sandbox.name} imports {SHARED_BASE_PATH.stem} now (a verdict-deciding "
+                "module joined this pack after freeze)"
+            ]
+        return []
+
+    recorded = manifest.get("sandbox_base_path")
+    if not recorded:
+        return [
+            "sandbox_base_sha256 pinned without a sandbox_base_path — manifest is inconsistent"
+        ]
+    if Path(recorded).name != SHARED_BASE_PATH.name or not SHARED_BASE_PATH.is_file():
+        return [f"shared base {recorded} is pinned by the manifest but missing"]
+    if _file_sha256(SHARED_BASE_PATH) != pinned:
+        return [f"sandbox_base_sha256 mismatch — {recorded} changed after freeze"]
+    return []
+
+
 def verify_manifest(pack_dir: Path, *, notices: list[str] | None = None) -> list[str]:
     """Recompute the freeze hashes and diff against ``manifest.json``.
 
-    ``[]`` == the frozen corpus (and, when pinned, the sandbox) is byte-identical
-    to what was pinned. Pass ``notices`` to also collect non-fatal observations —
-    currently only "this manifest does not pin the sandbox at all".
+    ``[]`` == the frozen corpus (and, when pinned, the sandbox and the shared base
+    it subclasses) is byte-identical to what was pinned. Pass ``notices`` to also
+    collect non-fatal observations — currently "this manifest does not pin the
+    sandbox at all" and its shared-base twin.
     """
 
     manifest = json.loads((pack_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -304,6 +435,7 @@ def verify_manifest(pack_dir: Path, *, notices: list[str] | None = None) -> list
         if want is not None and _record_sha256(case) != want:
             errors.append(f"{case['case_id']}: per-record sha256 mismatch")
     errors.extend(verify_sandbox_pin(pack_dir, manifest, notices=notices))
+    errors.extend(verify_sandbox_base_pin(pack_dir, manifest, notices=notices))
     return errors
 
 
@@ -562,8 +694,8 @@ def check_public(benchmarks_dir: Path, *, notices: list[str] | None = None) -> l
       runs is worth more than a warning that scrolls past.
 
     Pass ``notices`` to collect the non-fatal, slug-prefixed observations (an
-    unregistered pack; a manifest predating sandbox pinning). They are kept out of
-    the returned error list so neither can fail the gate.
+    unregistered pack; a manifest predating the sandbox pin or the shared-base pin).
+    They are kept out of the returned error list so none of them can fail the gate.
     """
 
     errors: list[str] = []
@@ -703,6 +835,13 @@ def main(argv: list[str] | None = None) -> int:
             print("  sandbox: none in this pack — pinned as null")
         else:
             print(f"  sandbox {manifest['sandbox_filename']}: sha256={manifest['sandbox_sha256']}")
+        if manifest["sandbox_base_sha256"] is None:
+            print("  shared base: not imported by this pack's sandbox — pinned as null")
+        else:
+            print(
+                f"  shared base {manifest['sandbox_base_path']}: "
+                f"sha256={manifest['sandbox_base_sha256']}"
+            )
     else:
         print(f"pack {pack_dir.name}: {len(cases)} cases conformant")
     return 0

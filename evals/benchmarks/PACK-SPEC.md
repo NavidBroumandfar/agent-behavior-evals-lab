@@ -298,29 +298,74 @@ word — plausible words are plausible because they are already taken.
   pack driven by `--tools` with no sandbox module records both fields as `null` —
   an explicit "this pack has no sandbox", which is a different claim from an
   older manifest's silence.
+- `sandbox_base_sha256` + `sandbox_base_path` — sha256 of the raw bytes of the
+  **shared** sandbox base (`src/pack_sandbox_base.py`), and its repo-relative
+  path. Added 2026-08-08, closing the same under-promise one layer down: the base
+  was always shared plumbing (`_record`, `summarize`, `dispatch`), but the
+  resolve-then-act change moved the **argument-resolution primitives** there, so
+  it now decides part of every verdict in every pack that subclasses it. Two runs
+  against a pack pinned to the byte could still score differently if the base
+  moved, and nothing detected it.
+
+  The pin is **conditional**: it is recorded only when this pack's sandbox
+  actually imports the base, and `null` otherwise. `finance_redteam` is the
+  `null` case — it carries its own copies of the primitives inside its own
+  already-pinned `finance_sandbox_tools.py`, so a hash there would pin a module
+  that cannot move one of its verdicts, and every unrelated edit to the base
+  would red a pack whose only sanctioned remedy is a re-freeze. The import is
+  detected statically (`ast`, no module executed); only a **direct** import
+  counts, which is the documented limit.
 - `frozen: true`, `provenance.authored_by_ai: true`, and the v0-DRAFT caveat.
 
-`verify_manifest` recomputes all three and fails on any drift — no corpus is
-scored until it is frozen, and neither a frozen corpus nor its sandbox is edited
-in place (bump `case_set_id` / `version` for changes).
+`verify_manifest` recomputes all four and fails on any drift — no corpus is
+scored until it is frozen, and neither a frozen corpus, nor its sandbox, nor the
+base that sandbox subclasses is edited in place (bump `case_set_id` / `version`
+for changes).
 
-The sandbox pin has three states, kept distinct on purpose:
+**What the pack manifest deliberately does NOT pin** is the scoring layer
+(`src/finance_redteam_scorer.py`, `src/vertical_pack_scorer.py`,
+`src/scorers.py`) — and it does not roll the shared machinery into one combined
+"factory hash". Three reasons: the scorers are the *instrument*, not the pack
+(they read the log the sandbox produced, and they already have their own change
+control — the ledger re-derivation chain and the verdict-flip regression checks);
+a combined digest changes when any input changes while naming none of them, so
+`--verify` could report "the factory moved" and nothing more, where a per-file
+pin names the file; and a scorer improvement measured at **zero** verdict flips
+would red every pack's gate, whose only sanctioned remedy — a re-freeze — would
+re-pin corpora that did not change, training everyone to re-freeze routinely and
+devaluing the freeze. The rule the two pinned files share and the scorers do not:
+**pin what the pack is made of.** A sandbox subclass is an incomplete artifact
+without its base; a scorer is a separate instrument pointed at the result.
+
+The sandbox pin has three states, kept distinct on purpose. The shared-base pin
+mirrors them exactly, and for the same reasons:
 
 - **A hash is pinned** — recompute and diff. A changed module, a module missing
-  under the pinned filename, or a hash pinned without a filename are all errors.
+  under the pinned filename (or, for the base, a pinned path this checkout does
+  not have), or a hash pinned without a filename/path are all errors.
 - **`sandbox_sha256: null`** — the pack was frozen with no sandbox module. Clean,
   but a module *appearing* later is drift, because the thing that emits breach
   tokens changed after the freeze. This is why absence is recorded explicitly
-  rather than omitted.
+  rather than omitted. `sandbox_base_sha256: null` says "this pack's sandbox does
+  not use the shared base", and a sandbox that starts importing it later is drift
+  for the same reason: a module deciding part of every verdict joined the pack
+  after the freeze.
 - **The key is absent** — a manifest frozen before this field existed. It is
   reported **unpinned**, not mismatched: a visible non-fatal notice
-  (`CONFORMANCE NOTICE: <pack>: sandbox is NOT pinned by this manifest …`) on the
-  gate's notices channel. Such a manifest never made a claim about the sandbox,
+  (`CONFORMANCE NOTICE: <pack>: sandbox is NOT pinned by this manifest …`, or
+  `… the shared sandbox base is NOT pinned by this manifest …`) on the gate's
+  notices channel. Such a manifest never made a claim about the sandbox,
   so nothing can contradict it; failing on its silence would break the gate for
   every already-frozen pack and teach everyone to route around the check.
   Absence is read with `in`, never `get()`, so it can never be confused with an
   explicit `null`. The fix is a re-freeze — and until a pack is re-frozen, a
-  published result from it must name the sandbox commit beside the corpus hash.
+  published result from it must name the unpinned module's commit beside the
+  corpus hash.
+
+All three frozen packs were re-frozen on 2026-08-08 to carry the base pin
+(`finance_redteam` v0.10, `devops_sre` v0.8, `healthcare_admin` v0.6), so no pack
+in this repo is in the unpinned state — but the state stays supported, because the
+next field added to the manifest will put every one of them back in it.
 
 ## Registration & lifecycle — register EARLY, not at freeze
 
