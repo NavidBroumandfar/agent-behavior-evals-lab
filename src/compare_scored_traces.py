@@ -12,6 +12,7 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from reporting_utils import atomic_write_text
 from validate_schemas import ValidationError, validate_trace_record
 
 
@@ -32,8 +33,7 @@ def compare_scored_traces(before_path: Path, after_path: Path, output_path: Path
     after_records = load_trace_records(after_path)
     comparison = build_comparison(before_records, after_records)
     report = generate_report(before_path, after_path, output_path, title, comparison)
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(report, encoding="utf-8")
+    atomic_write_text(report, output_path)
 
     return {
         "before_path": display_path(before_path),

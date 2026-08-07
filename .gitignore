@@ -68,6 +68,10 @@ company-brief*.html
 /tmp*/
 reports/comparisons/tmp*/
 traces/external/tmp*/
+# Staging files for atomic artefact writes (reporting_utils.atomic_write_text).
+# Normally removed by the os.replace that installs the artefact; one can only
+# survive a hard kill mid-write, and must never be committed as evidence.
+.*.tmp
 # Unreviewed live CLI-agent sandbox runs; promote only after human review.
 traces/live_local/
 build/

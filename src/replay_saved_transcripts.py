@@ -23,6 +23,7 @@ from evaluate_manual_outputs import (
     _summary_table,
     _truncate,
 )
+from reporting_utils import atomic_write_text
 from run_eval import CASE_PATHS, build_trace_record, load_cases
 from scorers import score_response
 from schema_validation_utils import load_json_object, validate_schema_value
@@ -230,8 +231,7 @@ def run_replay(
         report_title,
         report_context,
     )
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(report, encoding="utf-8")
+    atomic_write_text(report, report_path)
 
     pass_count = sum(1 for trace in scored_traces if trace["passed"])
     fail_count = len(scored_traces) - pass_count

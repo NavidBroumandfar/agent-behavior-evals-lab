@@ -14,6 +14,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+from reporting_utils import atomic_write_text
 from validate_schemas import ValidationError, validate_trace_record
 
 
@@ -274,10 +275,9 @@ def generate_report(source_records: dict[str, list[dict[str, Any]]], manifest: F
 
 
 def write_report(content: str) -> None:
-    """Write the comparison report to the intended deterministic path."""
+    """Write the comparison report to the intended deterministic path atomically."""
 
-    OUTPUT_PATH.parent.mkdir(parents=True, exist_ok=True)
-    OUTPUT_PATH.write_text(content, encoding="utf-8")
+    atomic_write_text(content, OUTPUT_PATH)
 
 
 def print_summary(source_records: dict[str, list[dict[str, Any]]], manifest: FixtureManifest) -> None:

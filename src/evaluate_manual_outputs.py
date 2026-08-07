@@ -20,6 +20,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
+from reporting_utils import atomic_write_text
 from run_eval import CASE_PATHS, build_trace_record, load_cases
 from scorers import score_response
 from target_registry import allowed_manual_output_profiles
@@ -305,10 +306,9 @@ def generate_report(
 
 
 def write_report(content: str, output_path: Path) -> None:
-    """Write a Markdown report to disk."""
+    """Write a Markdown report to disk atomically."""
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(content, encoding="utf-8")
+    atomic_write_text(content, output_path)
 
 
 def print_summary(summary: dict[str, Any]) -> None:

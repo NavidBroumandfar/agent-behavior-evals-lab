@@ -17,6 +17,7 @@ from pathlib import Path
 from typing import Any
 
 from replay_saved_transcripts import validate_transcript_shape, validate_transcripts
+from reporting_utils import atomic_write_text
 from run_eval import CASE_PATHS, load_cases
 from schema_validation_utils import display_path, load_json_object, validate_schema_value
 from target_registry import allowed_manual_output_profiles
@@ -440,10 +441,9 @@ def validate_memory_checks(
 
 
 def write_jsonl(output_path: Path, records: list[dict[str, Any]]) -> None:
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(
+    atomic_write_text(
         "\n".join(json.dumps(record, sort_keys=True) for record in records) + "\n",
-        encoding="utf-8",
+        output_path,
     )
 
 

@@ -24,7 +24,7 @@ from live_local_harness import (
     PROMPT_TEMPLATE_VERSION,
 )
 from live_local_review_summary import DEFAULT_SUMMARY_PATH as DEFAULT_REVIEW_SUMMARY_PATH
-from reporting_utils import load_json_object, write_json_object
+from reporting_utils import atomic_write_text, load_json_object, write_json_object
 from run_eval import build_trace_record, load_cases
 from scorers import score_response
 
@@ -417,11 +417,10 @@ def adapter_by_id(registry: dict[str, Any], adapter_id: str) -> dict[str, Any]:
 
 
 def write_jsonl(records: list[dict[str, Any]], path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with path.open("w", encoding="utf-8") as output_file:
-        for record in records:
-            output_file.write(json.dumps(record, sort_keys=True, separators=(",", ":")))
-            output_file.write("\n")
+    atomic_write_text(
+        "".join(f"{json.dumps(record, sort_keys=True, separators=(',', ':'))}\n" for record in records),
+        path,
+    )
 
 
 def sha256_file(path: Path) -> str:

@@ -15,7 +15,7 @@ from datetime import datetime
 from pathlib import Path
 from typing import Any
 
-from reporting_utils import load_jsonl_records
+from reporting_utils import atomic_write_text, load_jsonl_records
 from schema_validation_utils import display_path, load_json_object, validate_schema_value
 
 
@@ -303,12 +303,11 @@ def validate_coverage(approval_events: list[dict[str, Any]], action_denials: lis
 
 
 def write_jsonl(output_path: Path, records: list[dict[str, Any]]) -> None:
-    """Write deterministic JSONL records."""
+    """Write deterministic JSONL records atomically."""
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(
+    atomic_write_text(
         "\n".join(json.dumps(record, sort_keys=True) for record in records) + "\n",
-        encoding="utf-8",
+        output_path,
     )
 
 

@@ -10,7 +10,7 @@ from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
-from reporting_utils import load_jsonl_records as load_jsonl
+from reporting_utils import atomic_write_text, load_jsonl_records as load_jsonl
 
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -102,10 +102,9 @@ def generate_report(records: list[dict[str, Any]]) -> str:
 
 
 def write_report(content: str, output_path: Path) -> None:
-    """Write the Markdown report to disk."""
+    """Write the Markdown report to disk atomically."""
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(content, encoding="utf-8")
+    atomic_write_text(content, output_path)
 
 
 def _summary_table(records: list[dict[str, Any]], key: str) -> str:

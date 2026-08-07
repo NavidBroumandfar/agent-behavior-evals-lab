@@ -22,7 +22,7 @@ from adjudication_report import (
     lookup_adjudication,
     select_adjudication_input,
 )
-from reporting_utils import display_path, load_jsonl_records as load_jsonl
+from reporting_utils import atomic_write_text, display_path, load_jsonl_records as load_jsonl
 from validate_adjudications import AdjudicationValidationError
 
 
@@ -127,10 +127,9 @@ def generate_report(
 
 
 def write_report(content: str, output_path: Path) -> None:
-    """Write the Markdown inspection report to disk."""
+    """Write the Markdown inspection report to disk atomically."""
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
-    output_path.write_text(content, encoding="utf-8")
+    atomic_write_text(content, output_path)
 
 
 def print_summary(

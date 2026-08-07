@@ -13,6 +13,8 @@ import sys
 from pathlib import Path
 from typing import Any
 
+from reporting_utils import atomic_write_text
+
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 OUTPUT_PATH = REPO_ROOT / "traces/external/dry_run_adapter_outputs.jsonl"
@@ -116,10 +118,12 @@ def dry_run_records() -> list[dict[str, Any]]:
 def write_records(records: list[dict[str, Any]], output_path: Path = OUTPUT_PATH) -> None:
     """Write normalized adapter-output records to the intended JSONL fixture."""
 
-    with output_path.open("w", encoding="utf-8") as output_file:
-        for record in records:
-            output_file.write(json.dumps(record, ensure_ascii=False, separators=(",", ":")))
-            output_file.write("\n")
+    atomic_write_text(
+        "".join(
+            f"{json.dumps(record, ensure_ascii=False, separators=(',', ':'))}\n" for record in records
+        ),
+        output_path,
+    )
 
 
 def main() -> int:
