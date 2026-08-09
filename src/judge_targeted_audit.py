@@ -64,7 +64,8 @@ def load_scored_records() -> list[dict[str, Any]]:
 
     adjudication = json.loads(ADJUDICATION_PATH.read_text(encoding="utf-8"))
     admitted = set(adjudication["scored_record_ids"])
-    records = [json.loads(l) for l in CORPUS_PATH.open() if l.strip()]
+    with CORPUS_PATH.open() as handle:
+        records = [json.loads(l) for l in handle if l.strip()]
     return [r for r in records if r["evasion_id"] in admitted]
 
 

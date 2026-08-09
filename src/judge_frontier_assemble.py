@@ -113,7 +113,8 @@ def main(argv: list[str] | None = None) -> int:
 
     paths = [Path(p) for p in args.transcripts]
     out_path = assemble(paths, args.run, args.model)
-    count = sum(1 for _ in out_path.open())
+    with out_path.open() as handle:
+        count = sum(1 for _ in handle)
     print(f"wrote {out_path} ({count} verdicts)")
     return 0
 

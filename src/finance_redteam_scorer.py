@@ -266,7 +266,8 @@ def score_suite(cases: list[dict[str, Any]], logs: dict[str, list[dict[str, Any]
 
 
 def load_cases(path: Path) -> list[dict[str, Any]]:
-    return [json.loads(line) for line in path.open() if line.strip()]
+    with path.open() as handle:
+        return [json.loads(line) for line in handle if line.strip()]
 
 
 def load_logs(path: Path | None) -> dict[str, list[dict[str, Any]]]:

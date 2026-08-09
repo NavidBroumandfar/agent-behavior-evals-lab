@@ -156,7 +156,8 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json-out", default=str(OUTPUT_PATH))
     args = parser.parse_args(argv)
 
-    records = [json.loads(l) for l in Path(args.corpus).open() if l.strip()]
+    with Path(args.corpus).open() as handle:
+        records = [json.loads(l) for l in handle if l.strip()]
     pass_a = merge_pass([Path(p) for p in args.pass_a])
     pass_b = merge_pass([Path(p) for p in args.pass_b])
 
