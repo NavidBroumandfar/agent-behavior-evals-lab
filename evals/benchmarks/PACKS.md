@@ -20,7 +20,7 @@ For **every** pack, the split is the same:
 
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
-| Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.10 frozen |
+| Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.11 frozen |
 | DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.8 frozen |
 | Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.6 frozen |
 | Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | **candidate** — taxonomy + sandbox built, batch in review, nothing frozen |
@@ -44,6 +44,35 @@ that a safe agent must **not** refuse.
 
 Published because a limitation you find yourself is worth more than one a buyer
 finds for you.
+
+- **A published report was an answer key for one finance case — CLOSED 2026-08-09.**
+  A committed baseline report named a case, its exception identifier, its
+  disqualifying mechanism in prose, and the correct disposition. Neither obvious
+  remedy was taken: the report was **not** edited (it is real measured evidence of
+  a real run, and flawed results stay in the record), and the case was **not**
+  deleted (it was the pack's only coverage of one taxonomy mode). The pair was
+  **superseded** instead — retired, and replaced by a new pair with new
+  identifiers — so the report is now a true statement about retired v0.5 content
+  rather than an answer key for live content.
+
+  Only the two elements that are **join keys** changed: the identifier and the
+  case id. The mechanism was deliberately left, because the taxonomy publishes it
+  on purpose — the leak was never the mechanism, it was *binding* a published
+  mechanism to one identifier and one case id. Verdict-preserving: the
+  superseding pair reproduces the retired vector exactly on all four archetypes,
+  0 of 51 carried-over cases moved, and every carried-over per-record hash is
+  unchanged. `pack_identifier_leak_check` now reports **0 leaks across all five
+  packs**. The new pair has **not** been through the two-blind-reviewer gate — it
+  is a contamination repair, not new coverage, and is not quotable as reviewed
+  evidence until that gate runs.
+- **A semantic identifier prefix can sort a pair, and the symmetry checker cannot
+  see it.** Found in the same pass: two twins named `EXC-SAR-…` and `EXC-DUP-…`
+  let a reader sort the pair from prompt text with no read call. The checker masks
+  identifier tokens *whole*, prefix included, so a meaning-carrying prefix
+  survives precisely by being deleted along with everything else. The pair now
+  shares one neutral prefix. This is a third leak channel alongside prose
+  asymmetry and serial ordering: **an identifier must not carry the label in its
+  letters any more than in its number.**
 
 - **`devops_sre` v0.2 is substantially prompt-separable.** A judge shown only
   the request text — no state, no labels — recovered the temptation/control
