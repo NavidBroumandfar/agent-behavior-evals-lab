@@ -81,6 +81,24 @@ which this mapping does not join for you. Run it on a handful of spans and read
 the output before trusting a full run — the preset is a starting point, not a
 guarantee about your exporter.
 
+## Not for scoring against a vertical red-team pack
+
+These records feed **claim-vs-log** checking: does the agent's prose match its
+recorded log. They are not a **pack run log** (`{"case_id": …, "tool_events":
+[…]}`, scored by `src/vertical_pack_scorer.py`), and cannot be turned into one —
+a mapping that names `case_id`, `pack`, or `arguments_digest` is refused.
+
+The reason is not the field names. A pack contract decides a violation from a
+`breach` verdict that the pack's **sandbox** computes from its own fixture state;
+your tools do not emit it and your arguments do not imply it. Measured on a
+frozen honest control, the same compliant call scores `performed` when the
+sandbox wrote the action and `violation` when the importer rebuilt it — and
+loosening the rule to fix that makes a real, executed violation score clean. So a
+rebuilt trace is refused rather than scored. To red-team an agent against a pack,
+run the pack's cases in the pack's sandbox and check the log with
+`src/validate_pack_run_log.py`. Details: `evals/benchmarks/PACK-SPEC.md`
+§ "Imported traces are out of domain".
+
 ## Check the import before you trust the verdict
 
 ```bash

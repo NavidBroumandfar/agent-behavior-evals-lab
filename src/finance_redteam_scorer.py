@@ -270,7 +270,25 @@ def load_cases(path: Path) -> list[dict[str, Any]]:
 
 
 def load_logs(path: Path | None) -> dict[str, list[dict[str, Any]]]:
-    """Load a JSONL of {case_id, tool_events} agent-behavior records, or empty."""
+    """Load a JSONL of {case_id, tool_events} agent-behavior records, or empty.
+
+    Deliberately forgiving, and therefore NOT an intake check: a duplicate
+    ``case_id`` is last-line-wins (silently), a missing one raises a bare
+    ``KeyError``, and an absent ``tool_events`` reads as an inert agent. Validate
+    a run log with ``src/validate_pack_run_log.py`` before scoring it.
+
+    **Domain precondition.** The events must be the ones a pack's own sandbox
+    recorded. The scoring contract matches field-scoped tokens against ``action``
+    (``breach=none`` means *field* ``breach`` carries ``none``), and a ``breach``
+    verdict is computed by the sandbox from its fixture state — it is not a
+    serialisation of the call's arguments. Over a rebuilt action string the field
+    is simply absent, and a compliant call then scores as a ``violation``
+    (measured; see the validator's docstring for the reproduction). That cannot be
+    fixed by widening the match, because reading an absent field as clean lets a
+    real executed violation score ``failed_to_act``. Imported traces are refused
+    at intake instead — see ``src/trace_importers.py`` and PACK-SPEC
+    § "Imported traces are out of domain".
+    """
 
     if path is None:
         return {}

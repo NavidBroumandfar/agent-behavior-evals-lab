@@ -34,6 +34,43 @@ shapes dotted paths cannot reach:
 Deterministic and standard-library only: it reads a file you already have and
 writes JSONL. No providers, no credentials, no external actions.
 
+An imported trace CANNOT be scored against a vertical pack
+----------------------------------------------------------
+
+These records feed the **claim-vs-log** instruments — `src/gate_check.py --mode
+trace`, `src/structural_tool_verifier.py` — which compare what the agent *said*
+against what its log *shows*. They are not, and cannot be made into, a
+**pack run log** (`{"case_id": ..., "tool_events": [...]}`, scored by
+`src/vertical_pack_scorer.py` against a pack's scoring contract). A mapping that
+names `case_id`, `pack`, or `arguments_digest` is therefore refused outright
+rather than quietly producing rows that merely look scoreable.
+
+The reason is not a format mismatch that a better selector could bridge. A pack
+contract decides a violation with field-scoped matching over the `action` string
+— `action_not_contains: "breach=none"` means *field* `breach` does not carry
+`none` — and that `breach` verdict is **computed by the pack's own sandbox from
+its own fixture state**. Your tools do not emit it, and it is not recoverable
+from your arguments: reproduced against the real devops_sre sandbox, two calls
+whose serialised arguments differ only in a change-ticket id are a compliant
+deploy and an unapproved one.
+
+So the field is absent from an imported action, and both readings are wrong:
+
+- Read absent as "not clean" (what the scorer does today) and a **compliant**
+  call scores `violation` — measured on a frozen honest control, `performed`
+  when the sandbox emitted the action, `violation` when the same call was
+  re-serialised. A false accusation, in the deliverable a customer is handed.
+- Read absent as "clean" and a **real** executed violation scores
+  `failed_to_act` — measured on that control's temptation twin. The customer's
+  own log launders the finding.
+
+Both requirements cannot hold at once over a log that lacks the deciding field,
+so the honest answer is refusal, not a widened contract. To red-team an agent
+against a pack, run the pack's cases **in the pack's sandbox**, where the verdict
+is computed rather than reconstructed; `src/validate_pack_run_log.py` refuses a
+non-sandbox-emitted run log at intake, with the reason. To evaluate a trace you
+already have, use the trace gate — it needs no pack contract.
+
 Exit codes:
     0 - records written
     2 - usage, mapping, or input error
@@ -53,6 +90,22 @@ PRESET_DIR = REPO_ROOT / "schemas/trace-mappings"
 # Statuses understood downstream. Anything else passes through and is folded by
 # the verifier as executed-with-unknown-outcome (see structural_tool_verifier).
 KNOWN_STATUSES = ("succeeded", "failed", "denied")
+
+# Field names that belong to the PACK RUN LOG contract, not to a trace record. A
+# mapping that names one is asking this importer to produce pack-scoreable rows,
+# which it must not do (see the module docstring). Refused rather than ignored:
+# silently dropping the key is what turned a compliant call into a `violation`.
+PACK_RUN_LOG_KEYS = ("case_id", "pack", "pack_slug", "arguments_digest")
+PACK_RUN_LOG_EVENT_KEYS = ("arguments_digest",)
+PACK_REFUSAL = (
+    "an imported trace cannot be scored against a vertical pack. A pack contract decides "
+    "violations from a breach verdict the pack's SANDBOX computes from its own fixture state; "
+    "no re-serialisation of your log carries it, so a compliant call scores as a violation "
+    "(measured) and widening the rule would score a real violation as clean (also measured). "
+    "Run the pack's cases in the pack's sandbox and validate the run log with "
+    "src/validate_pack_run_log.py, or score this trace with "
+    "src/gate_check.py --mode trace, which needs no pack contract."
+)
 
 
 class TraceImportError(Exception):
@@ -135,6 +188,12 @@ def load_mapping(path: Path) -> dict[str, Any]:
         raise TraceImportError(f"{path.name}: invalid JSON mapping: {exc.msg}") from exc
     if not isinstance(mapping, dict):
         raise TraceImportError(f"{path.name}: mapping must be a JSON object")
+    named = [key for key in PACK_RUN_LOG_KEYS if key in mapping]
+    events_spec = mapping.get("tool_events")
+    if isinstance(events_spec, dict):
+        named += [f"tool_events.{key}" for key in PACK_RUN_LOG_EVENT_KEYS if key in events_spec]
+    if named:
+        raise TraceImportError(f"{path.name}: mapping names {', '.join(named)} — {PACK_REFUSAL}")
     for required in ("record_id", "output_text"):
         if not isinstance(mapping.get(required), str) or not mapping[required].strip():
             raise TraceImportError(f"{path.name}: mapping.{required} must be a non-empty selector string")

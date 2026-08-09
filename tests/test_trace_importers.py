@@ -162,6 +162,68 @@ class EndToEndGateTests(unittest.TestCase):
         self.assertEqual(summary["fail_count"], 1)
 
 
+class PackRunLogRefusalTests(unittest.TestCase):
+    """An imported trace is out of domain for pack scoring — refuse, don't approximate.
+
+    A pack contract decides a violation from a breach verdict the pack's sandbox
+    computes from its own fixture state. Nothing in a customer's log carries it,
+    so a rebuilt ``action`` string cannot be scored against a pack either way
+    round: reproduced on a frozen honest control, the sandbox-emitted action
+    scores ``performed`` and the re-serialised one scores ``violation``, while
+    widening the contract to tolerate the absent field scores a real, executed
+    violation as clean. See ``src/validate_pack_run_log.py``.
+    """
+
+    BASE = {
+        "name": "t",
+        "record_id": "id",
+        "output_text": "output",
+        "tool_events": {"path": "tool_calls", "tool_name": "name", "action": "arguments"},
+    }
+
+    def test_mapping_naming_case_id_is_refused(self) -> None:
+        path = write_json(dict(self.BASE, case_id="id"))
+        with self.assertRaises(TraceImportError) as caught:
+            load_mapping(path)
+        self.assertIn("case_id", str(caught.exception))
+        self.assertIn("pack", str(caught.exception))
+
+    def test_mapping_naming_a_pack_is_refused(self) -> None:
+        for key in ("pack", "pack_slug"):
+            with self.subTest(key=key):
+                with self.assertRaises(TraceImportError):
+                    load_mapping(write_json(dict(self.BASE, **{key: "devops_sre"})))
+
+    def test_mapping_naming_arguments_digest_is_refused(self) -> None:
+        with self.assertRaises(TraceImportError):
+            load_mapping(write_json(dict(self.BASE, arguments_digest="digest")))
+
+    def test_event_level_arguments_digest_is_refused(self) -> None:
+        events = dict(self.BASE["tool_events"], arguments_digest="digest")
+        with self.assertRaises(TraceImportError):
+            load_mapping(write_json(dict(self.BASE, tool_events=events)))
+
+    def test_refusal_names_the_two_supported_routes(self) -> None:
+        with self.assertRaises(TraceImportError) as caught:
+            load_mapping(write_json(dict(self.BASE, case_id="id")))
+        message = str(caught.exception)
+        self.assertIn("gate_check", message)
+        self.assertIn("sandbox", message)
+
+    def test_ordinary_mappings_still_load(self) -> None:
+        self.assertEqual(load_mapping(write_json(self.BASE))["record_id"], "id")
+
+    def test_emitted_records_cannot_masquerade_as_a_pack_run_log(self) -> None:
+        """The structural half of the refusal: the shape is never pack-shaped."""
+
+        source = write_json([{"id": "r1", "output": "x", "tool_calls": [{"name": "t", "arguments": "a=b"}]}])
+        record = import_records(source, self.BASE)[0]
+        self.assertEqual(set(record), {"record_id", "output_text", "tool_events"})
+        self.assertNotIn("case_id", record)
+        for event in record["tool_events"]:
+            self.assertNotIn("arguments_digest", event)
+
+
 class CliTests(unittest.TestCase):
     def test_cli_writes_records(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:

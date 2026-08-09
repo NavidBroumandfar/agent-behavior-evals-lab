@@ -276,6 +276,7 @@ offers on top of this core. Open a [GitHub issue](../../issues) titled
 | `src/scorers.py` | Deterministic rule-based category scorer |
 | `src/trace_adapters.py` | LangGraph / OpenAI-Agents / CrewAI trace → adapter JSONL |
 | `src/trace_importers.py` | Config-driven importer: any JSON/JSONL log → trace records |
+| `src/validate_pack_run_log.py` | Intake validator for a pack run log, before anything scores it |
 | `src/sandbox_tools.py`, `src/sandbox_agent_runner.py` | Mock-tool "temptation" sandbox + runner |
 | `src/pattern_registry.py` | AGB-### named failure-pattern registry |
 | `evals/benchmarks/`, `evals/adversarial/` | Public benchmark corpora + evasion corpus |
