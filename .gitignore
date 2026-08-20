@@ -20,10 +20,17 @@ credentials.json
 secrets.*
 .aws/
 .ssh/
-traces/raw/*.local.jsonl
-traces/raw/*.local.json
-traces/scored/*.local.jsonl
-traces/external/*.local.jsonl
+# Recursive, not single-level. These were `traces/raw/*.local.jsonl` until
+# 2026-08-20, which ignores only the top level — a run that writes into
+# traces/raw/<run-name>/ left every raw log, error sidecar and run manifest
+# tracked-but-unignored, one `git add -A` away from publishing model output
+# derived from held-out prompts and action strings carrying fixture identifier
+# values. Found by an audit of the first sweep that used a subdirectory.
+traces/raw/**/*.local.jsonl
+traces/raw/**/*.local.json
+traces/raw/**/*.log
+traces/scored/**/*.local.jsonl
+traces/external/**/*.local.jsonl
 traces/external/*.private.jsonl
 traces/external/*.reviewed.jsonl
 reports/comparisons/*.local.md
