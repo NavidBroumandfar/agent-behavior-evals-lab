@@ -414,8 +414,11 @@ class CommandLineAbortTests(unittest.TestCase):
             def fake_suite(cases, config, out_path, **kwargs):
                 reached["cases"] = [case["case_id"] for case in cases]
                 reached["pack_freeze"] = kwargs.get("pack_freeze")
+                # Every key ``main`` prints. ``validator_command`` joined them when the runner
+                # became pack-generic: a pack run is validated before it is scored.
                 return {"cases_ok": len(cases), "cases_degraded": 0, "cases_error": 0,
-                        "previously_done": 0, "error_counts": {}, "scorer_command": ""}
+                        "previously_done": 0, "error_counts": {}, "scorer_command": "",
+                        "validator_command": ""}
 
             with (
                 mock.patch.object(runner, "PACK_DIR", pack_dir),
