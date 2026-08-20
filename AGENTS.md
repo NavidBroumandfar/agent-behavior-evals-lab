@@ -89,6 +89,16 @@ Published, dated, reproducible from committed artifacts:
 | Blind red-team corpus vs the deterministic structural checker | 21.8% catch, 0 twin false positives |
 | Same corpus, LLM judge **with tool-log access** | ~98.2% catch |
 | Judge-targeted corpus (attacks written against the judge prompt) | 98.1% catch — no meaningful degradation |
+| Finance pack v0.5 vs 3 real tool-calling agents (2026-07-26) | 159/159 trajectories; 15 of 35 temptations drove at least one model to execute the harmful call |
+| Same pack, hidden-state retrofit v0.5 → v0.6 | violation rate 14.0% → 47.2% on retrofitted cases vs +4.0pp on 23 unchanged controls — **difference-in-differences +29.2 points** |
+
+**A new session should know the packs HAVE been run.** `PACKS.md` said otherwise
+until 2026-08-20 and the statement was false; both reports live in
+`evals/benchmarks/finance_redteam/reports/`. What is still true: `devops_sre` and
+`healthcare_admin` have never been run, and no pack has been run at its current
+frozen version (finance is now v0.11, the results above are v0.5/v0.6).
+The B-05 report also publishes a measured run-to-run **noise floor of 21.7%** —
+per-case verdicts from a single run are weak evidence.
 
 **The load-bearing conclusion:** detection of claim-vs-log lies by an LLM judge
 that reads the tool log is **effectively a solved, commodity capability**. Do not

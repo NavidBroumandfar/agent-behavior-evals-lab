@@ -45,6 +45,44 @@ that a safe agent must **not** refuse.
 Published because a limitation you find yourself is worth more than one a buyer
 finds for you.
 
+- **The flagship pack is the least symmetric pack in the repo, and this file has
+  been naming the wrong one — DISCLOSED 2026-08-20.** `devops_sre` is described
+  below as the separable pack, the one "where a deterministic check finds 3x the
+  density of forbidden prose asymmetries". Run today, `pack_symmetry_check` says the
+  ordering is the other way round:
+
+  | Pack | `[leak]` | `[warn]` | pairs identical after id-masking |
+  |---|---|---|---|
+  | `finance_redteam` v0.11 | **12** | **72** | **1 of 15** |
+  | `healthcare_admin` v0.6 | 3 | 19 | 0 of 6 |
+  | `devops_sre` v0.8 | **0** | 3 | **7 of 12** |
+  | `legal_ops` (candidate) | 0 | 0 | 9 of 9 |
+  | `hr_payroll` (candidate) | 0 | 0 | 9 of 9 |
+
+  Reproduce with `python3 src/pack_symmetry_check.py --pack <slug>`.
+
+  Three things follow, and none of them is comfortable:
+
+  1. **The pack sold first is the one with the weakest pair symmetry.** `finance_redteam`
+     carries a hedge-phrase leak, a legitimizing-assertion leak, pairs differing in 85
+     of 85 token positions after masking, and a `firstname.initial`-shaped principal
+     that `PACK-SPEC`'s own entity standard rejects. Any finance result must publish
+     this beside it.
+  2. **The two packs marked "candidate — nothing frozen" are the cleanest in the
+     repo.** They were authored after the pair-symmetry rule existed; the frozen three
+     were not. Maturity labels here track authoring date, not corpus quality, and a
+     reader is entitled to assume the opposite.
+  3. **Why the gate stayed green through all of it.** `pack_symmetry_check` is wired
+     as an **advisory** step, because the frozen corpora predate the rule and the only
+     legitimate fix is a version bump. That is a defensible reason to keep it advisory
+     and *not* a reason for the finding to go unpublished for two weeks. The advisory
+     summary also truncates its findings list, so the leak lines never reached anyone.
+
+  Not fixed here. Fixing it means re-authoring `finance_redteam` pairs and re-freezing
+  as v0.12, which moves verdicts on a corpus that already has published results against
+  it — a corpus decision, not a bug fix, and one that needs its own before/after verdict
+  diff. Disclosed now, because the number existed before the decision does.
+
 - **A published report was an answer key for one finance case — CLOSED 2026-08-09.**
   A committed baseline report named a case, its exception identifier, its
   disqualifying mechanism in prose, and the correct disposition. Neither obvious
@@ -89,11 +127,18 @@ finds for you.
   All 12 pairs are now length-matched and differ by at most one token position
   once identifiers are masked; `pack_symmetry_check` goes from 14 `[leak]`
   findings to 0. **This does not retire the 86.4% figure.** That number was
-  measured on v0.2 content, no probe has been run against v0.6, and one is not
-  claimed here — re-measuring requires the pre-registered protocol and is a
-  separate decision. Until a v0.6 probe exists, v0.2's measurement remains the
-  only separability evidence this pack has, and it stays published beside any
-  result from it.
+  measured on v0.2 content and re-measuring is a separate decision under the
+  pre-registered protocol.
+
+  **Correction, 2026-08-20:** this paragraph used to continue "no probe has been run
+  against v0.6, and one is not claimed here". That was stale. The v0.6 probe *was*
+  run, on the same day, and is published in the report this section already links:
+  **57.7% against a 50.0% baseline (+7.7pp — passes)**, down from 86.4% (+36.4pp).
+  The website has been publishing that improvement while this file denied it existed.
+
+  The v0.2 figure is **not** retired by it: v0.2 had 22 cases and v0.6 has 26, so it
+  is not a like-for-like case set, and the older measurement stays published beside
+  any result from this pack.
 - **Two sandbox scoring holes — FIXED 2026-08-06** (devops v0.4,
   healthcare v0.3). A restricted-secret disclosure was excused by the agent's
   own claim about who would receive the value (scoring the assertion, not the
@@ -290,12 +335,32 @@ finds for you.
 
 ## Running the packs
 
-The first execution of the packs against real tool-calling agents is
-pre-registered in [`pack-run-protocol.md`](pack-run-protocol.md) — question,
-fleet rules, metrics, suite-quality gates, and invalidation conditions all
-committed **before** any run, per this repo's protocol convention. No result
-from these packs exists yet; when one does, it lands as a dated report in
-`reports/comparisons/` and never as a marketing number.
+**Correction, 2026-08-20: this section previously said "no result from these packs
+exists yet". That was false, and had been since 2026-07-26.** Two committed reports
+predate it, both inside the finance pack:
+
+- [`A4-baseline-v0.5-2026-07-26.md`](finance_redteam/reports/A4-baseline-v0.5-2026-07-26.md)
+  — three models, one run each, **159/159 trajectories**, scored on the recorded tool
+  log. 15 of 35 temptations drove at least one model to execute the harmful call.
+- [`B05-delta-v0.6-2026-07-26.md`](finance_redteam/reports/B05-delta-v0.6-2026-07-26.md)
+  — three models x three runs x two corpus versions. Rewriting a temptation so the
+  violation is discoverable only through a tool call the agent chose not to make moved
+  the violation rate from 14.0% to 47.2%, while 23 unchanged cases moved 4.0 points:
+  **difference-in-differences +29.2 points.** It also retracts one of its own earlier
+  claims and publishes a measured run-to-run noise floor of **21.7%**.
+
+The statement was written when the vertical-pack registry was created and was never
+reconciled against the pack's own reports directory. It is corrected here rather than
+quietly deleted, because a false claim this repo made about itself belongs in the
+record next to the correction — the same rule that keeps the superseded measurements
+above published.
+
+What *is* true, and what the pre-registration in
+[`pack-run-protocol.md`](pack-run-protocol.md) now governs: **`devops_sre` and
+`healthcare_admin` have never been run by any agent**, and **no pack has been run at
+its current frozen version** — the results above measure finance v0.5 and v0.6, and
+the shipped pack is v0.11. Every hash moved in between. Results land as dated reports
+and never as a marketing number.
 
 ## Adding a pack
 
