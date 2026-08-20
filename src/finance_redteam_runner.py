@@ -20,6 +20,21 @@ validity problem symmetrically: both temptations and honest controls require the
 agent to actually call tools, so an agent that merely refuses in text fails on both
 axes.
 
+Run preconditions (`preflight_pack`, both abort non-zero before anything is spawned):
+* **The corpus must belong to this pack.** `--corpus` takes any path, but the sandbox does not
+  move: the MCP server, `TOOL_DOMAINS` and the replay toolbox are all finance. Pointed at a devops
+  or healthcare corpus the runner used to serve finance tools, record finance events, replay them
+  into a finance toolbox and mark every row `ok` — a result nothing flagged, publishable as that
+  other pack's number. The corpus directory and every record's `case_set_id` must now both name
+  this pack, and a case naming no pack at all is a mismatch rather than a pass.
+* **The pack must still be the pack that was frozen.** `evals/benchmarks/pack-run-protocol.md`
+  Precondition 3 promised the manifest sha256 is verified before every run and the harness aborts
+  on mismatch; the harness did not verify anything. It now delegates to
+  `pack_conformance.verify_manifest` (corpus bytes, per-record hashes, sandbox module, shared
+  sandbox base), hashes the corpus file actually named by `--corpus`, and copies what it verified
+  into the run manifest as `pack_freeze` so a published result names what it ran against. A
+  manifest frozen before a pin existed is reported unpinned on the notices channel, never failed.
+
 Operational notes:
 * `stream_tool_calls` is the opencode `--format json` second evidence channel. It is empty for
   the `claude` and `codex` kinds, which expose no comparable per-tool-call stream. Transport
@@ -34,7 +49,11 @@ Operational notes:
 * `--raw-dir` should point outside the repo or at `traces/raw/`; only `*.local.json(l)` under
   the traces directories is gitignored.
 
-This is an opt-in evidence producer; the deterministic quality gate never runs it.
+This is an opt-in evidence producer: the deterministic quality gate never spawns a CLI
+from it — but it does run ``self_check`` (``tests/test_finance_harness_self_checks.py``),
+which nothing did until 2026-08-20. Section 5's replayed breach verdict and section 11's
+degraded-violation outcome had both been failing since the 2026-08-08 resolve-then-act
+change, unnoticed, because no gate step and no test ever invoked them.
 """
 
 from __future__ import annotations
@@ -44,6 +63,7 @@ import concurrent.futures
 import hashlib
 import json
 import os
+import re
 import shlex
 import shutil
 import subprocess
@@ -63,13 +83,19 @@ sys.path.insert(0, str(_SRC_DIR))
 sys.path.append(str(_SRC_DIR.parent / "evals" / "benchmarks" / "finance_redteam"))
 
 from finance_redteam_scorer import OUTCOME_VIOLATION, load_cases, load_logs, score_case
+from finance_sandbox_mcp_server import fixture_account_id
 from finance_sandbox_tools import TOOL_DOMAINS, FinanceSandboxToolbox
+from pack_conformance import verify_manifest
 from repo_config import REPO_ROOT
 from reporting_utils import write_json_object
 
 RUNNER_VERSION = "finance_redteam_runner/v1"
 SERVER_PATH = _SRC_DIR / "finance_sandbox_mcp_server.py"
-PACK_DIR = REPO_ROOT / "evals/benchmarks/finance_redteam"
+BENCHMARKS_DIR = REPO_ROOT / "evals/benchmarks"
+PACK_DIR = BENCHMARKS_DIR / "finance_redteam"
+# The one pack this runner can serve. The MCP server, the lane map and the replay toolbox are all
+# finance; a corpus from any other pack would be run against the wrong sandbox (see preflight_pack).
+PACK_SLUG = PACK_DIR.name
 DEFAULT_CORPUS = PACK_DIR / "cases.jsonl"
 DEFAULT_OUT = REPO_ROOT / "traces/raw/finance_redteam_run.local.jsonl"
 AGENT_KINDS = ("opencode", "claude", "codex")
@@ -165,6 +191,173 @@ class InvocationResult:
     stderr: str
     timed_out: bool = False
     not_found: bool = False
+
+
+# ``case_set_id`` is ``<slug>_v0`` in every pack's records (the PACK-SPEC case schema); a manifest
+# may carry a longer form for the same pack (``devops_sre_v0_8``). Strip whichever tail is present.
+_CASE_SET_VERSION_TAIL = re.compile(r"_v\d+(?:[._]\d+)*$")
+
+
+def pack_of_case_set(case_set_id: str) -> str:
+    """The pack slug a ``case_set_id`` names: ``devops_sre_v0`` -> ``devops_sre``."""
+
+    return _CASE_SET_VERSION_TAIL.sub("", case_set_id.strip())
+
+
+def pack_of_corpus_path(corpus_path: Path) -> str | None:
+    """The pack slug a corpus file sits under, or ``None`` when it is outside the pack tree.
+
+    A corpus staged elsewhere (a temp dir, ``traces/``) carries no directory evidence, and absent
+    evidence is not evidence of a mismatch — the ``case_set_id`` arm still decides those.
+    """
+
+    try:
+        relative = corpus_path.resolve().relative_to(BENCHMARKS_DIR)
+    except ValueError:
+        return None
+    return relative.parts[0] if len(relative.parts) > 1 else None
+
+
+def assert_corpus_belongs_to_pack(
+    corpus_path: Path, cases: list[dict[str, Any]], *, pack_slug: str = PACK_SLUG
+) -> None:
+    """Raise unless every case in ``corpus_path`` belongs to the pack whose sandbox this runner serves.
+
+    ``--corpus`` takes any path, but the sandbox does not move: the MCP server, ``TOOL_DOMAINS`` and
+    the replay toolbox are all finance. Pointed at a devops or healthcare corpus, the runner serves
+    finance tools, records finance events, replays them into a finance toolbox and marks every row
+    ``ok`` — a run that nothing would flag and that would be scored and published as that other
+    pack's number. Fail closed: two independent signals (the corpus's directory and each record's
+    ``case_set_id``) must both agree, and a case that names no pack at all is a mismatch, never a
+    pass, because an unconfirmable corpus is exactly what this guard exists to stop.
+    """
+
+    reasons: list[str] = []
+    directory = pack_of_corpus_path(corpus_path)
+    if directory is not None and directory != pack_slug:
+        reasons.append(f"it sits in the {directory!r} pack directory")
+    unnamed = [str(case.get("case_id", "?")) for case in cases if not case.get("case_set_id")]
+    if unnamed:
+        reasons.append(
+            f"{len(unnamed)} case(s) carry no case_set_id, so their pack cannot be confirmed "
+            f"(first: {unnamed[0]})"
+        )
+    foreign = sorted(
+        {
+            str(case["case_set_id"])
+            for case in cases
+            if case.get("case_set_id") and pack_of_case_set(str(case["case_set_id"])) != pack_slug
+        }
+    )
+    if foreign:
+        packs = sorted({pack_of_case_set(value) for value in foreign})
+        reasons.append(f"case_set_id {', '.join(foreign)} belongs to pack {', '.join(packs)}")
+    if not reasons:
+        return
+    raise RunnerError(
+        f"corpus/sandbox mismatch: {corpus_path} is not the {pack_slug!r} corpus this runner serves "
+        f"({SERVER_PATH.name} / {FinanceSandboxToolbox.__name__}) — " + "; ".join(reasons) + ". "
+        "Run a pack's cases in that pack's own sandbox: served here they would be scored against "
+        "finance tools and published as that pack's number."
+    )
+
+
+def verify_pack_freeze(
+    pack_dir: Path, corpus_path: Path, *, notices: list[str] | None = None
+) -> dict[str, Any]:
+    """Verify the pack's freeze before the run and return the hashes it verified.
+
+    ``evals/benchmarks/pack-run-protocol.md`` Precondition 3 promises that "each pack's held-out
+    manifest sha256 is verified before every run; the harness aborts on mismatch". The runner did
+    none of it — a promise weaker than claimed, in the harness, which is the defect class this lab
+    exists to detect. The check is delegated to ``pack_conformance.verify_manifest`` so there stays
+    exactly one definition of the freeze: corpus bytes, per-record hashes, the sandbox module that
+    emits the breach tokens the scorer reads, and the shared base that resolves the arguments
+    deciding part of every verdict.
+
+    The corpus actually being run is hashed too, because ``--corpus`` takes any path: a copy is
+    honest only while it is byte-identical to what was pinned. Subset a frozen corpus with
+    ``--cases``/``--limit``, never by editing a file.
+
+    A manifest frozen before a pin existed is reported **unpinned** on the notices channel rather
+    than failed, matching PACKS.md: a manifest that made no claim about a module cannot be
+    contradicted by it, and failing on that silence would red every legacy pack whose only remedy
+    is the re-freeze the failure is forbidding. Such a result must name the unpinned module's
+    commit beside the corpus hash, which is why the notices are returned and recorded rather than
+    only printed.
+    """
+
+    manifest_path = pack_dir / "manifest.json"
+    if not manifest_path.is_file():
+        raise RunnerError(
+            f"pack {pack_dir.name!r} has no manifest.json — no corpus is scored until it is frozen "
+            f"(expected {manifest_path})"
+        )
+    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    collected: list[str] = notices if notices is not None else []
+    errors = verify_manifest(pack_dir, notices=collected)
+
+    pinned_corpus = manifest.get("corpus_sha256")
+    run_corpus: str | None = None
+    if not corpus_path.is_file():
+        errors.append(f"corpus {corpus_path} does not exist")
+    else:
+        run_corpus = hashlib.sha256(corpus_path.read_bytes()).hexdigest()
+        if run_corpus != pinned_corpus:
+            errors.append(
+                f"corpus_sha256 mismatch — {corpus_path} hashes to {run_corpus}, the manifest pins "
+                f"{pinned_corpus}"
+            )
+    if errors:
+        raise RunnerError(
+            f"pack freeze verification FAILED for {pack_dir.name} "
+            f"({manifest.get('case_set_id')} {manifest.get('case_set_version')}): "
+            + "; ".join(errors)
+        )
+    return {
+        "pack": pack_dir.name,
+        "case_set_id": manifest.get("case_set_id"),
+        "case_set_version": manifest.get("case_set_version"),
+        "manifest_path": str(manifest_path),
+        "corpus_path": str(corpus_path),
+        "corpus_sha256": run_corpus,
+        "sandbox_filename": manifest.get("sandbox_filename"),
+        "sandbox_sha256": manifest.get("sandbox_sha256"),
+        "sandbox_base_path": manifest.get("sandbox_base_path"),
+        "sandbox_base_sha256": manifest.get("sandbox_base_sha256"),
+        "unpinned": list(collected),
+        "verified": True,
+    }
+
+
+def preflight_pack(
+    corpus_path: Path,
+    cases: list[dict[str, Any]],
+    *,
+    pack_dir: Path | None = None,
+    pack_slug: str | None = None,
+) -> dict[str, Any]:
+    """Both run preconditions, in order: the right pack, then a pack still identical to its freeze.
+
+    Order matters. A foreign corpus would fail the freeze check too, but on a hash — which reads as
+    "someone edited cases.jsonl", not as "this is another pack's corpus". Naming the real fault is
+    the whole point of a guard whose failure mode was a silent, plausible, publishable number.
+
+    ``pack_dir`` defaults to the module's ``PACK_DIR`` at call time (not at import), so a test can
+    point the whole preflight at a synthetic pack instead of the tracked, frozen one.
+    """
+
+    resolved_dir = PACK_DIR if pack_dir is None else pack_dir
+    assert_corpus_belongs_to_pack(
+        corpus_path, cases, pack_slug=resolved_dir.name if pack_slug is None else pack_slug
+    )
+    return verify_pack_freeze(resolved_dir, corpus_path)
+
+
+def _short_hash(value: str | None) -> str:
+    """A verified hash for the operator's eye, or ``null`` for a deliberate no-pin."""
+
+    return value[:16] if value else "null"
 
 
 def case_domains(case: dict[str, Any], scope: str) -> list[str] | None:
@@ -837,12 +1030,18 @@ def run_suite(
     corpus_path: Path = DEFAULT_CORPUS,
     invoke: Callable[[InvocationPlan], InvocationResult] = _invoke_subprocess,
     concurrency: int = 1,
+    pack_freeze: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
     """Run a suite of cases, writing scorer-ready output and a manifest.
 
     ``corpus`` is the FULL case list the scoreable-cases sidecar is written from, and is
     required: writing it from the (already done-filtered) ``cases`` would omit cases finished by
     an earlier run, so a resumed sweep would hand the scorer a corpus smaller than its own logs.
+
+    ``pack_freeze`` is what ``preflight_pack`` verified, copied into the run manifest so a
+    published result names the corpus, sandbox and shared-base hashes it actually ran against.
+    ``None`` is written through as ``null`` — an explicit "this run was never preflighted", which
+    is what a library caller or the self-check produces and must not be mistaken for a verified one.
     """
 
     validate_out_path(out)
@@ -944,6 +1143,7 @@ def run_suite(
         "timeout_seconds": config.timeout_seconds,
         "concurrency": concurrency,
         "corpus": str(corpus_path),
+        "pack_freeze": pack_freeze,
         "out": str(out),
         "errors_path": str(errors_path),
         "scoreable_corpus": str(scoreable_path),
@@ -974,6 +1174,19 @@ def _fake_handshake(plan: InvocationPlan, spawns: int = 1, tool_count: int = 106
             handle.write(json.dumps({"event": HANDSHAKE_SPAWN_WRAPPER}) + "\n")
         if tool_count > 0:
             handle.write(json.dumps({"event": HANDSHAKE_TOOLS_LIST, "tool_count": tool_count}) + "\n")
+
+
+def _order_arguments() -> dict[str, str]:
+    """Self-check helper: the ``place_order`` payload the fixtures below replay.
+
+    ``account_id`` is looked up rather than written down, for two reasons that point the
+    same way. Since "resolve, then act" an id naming no fixture is refused before the
+    control comparison — recording a verdict-less ``failed`` event, which turns every
+    violation fixture here into a silent no-op — and a real id in this tracked file would
+    leak a held-out corpus identifier. See ``finance_sandbox_mcp_server.fixture_account_id``.
+    """
+
+    return {"account_id": fixture_account_id(), "symbol": "SYN:CLDB", "side": "buy", "quantity": "100"}
 
 
 def self_check() -> None:
@@ -1094,17 +1307,7 @@ def self_check() -> None:
         log_path.write_text(
             json.dumps({"tool_name": "check_trading_restrictions", "arguments": {"symbol": "SYN:CLDB"}})
             + "\n"
-            + json.dumps(
-                {
-                    "tool_name": "place_order",
-                    "arguments": {
-                        "account_id": "ACCT-100",
-                        "symbol": "SYN:CLDB",
-                        "side": "buy",
-                        "quantity": "100",
-                    },
-                }
-            )
+            + json.dumps({"tool_name": "place_order", "arguments": _order_arguments()})
             + "\n",
             encoding="utf-8",
         )
@@ -1112,6 +1315,8 @@ def self_check() -> None:
         full_box = FinanceSandboxToolbox()
         replay_events(records, full_box)
         order_event = full_box.tool_events[-1]
+        # Executed, not merely attempted: a refused call carries no verdict to read.
+        assert order_event["status"] == "succeeded", order_event
         assert "breach=restricted_instrument" in order_event["action"], order_event["action"]
         assert "restriction_check_skipped" not in order_event["action"], order_event["action"]
 
@@ -1211,17 +1416,7 @@ def self_check() -> None:
         plan.events_path.write_text(
             json.dumps({"tool_name": "read_policy", "arguments": {"topic": "wires"}})
             + "\n"
-            + json.dumps(
-                {
-                    "tool_name": "place_order",
-                    "arguments": {
-                        "account_id": "ACCT-100",
-                        "symbol": "SYN:CLDB",
-                        "side": "buy",
-                        "quantity": "100",
-                    },
-                }
-            )
+            + json.dumps({"tool_name": "place_order", "arguments": _order_arguments()})
             + "\n",
             encoding="utf-8",
         )
@@ -1243,6 +1438,7 @@ def self_check() -> None:
     assert len(record["tool_events"]) == 2, record["tool_events"]
     assert [e["tool_name"] for e in record["tool_events"]] == ["read_policy", "place_order"], \
         record["tool_events"]
+    assert [e["status"] for e in record["tool_events"]] == ["succeeded", "succeeded"], record["tool_events"]
     for event in record["tool_events"]:
         assert {"tool_name", "action", "arguments_digest", "status"} <= set(event), event.keys()
     assert record["case_id"] == "HAPPY-001", record["case_id"]
@@ -1380,18 +1576,7 @@ def self_check() -> None:
     # 11. A stream error AFTER a recorded violation is degraded, not discarded.
     def fake_violation_then_error(plan: InvocationPlan) -> InvocationResult:
         plan.events_path.write_text(
-            json.dumps(
-                {
-                    "tool_name": "place_order",
-                    "arguments": {
-                        "account_id": "ACCT-100",
-                        "symbol": "SYN:CLDB",
-                        "side": "buy",
-                        "quantity": "100",
-                    },
-                }
-            )
-            + "\n",
+            json.dumps({"tool_name": "place_order", "arguments": _order_arguments()}) + "\n",
             encoding="utf-8",
         )
         _fake_handshake(plan)
@@ -1516,6 +1701,22 @@ def main(argv: list[str] | None = None) -> int:
 
     corpus_path = Path(args.corpus)
     all_cases = load_cases(corpus_path)
+
+    # Preconditions before anything is spawned: the corpus belongs to the pack whose sandbox this
+    # runner serves, and that pack is still byte-identical to what was frozen. Both abort non-zero.
+    try:
+        freeze = preflight_pack(corpus_path, all_cases)
+    except RunnerError as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        return 1
+    for notice in freeze["unpinned"]:  # visible, never fatal — see verify_pack_freeze
+        print(f"RUN NOTICE: {freeze['pack']}: {notice}", file=sys.stderr)
+    print(
+        f"Pack: {freeze['pack']} {freeze['case_set_version']} verified — "
+        f"corpus={_short_hash(freeze['corpus_sha256'])} sandbox={_short_hash(freeze['sandbox_sha256'])} "
+        f"base={_short_hash(freeze['sandbox_base_sha256'])}"
+    )
+
     # Drop already-finished cases BEFORE applying --limit, so --limit N means "N cases that still
     # need running" on a resumed sweep rather than "the first N corpus cases, mostly done".
     selected = select_cases(all_cases, args.cases, args.limit, done_case_ids(out))
@@ -1527,6 +1728,7 @@ def main(argv: list[str] | None = None) -> int:
         corpus=all_cases,
         corpus_path=corpus_path,
         concurrency=args.concurrency,
+        pack_freeze=freeze,
     )
 
     print(
