@@ -20,6 +20,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -210,6 +211,18 @@ def decide(catch_rate: float, flip: dict[str, Any], scores: dict[str, Any]) -> d
 def build_report(records: list[dict[str, Any]], corpus_sha: str) -> dict[str, Any]:
     run1 = load_verdicts(FRONTIER_MODEL + "-jt", 1)
     run2 = load_verdicts(FRONTIER_MODEL + "-jt", 2)
+    if not run1:
+        # With no verdicts every record scores as a parse error, the catch rate
+        # is 0.0, and the pre-registered rule reads 0.0 as `gap_is_real` — the
+        # exact opposite of this round's published finding, written at exit
+        # code 0. Refuse rather than publish an inverted conclusion.
+        raise AuditError(
+            f"no run-1 verdicts for {FRONTIER_MODEL}. Raw responses live in gitignored "
+            "traces/external/*.local.jsonl and the committed fallback is "
+            "docs/reproducibility/judge_verdict_ledger.json; neither supplied a verdict. "
+            "Refusing to write a report from an empty judge run — a 0.0% catch rate here "
+            "is missing data, not a measurement."
+        )
     scores1 = score(records, run1)
     scores2 = score(records, run2) if run2 else None
     flip = consistency(records, run1, run2) if run2 else {
@@ -349,9 +362,13 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--md-out", default=str(MARKDOWN_OUTPUT_PATH))
     args = parser.parse_args(argv)
 
-    corpus_sha = verify_corpus_frozen()
-    records = load_scored_records()
-    report = build_report(records, corpus_sha)
+    try:
+        corpus_sha = verify_corpus_frozen()
+        records = load_scored_records()
+        report = build_report(records, corpus_sha)
+    except AuditError as exc:
+        print(f"judge-targeted audit error: {exc}", file=sys.stderr)
+        return 2
     write_json_object(report, Path(args.json_out))
     write_text(render_markdown(report), Path(args.md_out))
     print(json.dumps(report["decision"], indent=2))

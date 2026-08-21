@@ -164,6 +164,13 @@ PYTHONPATH=src python3 src/memory_and_collusion_detection.py  # authorization pr
 
 ## Scorer credibility is measured, not asserted
 
+Before you try to reproduce any of these: **[`docs/reproducibility.md`](docs/reproducibility.md)
+classifies every number in this README and in `AGENTS.md` as REPRODUCIBLE (it
+regenerates from a clean clone, with the command), AUDITABLE (the aggregate is
+committed and re-derives from its own parts, but the raw inputs are held out by
+policy) or ORPHAN (it traces to nothing — **two** are listed, and they are named
+rather than deleted).** That page is the one to hand a technical reviewer.
+
 - [Keyword scorer vs LLM judge, 700 model records](reports/comparisons/scorer_judge_calibration.md)
   — 59.7% agreement across 6 local models; disagreement localizes the keyword
   rules that need work, which is exactly why the structural `tool_events` check
@@ -239,6 +246,15 @@ Every known weak point, with the measurement that quantifies it:
   languages beyond ES/DE. Both audits, and the pre-fix figures, are published.
 - **Judge overlap and single-reviewer promotion** (with AI review assistance)
   are disclosed per run in the committed review summaries.
+- **Not every number here regenerates from a clean clone, and the ones that do
+  not are named.** Two calibration studies and every vertical-pack result
+  depend on inputs held out by policy (raw model output, held-out case packs);
+  their committed aggregates re-derive from their own published parts and
+  nothing more. The two LLM-judge rounds now aggregate from a committed,
+  prose-free per-record verdict ledger, so the *aggregation* reproduces — the
+  *measurement* was a dated set of live model calls and cannot be replayed
+  here. All of it, per number, with the exact command:
+  [`docs/reproducibility.md`](docs/reproducibility.md).
 
 ## What this repo does and does not claim
 
@@ -261,6 +277,7 @@ offers on top of this core. Open a [GitHub issue](../../issues) titled
 ## Documentation
 
 - [Quickstart](docs/quickstart.md) · [Architecture](docs/architecture.md)
+- [**Reproducibility**](docs/reproducibility.md) — per-number: reproducible, auditable, or orphan
 - [Evidence model](docs/evidence-model.md) · [Evidence trust model](docs/evidence-trust-model.md)
 - [Public repository boundary](PUBLIC_REPO_BOUNDARY.md) · [Release checklist](docs/public-release-checklist.md)
 - [Adjudication workflow](docs/adjudication-workflow.md) · [Threat models](docs/threat-models/)

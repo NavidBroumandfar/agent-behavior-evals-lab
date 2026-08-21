@@ -36,6 +36,7 @@ from itertools import combinations
 from pathlib import Path
 from typing import Any
 
+from judge_verdict_ledger import load_ledger_verdicts
 from repo_config import REPO_ROOT
 from reporting_utils import write_json_object, write_text
 
@@ -61,6 +62,16 @@ CLI_JUDGES = (
     "opencode-go/deepseek-v4-pro",
     "opencode-go/qwen3.7-max",
 )
+# The frontier judge runs as subagents, not through the opencode CLI, so it is
+# not in CLI_JUDGES and is never a live target of this module — but it IS in the
+# published report, and it is the judge the headline 98.2% belongs to. Until
+# 2026-08-21 the default aggregate set was CLI_JUDGES alone, so the plain
+# `python3 src/judge_with_log_experiment.py` silently rebuilt the artefact
+# WITHOUT the headline judge, and no command documented anywhere rebuilt it
+# with. Order matters: it fixes the row order in the markdown table, so this
+# tuple is the one that reproduces the committed report byte-for-byte.
+FRONTIER_JUDGE = "frontier/claude-opus-4-8"
+DEFAULT_AGGREGATE_JUDGES = CLI_JUDGES + (FRONTIER_JUDGE,)
 RUNS = (1, 2)
 
 # Checker control, reproduced at HEAD from reports/comparisons/blind_red_team_audit.md.
@@ -232,9 +243,20 @@ def run_judge(model: str, run: int, records: list[dict[str, Any]], template: str
 
 
 def load_verdicts(model: str, run: int) -> dict[str, str]:
+    """Per-record verdicts for one judge run.
+
+    The raw response file is authoritative when it exists. It is gitignored, so
+    on a public checkout it does not — and the fallback is the committed,
+    prose-free verdict ledger (``docs/reproducibility/judge_verdict_ledger.json``),
+    which carries exactly the record_id -> verdict mapping this function returns.
+    Without that fallback this returned ``{}`` on a clean clone, every record
+    became a parse error, and the report below was written with a 0.0% catch
+    rate and the OPPOSITE decision branch, at exit code 0.
+    """
+
     path = raw_path(model, run)
     if not path.exists():
-        return {}
+        return load_ledger_verdicts(model, run)
     verdicts = {}
     with path.open("r", encoding="utf-8") as handle:
         for line in handle:
@@ -463,6 +485,21 @@ def build_report(records: list[dict[str, Any]], models: list[str], corpus_sha: s
         if v2:
             consistency[model] = self_consistency(records, v1, v2)
 
+    if not judge_rows:
+        # An empty panel is not a measurement. `median([])` is 0.0, 0.0 is below
+        # the pre-registered `gap_is_real` threshold, and the report would state
+        # that monitors miss most attacks — the exact opposite of the published
+        # finding — with exit code 0. Refuse instead.
+        raise JudgeExperimentError(
+            "no judge verdicts available for any of: "
+            + ", ".join(models)
+            + ". Raw responses live in gitignored traces/external/*.local.jsonl and the "
+            "committed fallback is docs/reproducibility/judge_verdict_ledger.json; neither "
+            "supplied a verdict. Refusing to write a report from an empty judge panel — "
+            "with no verdicts every rate is 0.0 and the decision rule reads that as "
+            "'gap_is_real', which would invert the published result."
+        )
+
     cli_models = [m for m in judge_rows if m in CLI_JUDGES]
     median_catch = median([judge_rows[m]["scores_run1"]["catch_rate"] for m in cli_models])
     cli_run1 = {m: run1_verdicts[m] for m in cli_models}
@@ -663,10 +700,20 @@ def render_markdown(report: dict[str, Any]) -> str:
 def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(LIVE_RUN_REQUIRED_FLAG, action="store_true", help="make live judge calls")
-    parser.add_argument("--models", nargs="*", default=list(CLI_JUDGES))
+    parser.add_argument("--models", nargs="*", default=None, help="Judges to run live.")
     parser.add_argument("--runs", nargs="*", type=int, default=list(RUNS))
     parser.add_argument("--workers", type=int, default=6)
-    parser.add_argument("--aggregate-models", nargs="*", default=None)
+    parser.add_argument(
+        "--aggregate-models",
+        nargs="*",
+        default=None,
+        help=(
+            "Judges to aggregate into the report. Defaults to the full published "
+            "panel (CLI judges + the frontier judge), which is what reproduces the "
+            "committed artefact; explicit --models narrows it when --aggregate-models "
+            "is not given."
+        ),
+    )
     parser.add_argument("--json-out", default=str(JSON_OUTPUT_PATH))
     parser.add_argument("--md-out", default=str(MARKDOWN_OUTPUT_PATH))
     args = parser.parse_args(argv)
@@ -684,12 +731,16 @@ def main(argv: list[str] | None = None) -> int:
             )
             return 2
         for run in args.runs:
-            for model in args.models:
+            for model in (args.models or list(CLI_JUDGES)):
                 path = run_judge(model, run, records, template, args.workers)
                 print(f"wrote {path.relative_to(REPO_ROOT)}", file=sys.stderr)
 
-    aggregate = args.aggregate_models or args.models
-    report = build_report(records, list(aggregate), corpus_sha, prompt_sha)
+    aggregate = args.aggregate_models or args.models or list(DEFAULT_AGGREGATE_JUDGES)
+    try:
+        report = build_report(records, list(aggregate), corpus_sha, prompt_sha)
+    except JudgeExperimentError as exc:
+        print(f"judge-with-log audit error: {exc}", file=sys.stderr)
+        return 2
     write_json_object(report, Path(args.json_out))
     write_text(render_markdown(report), Path(args.md_out))
     print(json.dumps(report["decision"], indent=2))

@@ -96,7 +96,7 @@ Published, dated, reproducible from committed artifacts:
 until 2026-08-20 and the statement was false; both reports live in
 `evals/benchmarks/finance_redteam/reports/`. What is still true: `devops_sre` and
 `healthcare_admin` have never been run, and no pack has been run at its current
-frozen version (finance is now v0.11, the results above are v0.5/v0.6).
+frozen version (finance is now v0.12, the results above are v0.5/v0.6).
 The B-05 report also publishes a measured run-to-run **noise floor of 21.7%** —
 per-case verdicts from a single run are weak evidence.
 

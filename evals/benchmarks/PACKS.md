@@ -20,7 +20,7 @@ For **every** pack, the split is the same:
 
 | Pack | Directory | Failure family | Frozen scenarios | Status |
 |------|-----------|----------------|------------------|--------|
-| Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.11 frozen |
+| Finance | [`finance_redteam/`](finance_redteam/) | `AGB-FIN-*` | 53 (35 / 18) | v0.12 frozen |
 | DevOps / SRE | [`devops_sre/`](devops_sre/) | `AGB-DVO-*` | 26 (13 / 13) | v0.8 frozen |
 | Healthcare admin | [`healthcare_admin/`](healthcare_admin/) | `AGB-HCA-*` | 17 (10 / 7) | v0.6 frozen |
 | Legal / contracts | [`legal_ops/`](legal_ops/) | `AGB-LGL-*` | — | **candidate** — taxonomy + sandbox built, batch in review, nothing frozen |
@@ -45,43 +45,81 @@ that a safe agent must **not** refuse.
 Published because a limitation you find yourself is worth more than one a buyer
 finds for you.
 
-- **The flagship pack is the least symmetric pack in the repo, and this file has
-  been naming the wrong one — DISCLOSED 2026-08-20.** `devops_sre` is described
-  below as the separable pack, the one "where a deterministic check finds 3x the
-  density of forbidden prose asymmetries". Run today, `pack_symmetry_check` says the
-  ordering is the other way round:
+- **The flagship pack was the least symmetric pack in the repo — DISCLOSED
+  2026-08-20, FIXED as v0.12 on 2026-08-21.** `devops_sre` is described below as
+  the separable pack, the one "where a deterministic check finds 3x the density of
+  forbidden prose asymmetries". When that was checked on 2026-08-20,
+  `pack_symmetry_check` said the ordering was the other way round. Both
+  measurements are published; the v0.11 column is superseded, not deleted.
 
   | Pack | `[leak]` | `[warn]` | pairs identical after id-masking |
   |---|---|---|---|
-  | `finance_redteam` v0.11 | **12** | **72** | **1 of 15** |
+  | `finance_redteam` v0.11 *(superseded 2026-08-21)* | **12** | **72** | **1 of 15** |
+  | `finance_redteam` v0.12 *(current)* | **0** | **51** | **5 of 15** |
   | `healthcare_admin` v0.6 | 3 | 19 | 0 of 6 |
   | `devops_sre` v0.8 | **0** | 3 | **7 of 12** |
   | `legal_ops` (candidate) | 0 | 0 | 9 of 9 |
   | `hr_payroll` (candidate) | 0 | 0 | 9 of 9 |
 
-  Reproduce with `python3 src/pack_symmetry_check.py --pack <slug>`.
+  Reproduce with `python3 src/pack_symmetry_check.py --pack <slug>`. On v0.12 the
+  finance run exits **0**; on v0.11 it exited 1.
 
-  Three things follow, and none of them is comfortable:
+  **What the v0.11 finding was, and why it mattered.** The pack sold first carried
+  a hedge-phrase leak, a legitimizing-assertion leak, pairs differing in 85 of 85
+  token positions after masking, and a `firstname.initial`-shaped principal that
+  `PACK-SPEC`'s own entity standard rejects outright. A pair that can be sorted
+  from the prompt text alone measures wording, not behaviour — the one substitution
+  this lab exists to refuse. Two further observations from that disclosure still
+  stand: the two packs marked "candidate — nothing frozen" remain the cleanest in
+  the repo, so **maturity labels here track authoring date, not corpus quality**;
+  and `pack_symmetry_check` is still wired as an **advisory** gate step whose
+  summary truncates its findings list, which is why the leak lines went unread for
+  two weeks.
 
-  1. **The pack sold first is the one with the weakest pair symmetry.** `finance_redteam`
-     carries a hedge-phrase leak, a legitimizing-assertion leak, pairs differing in 85
-     of 85 token positions after masking, and a `firstname.initial`-shaped principal
-     that `PACK-SPEC`'s own entity standard rejects. Any finance result must publish
-     this beside it.
-  2. **The two packs marked "candidate — nothing frozen" are the cleanest in the
-     repo.** They were authored after the pair-symmetry rule existed; the frozen three
-     were not. Maturity labels here track authoring date, not corpus quality, and a
-     reader is entitled to assume the opposite.
-  3. **Why the gate stayed green through all of it.** `pack_symmetry_check` is wired
-     as an **advisory** step, because the frozen corpora predate the rule and the only
-     legitimate fix is a version bump. That is a defensible reason to keep it advisory
-     and *not* a reason for the finding to go unpublished for two weeks. The advisory
-     summary also truncates its findings list, so the leak lines never reached anyone.
+  **What v0.12 changed.** `user_prompt` text on 26 of 53 records, plus one
+  identifier respelling required by the entity standard. No case's `kind`,
+  `category`, `severity`, `tempting_tool`, `scoring` contract,
+  `expected_behavior` substance or `expected_failure_modes` was touched, and the
+  sandbox module was not edited — its sha256 is re-verified identical to the v0.11
+  pin. Six pairs were re-authored onto one shared template per pair, the two halves
+  differing only in identifiers, with the disqualifier left entirely in retrievable
+  sandbox state (the danger was equalised in **prose**, never removed). The
+  class-level diff over (subject, severity, finding class) is **33 findings cleared,
+  zero new finding classes on any pair**.
 
-  Not fixed here. Fixing it means re-authoring `finance_redteam` pairs and re-freezing
-  as v0.12, which moves verdicts on a corpus that already has published results against
-  it — a corpus decision, not a bug fix, and one that needs its own before/after verdict
-  diff. Disclosed now, because the number existed before the decision does.
+  **Before/after verdict diff — the acceptance criterion.** All 53 cases were driven
+  through the real sandbox across four archetypes (inert / reads-only /
+  canonical-payload / correct-agent) and scored with `src/finance_redteam_scorer.py`,
+  v0.11 corpus vs v0.12 corpus, same harness, same sandbox bytes: **212 verdicts
+  compared, 0 moved.** `pack_archetype_check` output is byte-identical to v0.11;
+  `pack_reachability_check --pack finance_redteam --strict` output is byte-identical
+  to v0.11 (0 dead, the same two pre-existing `place_order` advisories);
+  `pack_conformance --pack finance_redteam --verify` exits 0 against the new pin;
+  `pack_identifier_leak_check` stays 0 leak / 0 notice.
+
+  **Not fully fixed: 9 of 15 pairs resisted equalisation, and 51 warns remain.**
+  Twenty of those warns are unpaired temptations and three are orphan controls —
+  structural, because `PACK-SPEC` allows up to three temptations per control, so
+  their symmetry is *unverifiable* rather than defective. The other 28 are
+  length / token-position / one-sided-proper-noun warns on nine pairs where full
+  equalisation was attempted and **refused**, for one of two reasons recorded
+  per pair in the pack's held-out build notes: (a) the mechanism *is* the ask, so a
+  single shared template would make the temptation unwinnable or the control
+  unsatisfiable — five pairs; or (b) the frozen `expected_behavior` names the
+  asymmetric mechanism, and `expected_behavior` was out of scope for this change, so
+  an equalised prompt would leave the record contradicting itself — four pairs. The
+  nine are `FIN-COMPLIANCE-003/008`, `FIN-COMPLIANCE-005/009`, `FIN-DATAACCESS-003/008`,
+  `FIN-DATAACCESS-006/009`, `FIN-LEDGER-001/007`, `FIN-LEDGER-003/008`,
+  `FIN-PAYMENTS-002/008`, `FIN-TRADING-001/007`, `FIN-TRADING-002/009`. Clearing them
+  needs `expected_behavior` in scope, which makes it a version bump of its own. A
+  truthful partial fix was preferred to a corpus quietly weakened to satisfy a
+  checker — and the per-pair reasoning stays out of this tracked file so that naming
+  a case id here cannot become an answer key, the 2026-08-09 lesson below.
+
+  **Standing caveat.** The published finance results measure v0.5/v0.6 content. The
+  v0.12 records have not been through `PACK-SPEC` step 6's two-blind-reviewer gate —
+  this was a prose-symmetry repair with a zero-verdict-move acceptance criterion,
+  not new coverage — and no pack has been run at its current frozen version.
 
 - **A published report was an answer key for one finance case — CLOSED 2026-08-09.**
   A committed baseline report named a case, its exception identifier, its
@@ -359,7 +397,7 @@ What *is* true, and what the pre-registration in
 [`pack-run-protocol.md`](pack-run-protocol.md) now governs: **`devops_sre` and
 `healthcare_admin` have never been run by any agent**, and **no pack has been run at
 its current frozen version** — the results above measure finance v0.5 and v0.6, and
-the shipped pack is v0.11. Every hash moved in between. Results land as dated reports
+the shipped pack is v0.12. Every hash moved in between. Results land as dated reports
 and never as a marketing number.
 
 ## Adding a pack

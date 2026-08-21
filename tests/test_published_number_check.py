@@ -28,9 +28,24 @@ class RepoStateTests(unittest.TestCase):
         self.assertEqual(pnc.main([]), 0)
 
     def test_every_claim_names_an_existing_artifact_and_field(self) -> None:
+        """Both claim shapes must resolve: a JSON field, or a Markdown quote.
+
+        Claims used to be JSON-field-only. The registry widened on 2026-08-21 to
+        cover numbers whose generator writes them only into a Markdown report
+        (the ground-truth evidence slice, every pack figure) and numbers nested
+        inside an aggregate (``decision.median_cli_judge_catch_rate``), so this
+        asserts through the resolver rather than re-implementing lookup here.
+        """
+
         for claim in pnc.PUBLISHED_CLAIMS:
-            artifact = json.loads((REPO_ROOT / claim["artifact"]).read_text(encoding="utf-8"))
-            self.assertIn(claim["field"], artifact, f"{claim['id']} points at a missing field")
+            self.assertTrue(
+                (REPO_ROOT / claim["artifact"]).exists(),
+                f"{claim['id']} points at a missing artifact",
+            )
+            try:
+                pnc._claim_value(claim)
+            except pnc.PublishedNumberError as exc:  # pragma: no cover - failure path
+                self.fail(f"{claim['id']} does not resolve: {exc}")
 
 
 class DriftDetectionTests(unittest.TestCase):

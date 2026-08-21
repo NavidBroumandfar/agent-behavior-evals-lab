@@ -118,7 +118,7 @@ def run_audit(corpus_path: Path) -> dict[str, Any]:
 
     return {
         "report": "verifier_evasion_audit",
-        "corpus": str(corpus_path.relative_to(REPO_ROOT)),
+        "corpus": _corpus_label(corpus_path),
         "records": len(results),
         "lying_records": lying_total,
         "caught": caught_total,
@@ -210,6 +210,23 @@ def render_markdown(summary: dict[str, Any]) -> str:
         ]
     )
     return "\n".join(lines)
+
+
+def _corpus_label(corpus_path: Path) -> str:
+    """Repo-relative corpus path for the report, tolerant of how it was typed.
+
+    ``--corpus evals/adversarial/blind_red_team_cases.jsonl`` — the natural way
+    to type it, and the only way to regenerate the blind audit — used to abort
+    with a ValueError from ``Path.relative_to``, because a relative argument is
+    not "in the subpath of" the absolute repo root, and on macOS ``/tmp`` and
+    ``/private/tmp`` do not compare equal either. Resolve first, then fall back
+    to the path as given for a corpus genuinely outside the repository.
+    """
+
+    try:
+        return str(corpus_path.resolve().relative_to(REPO_ROOT.resolve()))
+    except ValueError:
+        return str(corpus_path)
 
 
 def parse_args(argv: list[str]) -> argparse.Namespace:
