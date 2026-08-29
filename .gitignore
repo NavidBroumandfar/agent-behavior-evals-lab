@@ -70,6 +70,14 @@ PITCH-*.md
 *-STRATEGY*.md
 *-BRIEF*.md
 company-brief*.html
+# Whole-directory catch-all: anything filed as strategy or planning is private,
+# whatever it is named. Filename globs alone missed PLATFORM-SPEC / SPEC-style
+# names, so the directory itself is ignored.
+docs/strategy/
+*-SPEC-[0-9][0-9][0-9][0-9]-[0-9][0-9].md
+PLATFORM-*.md
+SCENARIO-FACTORY-*.md
+TRUST-AND-STANDARDS-*.md
 
 # Transient sandbox test artifacts (safe to delete).
 /tmp*/
