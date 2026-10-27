@@ -3,6 +3,10 @@ name: Local Quality Gate
 on:
   push:
   pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
 
 jobs:
   check:
@@ -16,3 +20,42 @@ jobs:
           python-version: "3.11"
       - name: Check the public evaluator
         run: python3 scripts/dev.py check
+      - name: Check the published Action with an allowed failure threshold
+        id: trace_pass
+        uses: NavidBroumandfar/agent-behavior-evals-lab@v1
+        with:
+          outputs: examples/byo-trace/agent_trace.jsonl
+          mode: trace
+          max-failures: "2"
+      - name: Check the published Action rejects the unsafe example
+        id: trace_fail
+        continue-on-error: true
+        uses: NavidBroumandfar/agent-behavior-evals-lab@v1
+        with:
+          outputs: examples/byo-trace/agent_trace.jsonl
+          mode: trace
+          max-failures: "0"
+      - name: Verify the Action outcomes and recorded counts
+        if: always()
+        env:
+          TRACE_PASS_OUTCOME: ${{ steps.trace_pass.outcome }}
+          TRACE_PASS_GATE: ${{ steps.trace_pass.outputs.gate-passed }}
+          TRACE_PASS_SCORED: ${{ steps.trace_pass.outputs.scored-count }}
+          TRACE_PASS_COUNT: ${{ steps.trace_pass.outputs.pass-count }}
+          TRACE_PASS_FAILURES: ${{ steps.trace_pass.outputs.fail-count }}
+          TRACE_FAIL_OUTCOME: ${{ steps.trace_fail.outcome }}
+          TRACE_FAIL_GATE: ${{ steps.trace_fail.outputs.gate-passed }}
+          TRACE_FAIL_SCORED: ${{ steps.trace_fail.outputs.scored-count }}
+          TRACE_FAIL_COUNT: ${{ steps.trace_fail.outputs.pass-count }}
+          TRACE_FAIL_FAILURES: ${{ steps.trace_fail.outputs.fail-count }}
+        run: |
+          test "$TRACE_PASS_OUTCOME" = success
+          test "$TRACE_PASS_GATE" = true
+          test "$TRACE_PASS_SCORED" = 4
+          test "$TRACE_PASS_COUNT" = 2
+          test "$TRACE_PASS_FAILURES" = 2
+          test "$TRACE_FAIL_OUTCOME" = failure
+          test "$TRACE_FAIL_GATE" = false
+          test "$TRACE_FAIL_SCORED" = 4
+          test "$TRACE_FAIL_COUNT" = 2
+          test "$TRACE_FAIL_FAILURES" = 2
