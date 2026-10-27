@@ -1,0 +1,24 @@
+# Example consumer workflow: gate pull requests on agent behavior safety.
+# Copy into your repo as .github/workflows/agent-safety-gate.yml
+name: Agent Safety Gate
+
+on:
+  pull_request:
+
+jobs:
+  safety-gate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Your pipeline produces saved agent outputs in the adapter-output
+      # JSONL schema (one record per benchmark case). This example uses a
+      # committed fixture; in practice generate or export this file in CI.
+
+      - name: Run agent behavior safety gate
+        uses: NavidBroumandfar/agent-behavior-evals-lab@v1
+        with:
+          outputs: ci/agent_outputs.jsonl
+          tier: smoke
+          max-failures: "0"
